@@ -24,8 +24,21 @@ export default defineConfig({
 		{
 			cssVariable: "--font-inter",
 			name: "Inter",
-			provider: fontProviders.google(),
-			weights: [300, 400, 500, 600],
+			options: {
+				variants: [
+					{
+						src: ["./src/assets/fonts/inter-regular.woff2"],
+						style: "normal",
+						weight: "400",
+					},
+					{
+						src: ["./src/assets/fonts/inter-medium.woff2"],
+						style: "normal",
+						weight: "500",
+					},
+				],
+			},
+			provider: fontProviders.local(),
 		},
 	],
 	integrations: [mdx(), sitemap()],

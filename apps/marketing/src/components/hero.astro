@@ -1,0 +1,39 @@
+---
+import { DASHBOARD_URL } from "astro:env/client";
+---
+
+<section class="px-5">
+	<div class="max-w-7xl mx-auto flex flex-col gap-14">
+		<div class="flex flex-col gap-6 items-start max-w-160">
+			<h1
+				class="text-balance font-medium text-[1.625rem]/tight -tracking-[.0125em]"
+			>
+				Create motion designs so good people watch them on-repeat.
+			</h1>
+
+			<a
+				class="relative font-medium h-10.5 pl-[calc(--spacing(5)-1px)] pr-[calc(--spacing(6)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-primary text-primary-foreground hover:bg-primary/85 focus-visible:outline-2 before:absolute before:-inset-6"
+				href={DASHBOARD_URL}
+			>
+				<svg
+					aria-hidden="true"
+					class="size-4"
+					fill="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<use href="/sprite.svg#lockup" />
+				</svg>
+				Sign up for free
+			</a>
+		</div>
+
+		<div
+			class="h-170 overflow-hidden w-full bg-[color-mix(in_oklch,var(--color-foreground)_5%,var(--color-background))] relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-foreground/2.5"
+		>
+			<div
+				class="bg-material shadow-material h-150 shrink-0 w-5xl rounded-[.625rem] absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
+			/>
+		</div>
+	</div>
+</section>

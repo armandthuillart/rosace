@@ -2,17 +2,33 @@
 
 @theme {
 	--color-background: var(--background);
+	--color-border: var(--border);
 	--color-foreground: var(--foreground);
+	--color-material: var(--material);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--font-sans: var(--font-inter);
+	--shadow-material:
+		0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%),
+		0 0 0 1px var(--border);
 }
 
 :root {
-	--background: oklch(100% 0 0);
-	--foreground: oklch(0% 0 0 / 90%);
+	--background: oklch(98.5% 0 0);
+	--border: oklch(92.5% 0 0);
+	--foreground: oklch(29.3% 0 0);
+	--material: oklch(100% 0 0);
+	--primary: oklch(29.3% 0 0);
+	--primary-foreground: oklch(98.5% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: oklch(17.8% 0 0);	
-		--foreground: oklch(100% 0 0);
+		--background: oklch(17.8% 0 0);
+		--border: oklch(29.3% 0 0);
+		--foreground: oklch(92.5% 0 0);
+		--material: oklch(23.5% 0 0);
+		--primary: oklch(92.5% 0 0);
+		--primary-foreground: oklch(17.8% 0 0);
 	}
 }
