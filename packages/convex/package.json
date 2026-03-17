@@ -1,0 +1,38 @@
+{
+	"dependencies": {
+		"@convex-dev/resend": "catalog:",
+		"@convex-dev/stripe": "catalog:",
+		"@react-email/components": "catalog:",
+		"@react-email/render": "catalog:",
+		"@repo/better-auth": "workspace:*",
+		"@repo/crpc": "workspace:*",
+		"convex-helpers": "catalog:",
+		"hono": "catalog:",
+		"stripe": "catalog:"
+	},
+	"devDependencies": {
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"better-auth": "catalog:",
+		"convex": "catalog:",
+		"react": "catalog:",
+		"typescript": "catalog:",
+		"zod": "catalog:"
+	},
+	"exports": {
+		".": "./src/crpc/types.ts",
+		"./api": {
+			"import": "./src/_generated/api.js",
+			"types": "./src/_generated/api.d.ts"
+		}
+	},
+	"name": "@repo/convex",
+	"peerDependencies": {
+		"ai": "catalog:",
+		"better-auth": "catalog:",
+		"convex": "catalog:",
+		"react": "catalog:",
+		"zod": "catalog:"
+	},
+	"type": "module"
+}

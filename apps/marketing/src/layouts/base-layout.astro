@@ -1,0 +1,13 @@
+---
+import BaseHead from "@components/base-head.astro";
+import "@styles/global.css";
+---
+
+<html lang="en" class="antialiased scheme-light-dark">
+	<head>
+		<BaseHead />
+	</head>
+	<body class="bg-background text-foreground">
+		<main class="overflow-clip isolate"><slot /></main>
+	</body>
+</html>

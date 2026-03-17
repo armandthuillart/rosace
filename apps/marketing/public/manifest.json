@@ -1,0 +1,18 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"background_color": "#FFFFFF",
+	"description": "A new kind of motion design tool. Create videos so good people watch them twice.",
+	"display": "standalone",
+	"icons": [
+    {
+      "purpose": "any",
+      "sizes": "180x180",
+      "src": "/apple-touch-icon-light.png",
+      "type": "image/png"
+    }
+  ],
+	"name": "Rosace",
+	"short_name": "Rosace",
+	"start_url": "/",
+	"theme_color": "#498EE1"
+}

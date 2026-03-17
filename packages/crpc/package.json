@@ -1,0 +1,49 @@
+{
+	"bin": {
+		"crpc": "./src/cli/runner.ts"
+	},
+	"dependencies": {
+		"convex-helpers": "catalog:",
+		"dotenv": "catalog:",
+		"hono": "catalog:",
+		"jose": "catalog:",
+		"zustand": "catalog:"
+	},
+	"devDependencies": {
+		"@convex-dev/react-query": "catalog:",
+		"@tanstack/react-query": "catalog:",
+		"@tanstack/react-start": "catalog:",
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"@types/react-dom": "catalog:",
+		"better-auth": "catalog:",
+		"convex": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
+		"typescript": "catalog:",
+		"zod": "catalog:"
+	},
+	"exports": {
+		"./auth/": "./src/auth/plugin/index.ts",
+		"./auth/config": "./src/auth/config/provider.ts",
+		"./auth/http": "./src/auth/http/polyfills.ts",
+		"./auth/plugins": "./src/auth/plugin/index.ts",
+		"./auth/plugins/client": "./src/auth/plugin/client.ts",
+		"./react": "./src/react/index.ts",
+		"./server": "./src/server/index.ts",
+		"./tanstack-start": "./src/tanstack-start/index.ts"
+	},
+	"name": "@repo/crpc",
+	"peerDependencies": {
+		"@convex-dev/react-query": "catalog:",
+		"@repo/better-auth": "workspace:*",
+		"@tanstack/react-query": "catalog:",
+		"@tanstack/react-start": "catalog:",
+		"better-auth": "catalog:",
+		"convex": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
+		"zod": "catalog:"
+	},
+	"type": "module"
+}

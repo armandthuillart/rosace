@@ -1,0 +1,48 @@
+{
+	"dependencies": {
+		"@convex-dev/react-query": "catalog:",
+		"@repo/better-auth": "workspace:*",
+		"@repo/convex": "workspace:*",
+		"@repo/crpc": "workspace:*",
+		"@repo/env": "workspace:*",
+		"@repo/ui": "workspace:*",
+		"@tanstack/react-query": "catalog:",
+		"@tanstack/react-router": "catalog:",
+		"@tanstack/react-router-ssr-query": "catalog:",
+		"@tanstack/react-start": "catalog:",
+		"better-auth": "catalog:",
+		"better-themes": "catalog:",
+		"convex": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@babel/core": "catalog:",
+		"@cloudflare/vite-plugin": "catalog:",
+		"@fontsource-variable/inter": "catalog:",
+		"@rolldown/plugin-babel": "catalog:",
+		"@tailwindcss/vite": "catalog:",
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"@types/react-dom": "catalog:",
+		"@vitejs/plugin-react": "catalog:",
+		"babel-plugin-react-compiler": "catalog:",
+		"tailwindcss": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vite-tsconfig-paths": "catalog:",
+		"wrangler": "catalog:"
+	},
+	"name": "@apps/dashboard",
+	"private": true,
+	"scripts": {
+		"build": "vite build",
+		"cf-typegen": "wrangler types",
+		"deploy": "npm run build && wrangler deploy",
+		"dev": "vite dev",
+		"preview": "vite preview"
+	},
+	"sideEffects": false,
+	"type": "module"
+}

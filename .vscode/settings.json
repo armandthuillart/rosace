@@ -1,0 +1,6 @@
+{
+	"tailwindCSS.experimental.configFile": {
+		"apps/marketing/src/styles/global.css": ["**/*.astro"],
+		"packages/ui/src/globals.css": ["**/*.tsx"]
+	}
+}

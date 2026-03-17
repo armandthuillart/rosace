@@ -1,0 +1,30 @@
+{
+	"dependencies": {
+		"@repo/env": "workspace:*",
+		"astro": "catalog:",
+		"gsap": "catalog:"
+	},
+	"devDependencies": {
+		"@astrojs/cloudflare": "catalog:",
+		"@astrojs/mdx": "catalog:",
+		"@astrojs/sitemap": "catalog:",
+		"@tailwindcss/vite": "catalog:",
+		"@types/node": "catalog:",
+		"tailwindcss": "catalog:",
+		"vite": "catalog:",
+		"wrangler": "catalog:"
+	},
+	"name": "@apps/marketing",
+	"private": true,
+	"scripts": {
+		"astro": "astro",
+		"build": "astro check && astro build",
+		"deploy": "astro build && wrangler deploy",
+		"dev": "astro dev",
+		"lint": "biome check --write .",
+		"preview": "astro preview",
+		"start": "astro dev"
+	},
+	"sideEffects": false,
+	"type": "module"
+}

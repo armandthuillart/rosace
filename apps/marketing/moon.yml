@@ -1,0 +1,43 @@
+tasks:
+  build:
+    script: 'bun ../../env.ts && bunx astro build'
+    inputs:
+      - '$CONVEX_SITE_URL'
+      - '$MARKETING_URL'
+      - '$DASHBOARD_URL'
+      - '$CONVEX_URL'
+    outputs:
+      - 'dist'
+
+  deploy:
+    command: 'bunx wrangler deploy'
+    deps:
+      - '~:build'
+    inputs:
+      - '$CONVEX_SITE_URL'
+      - '$MARKETING_URL'
+      - '$DASHBOARD_URL'
+      - '$CONVEX_URL'
+    options:
+      cache: false
+
+  dev:
+    script: 'bun ../../env.ts && bunx astro dev'
+    inputs:
+      - '$CONVEX_SITE_URL'
+      - '$MARKETING_URL'
+      - '$DASHBOARD_URL'
+      - '$CONVEX_URL'
+    options:
+      cache: false
+    preset: 'server'
+
+  lint:
+    command: 'bunx @biomejs/biome check --write .'
+    inputs:
+      - '$CONVEX_SITE_URL'
+      - '$MARKETING_URL'
+      - '$DASHBOARD_URL'
+      - '$CONVEX_URL'
+    options:
+      cache: false
