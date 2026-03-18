@@ -1,34 +1,79 @@
 @import "tailwindcss";
 
 @theme {
+	--color-accent: var(--accent);
 	--color-background: var(--background);
 	--color-border: var(--border);
+	--color-card: var(--card);
+	--color-canvas: var(--canvas);
 	--color-foreground: var(--foreground);
 	--color-material: var(--material);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
 	--color-primary: var(--primary);
+	--color-primary-hover: var(--primary-hover);
 	--color-primary-foreground: var(--primary-foreground);
+	--color-quinary: var(--quinary);
+	--color-tertiary: var(--tertiary);
+	--color-tertiary-foreground: var(--tertiary-foreground);
+	--color-senary: var(--senary);
+	--color-septenary: var(--septenary);
 	--font-sans: var(--font-inter);
-	--shadow-material:
-		0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%),
-		0 0 0 1px var(--border);
+	--shadow-canvas: var(--shadow-canvas);
+	--shadow-material: var(--shadow-material);
 }
 
 :root {
+	--accent: oklch(97% 0 0);
 	--background: oklch(98.5% 0 0);
 	--border: oklch(92.5% 0 0);
+	--card: oklch(95.5% 0 0);
 	--foreground: oklch(29.3% 0 0);
 	--material: oklch(100% 0 0);
+	--muted: oklch(98.5% 0 0);
+	--muted-foreground: oklch(56.2% 0 0);
 	--primary: oklch(29.3% 0 0);
+	--primary-hover: oklch(34.1% 0 0);
 	--primary-foreground: oklch(98.5% 0 0);
+	--quinary: oklch(59.8% 0.254 298);
+	--tertiary: oklch(67% 0.183 249);
+	--tertiary-foreground: oklch(100% 0 0);
+	--senary: oklch(68.4% 0.21 39.3);
+	--septenary: oklch(67.7% 0.272 345);
+	--shadow-canvas:
+		0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%),
+		0 0 0 1px oklch(92.5% 0 0);
+	--shadow-material:
+		0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
+	--canvas: oklch(97% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
+		--accent: oklch(20.5% 0 0);
 		--background: oklch(17.8% 0 0);
-		--border: oklch(29.3% 0 0);
+		--border: oklch(38.7% 0 0);
+		--card: oklch(29.3% 0 0);
 		--foreground: oklch(92.5% 0 0);
-		--material: oklch(23.5% 0 0);
+		--material: oklch(29.3% 0 0);
+		--muted: oklch(24.4% 0 0);
+		--muted-foreground: oklch(76.7% 0 0);
 		--primary: oklch(92.5% 0 0);
+		--primary-hover: oklch(88.5% 0 0);
 		--primary-foreground: oklch(17.8% 0 0);
+		--quinary: oklch(56.1% 0.257 297);
+		--tertiary: oklch(62.7% 0.17 249);
+		--tertiary-foreground: oklch(100% 0 0);
+		--senary: oklch(65.6% 0.212 37.9);
+		--septenary: oklch(64.7% 0.266 346);
+		--shadow-canvas:
+			0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%),
+			0 0 0 1px oklch(38.7% 0 0);
+		--shadow-material:
+			0px 0px 0.5px oklch(0% 0 0 / 50%), 0px 1px 3px oklch(0% 0 0 / 40%), inset 0px 0.5px 0px oklch(
+				100% 0 0 /
+				10%
+			), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+		--canvas: oklch(23.5% 0 0);
 	}
 }

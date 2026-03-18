@@ -9,6 +9,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			class="relative h-7 inline-flex items-center before:absolute before:-inset-1 hover:text-foreground/75 focus-visible:outline-2"
 		>
 			<span class="sr-only">Go to homepage</span>
+
 			<svg
 				aria-hidden="true"
 				class="w-24 h-6"
@@ -26,8 +27,9 @@ import { DASHBOARD_URL } from "astro:env/client";
 				href={DASHBOARD_URL}
 				>Sign in</a
 			>
+
 			<a
-				class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center bg-primary text-primary-foreground hover:bg-primary/85 focus-visible:outline-2 before:absolute before:-inset-1"
+				class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-2 before:absolute before:-inset-1"
 				href={DASHBOARD_URL}
 			>
 				Sign up for free

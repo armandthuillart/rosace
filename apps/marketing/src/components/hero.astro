@@ -8,16 +8,18 @@ import { DASHBOARD_URL } from "astro:env/client";
 			<h1
 				class="text-balance font-medium text-[1.625rem]/tight -tracking-[.0125em]"
 			>
-				Create motion designs so good people watch them on-repeat.
+				Create motion designs so good people watch them on-repeat
 			</h1>
 
 			<a
-				class="relative font-medium h-10.5 pl-[calc(--spacing(5)-1px)] pr-[calc(--spacing(6)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-primary text-primary-foreground hover:bg-primary/85 focus-visible:outline-2 before:absolute before:-inset-6"
+				class="relative font-medium h-10.5 pl-[calc(--spacing(5)-1px)] pr-[calc(--spacing(6)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-2 before:absolute before:-inset-6"
+				data-button
 				href={DASHBOARD_URL}
 			>
 				<svg
 					aria-hidden="true"
 					class="size-4"
+					data-icon
 					fill="currentColor"
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
@@ -29,11 +31,84 @@ import { DASHBOARD_URL } from "astro:env/client";
 		</div>
 
 		<div
-			class="h-170 overflow-hidden w-full bg-[color-mix(in_oklch,var(--color-foreground)_5%,var(--color-background))] relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-foreground/2.5"
+			class="h-170 overflow-hidden w-full bg-accent relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
 		>
 			<div
-				class="bg-material shadow-material h-150 shrink-0 w-5xl rounded-[.625rem] absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
-			/>
+				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-[.625rem] absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
+			>
+				<div
+					class="grid grid-cols-[1fr_auto_1fr] overflow-hidden h-7.5 bg-primary dark:bg-background border-b border-border text-primary-foreground dark:text-foreground"
+				>
+					<div class="inline-flex" />
+
+					<div
+						class="text-[0.6875rem] inline-flex gap-0.75 justify-center text-center items-center"
+					>
+						Rosace
+						<svg
+							aria-hidden="true"
+							class="size-2.5"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#caret-down" />
+						</svg>
+					</div>
+
+					<div class="flex justify-end">
+						<div
+							class="bg-tertiary text-[0.6875rem] inline-flex gap-1.5 text-center items-center text-tertiary-foreground pl-[calc(--spacing(3.5)-1px)] pr-[calc(--spacing(4)-1px)] h-full"
+						>
+							<svg
+								aria-hidden="true"
+								class="size-2.75"
+								fill="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<use href="/sprite.svg#download" />
+							</svg>
+							Export
+						</div>
+					</div>
+				</div>
+
+				<div class="flex flex-1">
+					<div class="w-40 bg-material border-r border-border" />
+					<div class="flex-1" />
+					<div class="w-40 bg-material border-l border-border" />
+				</div>
+
+				<div class="flex h-49 flex-col border-t border-border">
+					<div class="flex h-9 border-b border-border bg-material">
+						<div class="w-40 border-r border-border" />
+						<div class="flex-1" />
+					</div>
+
+					<div class="flex flex-1">
+						<div class="w-40 border-r border-border bg-material" />
+						<div class="flex-1 bg-muted" />
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
+
+<script>
+import gsap from "gsap";
+
+const button = document.querySelector("[data-button]");
+
+if (button) {
+	const icon = button.querySelector("[data-icon]");
+
+	button.addEventListener("mouseenter", () => {
+		gsap
+			.timeline({ overwrite: true })
+			.to(icon, { duration: 1, ease: "power3.out", rotation: "+=360" })
+			.to(icon, { duration: 1, ease: "power4.out", rotation: 0 });
+	});
+}
+</script>
