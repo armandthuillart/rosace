@@ -34,98 +34,126 @@ import { DASHBOARD_URL } from "astro:env/client";
 			class="h-170 select-none overflow-hidden w-full bg-accent relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
 		>
 			<div
-				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-[.625rem] absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
+				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-2xl absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
 			>
 				<div
-					class="grid grid-cols-[1fr_auto_1fr] overflow-hidden h-7.5 bg-primary dark:bg-background border-b border-border text-primary-foreground dark:text-foreground"
+					class="absolute left-3 p-1.5 top-3 w-50 bg-material rounded-lg shadow-material"
 				>
-					<div class="inline-flex" />
-
-					<div
-						class="text-[0.6875rem] inline-flex gap-0.75 justify-center text-center items-center"
-					>
-						Rosace
-						<svg
+					<div class="size-8 rounded-sm flex items-center justify-center">
+						<!-- <svg
 							aria-hidden="true"
-							class="size-2.5"
+							class="size-4"
 							fill="currentColor"
 							viewBox="0 0 24 24"
 							xmlns="http://www.w3.org/2000/svg"
 						>
-							<use href="/sprite.svg#caret-down" />
+							<use href="/sprite.svg#arrow-left" />
+						</svg> -->
+					</div>
+				</div>
+
+				<div
+					class="absolute right-3 p-1.5 top-3 h-11 bg-material rounded-lg shadow-material"
+				>
+					<div
+						class="bg-tertiary font-medium size-full rounded-sm inline-flex gap-1.5 pl-[calc(--spacing(3.5)-1px)] pr-[calc(--spacing(4)-1px)] text-xs text-tertiary-foreground items-center text-center justify-center"
+					>
+						<svg
+							aria-hidden="true"
+							class="size-3"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#download" />
+						</svg>
+						Export
+					</div>
+				</div>
+
+				<div
+					class="absolute overflow-hidden h-19.5 bottom-6 left-1/2 rounded-2xl bg-material shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex"
+				>
+					<div
+						class="inset-2 right-auto rounded-lg bg-material w-11 flex items-center justify-center absolute z-1 shadow-timeline text-muted-foreground -space-x-px"
+					>
+						<svg
+							aria-hidden="true"
+							class="size-3.5"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#play" />
+						</svg>
+
+						<svg
+							aria-hidden="true"
+							class="size-3.5"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#pause" />
 						</svg>
 					</div>
 
-					<div class="flex justify-end">
-						<div
-							class="bg-tertiary text-[0.6875rem] inline-flex gap-1.5 text-center items-center text-tertiary-foreground pl-[calc(--spacing(3.5)-1px)] pr-[calc(--spacing(4)-1px)] h-full"
-						>
-							<svg
-								aria-hidden="true"
-								class="size-2.75"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<use href="/sprite.svg#download" />
-							</svg>
-							Export
-						</div>
-					</div>
-				</div>
-
-				<div class="flex flex-1">
-					<div class="w-40 bg-material border-r border-border" />
-					<div class="flex-1" />
-					<div class="w-40 bg-material border-l border-border" />
-				</div>
-
-				<div class="flex h-49 flex-col border-t border-border">
-					<div class="flex h-9 border-b border-border bg-material">
-						<div
-							class="w-40 text-muted-foreground px-2 flex items-center justify-between border-r border-border"
-						>
-							<span class="text-[0.625rem]">00:00</span>
-
-							<svg
-								aria-hidden="true"
-								class="size-3.25"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<use href="/sprite.svg#previous" />
-							</svg>
-
-							<svg
-								aria-hidden="true"
-								class="size-3.5"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<use href="/sprite.svg#pause" />
-							</svg>
-
-							<svg
-								aria-hidden="true"
-								class="size-3.25"
-								fill="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<use href="/sprite.svg#next" />
-							</svg>
-
-							<span class="text-[0.625rem] text-muted-foreground">00:00</span>
+					<div
+						class="-ml-10 flex flex-col h-full w-48 border-r border-border/75"
+					>
+						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
+							1
 						</div>
 
-						<div class="flex-1" />
+						<div class="relative h-6.5 bg-muted border-y border-border/50">
+							<div
+								class="left-1/2 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+							>
+								<div class="size-full bg-tertiary rounded-full" />
+							</div>
+						</div>
 					</div>
 
-					<div class="flex flex-1">
-						<div class="w-40 border-r border-border bg-material" />
-						<div class="flex-1 bg-muted" />
+					<div class="flex flex-col h-full w-48 border-r border-border/75">
+						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
+							2
+						</div>
+
+						<div class="relative h-6.5 bg-muted border-y border-border/50">
+							<div
+								class="left-1/4 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+							>
+								<div class="size-full bg-tertiary rounded-full" />
+							</div>
+						</div>
+					</div>
+
+					<div class="flex flex-col h-full w-48 border-r border-border/75">
+						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
+							3
+						</div>
+
+						<div class="relative h-6.5 bg-muted border-y border-border/50">
+							<div
+								class="left-4/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+							>
+								<div class="size-full bg-tertiary rounded-full" />
+							</div>
+						</div>
+					</div>
+
+					<div class="flex flex-col h-full w-48 border-r border-border/75">
+						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
+							4
+						</div>
+
+						<div class="relative h-6.5 bg-muted border-y border-border/50">
+							<div
+								class="left-6/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+							>
+								<div class="size-full bg-tertiary rounded-full" />
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
