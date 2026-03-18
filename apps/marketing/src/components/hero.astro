@@ -31,7 +31,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 		</div>
 
 		<div
-			class="h-170 overflow-hidden w-full bg-accent relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
+			class="h-170 select-none overflow-hidden w-full bg-accent relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
 		>
 			<div
 				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-[.625rem] absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
@@ -82,7 +82,44 @@ import { DASHBOARD_URL } from "astro:env/client";
 
 				<div class="flex h-49 flex-col border-t border-border">
 					<div class="flex h-9 border-b border-border bg-material">
-						<div class="w-40 border-r border-border" />
+						<div
+							class="w-40 text-muted-foreground px-2 flex items-center justify-between border-r border-border"
+						>
+							<span class="text-[0.625rem]">00:00</span>
+
+							<svg
+								aria-hidden="true"
+								class="size-3.25"
+								fill="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<use href="/sprite.svg#previous" />
+							</svg>
+
+							<svg
+								aria-hidden="true"
+								class="size-3.5"
+								fill="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<use href="/sprite.svg#pause" />
+							</svg>
+
+							<svg
+								aria-hidden="true"
+								class="size-3.25"
+								fill="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<use href="/sprite.svg#next" />
+							</svg>
+
+							<span class="text-[0.625rem] text-muted-foreground">00:00</span>
+						</div>
+
 						<div class="flex-1" />
 					</div>
 
