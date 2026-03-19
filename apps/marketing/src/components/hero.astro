@@ -184,19 +184,27 @@ import { DASHBOARD_URL } from "astro:env/client";
 
 				<div
 					class="absolute overflow-hidden h-18 bottom-6 left-1/2 rounded-2xl bg-material shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex"
+					data-timeline-viewport
 				>
-					<div class="z-20 absolute left-4/10 top-1.25 bottom-0 flex flex-col">
+					<div
+						class="z-20 absolute left-0 top-1.25 bottom-0 flex flex-col pointer-events-none"
+						data-timeline-time
+					>
 						<div
-							class="z-10 text-[.625rem] bg-octonary text-octonary-foreground rounded-full p-1 h-4 inline-flex items-center justify-center"
+							class="z-10 text-[.625rem] tabular-nums bg-octonary text-octonary-foreground rounded-full p-1 text-center min w-11 h-4 inline-flex items-center justify-center"
+							data-timeline-time-label
 						>
-							0:00
+							00:00
 						</div>
 
-						<div class="z-0 h-full w-px bg-octonary left-1/2 absolute" />
+						<div
+							class="z-0 h-full w-px bg-octonary left-1/2 absolute -translate-x-1/2"
+						/>
 					</div>
 
 					<div
 						class="inset-2 right-auto rounded-lg bg-material px-2 flex items-center justify-center absolute z-30 shadow-timeline text-muted-foreground"
+						data-timeline-controls
 					>
 						<svg
 							aria-hidden="true"
@@ -219,61 +227,87 @@ import { DASHBOARD_URL } from "astro:env/client";
 						</svg>
 					</div>
 
-					<div
-						class="-ml-10 flex flex-col h-full w-48 border-r border-border/75"
-					>
-						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
-							1s
-						</div>
+					<div data-timeline class="flex shrink-0">
+						<div class="flex flex-col h-full w-48 border-r border-border/75">
+							<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+								0s
+							</div>
 
-						<div class="relative h-6 bg-muted border-y border-border/50">
-							<div
-								class="left-1/2 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
-							>
-								<div class="size-full bg-tertiary rounded-full" />
+							<div class="relative h-6 bg-muted border-y border-border/50">
+								<div
+									class="left-1/2 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+								>
+									<div class="size-full bg-tertiary rounded-full" />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
-							2s
-						</div>
+						<div class="flex flex-col h-full w-48 border-r border-border/75">
+							<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+								1s
+							</div>
 
-						<div class="relative h-6 bg-muted border-y border-border/50">
-							<div
-								class="left-1/4 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
-							>
-								<div class="size-full bg-tertiary rounded-full" />
+							<div class="relative h-6 bg-muted border-y border-border/50">
+								<div
+									class="left-1/2 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+								>
+									<div class="size-full bg-tertiary rounded-full" />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
-							3s
-						</div>
+						<div class="flex flex-col h-full w-48 border-r border-border/75">
+							<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+								2s
+							</div>
 
-						<div class="relative h-6 bg-muted border-y border-border/50">
-							<div
-								class="left-4/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
-							>
-								<div class="size-full bg-tertiary rounded-full" />
+							<div class="relative h-6 bg-muted border-y border-border/50">
+								<div
+									class="left-1/4 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+								>
+									<div class="size-full bg-tertiary rounded-full" />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
-							4s
+						<div class="flex flex-col h-full w-48 border-r border-border/75">
+							<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+								3s
+							</div>
+
+							<div class="relative h-6 bg-muted border-y border-border/50">
+								<div
+									class="left-4/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+								>
+									<div class="size-full bg-tertiary rounded-full" />
+								</div>
+							</div>
 						</div>
 
-						<div class="relative h-6 bg-muted border-y border-border/50">
-							<div
-								class="left-6/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
-							>
-								<div class="size-full bg-tertiary rounded-full" />
+						<div class="flex flex-col h-full w-48 border-r border-border/75">
+							<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+								4s
 							</div>
+
+							<div class="relative h-6 bg-muted border-y border-border/50">
+								<div
+									class="left-6/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
+								>
+									<div class="size-full bg-tertiary rounded-full" />
+								</div>
+							</div>
+						</div>
+
+						<div
+							class="relative flex flex-col h-full w-0 shrink-0 overflow-visible border-r border-border/75"
+						>
+							<div
+								class="absolute right-1.5 h-6 pt-1.25 text-xs text-muted-foreground/75 whitespace-nowrap"
+							>
+								5s
+							</div>
+
+							<div class="relative h-6 w-0 border-y border-border/50" />
 						</div>
 					</div>
 				</div>
@@ -292,9 +326,155 @@ if (button) {
 
 	button.addEventListener("mouseenter", () => {
 		gsap
-			.timeline({ overwrite: true })
-			.to(icon, { duration: 1, ease: "power3.out", rotation: "+=360" })
-			.to(icon, { duration: 1, ease: "power4.out", rotation: 0 });
+			.timeline({
+				overwrite: true,
+			})
+			.to(icon, {
+				duration: 1,
+				ease: "power3.out",
+				rotation: "+=360",
+			})
+			.to(icon, {
+				duration: 1,
+				ease: "power4.out",
+				rotation: 0,
+			});
 	});
+}
+
+// AI-gen code:
+const timelineViewport = document.querySelector<HTMLElement>(
+	"[data-timeline-viewport]",
+);
+const timelineTrack = document.querySelector<HTMLElement>("[data-timeline]");
+const timelineTime = document.querySelector<HTMLElement>(
+	"[data-timeline-time]",
+);
+const timelineTimeLabel = document.querySelector<HTMLElement>(
+	"[data-timeline-time-label]",
+);
+
+if (timelineViewport && timelineTrack && timelineTime && timelineTimeLabel) {
+	const DURATION_SECONDS = 5;
+	const PLAYHEAD_RATIO = 0.4;
+	const prefersReducedMotion = window.matchMedia(
+		"(prefers-reduced-motion: reduce)",
+	).matches;
+	const playbackState = { time: 0 };
+	let playbackTween: gsap.core.Tween | undefined;
+
+	if (timelineTrack.children.length === DURATION_SECONDS + 1) {
+		const timelineCycle = Array.from(timelineTrack.children);
+		const previousCycle = document.createDocumentFragment();
+		const nextCycle = document.createDocumentFragment();
+
+		for (const item of timelineCycle) {
+			previousCycle.append(item.cloneNode(true));
+			nextCycle.append(item.cloneNode(true));
+		}
+
+		timelineTrack.prepend(previousCycle);
+		timelineTrack.append(nextCycle);
+	}
+
+	const formatPlaybackTime = (time: number) => {
+		const centiseconds = Math.round(
+			gsap.utils.clamp(0, DURATION_SECONDS, time) * 100,
+		);
+		const seconds = Math.floor(centiseconds / 100);
+		const remainder = centiseconds % 100;
+
+		return `${String(seconds).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+	};
+
+	const timelineStops = Array.from(timelineTrack.children).slice(
+		DURATION_SECONDS + 1,
+		(DURATION_SECONDS + 1) * 2,
+	) as HTMLElement[];
+
+	const getTimelineLayout = () => {
+		const viewportRect = timelineViewport.getBoundingClientRect();
+		const playheadWidth = timelineTime.offsetWidth;
+		const playheadCenter = viewportRect.width * PLAYHEAD_RATIO;
+		const playheadX = playheadCenter - playheadWidth / 2;
+		const secondStops = timelineStops.map((stop) => stop.offsetLeft);
+
+		return {
+			playheadCenter,
+			playheadX,
+			secondStops,
+		};
+	};
+
+	const getTrackXForTime = (
+		time: number,
+		layout: ReturnType<typeof getTimelineLayout>,
+	) => {
+		const clampedTime = gsap.utils.clamp(0, DURATION_SECONDS, time);
+		const currentSecond = Math.floor(clampedTime);
+		const progressToNextSecond = clampedTime - currentSecond;
+		const startStop =
+			layout.secondStops[currentSecond] ?? layout.secondStops.at(-1) ?? 0;
+		const endStop =
+			layout.secondStops[Math.min(currentSecond + 1, DURATION_SECONDS)] ??
+			startStop;
+		const currentStop = gsap.utils.interpolate(
+			startStop,
+			endStop,
+			progressToNextSecond,
+		);
+
+		return layout.playheadCenter - currentStop;
+	};
+
+	const renderTimeline = (layout: ReturnType<typeof getTimelineLayout>) => {
+		timelineTimeLabel.textContent = formatPlaybackTime(playbackState.time);
+		gsap.set(timelineTime, { x: layout.playheadX });
+		gsap.set(timelineTrack, {
+			x: getTrackXForTime(playbackState.time, layout),
+		});
+	};
+
+	const cleanup = () => {
+		playbackTween?.kill();
+		timelineTime.style.willChange = "auto";
+		timelineTrack.style.willChange = "auto";
+	};
+
+	const syncTimeline = () => {
+		cleanup();
+
+		const layout = getTimelineLayout();
+		playbackState.time = 0;
+		renderTimeline(layout);
+
+		if (prefersReducedMotion) {
+			return;
+		}
+
+		timelineTime.style.willChange = "transform";
+		timelineTrack.style.willChange = "transform";
+
+		playbackTween = gsap.to(playbackState, {
+			duration: DURATION_SECONDS,
+			ease: "none",
+			onUpdate: () => {
+				renderTimeline(layout);
+			},
+			repeat: -1,
+			time: DURATION_SECONDS,
+		});
+	};
+
+	syncTimeline();
+	window.addEventListener("resize", syncTimeline);
+	window.addEventListener(
+		"pagehide",
+		() => {
+			window.removeEventListener("resize", syncTimeline);
+			cleanup();
+		},
+		{ once: true },
+	);
 }
 </script>
