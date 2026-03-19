@@ -31,32 +31,143 @@ import { DASHBOARD_URL } from "astro:env/client";
 		</div>
 
 		<div
-			class="h-170 select-none overflow-hidden w-full bg-accent relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
+			class="h-170 select-none overflow-hidden w-full bg-card relative rounded-sm after:absolute after:border after:inset-0 after:rounded-[inherit] after:pointer-events-none after:border-border/25"
 		>
 			<div
-				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-2xl absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
+				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-[1.375rem] items-center justify-center absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
 			>
 				<div
-					class="absolute left-3 p-1.5 top-3 w-50 bg-material rounded-lg shadow-material"
+					class="-mt-10 border-2 border-tertiary relative aspect-video w-xl bg-muted"
 				>
-					<div class="size-8 rounded-sm flex items-center justify-center">
-						<!-- <svg
+					<div
+						class="absolute -top-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
+					/>
+					<div
+						class="absolute -top-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
+					/>
+					<div
+						class="absolute -bottom-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
+					/>
+					<div
+						class="absolute -bottom-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
+					/>
+				</div>
+
+				<div
+					class="absolute left-3 p-1.75 top-3 bg-material rounded-xl shadow-material"
+				>
+					<div class="size-7.5 rounded-md flex items-center justify-center">
+						<svg
 							aria-hidden="true"
-							class="size-4"
+							class="size-4.75"
 							fill="currentColor"
 							viewBox="0 0 24 24"
 							xmlns="http://www.w3.org/2000/svg"
 						>
-							<use href="/sprite.svg#arrow-left" />
-						</svg> -->
+							<use href="/sprite.svg#lockup" />
+						</svg>
 					</div>
 				</div>
 
 				<div
-					class="absolute right-3 p-1.5 top-3 h-11 bg-material rounded-lg shadow-material"
+					class="flex gap-1.75 top-3 left-1/2 -translate-x-1/2 absolute p-1.75 bg-material rounded-xl shadow-timeline"
 				>
 					<div
-						class="bg-tertiary font-medium size-full rounded-sm inline-flex gap-1.5 pl-[calc(--spacing(3.5)-1px)] pr-[calc(--spacing(4)-1px)] text-xs text-tertiary-foreground items-center text-center justify-center"
+						class="size-7.5 flex items-center justify-center bg-tertiary text-tertiary-foreground rounded-md"
+					>
+						<svg
+							aria-hidden="true"
+							class="size-4.75 translate-x-[.75px]"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#cursor" />
+						</svg>
+					</div>
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#hold" />
+						</svg>
+					</div>
+
+					<div class="-my-2 w-px bg-border" />
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#text" />
+						</svg>
+					</div>
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#square" />
+						</svg>
+					</div>
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#ellipse" />
+						</svg>
+					</div>
+
+					<div class="-my-2 w-px bg-border" />
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#image" />
+						</svg>
+					</div>
+
+					<div class="size-7.5 flex items-center justify-center rounded-md">
+						<svg
+							aria-hidden="true"
+							class="size-4.75"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#music" />
+						</svg>
+					</div>
+				</div>
+
+				<div
+					class="absolute right-3 p-1.75 top-3 bg-material rounded-xl shadow-material"
+				>
+					<div
+						class="bg-tertiary font-medium h-7.5 rounded-md inline-flex gap-1 pl-3 pr-3.5 text-xs text-tertiary-foreground items-center text-center justify-center"
 					>
 						<svg
 							aria-hidden="true"
@@ -72,10 +183,20 @@ import { DASHBOARD_URL } from "astro:env/client";
 				</div>
 
 				<div
-					class="absolute overflow-hidden h-19.5 bottom-6 left-1/2 rounded-2xl bg-material shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex"
+					class="absolute overflow-hidden h-18 bottom-6 left-1/2 rounded-2xl bg-material shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex"
 				>
+					<div class="z-20 absolute left-4/10 top-1.25 bottom-0 flex flex-col">
+						<div
+							class="z-10 text-[.625rem] bg-octonary text-octonary-foreground rounded-full p-1 h-4 inline-flex items-center justify-center"
+						>
+							0:00
+						</div>
+
+						<div class="z-0 h-full w-px bg-octonary left-1/2 absolute" />
+					</div>
+
 					<div
-						class="inset-2 right-auto rounded-lg bg-material w-11 flex items-center justify-center absolute z-1 shadow-timeline text-muted-foreground -space-x-px"
+						class="inset-2 right-auto rounded-lg bg-material px-2 flex items-center justify-center absolute z-30 shadow-timeline text-muted-foreground"
 					>
 						<svg
 							aria-hidden="true"
@@ -101,11 +222,11 @@ import { DASHBOARD_URL } from "astro:env/client";
 					<div
 						class="-ml-10 flex flex-col h-full w-48 border-r border-border/75"
 					>
-						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
-							1
+						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+							1s
 						</div>
 
-						<div class="relative h-6.5 bg-muted border-y border-border/50">
+						<div class="relative h-6 bg-muted border-y border-border/50">
 							<div
 								class="left-1/2 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
 							>
@@ -115,11 +236,11 @@ import { DASHBOARD_URL } from "astro:env/client";
 					</div>
 
 					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
-							2
+						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+							2s
 						</div>
 
-						<div class="relative h-6.5 bg-muted border-y border-border/50">
+						<div class="relative h-6 bg-muted border-y border-border/50">
 							<div
 								class="left-1/4 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
 							>
@@ -129,11 +250,11 @@ import { DASHBOARD_URL } from "astro:env/client";
 					</div>
 
 					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
-							3
+						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+							3s
 						</div>
 
-						<div class="relative h-6.5 bg-muted border-y border-border/50">
+						<div class="relative h-6 bg-muted border-y border-border/50">
 							<div
 								class="left-4/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
 							>
@@ -143,11 +264,11 @@ import { DASHBOARD_URL } from "astro:env/client";
 					</div>
 
 					<div class="flex flex-col h-full w-48 border-r border-border/75">
-						<div class="h-6.5 pl-1.5 pt-1 text-xs text-muted-foreground/75">
-							4
+						<div class="h-6 pl-1.5 pt-1.25 text-xs text-muted-foreground/75">
+							4s
 						</div>
 
-						<div class="relative h-6.5 bg-muted border-y border-border/50">
+						<div class="relative h-6 bg-muted border-y border-border/50">
 							<div
 								class="left-6/10 size-6.5 p-0.75 border border-border bg-material rounded-full absolute top-1/2 -translate-y-1/2"
 							>
