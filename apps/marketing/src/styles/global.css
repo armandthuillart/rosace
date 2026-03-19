@@ -8,6 +8,7 @@
 	--color-canvas: var(--canvas);
 	--color-foreground: var(--foreground);
 	--color-material: var(--material);
+	--color-material-accent: var(--material-accent);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);
 	--color-octonary: var(--octonary);
@@ -39,6 +40,7 @@
 	--card: oklch(95.5% 0 0);
 	--foreground: oklch(29.3% 0 0);
 	--material: oklch(100% 0 0);
+	--material-accent: oklch(97% 0 0);
 	--muted: oklch(98.5% 0 0);
 	--muted-foreground: oklch(56.2% 0 0);
 	--octonary: oklch(64.2% 0.212 33.7);
@@ -78,6 +80,7 @@
 		--card: oklch(29.3% 0 0);
 		--foreground: oklch(92.5% 0 0);
 		--material: oklch(29.3% 0 0);
+		--material-accent: oklch(34.1% 0 0);
 		--muted: oklch(26.9% 0 0);
 		--muted-foreground: oklch(76.7% 0 0);
 		--octonary: oklch(60.2% 0.204 33.5);

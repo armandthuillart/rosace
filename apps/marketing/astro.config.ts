@@ -36,6 +36,11 @@ export default defineConfig({
 						style: "normal",
 						weight: "500",
 					},
+					{
+						src: ["./src/assets/fonts/inter-semibold.woff2"],
+						style: "normal",
+						weight: "600",
+					},
 				],
 			},
 			provider: fontProviders.local(),
