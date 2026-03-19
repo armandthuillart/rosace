@@ -20,7 +20,7 @@
 			class="overflow-hidden lg:w-2/3 h-170 p-12 bg-card rounded-sm relative after:absolute after:inset-0 after:rounded-sm after:pointer-events-none after:border after:border-border/50"
 		>
 			<div
-				class="bg-material dark:bg-canvas overflow-hidden w-xs mx-auto h-full shadow-canvas rounded-2xl p-8 flex flex-col gap-6"
+				class="select-none bg-material dark:bg-canvas overflow-hidden w-xs mx-auto h-full shadow-canvas rounded-2xl p-8 flex flex-col gap-6"
 				data-preset-demo
 			>
 				<div class="flex flex-col gap-4">
@@ -173,340 +173,340 @@
 
 <script>
 import gsap from "gsap";
-import { CustomEase } from "gsap/all";
 import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(CustomEase, SplitText);
+gsap.registerPlugin(SplitText);
 
-const presetDemo = document.querySelector("[data-preset-demo]");
+type PresetName =
+	| "blur-in"
+	| "blur-slide"
+	| "mask-in-top"
+	| "mask-in-bottom"
+	| "mask-out-top"
+	| "mask-out-bottom";
+
+type PresetDemoElement = HTMLElement & {
+	__presetCleanup?: () => void;
+};
+
+const presetDemo = document.querySelector(
+	"[data-preset-demo]",
+) as PresetDemoElement | null;
+const reducedMotionQuery = window.matchMedia(
+	"(prefers-reduced-motion: reduce)",
+);
 
 if (presetDemo) {
-	const selector = gsap.utils.selector(presetDemo);
-	const presetElements = selector("[data-split-preset]").filter(
-		(element): element is HTMLElement => element instanceof HTMLElement,
+	presetDemo.__presetCleanup?.();
+
+	const presetTargets = Array.from(
+		presetDemo.querySelectorAll<HTMLElement>("[data-split-preset]"),
 	);
+	const splitTargets = [] as SplitText[];
+	const animations = [] as gsap.core.Animation[];
+	const step = {
+		enter: 0.8,
+		exit: 0.65,
+		hold: 0.35,
+		staggerIn: 0.045,
+		staggerOut: 0.035,
+	};
 
-	const wrapChars = (chars: Element[]) =>
-		chars
-			.filter((char): char is HTMLElement => char instanceof HTMLElement)
-			.map((char) => {
-				const wrapper = document.createElement("span");
-				wrapper.className = "preset-char-mask";
-				char.parentNode?.insertBefore(wrapper, char);
-				wrapper.appendChild(char);
+	const clearAnimations = () => {
+		while (animations.length > 0) {
+			animations.pop()?.kill();
+		}
 
-				return {
-					char,
-					wrapper,
-				};
-			});
+		while (splitTargets.length > 0) {
+			splitTargets.pop()?.revert();
+		}
 
-	const splitInstances = presetElements.map((element) => {
-		const split = new SplitText(element, {
-			charsClass: "preset-char",
-			type: "chars",
+		gsap.set(presetTargets, {
+			clearProps: "all",
+		});
+	};
+
+	const setStaticState = () => {
+		clearAnimations();
+
+		gsap.set(presetTargets, {
+			autoAlpha: 1,
+			clearProps: "all",
+			filter: "blur(0px)",
+		});
+	};
+
+	const splitPreset = (target: HTMLElement) => {
+		gsap.set(target, {
+			display: "inline-block",
+			overflow: "hidden",
 		});
 
-		return {
-			chars: wrapChars(split.chars),
-			element,
-			split,
-		};
-	});
+		const split = new SplitText(target, {
+			type: "chars",
+		});
+		const chars = split.chars as HTMLElement[];
 
-	const getChars = (preset: string) =>
-		splitInstances.find(({ element }) => element.dataset.splitPreset === preset)
-			?.chars ?? [];
+		splitTargets.push(split);
 
-	const blurInChars = getChars("blur-in");
-	const blurSlideChars = getChars("blur-slide");
-	const maskInTopChars = getChars("mask-in-top");
-	const maskInBottomChars = getChars("mask-in-bottom");
-	const maskOutTopChars = getChars("mask-out-top");
-	const maskOutBottomChars = getChars("mask-out-bottom");
-	const allChars = splitInstances.flatMap(({ chars }) =>
-		chars.map(({ char }) => char),
-	);
-	const allWrappers = splitInstances.flatMap(({ chars }) =>
-		chars.map(({ wrapper }) => wrapper),
-	);
-	const blurInTargets = blurInChars.map(({ char }) => char);
-	const blurSlideTargets = blurSlideChars.map(({ char }) => char);
-	const maskInTopTargets = maskInTopChars.map(({ char }) => char);
-	const maskInBottomTargets = maskInBottomChars.map(({ char }) => char);
-	const maskOutTopTargets = maskOutTopChars.map(({ char }) => char);
-	const maskOutBottomTargets = maskOutBottomChars.map(({ char }) => char);
-	const maskInTopWrappers = maskInTopChars.map(({ wrapper }) => wrapper);
-	const maskInBottomWrappers = maskInBottomChars.map(({ wrapper }) => wrapper);
-	const maskOutTopWrappers = maskOutTopChars.map(({ wrapper }) => wrapper);
-	const maskOutBottomWrappers = maskOutBottomChars.map(
-		({ wrapper }) => wrapper,
-	);
+		gsap.set(chars, {
+			display: "inline-block",
+			transformOrigin: "50% 50%",
+			willChange: "transform, opacity, filter, clip-path",
+		});
 
-	const timings = {
-		playDuration: 0.72,
-		playWindow: 0.16,
-		resetDuration: 0.68,
-		resetStart: 1.78,
-		resetWindow: 0.14,
+		return chars;
 	};
 
-	const eases = {
-		play: CustomEase.create("feature-preset-play", "M0,0 C0.18,1 0.32,1 1,1"),
-		reset: CustomEase.create("feature-preset-reset", "M0,0 C0.32,0 0.12,1 1,1"),
-	};
+	const createBlurIn = (chars: HTMLElement[], delay: number) => {
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
 
-	gsap.set(allWrappers, {
-		display: "inline-block",
-		lineHeight: 1,
-		overflow: "hidden",
-		verticalAlign: "top",
-		willChange: "clip-path",
-	});
-
-	gsap.set(allChars, {
-		autoAlpha: 1,
-		display: "inline-block",
-		force3D: true,
-		rotateZ: 0.01,
-		scale: 1,
-		transformOrigin: "50% 50%",
-		willChange: "transform, opacity, filter",
-		yPercent: 0,
-	});
-
-	const getStagger = (
-		targets: HTMLElement[],
-		window: number,
-		from: "start" | "end" = "start",
-	) => {
-		if (targets.length <= 1) {
-			return 0;
-		}
-
-		const each = window / (targets.length - 1);
-
-		if (from === "end") {
-			return {
-				each,
-				from: "end" as const,
-			};
-		}
-
-		return each;
-	};
-
-	type Preset = {
-		playChar: gsap.TweenVars;
-		playWrapper?: gsap.TweenVars;
-		resetChar: gsap.TweenVars;
-		resetWrapper?: gsap.TweenVars;
-		startChar: gsap.TweenVars;
-		startWrapper?: gsap.TweenVars;
-		targets: HTMLElement[];
-		wrappers: HTMLElement[];
-	};
-
-	const presets: Preset[] = [
-		{
-			playChar: {
+		timeline
+			.set(chars, {
+				autoAlpha: 0.2,
+				filter: "blur(4px)",
+				scale: 0.96,
+				yPercent: 0,
+			})
+			.to(chars, {
 				autoAlpha: 1,
+				duration: step.enter * 0.7,
+				ease: "power4.out",
 				filter: "blur(0px)",
 				scale: 1,
-				yPercent: 0,
-			},
-			resetChar: {
-				autoAlpha: 0,
-				filter: "blur(6px)",
-				scale: 0.97,
-				yPercent: 0,
-			},
-			startChar: {
-				autoAlpha: 0,
-				filter: "blur(6px)",
-				scale: 0.97,
-				yPercent: 0,
-			},
-			targets: blurInTargets,
-			wrappers: [],
-		},
-		{
-			playChar: {
-				autoAlpha: 1,
-				filter: "blur(0px)",
-				scale: 1,
-				yPercent: 0,
-			},
-			resetChar: {
-				autoAlpha: 0,
-				filter: "blur(6px)",
-				scale: 0.985,
-				yPercent: 24,
-			},
-			startChar: {
-				autoAlpha: 0,
-				filter: "blur(6px)",
-				scale: 0.985,
-				yPercent: 24,
-			},
-			targets: blurSlideTargets,
-			wrappers: [],
-		},
-		{
-			playChar: {
-				yPercent: 0,
-			},
-			playWrapper: {
-				clipPath: "inset(0% 0% 0% 0%)",
-			},
-			resetChar: {
-				yPercent: -18,
-			},
-			resetWrapper: {
-				clipPath: "inset(0% 0% 100% 0%)",
-			},
-			startChar: {
-				yPercent: -18,
-			},
-			startWrapper: {
-				clipPath: "inset(0% 0% 100% 0%)",
-			},
-			targets: maskInTopTargets,
-			wrappers: maskInTopWrappers,
-		},
-		{
-			playChar: {
-				yPercent: 0,
-			},
-			playWrapper: {
-				clipPath: "inset(0% 0% 0% 0%)",
-			},
-			resetChar: {
-				yPercent: 18,
-			},
-			resetWrapper: {
-				clipPath: "inset(100% 0% 0% 0%)",
-			},
-			startChar: {
-				yPercent: 18,
-			},
-			startWrapper: {
-				clipPath: "inset(100% 0% 0% 0%)",
-			},
-			targets: maskInBottomTargets,
-			wrappers: maskInBottomWrappers,
-		},
-		{
-			playChar: {
-				yPercent: 0,
-			},
-			playWrapper: {
-				clipPath: "inset(0% 0% 0% 0%)",
-			},
-			resetChar: {
-				yPercent: -18,
-			},
-			resetWrapper: {
-				clipPath: "inset(0% 0% 100% 0%)",
-			},
-			startChar: {
-				yPercent: -18,
-			},
-			startWrapper: {
-				clipPath: "inset(0% 0% 100% 0%)",
-			},
-			targets: maskOutTopTargets,
-			wrappers: maskOutTopWrappers,
-		},
-		{
-			playChar: {
-				yPercent: 0,
-			},
-			playWrapper: {
-				clipPath: "inset(0% 0% 0% 0%)",
-			},
-			resetChar: {
-				yPercent: 18,
-			},
-			resetWrapper: {
-				clipPath: "inset(100% 0% 0% 0%)",
-			},
-			startChar: {
-				yPercent: 18,
-			},
-			startWrapper: {
-				clipPath: "inset(100% 0% 0% 0%)",
-			},
-			targets: maskOutBottomTargets,
-			wrappers: maskOutBottomWrappers,
-		},
-	];
-
-	const setState = ({ startChar, startWrapper, targets, wrappers }: Preset) => {
-		gsap.set(targets, startChar);
-
-		if (wrappers.length > 0) {
-			gsap.set(wrappers, startWrapper ?? { clipPath: "inset(0% 0% 0% 0%)" });
-		}
-	};
-
-	presets.forEach(setState);
-
-	const timeline = gsap.timeline({
-		id: "feature-presets",
-		repeat: -1,
-		repeatDelay: 0.08,
-	});
-
-	for (const preset of presets) {
-		timeline.to(
-			preset.targets,
-			{
-				duration: timings.playDuration,
-				ease: eases.play,
-				...preset.playChar,
-				stagger: getStagger(preset.targets, timings.playWindow),
-			},
-			0,
-		);
-
-		if (preset.wrappers.length > 0 && preset.playWrapper) {
-			timeline.to(
-				preset.wrappers,
+				stagger: step.staggerIn,
+			})
+			.to(
+				chars,
 				{
-					duration: timings.playDuration,
-					ease: eases.play,
-					...preset.playWrapper,
-					stagger: getStagger(preset.wrappers, timings.playWindow),
+					autoAlpha: 1,
+					duration: step.hold,
+					ease: "none",
+					filter: "blur(0px)",
+					scale: 1,
+				},
+				">",
+			)
+			.to(chars, {
+				autoAlpha: 0.2,
+				duration: step.exit * 0.8,
+				ease: "power2.in",
+				filter: "blur(4px)",
+				scale: 0.96,
+				stagger: step.staggerOut,
+			});
+
+		return timeline;
+	};
+
+	const createBlurSlide = (chars: HTMLElement[], delay: number) => {
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				autoAlpha: 0.25,
+				filter: "blur(3px)",
+				yPercent: 100,
+			})
+			.to(chars, {
+				autoAlpha: 1,
+				duration: step.enter * 0.75,
+				ease: "power3.out",
+				filter: "blur(0px)",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			})
+			.to(chars, {
+				autoAlpha: 0.25,
+				duration: step.enter * 0.85,
+				ease: "power2.in",
+				filter: "blur(3px)",
+				stagger: step.staggerOut,
+				yPercent: -100,
+			});
+
+		return timeline;
+	};
+
+	const createMaskIn = (
+		chars: HTMLElement[],
+		delay: number,
+		direction: "top" | "bottom",
+	) => {
+		const hiddenState =
+			direction === "top"
+				? {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					}
+				: {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					};
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				...hiddenState,
+				autoAlpha: 1,
+			})
+			.to(chars, {
+				clipPath: "inset(0% 0% 0% 0%)",
+				duration: step.enter,
+				ease: "power4.out",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			})
+			.to(
+				chars,
+				{
+					duration: step.hold,
+					ease: "none",
+				},
+				">",
+			)
+			.to(chars, {
+				...hiddenState,
+				duration: step.exit,
+				ease: "power2.in",
+				stagger: step.staggerOut,
+			});
+
+		return timeline;
+	};
+
+	const createMaskOut = (
+		chars: HTMLElement[],
+		delay: number,
+		direction: "top" | "bottom",
+	) => {
+		const exitState =
+			direction === "top"
+				? {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					}
+				: {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					};
+		const resetState =
+			direction === "top"
+				? {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					}
+				: {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					};
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				autoAlpha: 1,
+				clipPath: "inset(0% 0% 0% 0%)",
+				yPercent: 0,
+			})
+			.to(
+				chars,
+				{
+					duration: step.hold,
+					ease: "none",
 				},
 				0,
-			);
+			)
+			.to(chars, {
+				...exitState,
+				duration: step.exit,
+				ease: "power2.in",
+				stagger: step.staggerOut,
+			})
+			.set(chars, resetState)
+			.to(chars, {
+				clipPath: "inset(0% 0% 0% 0%)",
+				duration: step.enter,
+				ease: "power4.out",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			});
+
+		return timeline;
+	};
+
+	const animationFactories: Record<
+		PresetName,
+		(chars: HTMLElement[], delay: number) => gsap.core.Animation
+	> = {
+		"blur-in": createBlurIn,
+		"blur-slide": createBlurSlide,
+		"mask-in-bottom": (chars, delay) => createMaskIn(chars, delay, "bottom"),
+		"mask-in-top": (chars, delay) => createMaskIn(chars, delay, "top"),
+		"mask-out-bottom": (chars, delay) => createMaskOut(chars, delay, "bottom"),
+		"mask-out-top": (chars, delay) => createMaskOut(chars, delay, "top"),
+	};
+
+	const buildPresetAnimations = () => {
+		clearAnimations();
+
+		if (reducedMotionQuery.matches) {
+			setStaticState();
+			return;
 		}
 
-		timeline.to(
-			preset.targets,
-			{
-				duration: timings.resetDuration,
-				ease: eases.reset,
-				...preset.resetChar,
-				stagger: getStagger(preset.targets, timings.resetWindow, "end"),
-			},
-			timings.resetStart,
-		);
+		presetTargets.forEach((target, index) => {
+			const presetName = target.dataset.splitPreset as PresetName | undefined;
 
-		if (preset.wrappers.length > 0 && preset.resetWrapper) {
-			timeline.to(
-				preset.wrappers,
-				{
-					duration: timings.resetDuration,
-					ease: eases.reset,
-					...preset.resetWrapper,
-					stagger: getStagger(preset.wrappers, timings.resetWindow, "end"),
-				},
-				timings.resetStart,
-			);
-		}
-	}
+			if (!presetName) {
+				return;
+			}
+
+			const createAnimation = animationFactories[presetName];
+
+			if (!createAnimation) {
+				return;
+			}
+
+			const chars = splitPreset(target);
+			const animation = createAnimation(chars, index * 0.18);
+
+			animations.push(animation);
+		});
+	};
+
+	const handleMotionChange = () => {
+		buildPresetAnimations();
+	};
+
+	const teardown = () => {
+		clearAnimations();
+		reducedMotionQuery.removeEventListener("change", handleMotionChange);
+		window.removeEventListener("pagehide", teardown);
+		presetDemo.__presetCleanup = undefined;
+	};
+
+	presetDemo.__presetCleanup = teardown;
+
+	reducedMotionQuery.addEventListener("change", handleMotionChange);
+	window.addEventListener("pagehide", teardown, { once: true });
+
+	buildPresetAnimations();
 }
 </script>
 
