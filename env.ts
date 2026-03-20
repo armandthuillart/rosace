@@ -7,7 +7,8 @@ const APP_PATHS: Record<string, string> = {
 };
 
 const repo = import.meta.dirname;
-const mode = process.env.NODE_ENV ?? "development";
+const mode =
+	process.env.NODE_ENV === "production" ? "production" : "development";
 const projectId = process.env.MOON_PROJECT_ID;
 
 const apps =

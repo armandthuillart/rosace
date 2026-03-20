@@ -1,6 +1,6 @@
 tasks:
   build:
-    script: 'bun ../../env.ts && bunx vite build'
+    script: 'NODE_ENV=production bun ../../env.ts && bunx vite build'
     inputs:
       - '$CONVEX_SITE_URL'
       - '$MARKETING_URL'

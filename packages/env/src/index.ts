@@ -2,8 +2,8 @@ import { config as loadEnv } from "dotenv";
 import { z } from "zod";
 
 const envSchema = z.object({
-	CONVEX_SITE_URL: z.string(),
-	CONVEX_URL: z.string(),
+	CONVEX_SITE_URL: z.string().optional(),
+	CONVEX_URL: z.string().optional(),
 	DASHBOARD_URL: z.string(),
 	MARKETING_URL: z.string(),
 });
@@ -17,8 +17,13 @@ function getEnv(): Env {
 		return cachedEnv;
 	}
 
+	const target =
+		process.env.NODE_ENV === "production"
+			? ".env.production"
+			: ".env.development";
+
 	loadEnv({
-		path: ".env.development",
+		path: target,
 		quiet: true,
 	});
 
