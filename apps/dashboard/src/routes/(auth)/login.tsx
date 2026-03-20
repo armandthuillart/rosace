@@ -20,7 +20,9 @@ const Route = createFileRoute("/(auth)/login")({
 
 function RouteComponent() {
 	const { email, step } = Route.useSearch();
-	return <div />;
+	return (
+		<div className="flex h-screen items-center justify-center">Cooking...</div>
+	);
 }
 
 export { Route };

@@ -10,14 +10,12 @@ const Route = createFileRoute("/(core)/")({
 	},
 	component: RouteComponent,
 	loader: async ({ context }) => {
-		await context.queryClient.ensureQueryData(
-			convexQuery(api.user.getUser),
-		);
+		await context.queryClient.ensureQueryData(convexQuery(api.user.getUser));
 	},
 });
 
 function RouteComponent() {
-	return <div />;
+	return <div>Cooking...</div>;
 }
 
 export { Route };

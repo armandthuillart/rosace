@@ -42,11 +42,23 @@ const Route = createRootRouteWithContext<{
 		links: [
 			{ href: appCss, rel: "stylesheet" },
 			{ href: globalsCss, rel: "stylesheet" },
+			{
+				href: "/favicon-dark.svg",
+				media: "(prefers-color-scheme: dark)",
+				rel: "icon",
+				type: "image/svg+xml",
+			},
+			{
+				href: "/favicon-light.svg",
+				media: "(prefers-color-scheme: light)",
+				rel: "icon",
+				type: "image/svg+xml",
+			},
 		],
 		meta: [
 			{ charSet: "utf-8" },
 			{ content: "width=device-width, initial-scale=1.0", name: "viewport" },
-			...seo({ title: "Neap" }),
+			...seo({ title: "Rosace" }),
 		],
 	}),
 });
