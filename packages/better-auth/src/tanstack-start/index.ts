@@ -2,6 +2,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie as getCookie } from "better-auth/cookies";
 import { decodeJwt } from "jose";
 import { cache } from "react";
+import { handler } from "./handler";
 
 interface ProxyOptions {
 	baseURL: string | undefined;
@@ -40,6 +41,10 @@ function betterAuth({ baseURL }: ProxyOptions) {
 			});
 			return jwt;
 		},
+		handler: (req: Request) =>
+			handler(req, {
+				baseURL,
+			}),
 	};
 }
 
@@ -127,4 +132,3 @@ async function getJwt({
 }
 
 export { betterAuth };
-
