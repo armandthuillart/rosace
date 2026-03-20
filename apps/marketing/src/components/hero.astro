@@ -1,5 +1,6 @@
 ---
 import { DASHBOARD_URL } from "astro:env/client";
+import Sequence from "@components/sequence.astro";
 import Timeline from "@components/timeline.astro";
 ---
 
@@ -37,22 +38,7 @@ import Timeline from "@components/timeline.astro";
 			<div
 				class="overflow-hidden flex flex-col bg-canvas shadow-canvas h-150 shrink-0 w-5xl rounded-[1.375rem] items-center justify-center absolute left-[clamp(550px,50%,100%)] -translate-1/2 top-1/2"
 			>
-				<div
-					class="-mt-10 border-2 border-tertiary relative aspect-video w-xl bg-muted"
-				>
-					<div
-						class="absolute -top-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
-					/>
-					<div
-						class="absolute -top-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
-					/>
-					<div
-						class="absolute -bottom-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
-					/>
-					<div
-						class="absolute -bottom-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary"
-					/>
-				</div>
+				<Sequence />
 
 				<div
 					class="absolute left-3 p-1.75 top-3 bg-material rounded-xl shadow-material"
