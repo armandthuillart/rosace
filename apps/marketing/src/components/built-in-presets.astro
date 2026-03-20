@@ -1,0 +1,468 @@
+<div
+	class="overflow-hidden lg:w-2/3 h-170 p-8 sm:p-12 bg-card rounded-sm relative after:absolute after:inset-0 after:rounded-sm after:pointer-events-none after:border after:border-border/50"
+>
+	<div
+		class="select-none bg-material dark:bg-canvas overflow-hidden w-[min(100%,var(--container-xs))] m-auto h-full shadow-canvas rounded-2xl p-8 flex flex-col gap-6"
+		data-preset-demo
+	>
+		<div class="flex flex-col gap-4">
+			<div class="text-2xl font-semibold -tracking-[0.05em]">Blur</div>
+
+			<div class="grid grid-cols-2 gap-4">
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="blur-in">Text</span>
+					</div>
+
+					<div class="text-center text-muted-foreground/75 -tracking-[0.01em]">Blur in</div>
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="blur-slide">Text</span>
+					</div>
+
+					<div class="text-center text-muted-foreground/75 -tracking-[0.01em]">
+						Blur + Slide
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			<div class="text-2xl font-semibold -tracking-[0.05em]">Mask</div>
+
+			<div class="grid grid-cols-2 gap-4">
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="mask-in-top">Text</span>
+					</div>
+
+					<div
+						class="flex items-center justify-center gap-0.5 text-center text-muted-foreground/75 -tracking-[0.01em]"
+					>
+						Mask in
+
+						<span class="sr-only">Top</span>
+
+						<svg
+							aria-hidden="true"
+							class="size-4"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#arrow-up" />
+						</svg>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="mask-in-bottom">Text</span>
+					</div>
+
+					<div
+						class="flex items-center justify-center gap-0.5 text-center text-muted-foreground/75 -tracking-[0.01em]"
+					>
+						Mask in
+
+						<span class="sr-only">Bottom</span>
+
+						<svg
+							aria-hidden="true"
+							class="size-4"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#arrow-down" />
+						</svg>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="mask-out-top">Text</span>
+					</div>
+
+					<div
+						class="flex items-center justify-center gap-0.5 text-center text-muted-foreground/75 -tracking-[0.01em]"
+					>
+						Mask out
+
+						<span class="sr-only">Top</span>
+
+						<svg
+							aria-hidden="true"
+							class="size-4"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#arrow-up" />
+						</svg>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<div
+						class="flex overflow-hidden text-2xl font-semibold items-center justify-center bg-accent dark:bg-material aspect-square rounded-lg"
+					>
+						<span data-split-preset="mask-out-bottom">Text</span>
+					</div>
+
+					<div
+						class="flex items-center justify-center gap-0.5 text-center text-muted-foreground/75 -tracking-[0.01em]"
+					>
+						Mask out
+
+						<span class="sr-only">Bottom</span>
+
+						<svg
+							aria-hidden="true"
+							class="size-4"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<use href="/sprite.svg#arrow-down" />
+						</svg>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
+
+type PresetName =
+	| "blur-in"
+	| "blur-slide"
+	| "mask-in-top"
+	| "mask-in-bottom"
+	| "mask-out-top"
+	| "mask-out-bottom";
+
+type PresetDemoElement = HTMLElement & {
+	__presetCleanup?: () => void;
+};
+
+const presetDemo = document.querySelector("[data-preset-demo]") as PresetDemoElement | null;
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+if (presetDemo) {
+	presetDemo.__presetCleanup?.();
+
+	const presetTargets = Array.from(presetDemo.querySelectorAll<HTMLElement>("[data-split-preset]"));
+	const splitTargets = [] as SplitText[];
+	const animations = [] as gsap.core.Animation[];
+	const step = {
+		enter: 0.8,
+		exit: 0.65,
+		hold: 0.35,
+		staggerIn: 0.045,
+		staggerOut: 0.035,
+	};
+
+	const clearAnimations = () => {
+		while (animations.length > 0) {
+			animations.pop()?.kill();
+		}
+
+		while (splitTargets.length > 0) {
+			splitTargets.pop()?.revert();
+		}
+
+		gsap.set(presetTargets, {
+			clearProps: "all",
+		});
+	};
+
+	const setStaticState = () => {
+		clearAnimations();
+
+		gsap.set(presetTargets, {
+			autoAlpha: 1,
+			clearProps: "all",
+			filter: "blur(0px)",
+		});
+	};
+
+	const splitPreset = (target: HTMLElement) => {
+		gsap.set(target, {
+			display: "inline-block",
+			overflow: "hidden",
+		});
+
+		const split = new SplitText(target, {
+			type: "chars",
+		});
+		const chars = split.chars as HTMLElement[];
+
+		splitTargets.push(split);
+
+		gsap.set(chars, {
+			display: "inline-block",
+			transformOrigin: "50% 50%",
+			willChange: "transform, opacity, filter, clip-path",
+		});
+
+		return chars;
+	};
+
+	const createBlurIn = (chars: HTMLElement[], delay: number) => {
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				autoAlpha: 0.2,
+				filter: "blur(4px)",
+				scale: 0.96,
+				yPercent: 0,
+			})
+			.to(chars, {
+				autoAlpha: 1,
+				duration: step.enter * 0.7,
+				ease: "power4.out",
+				filter: "blur(0px)",
+				scale: 1,
+				stagger: step.staggerIn,
+			})
+			.to(
+				chars,
+				{
+					autoAlpha: 1,
+					duration: step.hold,
+					ease: "none",
+					filter: "blur(0px)",
+					scale: 1,
+				},
+				">",
+			)
+			.to(chars, {
+				autoAlpha: 0.2,
+				duration: step.exit * 0.8,
+				ease: "power2.in",
+				filter: "blur(4px)",
+				scale: 0.96,
+				stagger: step.staggerOut,
+			});
+
+		return timeline;
+	};
+
+	const createBlurSlide = (chars: HTMLElement[], delay: number) => {
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				autoAlpha: 0.25,
+				filter: "blur(3px)",
+				yPercent: 100,
+			})
+			.to(chars, {
+				autoAlpha: 1,
+				duration: step.enter * 0.75,
+				ease: "power3.out",
+				filter: "blur(0px)",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			})
+			.to(chars, {
+				autoAlpha: 0.25,
+				duration: step.enter * 0.85,
+				ease: "power2.in",
+				filter: "blur(3px)",
+				stagger: step.staggerOut,
+				yPercent: -100,
+			});
+
+		return timeline;
+	};
+
+	const createMaskIn = (chars: HTMLElement[], delay: number, direction: "top" | "bottom") => {
+		const hiddenState =
+			direction === "top"
+				? {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					}
+				: {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					};
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				...hiddenState,
+				autoAlpha: 1,
+			})
+			.to(chars, {
+				clipPath: "inset(0% 0% 0% 0%)",
+				duration: step.enter,
+				ease: "power4.out",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			})
+			.to(
+				chars,
+				{
+					duration: step.hold,
+					ease: "none",
+				},
+				">",
+			)
+			.to(chars, {
+				...hiddenState,
+				duration: step.exit,
+				ease: "power2.in",
+				stagger: step.staggerOut,
+			});
+
+		return timeline;
+	};
+
+	const createMaskOut = (chars: HTMLElement[], delay: number, direction: "top" | "bottom") => {
+		const exitState =
+			direction === "top"
+				? {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					}
+				: {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					};
+		const resetState =
+			direction === "top"
+				? {
+						clipPath: "inset(100% 0% 0% 0%)",
+						yPercent: 120,
+					}
+				: {
+						clipPath: "inset(0% 0% 100% 0%)",
+						yPercent: -120,
+					};
+		const timeline = gsap.timeline({
+			delay,
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		timeline
+			.set(chars, {
+				autoAlpha: 1,
+				clipPath: "inset(0% 0% 0% 0%)",
+				yPercent: 0,
+			})
+			.to(
+				chars,
+				{
+					duration: step.hold,
+					ease: "none",
+				},
+				0,
+			)
+			.to(chars, {
+				...exitState,
+				duration: step.exit,
+				ease: "power2.in",
+				stagger: step.staggerOut,
+			})
+			.set(chars, resetState)
+			.to(chars, {
+				clipPath: "inset(0% 0% 0% 0%)",
+				duration: step.enter,
+				ease: "power4.out",
+				stagger: step.staggerIn,
+				yPercent: 0,
+			});
+
+		return timeline;
+	};
+
+	const animationFactories: Record<PresetName, (chars: HTMLElement[], delay: number) => gsap.core.Animation> = {
+		"blur-in": createBlurIn,
+		"blur-slide": createBlurSlide,
+		"mask-in-bottom": (chars, delay) => createMaskIn(chars, delay, "bottom"),
+		"mask-in-top": (chars, delay) => createMaskIn(chars, delay, "top"),
+		"mask-out-bottom": (chars, delay) => createMaskOut(chars, delay, "bottom"),
+		"mask-out-top": (chars, delay) => createMaskOut(chars, delay, "top"),
+	};
+
+	const buildPresetAnimations = () => {
+		clearAnimations();
+
+		if (reducedMotionQuery.matches) {
+			setStaticState();
+			return;
+		}
+
+		presetTargets.forEach((target, index) => {
+			const presetName = target.dataset.splitPreset as PresetName | undefined;
+
+			if (!presetName) {
+				return;
+			}
+
+			const createAnimation = animationFactories[presetName];
+
+			if (!createAnimation) {
+				return;
+			}
+
+			const chars = splitPreset(target);
+			const animation = createAnimation(chars, index * 0.18);
+
+			animations.push(animation);
+		});
+	};
+
+	const handleMotionChange = () => {
+		buildPresetAnimations();
+	};
+
+	const teardown = () => {
+		clearAnimations();
+		reducedMotionQuery.removeEventListener("change", handleMotionChange);
+		window.removeEventListener("pagehide", teardown);
+		presetDemo.__presetCleanup = undefined;
+	};
+
+	presetDemo.__presetCleanup = teardown;
+
+	reducedMotionQuery.addEventListener("change", handleMotionChange);
+	window.addEventListener("pagehide", teardown, { once: true });
+
+	buildPresetAnimations();
+}
+</script>

@@ -1,0 +1,215 @@
+<div
+	class="select-none @container overflow-hidden lg:w-2/3 p-12 bg-card rounded-sm relative after:absolute after:inset-0 after:rounded-sm after:pointer-events-none after:border after:border-border/50"
+>
+	<div class="my-16 relative h-[clamp(20rem,32.5cqw+12.5rem,37.5rem)]" id="size-text-reel">
+		<div
+			class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.5rem,6.25rem)] origin-[50%_100%] bottom-1/2 mb-[clamp(6.875rem,12.5cqw+4rem,13.5rem)]"
+			id="size-text-left"
+		>
+			<span>Any</span>
+		</div>
+
+		<div
+			class="absolute top-1/2 left-1/2 w-[clamp(18.75rem,50cqw+8rem,43.75rem)] mt-[clamp(-12.5rem,-12.5cqw-3.5rem,-6.25rem)] ml-[clamp(-22rem,-25cqw-4rem,-9.5rem)] h-[clamp(12.5rem,25cqw+7rem,25rem)]"
+			id="size-device-wrap"
+		>
+			<div
+				class="border-2 border-tertiary w-full top-1/2 -translate-1/2 absolute left-1/2 h-9/10 bg-material dark:bg-canvas shadow-canvas"
+				id="size-device"
+			>
+				<div class="absolute -top-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary" />
+				<div class="absolute -top-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary" />
+				<div class="absolute -bottom-1 -left-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary" />
+				<div class="absolute -bottom-1 -right-1.25 size-2 bg-tertiary-foreground outline-2 outline-tertiary" />
+			</div>
+		</div>
+
+		<div
+			id="size-dot"
+			class="z-30 top-1/2 absolute left-1/2 w-[clamp(6.25rem,10cqw+3.5rem,12.5rem)] mt-[clamp(-6.25rem,-5cqw-1.75rem,-3.125rem)] ml-[clamp(-6.25rem,-5cqw-1.75rem,-3.125rem)] h-[clamp(6.25rem,10cqw+3.5rem,12.5rem)]"
+		>
+			<svg
+				aria-hidden="true"
+				class="size-full animate-[spin_2.5s_linear_infinite]"
+				fill="currentColor"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<use href="/sprite.svg#lockup" />
+			</svg>
+		</div>
+
+		<div
+			class="text-center right-0 leading-none absolute -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.75rem,6.25rem)] origin-[50%_0] top-1/2 mt-[clamp(6.5625rem,12.5cqw+4rem,12.5rem)]"
+			id="size-text-right"
+		>
+			<span>Size</span>
+		</div>
+	</div>
+</div>
+
+<script>
+import gsap from "gsap";
+
+const reel = document.querySelector("#size-text-reel");
+const textLeft = document.querySelector("#size-text-left");
+const textRight = document.querySelector("#size-text-right");
+const dot = document.querySelector("#size-dot");
+const deviceWrap = document.querySelector("#size-device-wrap");
+const device = document.querySelector("#size-device");
+
+if (reel && textLeft && textRight && dot && deviceWrap && device) {
+	const defaults = {
+		duration: 0.8,
+		ease: "back.out(1.1)",
+	};
+
+	const getWrapHeight = () => deviceWrap.getBoundingClientRect().height;
+
+	const smallAnimation = () => {
+		const timeline = gsap.timeline({
+			defaults,
+			id: "scroll-size",
+			repeat: -1,
+			repeatDelay: 1,
+			repeatRefresh: true,
+		});
+
+		gsap.set(reel, {
+			autoAlpha: 1,
+		});
+
+		timeline.set(device, {
+			height: "90%",
+			width: "100%",
+		});
+
+		timeline.addLabel("toMobile");
+
+		timeline.to(
+			device,
+			{
+				height: "100%",
+				width: "30%",
+			},
+			"toMobile",
+		);
+
+		timeline.to(
+			dot,
+			{
+				scale: 0.5,
+			},
+			"toMobile",
+		);
+
+		timeline.to(
+			textLeft,
+			{
+				scale: 1,
+				y: 0,
+			},
+			"toMobile",
+		);
+
+		timeline.to(
+			textRight,
+			{
+				scale: 1,
+				y: 0,
+			},
+			"toMobile",
+		);
+
+		timeline.addLabel("toTablet", "+=1");
+
+		timeline.to(
+			device,
+			{
+				height: "50%",
+				width: "60%",
+			},
+			"toTablet",
+		);
+
+		timeline.to(
+			dot,
+			{
+				scale: 0.3,
+			},
+			"toTablet",
+		);
+
+		timeline.to(
+			textLeft,
+			{
+				scale: 1.2,
+				y: () => getWrapHeight() * 0.25,
+			},
+			"toTablet",
+		);
+
+		timeline.to(
+			textRight,
+			{
+				scale: 1.2,
+				y: () => getWrapHeight() * -0.25,
+			},
+			"toTablet",
+		);
+
+		timeline.addLabel("toDesktop", "+=1");
+
+		timeline.to(
+			device,
+			{
+				height: "90%",
+				width: "100%",
+			},
+			"toDesktop",
+		);
+
+		timeline.to(
+			dot,
+			{
+				scale: 1,
+			},
+			"toDesktop",
+		);
+
+		timeline.to(
+			textLeft,
+			{
+				scale: 0.8,
+				y: () => getWrapHeight() * 0.05,
+			},
+			"toDesktop",
+		);
+
+		timeline.to(
+			textRight,
+			{
+				scale: 0.8,
+				y: () => getWrapHeight() * -0.05,
+			},
+			"toDesktop",
+		);
+
+		return timeline;
+	};
+
+	let timeline: gsap.core.Timeline | undefined;
+
+	const resetAnimatedProps = () => {
+		gsap.set([reel, textLeft, textRight, dot, device], { clearProps: "all" });
+	};
+
+	const buildTimeline = () => {
+		timeline?.kill();
+		resetAnimatedProps();
+		timeline = smallAnimation();
+	};
+
+	buildTimeline();
+}
+</script>
