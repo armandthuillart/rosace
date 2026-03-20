@@ -16,7 +16,9 @@
 						<span data-split-preset="blur-in">Text</span>
 					</div>
 
-					<div class="text-center text-muted-foreground/75 -tracking-[0.01em]">Blur in</div>
+					<div class="text-center text-muted-foreground/75 -tracking-[0.01em]">
+						Blur in
+					</div>
 				</div>
 
 				<div class="flex flex-col gap-2">
@@ -163,13 +165,19 @@ type PresetDemoElement = HTMLElement & {
 	__presetCleanup?: () => void;
 };
 
-const presetDemo = document.querySelector("[data-preset-demo]") as PresetDemoElement | null;
-const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const presetDemo = document.querySelector(
+	"[data-preset-demo]",
+) as PresetDemoElement | null;
+const reducedMotionQuery = window.matchMedia(
+	"(prefers-reduced-motion: reduce)",
+);
 
 if (presetDemo) {
 	presetDemo.__presetCleanup?.();
 
-	const presetTargets = Array.from(presetDemo.querySelectorAll<HTMLElement>("[data-split-preset]"));
+	const presetTargets = Array.from(
+		presetDemo.querySelectorAll<HTMLElement>("[data-split-preset]"),
+	);
 	const splitTargets = [] as SplitText[];
 	const animations = [] as gsap.core.Animation[];
 	const step = {
@@ -304,7 +312,11 @@ if (presetDemo) {
 		return timeline;
 	};
 
-	const createMaskIn = (chars: HTMLElement[], delay: number, direction: "top" | "bottom") => {
+	const createMaskIn = (
+		chars: HTMLElement[],
+		delay: number,
+		direction: "top" | "bottom",
+	) => {
 		const hiddenState =
 			direction === "top"
 				? {
@@ -351,7 +363,11 @@ if (presetDemo) {
 		return timeline;
 	};
 
-	const createMaskOut = (chars: HTMLElement[], delay: number, direction: "top" | "bottom") => {
+	const createMaskOut = (
+		chars: HTMLElement[],
+		delay: number,
+		direction: "top" | "bottom",
+	) => {
 		const exitState =
 			direction === "top"
 				? {
@@ -410,7 +426,10 @@ if (presetDemo) {
 		return timeline;
 	};
 
-	const animationFactories: Record<PresetName, (chars: HTMLElement[], delay: number) => gsap.core.Animation> = {
+	const animationFactories: Record<
+		PresetName,
+		(chars: HTMLElement[], delay: number) => gsap.core.Animation
+	> = {
 		"blur-in": createBlurIn,
 		"blur-slide": createBlurSlide,
 		"mask-in-bottom": (chars, delay) => createMaskIn(chars, delay, "bottom"),
