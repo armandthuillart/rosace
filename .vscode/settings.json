@@ -1,4 +1,7 @@
 {
+	"editor.codeActionsOnSave": { "source.fixAll.biome": "explicit" },
+	"editor.defaultFormatter": "biomejs.biome",
+
 	"tailwindCSS.experimental.configFile": {
 		"apps/marketing/src/styles/global.css": ["**/*.astro"],
 		"packages/ui/src/globals.css": ["**/*.tsx"]

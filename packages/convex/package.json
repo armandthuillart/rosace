@@ -28,7 +28,6 @@
 	},
 	"name": "@repo/convex",
 	"peerDependencies": {
-		"ai": "catalog:",
 		"better-auth": "catalog:",
 		"convex": "catalog:",
 		"react": "catalog:",

@@ -12,7 +12,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 
 		<a
 			href={DASHBOARD_URL}
-			class="relative font-medium h-11 pr-[calc(--spacing(4)-1px)] pl-[calc(--spacing(5)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-2 before:absolute before:-inset-6"
+			class="relative font-medium h-11 pr-[calc(--spacing(4)-1px)] pl-[calc(--spacing(5)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-gray-800 text-gray-50 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-6"
 			data-button="arrow-down"
 		>
 			<span class="sr-only">Sign up for free</span>
@@ -23,8 +23,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			>
 				<svg
 					aria-hidden="true"
-					class="-translate-1/2 size-6"
-					fill="var(--quinary)"
+					class="-translate-1/2 size-6 fill-pink-400 dark:fill-pink-500"
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -38,8 +37,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			>
 				<svg
 					aria-hidden="true"
-					class="-translate-1/2 size-15"
-					fill="var(--tertiary)"
+					class="-translate-1/2 size-15 fill-blue-400 dark:fill-blue-500"
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -53,8 +51,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			>
 				<svg
 					aria-hidden="true"
-					class="-translate-1/2 size-4.75"
-					fill="var(--senary)"
+					class="-translate-1/2 size-4.75 fill-purple-400 dark:fill-purple-500"
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -68,8 +65,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			>
 				<svg
 					aria-hidden="true"
-					class="-translate-1/2 size-4.5"
-					fill="var(--septenary)"
+					class="-translate-1/2 size-4.5 fill-green-400 dark:fill-green-500"
 					viewBox="0 0 24 24"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -84,7 +80,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 			</div>
 
 			<div
-				class="text-primary bg-primary-foreground rounded-full size-5 relative flex items-center justify-center overflow-hidden"
+				class="text-gray-800 bg-gray-50 dark:bg-gray-950 dark:text-gray-200 rounded-full size-5 relative flex items-center justify-center overflow-hidden"
 			>
 				<svg
 					aria-hidden="true"

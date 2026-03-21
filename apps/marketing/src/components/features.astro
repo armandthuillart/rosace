@@ -1,14 +1,8 @@
----
-import AnySize from "@components/any-size.astro";
-import BuiltInPresets from "@components/built-in-presets.astro";
-import AnimateAnything from "@components/animate-anything.astro";
----
-
 <section class="px-5">
 	<div
-		class="max-w-7xl gap-x-10 gap-y-4 relative bg-accent rounded-sm mx-auto p-5 flex flex-col lg:flex-row before:absolute before:inset-0 before:rounded-sm before:pointer-events-none before:border before:border-border/25"
+		class="max-w-7xl gap-x-2.5 gap-y-4 bg-gray-100 dark:bg-gray-950 rounded-sm mx-auto p-5 flex flex-col lg:grid lg:grid-cols-24 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
 	>
-		<div class="lg:self-center">
+		<div class="lg:col-start-1 lg:col-end-9 lg:self-center lg:pr-7.5">
 			<h3
 				class="text-pretty font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
@@ -16,21 +10,29 @@ import AnimateAnything from "@components/animate-anything.astro";
 			</h3>
 
 			<p
-				class="text-pretty text-muted-foreground font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
+				class="text-pretty text-gray-500 dark:text-gray-400 font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
 				Translate ideas to animations at the speed of your imagination.
 			</p>
 		</div>
 
-		<BuiltInPresets />
+		<div
+			class="overflow-hidden bg-pale-blue-400 dark:bg-pale-blue-800 rounded-sm relative inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 pl-6 lg:py-8 lg:pl-7"
+		>
+			<div
+				class="ring ring-black/5 dark:ring-white/5 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl w-230 h-150"
+			/>
+		</div>
 	</div>
 </section>
 
 <section class="px-5">
 	<div
-		class="max-w-7xl relative gap-x-10 gap-y-4 bg-accent rounded-sm mx-auto p-5 flex flex-col lg:flex-row-reverse before:absolute before:inset-0 before:rounded-sm before:pointer-events-none before:border before:border-border/25"
+		class="max-w-7xl gap-x-2.5 gap-y-4 bg-gray-100 dark:bg-gray-950 rounded-sm mx-auto p-5 flex flex-col lg:grid lg:grid-cols-24 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
 	>
-		<div class="lg:self-center">
+		<div
+			class="lg:row-start-1 lg:col-start-17 lg:col-end-25 lg:self-center lg:pl-8"
+		>
 			<h3
 				class="text-pretty font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
@@ -38,21 +40,27 @@ import AnimateAnything from "@components/animate-anything.astro";
 			</h3>
 
 			<p
-				class="text-pretty text-muted-foreground font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
+				class="text-pretty text-gray-500 dark:text-gray-400 font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
-				Do your best work while enjoying every second of it.
+				Do your best work while enjoying every bit of it.
 			</p>
 		</div>
 
-		<AnimateAnything />
+		<div
+			class="flex justify-end overflow-hidden bg-pale-violet-400 dark:bg-pale-violet-800 rounded-sm relative gap-6 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-1 lg:col-end-17 lg:row-start-1 py-7 pr-6 lg:py-8 lg:pr-7"
+		>
+			<div
+				class="ring ring-black/5 dark:ring-white/5 rounded-[.625rem] bg-white dark:bg-gray-900 shadow-4xl shrink-0 w-230 h-146"
+			/>
+		</div>
 	</div>
 </section>
 
 <section class="px-5">
 	<div
-		class="max-w-7xl relative gap-x-10 gap-y-4 bg-accent rounded-sm mx-auto p-5 flex flex-col lg:flex-row before:absolute before:inset-0 before:rounded-sm before:pointer-events-none before:border before:border-border/25"
+		class="max-w-7xl gap-x-2.5 gap-y-4 bg-gray-100 dark:bg-gray-950 rounded-sm mx-auto p-5 flex flex-col lg:grid lg:grid-cols-24 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
 	>
-		<div class="lg:self-center">
+		<div class="lg:col-start-1 lg:col-end-9 lg:self-center lg:pr-7.5">
 			<h3
 				class="text-pretty font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
@@ -60,12 +68,26 @@ import AnimateAnything from "@components/animate-anything.astro";
 			</h3>
 
 			<p
-				class="text-pretty text-muted-foreground font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
+				class="text-pretty text-gray-500 dark:text-gray-400 font-medium tracking-[.005em] sm:text-[1.375rem]/[1.3] sm:-tracking-[.005em]"
 			>
 				Get it resized to any format you need, automatically.
 			</p>
 		</div>
 
-		<AnySize />
+		<div
+			class="overflow-hidden bg-pale-teal-400 dark:bg-pale-teal-800 rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 px-6 lg:py-8 lg:px-7"
+		>
+			<div
+				class="h-120 min-[25rem]:h-122.5 min-[31.25rem]:h-146 w-full relative"
+			>
+				<div
+					class="absolute top-0 left-0 aspect-9/16 h-8/10 md:aspect-square min-[31.25rem]:h-8/10 min-[34.375rem]:w-11/20 md:h-auto ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
+				/>
+
+				<div
+					class="absolute bottom-0 right-0 aspect-square w-8/10 md:h-auto sm:aspect-9/5 md:w-15/20 ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
+				/>
+			</div>
+		</div>
 	</div>
 </section>
