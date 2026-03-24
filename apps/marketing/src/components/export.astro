@@ -1,5 +1,16 @@
+---
+interface Props {
+	className?: string;
+}
+
+const { className } = Astro.props;
+---
+
 <div
-	class="absolute top-0 right-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-control"
+	class:list={[
+		"absolute top-0 right-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-control",
+		className,
+	]}
 >
 	<div
 		class="bg-blue-400 dark:bg-blue-500 text-white pr-3 pl-2.5 text-sm h-8 shrink-0 rounded-sm gap-1.5 inline-flex items-center justify-center"

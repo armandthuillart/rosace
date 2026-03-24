@@ -1,5 +1,6 @@
 ---
 import Breakpoint from "@components/breakpoint.astro";
+import Presets from "@components/presets.astro";
 ---
 
 <section class="px-5">
@@ -54,8 +55,10 @@ import Breakpoint from "@components/breakpoint.astro";
 			class="flex justify-end overflow-hidden bg-pale-violet-400 dark:bg-pale-violet-800 rounded-sm relative gap-6 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-1 lg:col-end-17 lg:row-start-1 py-7 pr-6 lg:py-8 lg:pr-7"
 		>
 			<div
-				class="ring ring-black/5 dark:ring-white/5 rounded-[.625rem] bg-white dark:bg-gray-900 shadow-4xl shrink-0 w-230 h-146"
-			/>
+				class="relative ring ring-black/5 dark:ring-white/5 rounded-[.625rem] bg-gray-100 dark:bg-gray-900 shadow-4xl shrink-0 w-230 h-146"
+			>
+				<Presets />
+			</div>
 		</div>
 	</div>
 </section>
