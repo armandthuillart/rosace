@@ -54,7 +54,7 @@ const initializedRoots =
 const cleanupMap = new WeakMap<HTMLElement, () => void>();
 
 const updateEmphasis = (wordNodes: HTMLElement[], spacing: number) => {
-	for (const word of wordNodes) {
+	for (const [index, word] of wordNodes.entries()) {
 		const y = Number(gsap.getProperty(word, "y"));
 		const distance = Math.min(Math.abs(y) / spacing, 2.2);
 		const centerWeight = Math.max(0, 1 - distance);
@@ -134,23 +134,36 @@ const initRoot = (root: HTMLElement) => {
 		}
 
 		timeline = gsap.timeline({
-			defaults: { ease: "expo.inOut" },
+			defaults: { ease: "none" },
 			repeat: -1,
 			repeatDelay: 0,
 		});
 
+		const tractionStep = spacing * 0.05;
+		const mainStep = spacing - tractionStep;
+
 		for (let step = 0; step < count; step += 1) {
 			timeline.to(orderedNodes, {
-				duration: 0.46,
+				duration: 0.1,
+				ease: "power2.out",
 				modifiers: {
 					y: (value: string) => `${wrapY(Number.parseFloat(value))}px`,
 				},
 				onComplete: () => updateEmphasis(orderedNodes, spacing),
 				onUpdate: () => updateEmphasis(orderedNodes, spacing),
-				y: `-=${spacing}`,
+				y: `-=${tractionStep}`,
 			});
 
-			timeline.to({}, { duration: 0.1 });
+			timeline.to(orderedNodes, {
+				duration: 0.46,
+				ease: "power3.out",
+				modifiers: {
+					y: (value: string) => `${wrapY(Number.parseFloat(value))}px`,
+				},
+				onComplete: () => updateEmphasis(orderedNodes, spacing),
+				onUpdate: () => updateEmphasis(orderedNodes, spacing),
+				y: `-=${mainStep}`,
+			});
 		}
 	};
 
