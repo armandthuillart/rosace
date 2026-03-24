@@ -1,0 +1,184 @@
+<div
+	class="@container w-full mx-auto max-w-xs size-full relative overflow-hidden"
+	data-breakpoint
+>
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="1"
+	>
+		A
+	</div>
+
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="2"
+	>
+		new
+	</div>
+
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="3"
+	>
+		kind
+	</div>
+
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="4"
+	>
+		of
+	</div>
+
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="5"
+	>
+		motion
+	</div>
+
+	<div
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		data-word="6"
+	>
+		tool
+	</div>
+</div>
+
+<script>
+import gsap from "gsap";
+
+const MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const initializedRoots =
+	document.querySelectorAll<HTMLElement>("[data-breakpoint]");
+const cleanupMap = new WeakMap<HTMLElement, () => void>();
+
+const updateEmphasis = (wordNodes: HTMLElement[], spacing: number) => {
+	for (const word of wordNodes) {
+		const y = Number(gsap.getProperty(word, "y"));
+		const distance = Math.min(Math.abs(y) / spacing, 2.2);
+		const centerWeight = Math.max(0, 1 - distance);
+		const fadeThreshold = 1.25;
+		const fadeZone = 0.95;
+		const fadeProgress = Math.max(0, (distance - fadeThreshold) / fadeZone);
+		const edgeFade = 1 - Math.min(1, fadeProgress);
+		const edgeWeight = 1 - centerWeight;
+		const shouldHide = distance > 1.82;
+		const opacity = shouldHide ? 0 : (0.08 + centerWeight * 0.92) * edgeFade;
+		const scale = 0.88 + centerWeight * 0.12;
+		const blur = shouldHide ? 3.2 : edgeWeight * 2.2;
+		const rotation = Math.sign(y || 1) * edgeWeight * 5.5;
+		const zIndex = String(100 - Math.round(Math.abs(y)));
+
+		gsap.set(word, {
+			autoAlpha: opacity,
+			filter: `blur(${blur}px)`,
+			rotation,
+			scale,
+			zIndex,
+		});
+	}
+};
+
+const initRoot = (root: HTMLElement) => {
+	if (root.dataset.gsapInit === "true") {
+		return;
+	}
+	root.dataset.gsapInit = "true";
+
+	const wordNodes = Array.from(
+		root.querySelectorAll<HTMLElement>("[data-word]"),
+	);
+	if (wordNodes.length === 0) {
+		return;
+	}
+
+	let timeline: gsap.core.Timeline | null = null;
+	let resizeObserver: ResizeObserver | null = null;
+
+	const setup = () => {
+		timeline?.kill();
+
+		const reducedMotion = window.matchMedia(MOTION_QUERY).matches;
+		const orderedNodes = [...wordNodes].sort((a, b) => {
+			const aWord = Number(a.dataset.word ?? "0");
+			const bWord = Number(b.dataset.word ?? "0");
+			return aWord - bWord;
+		});
+		const count = orderedNodes.length;
+		const slotHeight = wordNodes[0].offsetHeight || 1;
+		const spacing = slotHeight * 1.05;
+		const half = Math.floor(count / 2);
+		const minY = -half * spacing;
+		const maxY = (count - half) * spacing;
+		const spanY = maxY - minY;
+		const wrapY = (value: number) => {
+			let wrapped = value;
+			while (wrapped < minY) {
+				wrapped += spanY;
+			}
+			while (wrapped >= maxY) {
+				wrapped -= spanY;
+			}
+			return wrapped;
+		};
+		for (const [index, word] of orderedNodes.entries()) {
+			const y = wrapY(index * spacing);
+			gsap.set(word, { y });
+		}
+
+		updateEmphasis(orderedNodes, spacing);
+
+		if (reducedMotion) {
+			return;
+		}
+
+		timeline = gsap.timeline({
+			defaults: { ease: "expo.inOut" },
+			repeat: -1,
+			repeatDelay: 0,
+		});
+
+		for (let step = 0; step < count; step += 1) {
+			timeline.to(orderedNodes, {
+				duration: 0.46,
+				modifiers: {
+					y: (value: string) => `${wrapY(Number.parseFloat(value))}px`,
+				},
+				onComplete: () => updateEmphasis(orderedNodes, spacing),
+				onUpdate: () => updateEmphasis(orderedNodes, spacing),
+				y: `-=${spacing}`,
+			});
+
+			timeline.to({}, { duration: 0.1 });
+		}
+	};
+
+	setup();
+
+	resizeObserver = new ResizeObserver(() => {
+		setup();
+	});
+	resizeObserver.observe(root);
+
+	cleanupMap.set(root, () => {
+		timeline?.kill();
+		resizeObserver?.disconnect();
+	});
+};
+
+for (const root of initializedRoots) {
+	initRoot(root);
+}
+
+const rootElement = document.documentElement;
+if (rootElement.dataset.breakpointCleanupBound !== "true") {
+	rootElement.dataset.breakpointCleanupBound = "true";
+	document.addEventListener("astro:before-swap", () => {
+		const roots = document.querySelectorAll<HTMLElement>("[data-breakpoint]");
+		for (const root of roots) {
+			cleanupMap.get(root)?.();
+		}
+	});
+}
+</script>

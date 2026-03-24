@@ -1,3 +1,7 @@
+---
+import Breakpoint from "@components/breakpoint.astro";
+---
+
 <section class="px-5">
 	<div
 		class="max-w-7xl gap-x-2.5 gap-y-4 bg-gray-100 dark:bg-gray-950 rounded-sm mx-auto p-5 flex flex-col lg:grid lg:grid-cols-24 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
@@ -81,12 +85,16 @@
 				class="h-120 min-[25rem]:h-122.5 min-[31.25rem]:h-146 w-full relative"
 			>
 				<div
-					class="absolute top-0 left-0 aspect-9/16 h-8/10 md:aspect-square min-[31.25rem]:h-8/10 min-[34.375rem]:w-11/20 md:h-auto ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
-				/>
+					class="z-10 absolute top-0 left-0 aspect-9/16 h-8/10 md:aspect-square min-[31.25rem]:h-8/10 min-[34.375rem]:w-13/20 md:h-auto ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
+				>
+					<Breakpoint />
+				</div>
 
 				<div
-					class="absolute bottom-0 right-0 aspect-square w-8/10 md:h-auto sm:aspect-9/5 md:w-15/20 ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
-				/>
+					class="z-20 absolute bottom-0 right-0 aspect-square w-8/10 md:h-auto sm:aspect-9/5 md:w-15/20 ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
+				>
+					<Breakpoint />
+				</div>
 			</div>
 		</div>
 	</div>
