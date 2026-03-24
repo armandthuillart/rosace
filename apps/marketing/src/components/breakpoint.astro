@@ -1,61 +1,64 @@
 <div
-	class="@container w-full mx-auto max-w-xs size-full relative overflow-hidden"
+	class="select-none @container w-full mx-auto max-w-xs size-full relative overflow-hidden"
 	data-breakpoint
 >
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="1"
 	>
-		A
+		Resize
 	</div>
 
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="2"
 	>
-		new
+		to
 	</div>
 
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="3"
 	>
-		kind
+		any
 	</div>
 
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="4"
 	>
-		of
+		format
 	</div>
 
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-teal-400 dark:bg-teal-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="5"
 	>
-		motion
+		in
 	</div>
 
 	<div
-		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
+		class="left-1/2 top-1/2 -translate-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
 		data-word="6"
 	>
-		tool
+		seconds
 	</div>
 </div>
 
 <script>
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-const initializedRoots =
-	document.querySelectorAll<HTMLElement>("[data-breakpoint]");
-const cleanupMap = new WeakMap<HTMLElement, () => void>();
+gsap.registerPlugin(ScrollTrigger);
 
-const updateEmphasis = (wordNodes: HTMLElement[], spacing: number) => {
+const updateEmphasis = (
+	wordNodes: HTMLElement[],
+	spacing: number,
+	offsetY: number,
+	wrapY: (value: number) => number,
+) => {
 	for (const [index, word] of wordNodes.entries()) {
-		const y = Number(gsap.getProperty(word, "y"));
+		const y = wrapY(index * spacing + offsetY);
 		const distance = Math.min(Math.abs(y) / spacing, 2.2);
 		const centerWeight = Math.max(0, 1 - distance);
 		const fadeThreshold = 1.25;
@@ -65,9 +68,9 @@ const updateEmphasis = (wordNodes: HTMLElement[], spacing: number) => {
 		const edgeWeight = 1 - centerWeight;
 		const shouldHide = distance > 1.82;
 		const opacity = shouldHide ? 0 : (0.08 + centerWeight * 0.92) * edgeFade;
-		const scale = 0.88 + centerWeight * 0.12;
+		const scale = 0.84 + centerWeight * 0.16;
 		const blur = shouldHide ? 3.2 : edgeWeight * 2.2;
-		const rotation = Math.sign(y || 1) * edgeWeight * 5.5;
+		const rotation = Math.sign(y || 1) * edgeWeight * 16;
 		const zIndex = String(100 - Math.round(Math.abs(y)));
 
 		gsap.set(word, {
@@ -80,118 +83,135 @@ const updateEmphasis = (wordNodes: HTMLElement[], spacing: number) => {
 	}
 };
 
-const initRoot = (root: HTMLElement) => {
-	if (root.dataset.gsapInit === "true") {
-		return;
-	}
-	root.dataset.gsapInit = "true";
+const runSequence = (root: HTMLElement) => {
+	const mm = gsap.matchMedia();
 
-	const wordNodes = Array.from(
-		root.querySelectorAll<HTMLElement>("[data-word]"),
+	mm.add(
+		{
+			motionOk: "(prefers-reduced-motion: no-preference)",
+			reduceMotion: "(prefers-reduced-motion: reduce)",
+		},
+		(context) => {
+			const { reduceMotion } = context.conditions ?? {};
+
+			const querySelector = gsap.utils.selector(root);
+			const { toArray } = gsap.utils;
+
+			const words = toArray(querySelector("[data-word]")) as HTMLElement[];
+
+			if (words.length === 0) {
+				return;
+			}
+
+			let tl: gsap.core.Timeline | null = null;
+			const state = { y: 0 };
+
+			const applyPositions = (
+				orderedNodes: HTMLElement[],
+				spacing: number,
+				wrapY: (value: number) => number,
+			) => {
+				for (const [index, word] of orderedNodes.entries()) {
+					gsap.set(word, { y: wrapY(index * spacing + state.y) });
+				}
+			};
+
+			const runLayout = () => {
+				tl?.kill();
+				tl = null;
+				state.y = 0;
+
+				const orderedNodes = [...words].sort((a, b) => {
+					const aWord = Number(a.dataset.word ?? "0");
+					const bWord = Number(b.dataset.word ?? "0");
+					return aWord - bWord;
+				});
+
+				const count = orderedNodes.length;
+				const slotHeight = orderedNodes[0].offsetHeight || 1;
+				const spacing = slotHeight * 1.05;
+				const half = Math.floor(count / 2);
+				const minY = -half * spacing;
+				const maxY = (count - half) * spacing;
+
+				const wrapY = gsap.utils.wrap(minY, maxY);
+
+				applyPositions(orderedNodes, spacing, wrapY);
+				updateEmphasis(orderedNodes, spacing, state.y, wrapY);
+
+				if (reduceMotion) {
+					return;
+				}
+
+				tl = gsap.timeline({
+					onUpdate: () => {
+						applyPositions(orderedNodes, spacing, wrapY);
+						updateEmphasis(orderedNodes, spacing, state.y, wrapY);
+					},
+					repeat: -1,
+				});
+
+				if (count === 6) {
+					tl.to(state, {
+						keyframes: [
+							{
+								duration: 0.3,
+								ease: "power4.inOut",
+								y: `-=${spacing}`,
+							},
+							{
+								duration: 0.3,
+								ease: "power4.inOut",
+								y: `-=${spacing}`,
+							},
+							{
+								duration: 0.3,
+								ease: "power4.inOut",
+								y: `-=${spacing}`,
+							},
+							{
+								duration: 0.4,
+								ease: "power4.inOut",
+								y: `-=${spacing}`,
+							},
+							{
+								duration: 0.5,
+								ease: "expo.out",
+								y: `-=${spacing}`,
+							},
+							{
+								duration: 0.4,
+								ease: "expo.out",
+								y: `-=${spacing}`,
+							},
+						],
+					});
+				} else {
+					tl.to(state, {
+						keyframes: Array.from({ length: count }, () => ({
+							duration: 0.48,
+							ease: "power4.inOut",
+							y: `-=${spacing}`,
+						})),
+					});
+				}
+			};
+
+			runLayout();
+
+			ScrollTrigger.create({
+				onRefresh: runLayout,
+				refreshPriority: -1,
+				trigger: root,
+			});
+		},
+		root,
 	);
-	if (wordNodes.length === 0) {
-		return;
-	}
-
-	let timeline: gsap.core.Timeline | null = null;
-	let resizeObserver: ResizeObserver | null = null;
-
-	const setup = () => {
-		timeline?.kill();
-
-		const reducedMotion = window.matchMedia(MOTION_QUERY).matches;
-		const orderedNodes = [...wordNodes].sort((a, b) => {
-			const aWord = Number(a.dataset.word ?? "0");
-			const bWord = Number(b.dataset.word ?? "0");
-			return aWord - bWord;
-		});
-		const count = orderedNodes.length;
-		const slotHeight = wordNodes[0].offsetHeight || 1;
-		const spacing = slotHeight * 1.05;
-		const half = Math.floor(count / 2);
-		const minY = -half * spacing;
-		const maxY = (count - half) * spacing;
-		const spanY = maxY - minY;
-		const wrapY = (value: number) => {
-			let wrapped = value;
-			while (wrapped < minY) {
-				wrapped += spanY;
-			}
-			while (wrapped >= maxY) {
-				wrapped -= spanY;
-			}
-			return wrapped;
-		};
-		for (const [index, word] of orderedNodes.entries()) {
-			const y = wrapY(index * spacing);
-			gsap.set(word, { y });
-		}
-
-		updateEmphasis(orderedNodes, spacing);
-
-		if (reducedMotion) {
-			return;
-		}
-
-		timeline = gsap.timeline({
-			defaults: { ease: "none" },
-			repeat: -1,
-			repeatDelay: 0,
-		});
-
-		const tractionStep = spacing * 0.05;
-		const mainStep = spacing - tractionStep;
-
-		for (let step = 0; step < count; step += 1) {
-			timeline.to(orderedNodes, {
-				duration: 0.1,
-				ease: "power2.out",
-				modifiers: {
-					y: (value: string) => `${wrapY(Number.parseFloat(value))}px`,
-				},
-				onComplete: () => updateEmphasis(orderedNodes, spacing),
-				onUpdate: () => updateEmphasis(orderedNodes, spacing),
-				y: `-=${tractionStep}`,
-			});
-
-			timeline.to(orderedNodes, {
-				duration: 0.46,
-				ease: "power3.out",
-				modifiers: {
-					y: (value: string) => `${wrapY(Number.parseFloat(value))}px`,
-				},
-				onComplete: () => updateEmphasis(orderedNodes, spacing),
-				onUpdate: () => updateEmphasis(orderedNodes, spacing),
-				y: `-=${mainStep}`,
-			});
-		}
-	};
-
-	setup();
-
-	resizeObserver = new ResizeObserver(() => {
-		setup();
-	});
-	resizeObserver.observe(root);
-
-	cleanupMap.set(root, () => {
-		timeline?.kill();
-		resizeObserver?.disconnect();
-	});
 };
 
-for (const root of initializedRoots) {
-	initRoot(root);
-}
+const nodes = document.querySelectorAll<HTMLElement>("[data-breakpoint]");
 
-const rootElement = document.documentElement;
-if (rootElement.dataset.breakpointCleanupBound !== "true") {
-	rootElement.dataset.breakpointCleanupBound = "true";
-	document.addEventListener("astro:before-swap", () => {
-		const roots = document.querySelectorAll<HTMLElement>("[data-breakpoint]");
-		for (const root of roots) {
-			cleanupMap.get(root)?.();
-		}
-	});
+for (const node of nodes) {
+	runSequence(node);
 }
 </script>

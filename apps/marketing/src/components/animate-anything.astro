@@ -632,10 +632,7 @@ for (const root of roots) {
 		const rect = root.getBoundingClientRect();
 		const vh = window.innerHeight || document.documentElement.clientHeight;
 		const alreadyVisible =
-			rect.width > 0 &&
-			rect.height > 0 &&
-			rect.bottom > 0 &&
-			rect.top < vh;
+			rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < vh;
 		if (alreadyVisible) {
 			startAnimation();
 		} else {

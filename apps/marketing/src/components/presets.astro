@@ -1,8 +1,24 @@
 ---
-import Export from "@components/export.astro";
 ---
 
-<Export className="top-4 right-4 rounded-lg!" />
+<div
+	class="absolute top-4 right-4 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-control"
+>
+	<div
+		class="bg-violet-400 dark:bg-violet-500 text-white pr-3 pl-2.5 text-sm h-8 shrink-0 rounded-sm gap-1.5 inline-flex items-center justify-center"
+	>
+		<svg
+			aria-hidden="true"
+			class="size-4"
+			fill="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<use href="/sprite.svg#download" />
+		</svg>
+		Export
+	</div>
+</div>
 
 <div
 	class="w-3xs absolute top-20 bottom-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-control"
