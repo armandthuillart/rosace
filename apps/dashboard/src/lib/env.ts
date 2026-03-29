@@ -4,8 +4,6 @@ import {
   PUBLIC_CONVEX_URL,
   PUBLIC_DASHBOARD_URL,
   PUBLIC_MARKETING_URL,
-  PUBLIC_POSTHOG_API_KEY,
-  PUBLIC_POSTHOG_HOST,
 } from "$env/static/public";
 
 const envSchema = z.object({
@@ -13,8 +11,6 @@ const envSchema = z.object({
   PUBLIC_CONVEX_URL: z.url(),
   PUBLIC_DASHBOARD_URL: z.url(),
   PUBLIC_MARKETING_URL: z.url(),
-  PUBLIC_POSTHOG_API_KEY: z.string(),
-  PUBLIC_POSTHOG_HOST: z.url(),
 });
 
 export const env = envSchema.parse({
@@ -22,6 +18,4 @@ export const env = envSchema.parse({
   PUBLIC_CONVEX_URL,
   PUBLIC_DASHBOARD_URL,
   PUBLIC_MARKETING_URL,
-  PUBLIC_POSTHOG_API_KEY,
-  PUBLIC_POSTHOG_HOST,
 });

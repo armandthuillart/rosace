@@ -1,25 +1,35 @@
 <script lang="ts">
-	import faviconLight from '$lib/assets/favicon-light.svg';
-	import faviconDark from '$lib/assets/favicon-dark.svg';
-	let { children } = $props();
 	import "../app.css";
+	import favicon from "$lib/assets/favicon.svg";
+	import regular from "@fontsource/inter/files/inter-latin-400-normal.woff2?url";
+	import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
+	import { convex } from "@repo/convex/svelte";
+	import { client } from "$lib/auth";
+
+	let { children, data } = $props();
+
+	convex({ 
+		client, 
+		server: () => data.auth 
+	})
 </script>
 
 <svelte:head>
+	<link rel="icon" href={favicon} />
 	<link
-		href={faviconDark}
-		media="(prefers-color-scheme: dark)"
-		rel="icon"
-		type="image/svg+xml"
-	>
+		rel="preload"
+		as="font"
+		crossorigin="anonymous"
+		href={regular}
+		type="font/woff2"
+	/>
 	<link
-		href={faviconLight}
-		media="(prefers-color-scheme: light)"
-		rel="icon"
-		type="image/svg+xml"
-	>
-
-	<title>Rosace</title>
+		rel="preload"
+		as="font"
+		crossorigin="anonymous"
+		href={medium}
+		type="font/woff2"
+	/>
 </svelte:head>
 
 {@render children()}

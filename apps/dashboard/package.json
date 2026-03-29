@@ -6,19 +6,17 @@
   "scripts": {
     "build": "vp build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "deploy": "wrangler deploy",
     "dev": "vp dev",
-    "prepare": "svelte-kit sync || echo ''",
     "preview": "vp preview"
   },
   "dependencies": {
+    "@fontsource/inter": "catalog:",
     "@repo/better-auth": "workspace:*",
     "@repo/convex": "workspace:*",
     "@repo/crpc": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
-    "posthog-js": "catalog:",
-    "posthog-node": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -30,7 +28,7 @@
     "svelte-check": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   }
 }
