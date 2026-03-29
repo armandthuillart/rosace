@@ -1,15 +1,10 @@
 {
-	"skills": {
-		"git-commit": {
-			"computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21",
-			"source": "github/awesome-copilot",
-			"sourceType": "github"
-		},
-		"gsap": {
-			"computedHash": "b7d401d70a6f6f2bd29bb36ee803564cb071cc43bf5701e32a5dedbf88cc1466",
-			"source": "martinholovsky/claude-skills-generator",
-			"sourceType": "github"
-		}
-	},
-	"version": 1
+  "skills": {
+    "git-commit": {
+      "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21",
+      "source": "github/awesome-copilot",
+      "sourceType": "github"
+    }
+  },
+  "version": 1
 }

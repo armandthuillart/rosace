@@ -1,7 +1,7 @@
 {
-	"compilerOptions": {
-		"module": "esnext",
-		"moduleResolution": "bundler"
-	},
-	"include": ["src/**/*"]
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "include": ["src/**/*"]
 }

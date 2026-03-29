@@ -1,40 +1,27 @@
 {
-	"dependencies": {
-		"convex-helpers": "catalog:",
-		"jose": "catalog:",
-		"zustand": "catalog:"
-	},
-	"devDependencies": {
-		"@convex-dev/react-query": "catalog:",
-		"@tanstack/react-query": "catalog:",
-		"@tanstack/react-start": "catalog:",
-		"@types/node": "catalog:",
-		"@types/react": "catalog:",
-		"@types/react-dom": "catalog:",
-		"better-auth": "catalog:",
-		"convex": "catalog:",
-		"react": "catalog:",
-		"react-dom": "catalog:",
-		"typescript": "catalog:",
-		"zod": "catalog:"
-	},
-	"exports": {
-		"./plugins/convex": "./src/convex/plugin.ts",
-		"./plugins/convex-client": "./src/convex/client.ts",
-		"./react": "./src/react/index.ts",
-		"./server": "./src/server/index.ts",
-		"./tanstack-start": "./src/tanstack-start/index.ts"
-	},
-	"name": "@repo/better-auth",
-	"peerDependencies": {
-		"@convex-dev/react-query": "catalog:",
-		"@tanstack/react-query": "catalog:",
-		"@tanstack/react-start": "catalog:",
-		"better-auth": "catalog:",
-		"convex": "catalog:",
-		"react": "catalog:",
-		"react-dom": "catalog:",
-		"zod": "catalog:"
-	},
-	"type": "module"
+  "name": "@repo/better-auth",
+  "type": "module",
+  "exports": {
+    "./plugins": "./src/convex/plugin.ts",
+    "./client/plugins": "./src/convex/client.ts",
+    "./react": "./src/react/index.ts",
+    "./server": "./src/server/index.ts",
+    "./tanstack-start": "./src/tanstack-start/index.ts"
+  },
+  "dependencies": {
+    "convex-helpers": "catalog:",
+    "jose": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "zod": "catalog:"
+  }
 }

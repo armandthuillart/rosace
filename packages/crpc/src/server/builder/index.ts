@@ -20,12 +20,10 @@ import { ConvexBuilder } from "./factory";
  *
  * @see {@link ConvexBuilder}
  */
-function createBuilder<
-	TDataModel extends GenericDataModel,
->(): ConvexBuilder<TDataModel> {
-	return new ConvexBuilder<TDataModel>({
-		middlewares: [],
-	});
+function createBuilder<TDataModel extends GenericDataModel>(): ConvexBuilder<TDataModel> {
+  return new ConvexBuilder<TDataModel>({
+    middlewares: [],
+  });
 }
 
 export { createBuilder };

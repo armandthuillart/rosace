@@ -213,69 +213,64 @@
 --ramp-yellow-1000: #71440f */
 
 @theme {
-	--color-blue-400: oklch(67% 0.183 249);
-	--color-blue-500: oklch(62.7% 0.17 249);
-	--color-gray-50: oklch(98.5% 0 0);
-	--color-gray-100: oklch(97% 0 0);
-	--color-gray-150: oklch(95.5% 0 0);
-	--color-gray-200: oklch(92.5% 0 0);
-	--color-gray-300: oklch(88.5% 0 0);
-	--color-gray-400: oklch(76.7% 0 0);
-	--color-gray-500: oklch(56.2% 0 0);
-	--color-gray-600: oklch(38.7% 0 0);
-	--color-gray-700: oklch(34.1% 0 0);
-	--color-gray-800: oklch(29.3% 0 0);
-	--color-gray-900: oklch(23.5% 0 0);
-	--color-gray-950: oklch(20.5% 0 0);
-	--color-gray-1000: oklch(17.8% 0 0);
-	--color-green-400: oklch(57.4% 0.137 154);
-	--color-green-500: oklch(57.4% 0.137 154);
-	--color-pale-blue-400: oklch(79.1% 0.0306 258);
-	--color-pale-blue-800: oklch(38.7% 0.0513 269);
-	--color-pale-teal-400: oklch(79.4% 0.0363 219);
-	--color-pale-teal-800: oklch(39.8% 0.0385 222);
-	--color-pale-violet-400: oklch(77.9% 0.0595 286);
-	--color-pale-violet-800: oklch(35.8% 0.0499 284);
-	--color-teal-400: oklch(65.8% 0.118 219);
-	--color-teal-500: oklch(57.5% 0.101 217);
-	--color-violet-400: oklch(59.8% 0.254 298);
-	--color-violet-500: oklch(56.1% 0.257 297);
-	--color-red-400: oklch(60.2% 0.204 33.5);
-	--color-red-500: oklch(64.8% 0.208 35.7);
-	--font-sans: var(--font-inter);
-	--shadow-4xl: 0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%);
-	--shadow-control: var(--shadow-control);
-	--shadow-popover: var(--shadow-popover);
-	--shadow-timeline: var(--shadow-timeline);
+  --color-blue-400: oklch(67% 0.183 249);
+  --color-blue-500: oklch(62.7% 0.17 249);
+  --color-gray-50: oklch(98.5% 0 0);
+  --color-gray-100: oklch(97% 0 0);
+  --color-gray-150: oklch(95.5% 0 0);
+  --color-gray-200: oklch(92.5% 0 0);
+  --color-gray-300: oklch(88.5% 0 0);
+  --color-gray-400: oklch(76.7% 0 0);
+  --color-gray-500: oklch(56.2% 0 0);
+  --color-gray-600: oklch(38.7% 0 0);
+  --color-gray-700: oklch(34.1% 0 0);
+  --color-gray-800: oklch(29.3% 0 0);
+  --color-gray-900: oklch(23.5% 0 0);
+  --color-gray-950: oklch(20.5% 0 0);
+  --color-gray-1000: oklch(17.8% 0 0);
+  --color-green-400: oklch(57.4% 0.137 154);
+  --color-green-500: oklch(57.4% 0.137 154);
+  --color-pale-blue-400: oklch(79.1% 0.0306 258);
+  --color-pale-blue-800: oklch(38.7% 0.0513 269);
+  --color-pale-teal-400: oklch(79.4% 0.0363 219);
+  --color-pale-teal-800: oklch(39.8% 0.0385 222);
+  --color-pale-violet-400: oklch(77.9% 0.0595 286);
+  --color-pale-violet-800: oklch(35.8% 0.0499 284);
+  --color-teal-400: oklch(65.8% 0.118 219);
+  --color-teal-500: oklch(57.5% 0.101 217);
+  --color-violet-400: oklch(59.8% 0.254 298);
+  --color-violet-500: oklch(56.1% 0.257 297);
+  --color-red-400: oklch(60.2% 0.204 33.5);
+  --color-red-500: oklch(64.8% 0.208 35.7);
+  --font-sans: var(--font-inter);
+  --shadow-4xl: 0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%);
+  --shadow-control: var(--shadow-control);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-timeline: var(--shadow-timeline);
 }
 
 :root {
-	--shadow-control:
-		0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
-	--shadow-popover:
-		0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
-		0px 2px 5px oklch(0% 0 0 / 15%);
-	--shadow-timeline:
-		0px 0px 0.5px oklch(0% 0 0 / 18%), 0px 3px 8px oklch(0% 0 0 / 10%),
-		0px 1px 3px oklch(0% 0 0 / 10%);
+  --shadow-control: 0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
+  --shadow-popover:
+    0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
+    0px 2px 5px oklch(0% 0 0 / 15%);
+  --shadow-timeline:
+    0px 0px 0.5px oklch(0% 0 0 / 18%), 0px 3px 8px oklch(0% 0 0 / 10%),
+    0px 1px 3px oklch(0% 0 0 / 10%);
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {
-		--shadow-control:
-			0px 0px 0.5px oklch(0% 0 0 / 50%), 0px 1px 3px oklch(0% 0 0 / 40%), inset 0px 0.5px 0px oklch(
-				100% 0 0 /
-				10%
-			), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
-		--shadow-popover:
-			0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
-			0px 2px 5px oklch(0% 0 0 / 15%);
-		--shadow-timeline:
-			0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%), inset 0px 0.5px 0px oklch(
-				100% 0 0 /
-				8%
-			), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
-	}
+  :root {
+    --shadow-control:
+      0px 0px 0.5px oklch(0% 0 0 / 50%), 0px 1px 3px oklch(0% 0 0 / 40%),
+      inset 0px 0.5px 0px oklch(100% 0 0 / 10%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+    --shadow-popover:
+      0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
+      0px 2px 5px oklch(0% 0 0 / 15%);
+    --shadow-timeline:
+      0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
+      inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+  }
 }
 
 /* @theme {

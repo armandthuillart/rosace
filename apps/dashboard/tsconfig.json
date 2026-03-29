@@ -1,20 +1,15 @@
 {
-	"compilerOptions": {
-		"allowJs": true,
-		"baseUrl": ".",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
-		"jsx": "react-jsx",
-		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"noEmit": true,
-		"paths": { "@/*": ["./src/*"] },
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"target": "es2022"
-	},
-	"include": ["**/*.ts", "**/*.tsx", "public/script*.js"]
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "rewriteRelativeImportExtensions": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true
+  },
+  "extends": "./.svelte-kit/tsconfig.json"
 }

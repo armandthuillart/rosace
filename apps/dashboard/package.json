@@ -1,48 +1,36 @@
 {
-	"dependencies": {
-		"@convex-dev/react-query": "catalog:",
-		"@repo/better-auth": "workspace:*",
-		"@repo/convex": "workspace:*",
-		"@repo/crpc": "workspace:*",
-		"@repo/env": "workspace:*",
-		"@repo/ui": "workspace:*",
-		"@tanstack/react-query": "catalog:",
-		"@tanstack/react-router": "catalog:",
-		"@tanstack/react-router-ssr-query": "catalog:",
-		"@tanstack/react-start": "catalog:",
-		"better-auth": "catalog:",
-		"better-themes": "catalog:",
-		"convex": "catalog:",
-		"react": "catalog:",
-		"react-dom": "catalog:",
-		"zod": "catalog:"
-	},
-	"devDependencies": {
-		"@babel/core": "catalog:",
-		"@cloudflare/vite-plugin": "catalog:",
-		"@fontsource-variable/inter": "catalog:",
-		"@rolldown/plugin-babel": "catalog:",
-		"@tailwindcss/vite": "catalog:",
-		"@types/node": "catalog:",
-		"@types/react": "catalog:",
-		"@types/react-dom": "catalog:",
-		"@vitejs/plugin-react": "catalog:",
-		"babel-plugin-react-compiler": "catalog:",
-		"tailwindcss": "catalog:",
-		"typescript": "catalog:",
-		"vite": "catalog:",
-		"vite-tsconfig-paths": "catalog:",
-		"wrangler": "catalog:"
-	},
-	"name": "@apps/dashboard",
-	"private": true,
-	"scripts": {
-		"build": "vite build",
-		"cf-typegen": "wrangler types",
-		"deploy": "npm run build && wrangler deploy",
-		"dev": "vite dev",
-		"preview": "vite preview"
-	},
-	"sideEffects": false,
-	"type": "module"
+  "name": "dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "dev": "vp dev",
+    "prepare": "svelte-kit sync || echo ''",
+    "preview": "vp preview"
+  },
+  "dependencies": {
+    "@repo/better-auth": "workspace:*",
+    "@repo/convex": "workspace:*",
+    "@repo/crpc": "workspace:*",
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "posthog-js": "catalog:",
+    "posthog-node": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-cloudflare": "catalog:",
+    "@sveltejs/kit": "catalog:",
+    "@sveltejs/vite-plugin-svelte": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "svelte": "catalog:",
+    "svelte-check": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vite-plus": "catalog:"
+  }
 }

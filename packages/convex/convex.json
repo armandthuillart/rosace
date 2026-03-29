@@ -1,11 +1,11 @@
 {
-	"$schema": "./node_modules/convex/schemas/convex.schema.json",
-	"codegen": {
-		"staticApi": true,
-		"staticDataModel": true
-	},
-	"functions": "src",
-	"node": {
-		"nodeVersion": "22"
-	}
+  "$schema": "./node_modules/convex/schemas/convex.schema.json",
+  "codegen": {
+    "staticApi": true,
+    "staticDataModel": true
+  },
+  "functions": "src",
+  "node": {
+    "nodeVersion": "22"
+  }
 }

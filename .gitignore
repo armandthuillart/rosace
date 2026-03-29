@@ -1,8 +1,6 @@
-# Dependencies
+# Node & package manager
 node_modules
-
-# TanStack Start
-.tanstack
+pnpm-debug.log*
 
 # macOS (Finder)
 .DS_Store
@@ -18,14 +16,14 @@ node_modules
 .astro
 dist
 
-# Bun
-bun.lockb
-
 # Cloudflare
+.cloudflare
 .wrangler
 
-# Convex
-.convex/
+# Svelte
+.svelte-kit/
+dist-ssr
 
-# moon
-.moon/cache
+# Logs
+logs
+*.log

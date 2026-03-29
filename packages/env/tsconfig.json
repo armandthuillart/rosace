@@ -1,8 +1,8 @@
 {
-	"compilerOptions": {
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"types": ["node"]
-	},
-	"include": ["src/**/*.ts"]
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
 }

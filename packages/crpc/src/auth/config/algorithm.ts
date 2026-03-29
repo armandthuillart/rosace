@@ -1,12 +1,12 @@
 import type { JwtOptions } from "better-auth/plugins";
 
 interface JwkDoc {
-	alg?: string;
-	createdAt: number;
-	crv?: string;
-	id: string;
-	privateKey: string;
-	publicKey: string;
+  alg?: string;
+  createdAt: number;
+  crv?: string;
+  id: string;
+  privateKey: string;
+  publicKey: string;
 }
 
 /**
@@ -15,7 +15,7 @@ interface JwkDoc {
  * @returns The data URI.
  */
 function toJwkDataUri(jwks: JwkDoc[]) {
-	return `data:text/plain;charset=utf-8;base64,${btoa(JSON.stringify(createPublicJwks(jwks)))}`;
+  return `data:text/plain;charset=utf-8;base64,${btoa(JSON.stringify(createPublicJwks(jwks)))}`;
 }
 
 /**
@@ -25,19 +25,18 @@ function toJwkDataUri(jwks: JwkDoc[]) {
  * @returns The public JWKS.
  */
 const createPublicJwks = (jwks: JwkDoc[], options?: JwtOptions) => {
-	const keyPairConfig = options?.jwks?.keyPairConfig;
-	const defaultAlg = keyPairConfig?.alg ?? "EdDSA";
-	const defaultCrv =
-		keyPairConfig && "crv" in keyPairConfig ? keyPairConfig.crv : undefined;
+  const keyPairConfig = options?.jwks?.keyPairConfig;
+  const defaultAlg = keyPairConfig?.alg ?? "EdDSA";
+  const defaultCrv = keyPairConfig && "crv" in keyPairConfig ? keyPairConfig.crv : undefined;
 
-	return {
-		keys: jwks.map((key) => ({
-			...JSON.parse(key.publicKey),
-			alg: key.alg ?? defaultAlg,
-			crv: key.crv ?? defaultCrv,
-			kid: key.id,
-		})),
-	};
+  return {
+    keys: jwks.map((key) => ({
+      ...JSON.parse(key.publicKey),
+      alg: key.alg ?? defaultAlg,
+      crv: key.crv ?? defaultCrv,
+      kid: key.id,
+    })),
+  };
 };
 
 export { createPublicJwks, toJwkDataUri };

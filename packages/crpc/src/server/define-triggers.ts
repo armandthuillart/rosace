@@ -1,9 +1,9 @@
 import type { GenericAuthTriggers } from "@repo/better-auth/server";
 import type {
-	GenericDataModel,
-	GenericMutationCtx,
-	GenericSchema,
-	SchemaDefinition,
+  GenericDataModel,
+  GenericMutationCtx,
+  GenericSchema,
+  SchemaDefinition,
 } from "convex/server";
 
 /**
@@ -16,15 +16,15 @@ export type AuthSchema = SchemaDefinition<GenericSchema, true>;
  * Convex mutation context that auth triggers run with.
  */
 export type AuthCtx<DataModel extends GenericDataModel = GenericDataModel> =
-	GenericMutationCtx<DataModel>;
+  GenericMutationCtx<DataModel>;
 
 /**
  * Shape of all auth triggers once they're wired up to your data model and schema.
  */
 export type AuthTriggers<
-	DataModel extends GenericDataModel = GenericDataModel,
-	Schema extends AuthSchema = AuthSchema,
-	Ctx = AuthCtx<DataModel>,
+  DataModel extends GenericDataModel = GenericDataModel,
+  Schema extends AuthSchema = AuthSchema,
+  Ctx = AuthCtx<DataModel>,
 > = GenericAuthTriggers<DataModel, Schema, Ctx>;
 
 /**
@@ -35,9 +35,9 @@ export type AuthTriggers<
  * @returns The same trigger configuration you passed in.
  */
 export function defineTriggers<
-	DataModel extends GenericDataModel = GenericDataModel,
-	Schema extends AuthSchema = AuthSchema,
-	Ctx = AuthCtx<DataModel>,
+  DataModel extends GenericDataModel = GenericDataModel,
+  Schema extends AuthSchema = AuthSchema,
+  Ctx = AuthCtx<DataModel>,
 >(_: Schema, triggers: AuthTriggers<DataModel, Schema, Ctx>) {
-	return triggers;
+  return triggers;
 }

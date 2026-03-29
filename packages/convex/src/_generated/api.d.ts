@@ -21,12 +21,7 @@ import type { GenericId as Id } from "convex/values";
  */
 export declare const api: {
   user: {
-    getUser: FunctionReference<
-      "query",
-      "public",
-      {},
-      { email: string; name: string }
-    >;
+    getUser: FunctionReference<"query", "public", {}, { email: string; name: string }>;
   };
 };
 
@@ -47,12 +42,7 @@ export declare const internal: {
         "internal",
         {
           input: any;
-          op:
-            | "create"
-            | "updateOne"
-            | "updateMany"
-            | "deleteOne"
-            | "deleteMany";
+          op: "create" | "updateOne" | "updateMany" | "deleteOne" | "deleteMany";
           select?: Array<string>;
         },
         any
@@ -75,48 +65,23 @@ export declare const internal: {
     };
   };
   email: {
-    changeEmail: FunctionReference<
-      "action",
-      "internal",
-      { otp: string; to: string },
-      string
-    >;
-    resetPassword: FunctionReference<
-      "action",
-      "internal",
-      { otp: string; to: string },
-      string
-    >;
-    sendOtp: FunctionReference<
-      "action",
-      "internal",
-      { otp: string; to: string },
-      string
-    >;
+    changeEmail: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
+    resetPassword: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
+    sendOtp: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
   };
 };
 
 export declare const components: {
   resend: {
     lib: {
-      cancelEmail: FunctionReference<
-        "mutation",
-        "internal",
-        { emailId: string },
-        null
-      >;
+      cancelEmail: FunctionReference<"mutation", "internal", { emailId: string }, null>;
       cleanupAbandonedEmails: FunctionReference<
         "mutation",
         "internal",
         { olderThan?: number },
         null
       >;
-      cleanupOldEmails: FunctionReference<
-        "mutation",
-        "internal",
-        { olderThan?: number },
-        null
-      >;
+      cleanupOldEmails: FunctionReference<"mutation", "internal", { olderThan?: number }, null>;
       createManualEmail: FunctionReference<
         "mutation",
         "internal",
@@ -192,12 +157,7 @@ export declare const components: {
             | "failed";
         } | null
       >;
-      handleEmailEvent: FunctionReference<
-        "mutation",
-        "internal",
-        { event: any },
-        null
-      >;
+      handleEmailEvent: FunctionReference<"mutation", "internal", { event: any }, null>;
       sendEmail: FunctionReference<
         "mutation",
         "internal",

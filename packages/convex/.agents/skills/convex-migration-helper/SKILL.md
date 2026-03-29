@@ -47,13 +47,13 @@ Unless you are certain, prefer deprecating fields over deleting them. Mark the f
 // Before
 users: defineTable({
   name: v.string(),
-})
+});
 
 // After - safe, new field is optional
 users: defineTable({
   name: v.string(),
   bio: v.optional(v.string()),
-})
+});
 ```
 
 ### Adding New Table
@@ -62,7 +62,7 @@ users: defineTable({
 posts: defineTable({
   userId: v.id("users"),
   title: v.string(),
-}).index("by_user", ["userId"])
+}).index("by_user", ["userId"]);
 ```
 
 ### Adding Index
@@ -71,8 +71,7 @@ posts: defineTable({
 users: defineTable({
   name: v.string(),
   email: v.string(),
-})
-  .index("by_email", ["email"])
+}).index("by_email", ["email"]);
 ```
 
 ## Breaking Changes: The Deployment Workflow
@@ -250,8 +249,7 @@ Process only matching documents instead of the full table:
 ```typescript
 export const fixEmptyNames = migrations.define({
   table: "users",
-  customRange: (query) =>
-    query.withIndex("by_name", (q) => q.eq("name", "")),
+  customRange: (query) => query.withIndex("by_name", (q) => q.eq("name", "")),
   migrateOne: () => ({ name: "<unknown>" }),
 });
 ```
@@ -277,7 +275,7 @@ export const clearField = migrations.define({
 users: defineTable({
   name: v.string(),
   role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
-})
+});
 
 // Migration: backfill the field
 export const addDefaultRole = migrations.define({
@@ -293,7 +291,7 @@ export const addDefaultRole = migrations.define({
 users: defineTable({
   name: v.string(),
   role: v.union(v.literal("user"), v.literal("admin")),
-})
+});
 ```
 
 ### Deleting a Field

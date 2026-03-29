@@ -1,6 +1,6 @@
 {
-	"assets": { "directory": "./dist" },
-	"compatibility_date": "2026-03-12",
-	"name": "rosace-marketing",
-	"observability": { "enabled": true }
+  "assets": { "directory": "./dist" },
+  "compatibility_date": "2026-03-12",
+  "name": "rosace-marketing",
+  "observability": { "enabled": true },
 }

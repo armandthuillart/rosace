@@ -1,27 +1,27 @@
 import { ConvexError } from "convex/values";
 
 const CRPC_ERROR_CODES = [
-	"PARSE_ERROR",
-	"BAD_REQUEST",
-	"INTERNAL_SERVER_ERROR",
-	"NOT_IMPLEMENTED",
-	"BAD_GATEWAY",
-	"SERVICE_UNAVAILABLE",
-	"GATEWAY_TIMEOUT",
-	"UNAUTHORIZED",
-	"PAYMENT_REQUIRED",
-	"FORBIDDEN",
-	"NOT_FOUND",
-	"METHOD_NOT_SUPPORTED",
-	"TIMEOUT",
-	"CONFLICT",
-	"PRECONDITION_FAILED",
-	"PAYLOAD_TOO_LARGE",
-	"UNSUPPORTED_MEDIA_TYPE",
-	"UNPROCESSABLE_CONTENT",
-	"PRECONDITION_REQUIRED",
-	"TOO_MANY_REQUESTS",
-	"CLIENT_CLOSED_REQUEST",
+  "PARSE_ERROR",
+  "BAD_REQUEST",
+  "INTERNAL_SERVER_ERROR",
+  "NOT_IMPLEMENTED",
+  "BAD_GATEWAY",
+  "SERVICE_UNAVAILABLE",
+  "GATEWAY_TIMEOUT",
+  "UNAUTHORIZED",
+  "PAYMENT_REQUIRED",
+  "FORBIDDEN",
+  "NOT_FOUND",
+  "METHOD_NOT_SUPPORTED",
+  "TIMEOUT",
+  "CONFLICT",
+  "PRECONDITION_FAILED",
+  "PAYLOAD_TOO_LARGE",
+  "UNSUPPORTED_MEDIA_TYPE",
+  "UNPROCESSABLE_CONTENT",
+  "PRECONDITION_REQUIRED",
+  "TOO_MANY_REQUESTS",
+  "CLIENT_CLOSED_REQUEST",
 ] as const;
 
 /**
@@ -30,14 +30,14 @@ const CRPC_ERROR_CODES = [
 export type CRPCErrorCode = (typeof CRPC_ERROR_CODES)[number];
 
 interface CRPCErrorData {
-	code: CRPCErrorCode;
-	message: string;
-	[key: string]: string | undefined;
+  code: CRPCErrorCode;
+  message: string;
+  [key: string]: string | undefined;
 }
 
 interface CRPCErrorOptions {
-	code: CRPCErrorCode;
-	message?: string;
+  code: CRPCErrorCode;
+  message?: string;
 }
 
 /**
@@ -51,17 +51,17 @@ interface CRPCErrorOptions {
  * @see {@link CRPCErrorCode}
  */
 export class CRPCError extends ConvexError<CRPCErrorData> {
-	readonly code: CRPCErrorCode;
+  readonly code: CRPCErrorCode;
 
-	constructor(opts: CRPCErrorOptions) {
-		const { code, message = code } = opts;
+  constructor(opts: CRPCErrorOptions) {
+    const { code, message = code } = opts;
 
-		super({
-			code,
-			message,
-		});
+    super({
+      code,
+      message,
+    });
 
-		this.name = "CRPCError";
-		this.code = code;
-	}
+    this.name = "CRPCError";
+    this.code = code;
+  }
 }

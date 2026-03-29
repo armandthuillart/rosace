@@ -1,15 +1,15 @@
 {
-	"dependencies": {
-		"dotenv": "catalog:"
-	},
-	"devDependencies": {
-		"@types/node": "catalog:",
-		"zod": "catalog:"
-	},
-	"exports": "./src/index.ts",
-	"name": "@repo/env",
-	"peerDependencies": {
-		"zod": "catalog:"
-	},
-	"type": "module"
+  "name": "@repo/env",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "dotenv": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "catalog:"
+  }
 }

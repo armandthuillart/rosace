@@ -1,9 +1,8 @@
 {
-	"editor.codeActionsOnSave": { "source.fixAll.biome": "explicit" },
-	"editor.defaultFormatter": "biomejs.biome",
-
-	"tailwindCSS.experimental.configFile": {
-		"apps/marketing/src/styles/global.css": ["**/*.astro"],
-		"packages/ui/src/globals.css": ["**/*.tsx"]
-	}
+  "files.associations": { "*.css": "tailwindcss" },
+  "editor.codeActionsOnSave": { "source.fixAll.oxc": "explicit" },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "oxc.fmt.configPath": "./vite.config.ts"
 }

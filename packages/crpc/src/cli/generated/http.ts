@@ -5,7 +5,7 @@
 
 import type { MiddlewareOptions } from "@repo/crpc/auth/http";
 import { betterAuth as middleware } from "@repo/crpc/auth/http";
-import { getAuth, getHandler } from "./auth";
+import { getHandler } from "./auth";
 
 /**
  * Middleware for CORS.
@@ -14,10 +14,10 @@ import { getAuth, getHandler } from "./auth";
  * @returns A Hono middleware handler.
  */
 function betterAuth(options: Omit<MiddlewareOptions, "getAuth">) {
-	return middleware({
-		...options,
-		getAuth: getHandler,
-	});
+  return middleware({
+    ...options,
+    getAuth: getHandler,
+  });
 }
 
 export { betterAuth };

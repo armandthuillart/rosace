@@ -1,4 +1,12 @@
 {
-	"name": "@repo/canvas",
-	"type": "module"
+  "name": "@repo/canvas",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "convex": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "convex": "catalog:"
+  }
 }
