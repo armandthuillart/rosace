@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-sans: "Inter";
 }
 
 :root {
