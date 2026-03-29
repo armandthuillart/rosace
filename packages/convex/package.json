@@ -1,5 +1,7 @@
 {
   "name": "@repo/convex",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
     ".": "./src/crpc/types.ts",

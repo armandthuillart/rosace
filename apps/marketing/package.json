@@ -4,13 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "astro": "vp dev",
-    "build": "vp build",
-    "deploy": "astro build && wrangler deploy",
+    "build": "astro build",
+    "check": "astro check",
+    "deploy": "wrangler deploy",
     "dev": "astro dev",
-    "lint": "biome check --write .",
-    "preview": "vp preview",
-    "start": "astro dev"
+    "preview": "astro preview"
   },
   "dependencies": {
     "@repo/env": "workspace:*",
@@ -24,7 +22,8 @@
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "tailwindcss": "catalog:",
-    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "wrangler": "catalog:"
   }
 }

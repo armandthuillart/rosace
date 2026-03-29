@@ -1,5 +1,7 @@
 {
   "name": "@repo/better-auth",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
     "./plugins": "./src/convex/plugin.ts",

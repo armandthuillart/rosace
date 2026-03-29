@@ -37,7 +37,6 @@ for (const app of apps) {
     const marketingEnv = rawEnv
       .split("\n")
       .filter((line) => !line.trim().startsWith("CONVEX_"))
-      .filter((line) => !line.trim().startsWith("POSTHOG_"))
       .join("\n");
 
     fs.writeFileSync(target, marketingEnv, "utf8");

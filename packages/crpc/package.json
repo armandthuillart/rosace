@@ -1,5 +1,7 @@
 {
   "name": "@repo/crpc",
+  "version": "0.0.0",
+  "private": true,
   "bin": {
     "crpc": "./src/cli/runner.ts"
   },

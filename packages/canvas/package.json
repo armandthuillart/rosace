@@ -1,5 +1,7 @@
 {
   "name": "@repo/canvas",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "devDependencies": {
     "@types/node": "catalog:",

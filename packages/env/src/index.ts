@@ -6,8 +6,6 @@ const envSchema = z.object({
   CONVEX_URL: z.string().optional(),
   DASHBOARD_URL: z.string(),
   MARKETING_URL: z.string(),
-  POSTHOG_API_KEY: z.string().optional(),
-  POSTHOG_HOST: z.string().optional(),
 });
 
 type Env = z.infer<typeof envSchema>;
@@ -31,8 +29,6 @@ function getEnv(): Env {
     CONVEX_URL: process.env.CONVEX_URL,
     DASHBOARD_URL: process.env.DASHBOARD_URL,
     MARKETING_URL: process.env.MARKETING_URL,
-    POSTHOG_API_KEY: process.env.POSTHOG_API_KEY,
-    POSTHOG_HOST: process.env.POSTHOG_HOST,
   });
 
   return cachedEnv;
