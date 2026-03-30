@@ -1,5 +1,16 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
 <div
-	class="absolute overflow-hidden h-18 bottom-0 left-1/2 rounded-[.875rem] bg-white dark:bg-gray-800 shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex before:absolute before:left-0 before:h-full before:w-15 before:bg-linear-to-r before:z-1 before:from-white before:to-transparent dark:before:from-gray-800 before:from-10%"
+	class:list={[
+		"absolute overflow-hidden h-18 bottom-0 left-1/2 rounded-[.875rem] bg-white dark:bg-gray-800 shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex before:absolute before:left-0 before:h-full before:w-15 before:bg-linear-to-r before:z-1 before:from-white before:to-transparent dark:before:from-gray-800 before:from-10%",
+		className,
+	]}
 	data-timeline-viewport
 >
 	<div
@@ -57,7 +68,7 @@
 				<div
 					class="-left-3.5 size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
 				>
-					<div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+					<div class="size-full bg-(--accent) rounded-full" />
 				</div>
 			</div>
 		</div>
@@ -75,7 +86,7 @@
 				<div
 					class="left-[43.5%] size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
 				>
-					<div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+					<div class="size-full bg-(--accent) rounded-full" />
 				</div>
 			</div>
 		</div>
@@ -93,7 +104,7 @@
 				<div
 					class="-left-3.5 size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
 				>
-					<div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+					<div class="size-full bg-(--accent) rounded-full" />
 				</div>
 			</div>
 		</div>
@@ -111,7 +122,7 @@
 				<div
 					class="left-4/10 size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
 				>
-					<div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+					<div class="size-full bg-(--accent) rounded-full" />
 				</div>
 			</div>
 		</div>
@@ -129,7 +140,7 @@
 				<div
 					class="left-6/10 size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
 				>
-					<div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+					<div class="size-full bg-(--accent) rounded-full" />
 				</div>
 			</div>
 		</div>

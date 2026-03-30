@@ -1,4 +1,6 @@
 ---
+import Timeline from "@components/timeline.astro";
+
 const spikes = [
 	34, 7, 6, 8, 14, 8, 7, 9, 22, 8, 7, 9, 14, 8, 7, 9,
 	30, 8, 7, 9, 14, 8, 7, 9, 22, 8, 7, 9, 32, 8, 7, 10
@@ -25,87 +27,97 @@ const spikes = [
 </div>
 
 <div
-	class="w-3xs absolute top-20 bottom-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-control flex flex-col"
+	class="w-3xs overflow-hidden absolute top-20 bottom-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-control flex flex-col"
 >
-	<div class="w-full gap-3 flex p-5 border-b border-gray-200 dark:border-gray-600 flex-col">
+	<div class="w-full gap-3 flex pt-4 p-5 border-b border-gray-200 dark:border-gray-600 flex-col">
 		<div class="text-sm font-medium">Background</div>
 		
 		<div class="grid grid-cols-3 gap-4">
-			<div class="ring-2 ring-violet-400 dark:ring-violet-600 relative w-full aspect-square bg-gray-50 dark:bg-gray-700 overflow-hidden">
-				<div class="z-10 absolute -bottom-0.5 size-4.5 flex items-center justify-center -right-0.5 text-white bg-violet-400 dark:bg-violet-600">
+			<div class="ring-2 rounded-sm ring-violet-400 dark:ring-violet-600 relative w-full aspect-square bg-gray-50 dark:bg-gray-700 overflow-hidden">
+				<div class="z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-violet-400 dark:bg-violet-600">
 					<svg aria-hidden="true" class="size-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 						<use href="/sprite.svg#check" />
 					</svg>
 				</div>
 
 				<div class="z-0 absolute inset-0 grid grid-cols-5 auto-rows-min">
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 			
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
 			
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 			
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
 
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 					<div class="w-full aspect-square bg-white dark:bg-gray-800" />
-					<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+					<div class="w-full aspect-square bg-gray-100 dark:bg-gray-700" />
 				</div>
 			</div>
 
-			<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
-			<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
-			<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
-			<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
-			<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
+			<div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700" />
+			<div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700" />
+			<div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700" />
+			<div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700" />
+			<div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700" />
 		</div>
 	</div>
 
-	<div class="w-full gap-3 flex p-5 border-b border-gray-200 dark:border-gray-600 flex-col">
+	<div class="w-full gap-3 flex pt-4 p-5 border-b border-gray-200 dark:border-gray-600 flex-col">
 		<div class="text-sm font-medium">Camera</div>
 
-		<div class="grid grid-cols-3 gap-4">
-			<div class=""></div>
+		<div class="grid grid-cols-2 gap-2">
+			<div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700" />
+
+			<div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700" />
+
+			<div class="grid py-1 h-14 bg-gray-100 rounded-sm dark:bg-gray-700 grid-cols-3 grid-rows-3">
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+				<span class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full" />
+			</div>
+
+			<div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700" />
 		</div>
 	</div>
 
-	<div class="w-full gap-3 flex p-5 border-b border-gray-200 dark:border-gray-600 flex-col">
+	<div class="w-full gap-3 flex pt-4 p-5 flex-col">
 		<div class="text-sm font-medium">Music</div>
-
-		<div class="grid grid-cols-3 gap-2">
-			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
-			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
-			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
-		</div>
 
 		<div 
 			aria-hidden="true"
-		 	class="relative bg-gray-50 border border-gray-150 h-13 dark:bg-gray-700 dark:border-gray-700 rounded-sm px-2 py-2 overflow-hidden"
+			 class="relative rounded-sm bg-gray-50 h-14 dark:bg-gray-700 px-2 py-2 overflow-hidden before:absolute before:right-auto before:w-6 before:inset-0 before:bg-linear-to-r before:from-gray-50 before:dark:from-gray-700 before:to-transparent before:z-10 after:absolute after:left-auto after:w-6 after:inset-0 after:bg-linear-to-l after:from-gray-50 after:dark:from-gray-700 after:to-transparent after:z-10"
 		>
 			<div class="flex h-full w-max items-center animate-waveform">
 				<div class="-ml-0.5 flex shrink-0 items-center gap-0.5">
 					{
 						spikes.map((height) => (
 							<div
-								class="h-(--bar-height) w-0.5 rounded-full bg-gray-400 dark:bg-gray-500"
+								class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
 								style={`--bar-height:${height}px`}
 							/>
 						))
@@ -119,7 +131,7 @@ const spikes = [
 					{
 						spikes.map((height) => (
 							<div
-								class="h-(--bar-height) w-0.5 rounded-full bg-gray-400 dark:bg-gray-500"
+								class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
 								style={`--bar-height:${height}px`}
 							/>
 						))
@@ -133,7 +145,7 @@ const spikes = [
 					{
 						spikes.map((height) => (
 							<div
-								class="h-(--bar-height) w-0.5 rounded-full bg-gray-400 dark:bg-gray-500"
+								class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
 								style={`--bar-height:${height}px`}
 							/>
 						))
@@ -141,11 +153,17 @@ const spikes = [
 				</div>
 			</div>
 		</div>
+
+		<div class="grid grid-cols-3 gap-2">
+			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
+			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
+			<div class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm" />
+		</div>
 	</div>
 </div>
 
 <div
-	class="overflow-hidden rounded-[.875rem] bg-white absolute right-[calc(var(--container-3xs)+4rem)] shadow-control top-1/2 -translate-y-1/2 aspect-4/3 h-[calc(100%-10rem)] dark:bg-gray-800"
+	class="-mt-4 overflow-hidden rounded-[.875rem] bg-white absolute right-[calc(var(--container-3xs)+4rem)] shadow-control top-1/2 -translate-y-1/2 aspect-4/3 h-[calc(100%-12rem)] dark:bg-gray-800"
 >
 	<div class="absolute inset-0 grid grid-cols-5 auto-rows-fr">
 		<div class="w-full aspect-square bg-gray-50 dark:bg-gray-700" />
@@ -174,3 +192,4 @@ const spikes = [
 	</div>
 </div>
 
+<Timeline class="bottom-4 -translate-x-full [--accent:var(--color-violet-400)] dark:[--accent:var(--color-violet-500)]" />
