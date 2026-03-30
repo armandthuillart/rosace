@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@types/node": "catalog:",
-    "convex": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "^25.5.0",
+    "convex": "^1.34.1",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "convex": "catalog:"
+    "convex": "^1.34.1"
   }
 }

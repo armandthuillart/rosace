@@ -1,6 +1,5 @@
 # Node & package manager
 node_modules
-pnpm-debug.log*
 
 # macOS (Finder)
 .DS_Store

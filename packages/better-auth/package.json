@@ -11,19 +11,19 @@
     "./tanstack-start": "./src/tanstack-start/index.ts"
   },
   "dependencies": {
-    "convex-helpers": "catalog:",
-    "jose": "catalog:"
+    "convex-helpers": "^0.1.114",
+    "jose": "^6.2.2"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "better-auth": "catalog:",
-    "convex": "catalog:",
-    "typescript": "catalog:",
-    "zod": "catalog:"
+    "@types/node": "^25.5.0",
+    "better-auth": "^1.5.6",
+    "convex": "^1.34.1",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   },
   "peerDependencies": {
-    "better-auth": "catalog:",
-    "convex": "catalog:",
-    "zod": "catalog:"
+    "better-auth": "^1.5.6",
+    "convex": "^1.34.1",
+    "zod": "^4.3.6"
   }
 }
