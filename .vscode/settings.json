@@ -1,14 +1,11 @@
 {
-  "files.associations": { "*.css": "tailwindcss" },
+  "[astro]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[svelte]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "editor.codeActionsOnSave": { "source.fixAll.oxc": "explicit" },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
+  "files.associations": { "*.css": "tailwindcss" },
   "oxc.fmt.configPath": "./vite.config.ts",
-  "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[svelte]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "prettier.documentSelectors": ["**/*.astro", "**/*.svelte"]
 }

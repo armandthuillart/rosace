@@ -170,9 +170,25 @@ const spikes = [
     <div class="text-sm font-medium">Camera</div>
 
     <div class="grid grid-cols-2 gap-2">
-      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700"></div>
+      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
+        <div
+          class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
+        >
+          X
+        </div>
 
-      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700"></div>
+        <div class="flex-1 flex items-center text-[.6875rem]">500</div>
+      </div>
+
+      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
+        <div
+          class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
+        >
+          Y
+        </div>
+
+        <div class="flex-1 flex items-center text-[.6875rem]">1000</div>
+      </div>
 
       <div
         class="grid py-1 h-14 bg-gray-100 rounded-sm dark:bg-gray-700 grid-cols-3 grid-rows-3"
@@ -189,9 +205,15 @@ const spikes = [
         <span
           class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
         ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
+        <svg
+          aria-hidden="true"
+          class="size-3.5 text-violet-400 dark:text-violet-500 place-self-center"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#align-center"></use>
+        </svg>
         <span
           class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
         ></span>
@@ -206,7 +228,15 @@ const spikes = [
         ></span>
       </div>
 
-      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700"></div>
+      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
+        <div
+          class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
+        >
+          Z
+        </div>
+
+        <div class="flex-1 flex items-center text-[.6875rem]">50</div>
+      </div>
     </div>
   </div>
 
@@ -215,14 +245,14 @@ const spikes = [
 
     <div
       aria-hidden="true"
-      class="relative rounded-sm bg-gray-50 h-14 dark:bg-gray-700 px-2 py-2 overflow-hidden before:absolute before:right-auto before:w-6 before:inset-0 before:bg-linear-to-r before:from-gray-50 before:dark:from-gray-700 before:to-transparent before:z-10 after:absolute after:left-auto after:w-6 after:inset-0 after:bg-linear-to-l after:from-gray-50 after:dark:from-gray-700 after:to-transparent after:z-10"
+      class="relative rounded-sm bg-gray-100 h-12 dark:bg-gray-700 px-2 py-2 overflow-hidden before:absolute before:right-auto before:w-6 before:inset-0 before:bg-linear-to-r before:from-gray-50 before:dark:from-gray-700 before:to-transparent before:z-10 after:absolute after:left-auto after:w-6 after:inset-0 after:bg-linear-to-l after:from-gray-50 after:dark:from-gray-700 after:to-transparent after:z-10"
     >
       <div class="flex h-full w-max items-center animate-waveform">
         <div class="-ml-0.5 flex shrink-0 items-center gap-0.5">
           {
             spikes.map((height) => (
               <div
-                class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
+                class="h-(--bar-height) w-0.5 rounded-full bg-gray-400"
                 style={`--bar-height:${height}px`}
               />
             ))
@@ -236,7 +266,7 @@ const spikes = [
           {
             spikes.map((height) => (
               <div
-                class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
+                class="h-(--bar-height) w-0.5 rounded-full bg-gray-400"
                 style={`--bar-height:${height}px`}
               />
             ))
@@ -250,7 +280,7 @@ const spikes = [
           {
             spikes.map((height) => (
               <div
-                class="h-(--bar-height) w-0.5 rounded-full bg-violet-400 dark:bg-violet-500"
+                class="h-(--bar-height) w-0.5 rounded-full bg-gray-400"
                 style={`--bar-height:${height}px`}
               />
             ))
@@ -259,19 +289,10 @@ const spikes = [
       </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-2">
-      <div
-        class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm"
-      >
-      </div>
-      <div
-        class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm"
-      >
-      </div>
-      <div
-        class="h-6 w-full border border-gray-150 dark:border-gray-700 rounded-sm"
-      >
-      </div>
+    <div
+      class="text-xs items-center font-medium inline-flex place-self-center px-2 h-6 bg-violet-400 dark:bg-violet-500 text-white rounded-sm"
+    >
+      Auto-sync
     </div>
   </div>
 </div>
@@ -307,7 +328,7 @@ const spikes = [
 </div>
 
 <Timeline
-  classes="bottom-4 -translate-x-full dark:bg-gray-800 [--accent:var(--color-violet-400)] dark:[--accent:var(--color-violet-500)]"
+  classes="bottom-4 -translate-x-full [--accent:var(--color-violet-400)] dark:[--accent:var(--color-violet-500)]"
   duration={3}
   markers={[-0.5, 0.2, -0.075]}
 />
