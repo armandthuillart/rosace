@@ -6,6 +6,6 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "files.associations": { "*.css": "tailwindcss" },
-  "oxc.fmt.configPath": "./vite.config.ts",
-  "prettier.documentSelectors": ["**/*.astro", "**/*.svelte"]
+  "json.format.enable": false,
+  "oxc.fmt.configPath": "./vite.config.ts"
 }

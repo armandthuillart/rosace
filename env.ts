@@ -31,6 +31,10 @@ for (const app of apps) {
   const appName = path.basename(app);
   const alreadyExists = fs.existsSync(target);
 
+  if (alreadyExists) {
+    console.info(`.env.${mode} already defined for ${appName}`);
+  }
+
   if (!alreadyExists && appName === "marketing") {
     const rawEnv = fs.readFileSync(source, "utf8");
 

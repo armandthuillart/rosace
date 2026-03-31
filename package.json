@@ -13,15 +13,8 @@
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
-    "vite": "npm:@voidzero-dev/vite-plus-core@alpha",
-    "vite-plus": "alpha"
-  },
-  "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@alpha",
-    "vitest": "npm:@voidzero-dev/vite-plus-test@alpha"
-  },
-  "engines": {
-    "node": ">=22.12.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.15",
+    "vite-plus": "^0.1.15"
   },
   "packageManager": "bun@1.2.11"
 }

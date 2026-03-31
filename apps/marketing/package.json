@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "astro build",
+    "build": "node ../../env.ts && astro build",
     "check": "astro check",
     "deploy": "wrangler deploy",
     "dev": "astro dev",
