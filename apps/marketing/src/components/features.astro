@@ -1,7 +1,7 @@
 ---
-import Breakpoint from "@components/breakpoint.astro";
-import Presets from "@components/presets.astro";
-import Timeline from "./timeline.astro";
+import Scale from "@components/scale.astro";
+import Refine from "@components/refine.astro";
+import Create from "@components/create.astro";
 ---
 
 <section class="px-5">
@@ -25,10 +25,9 @@ import Timeline from "./timeline.astro";
     <div
       class="overflow-hidden bg-pale-blue-400 dark:bg-pale-blue-800 rounded-sm relative inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 pl-6 lg:py-8 lg:pl-7"
     >
-      <div
-        class="ring ring-black/5 dark:ring-white/5 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl w-230 h-150"
-      >
-      </div>
+      
+        <Create />
+      
     </div>
   </div>
 </section>
@@ -59,7 +58,7 @@ import Timeline from "./timeline.astro";
       <div
         class="relative ring ring-black/5 dark:ring-white/5 rounded-[.625rem] bg-gray-100 dark:bg-gray-900 shadow-4xl shrink-0 w-230 h-146"
       >
-        <Presets animate={true} />
+        <Refine animate={true} />
       </div>
     </div>
   </div>
@@ -92,13 +91,13 @@ import Timeline from "./timeline.astro";
         <div
           class="z-10 absolute top-0 left-0 aspect-9/16 h-8/10 md:aspect-square min-[31.25rem]:h-8/10 min-[34.375rem]:w-13/20 md:h-auto ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
         >
-          <Breakpoint />
+          <Scale />
         </div>
 
         <div
           class="z-20 absolute bottom-0 right-0 aspect-square w-8/10 md:h-auto sm:aspect-9/5 md:w-15/20 ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
         >
-          <Breakpoint />
+          <Scale />
         </div>
       </div>
     </div>

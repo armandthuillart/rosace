@@ -1,0 +1,647 @@
+---
+import Timeline from "@components/timeline.astro";
+import Toolbar from "@components/toolbar.astro";
+---
+
+<div
+  class="relative ring ring-black/5 dark:ring-white/5 rounded-[.625rem] shrink-0 bg-gray-100 dark:bg-gray-900 shadow-4xl w-230 h-150"
+  data-animate="create"
+>
+  <Toolbar classes="top-4 left-4" />
+
+  <div
+    data-part="panel"
+    class="p-5 gap-3 w-3xs overflow-hidden absolute top-20 bottom-4 left-4 bg-white dark:bg-gray-800 rounded-xl shadow-control flex flex-col"
+  >
+    <div class="w-full gap-3 flex flex-col">
+      <div class="text-sm font-medium">Blur</div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="blur-in"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="blur-in">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Blur in
+          </div>
+        </button>
+
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="blur-slide"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="blur-slide">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Blur + Slide
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div class="w-full gap-3 flex flex-col">
+      <div class="text-sm font-medium">Mask</div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="mask-in-top"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="mask-in-top">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Mask in Top
+          </div>
+        </button>
+
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="mask-in-bottom"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="mask-in-bottom">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Mask in Bottom
+          </div>
+        </button>
+
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="mask-out-top"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="mask-out-top">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Mask out Top
+          </div>
+        </button>
+
+        <button
+          type="button"
+          data-part="preset-card"
+          data-preset-name="mask-out-bottom"
+          class="relative flex flex-col gap-2 rounded-lg"
+        >
+          <div
+            data-part="tile"
+            class="relative flex overflow-hidden text-2xl font-semibold items-center justify-center bg-gray-100 dark:bg-gray-700 aspect-square rounded-lg"
+          >
+            <span data-split-preset="mask-out-bottom">Text</span>
+            <div
+              data-part="selected"
+              class="invisible z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+            Mask out Bottom
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    data-part="preview"
+    class="-mt-4 overflow-hidden absolute left-[calc(var(--container-3xs)+4rem)] shadow-control top-1/2 -translate-y-1/2 aspect-4/3 h-[calc(100%-12rem)] transition-colors duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] rounded-[.875rem] bg-gray-50 dark:bg-gray-700 flex items-center justify-center"
+  >
+    <div
+      data-part="pattern"
+      class="absolute inset-0 pointer-events-none grid grid-cols-5 auto-rows-fr"
+    >
+      {
+        Array.from({ length: 20 }, (_, tile) => (
+          <div
+            class:list={[
+              "w-full aspect-square",
+              tile % 2 === 0
+                ? "bg-gray-50 dark:bg-gray-700"
+                : "bg-white dark:bg-gray-800",
+            ]}
+          />
+        ))
+      }
+    </div>
+
+    <div
+      data-part="preview-text"
+      class="relative z-10 inline-flex items-center justify-center text-center leading-none text-[clamp(2rem,4vw,2.7rem)] font-medium px-12 py-6 rounded-full bg-teal-400 dark:bg-teal-500 text-white"
+    >
+      Text
+    </div>
+  </div>
+
+  <Timeline animate={false} classes="bottom-4 translate-x-full" />
+</div>
+
+<script>
+  import gsap from "gsap";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(SplitText);
+
+  type PresetName =
+    | "blur-in"
+    | "blur-slide"
+    | "mask-in-top"
+    | "mask-in-bottom"
+    | "mask-out-top"
+    | "mask-out-bottom";
+
+  type RootWithCleanup = HTMLElement & {
+    __createCleanup?: () => void;
+  };
+
+  const roots = document.querySelectorAll<RootWithCleanup>(
+    '[data-animate="create"]',
+  );
+
+  for (const root of roots) {
+    root.__createCleanup?.();
+
+    const cards = Array.from(
+      root.querySelectorAll<HTMLElement>('[data-part="preset-card"]'),
+    );
+    const sampleTargets = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-split-preset]"),
+    );
+    const previewText = root.querySelector<HTMLElement>(
+      '[data-part="preview-text"]',
+    );
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (cards.length === 0 || sampleTargets.length === 0 || !previewText) {
+      continue;
+    }
+    gsap.set([...sampleTargets, previewText], { autoAlpha: 0 });
+
+    const splitTargets: SplitText[] = [];
+    const previewAnimations: gsap.core.Animation[] = [];
+    let panelAnimation: gsap.core.Animation | null = null;
+    let panelSplit: SplitText | null = null;
+    const selectionTiles = Array.from(
+      root.querySelectorAll<HTMLElement>('[data-part="tile"]'),
+    );
+    const selectedBadges = Array.from(
+      root.querySelectorAll<HTMLElement>('[data-part="selected"]'),
+    );
+    const selectionClasses = ["ring-2", "ring-blue-400", "dark:ring-blue-500"];
+    const next = gsap.utils.wrap(0, cards.length);
+
+    const step = {
+      enter: 0.8,
+      exit: 0.65,
+      hold: 0.35,
+      staggerIn: 0.045,
+      staggerOut: 0.035,
+    };
+    let stepDuration = 2.4;
+
+    const clearPreviewAnimations = () => {
+      while (previewAnimations.length > 0) previewAnimations.pop()?.kill();
+    };
+
+    const clearAll = () => {
+      clearPreviewAnimations();
+      panelAnimation?.kill();
+      panelAnimation = null;
+      panelSplit?.revert();
+      panelSplit = null;
+      while (splitTargets.length > 0) splitTargets.pop()?.revert();
+      gsap.set([...sampleTargets, previewText], { clearProps: "all" });
+    };
+
+    const splitPreset = (target: HTMLElement) => {
+      gsap.set(target, {
+        autoAlpha: 1,
+        display: "inline-block",
+        overflow: "hidden",
+      });
+      const split = new SplitText(target, { type: "chars" });
+      const chars = split.chars as HTMLElement[];
+      splitTargets.push(split);
+      gsap.set(chars, {
+        display: "inline-block",
+        transformOrigin: "50% 50%",
+        willChange: "transform, opacity, filter, clip-path",
+      });
+      return chars;
+    };
+
+    const createBlurIn = (chars: HTMLElement[], delay: number, repeat = 0) =>
+      gsap
+        .timeline({ delay, repeat, repeatDelay: 0 })
+        .set(chars, {
+          autoAlpha: 0.2,
+          filter: "blur(12px)",
+          scale: 0.96,
+          yPercent: 0,
+        })
+        .to(chars, {
+          autoAlpha: 1,
+          duration: step.enter * 0.7,
+          ease: "power4.out",
+          filter: "blur(0px)",
+          scale: 1,
+          stagger: step.staggerIn,
+        })
+        .to(
+          chars,
+          {
+            autoAlpha: 1,
+            duration: step.hold,
+            ease: "none",
+            filter: "blur(0px)",
+            scale: 1,
+          },
+          ">",
+        );
+
+    const createBlurSlide = (chars: HTMLElement[], delay: number, repeat = 0) =>
+      gsap
+        .timeline({ delay, repeat, repeatDelay: 0 })
+        .set(chars, { autoAlpha: 0.25, filter: "blur(10px)", yPercent: 100 })
+        .to(chars, {
+          autoAlpha: 1,
+          duration: step.enter * 0.75,
+          ease: "power3.out",
+          filter: "blur(0px)",
+          stagger: step.staggerIn,
+          yPercent: 0,
+        })
+        .to(chars, {
+          autoAlpha: 0.25,
+          duration: step.enter * 0.85,
+          ease: "power2.in",
+          filter: "blur(10px)",
+          stagger: step.staggerOut,
+          yPercent: -100,
+        })
+        .set(chars, {
+          autoAlpha: 0.25,
+          filter: "blur(10px)",
+          yPercent: 100,
+        })
+        .to(chars, {
+          autoAlpha: 1,
+          duration: step.enter * 0.75,
+          ease: "power3.out",
+          filter: "blur(0px)",
+          stagger: step.staggerIn,
+          yPercent: 0,
+        });
+
+    const createMaskIn = (
+      chars: HTMLElement[],
+      delay: number,
+      direction: "top" | "bottom",
+      repeat = 0,
+    ) => {
+      const hiddenState =
+        direction === "top"
+          ? { clipPath: "inset(0% 0% 100% 0%)", yPercent: -120 }
+          : { clipPath: "inset(100% 0% 0% 0%)", yPercent: 120 };
+
+      return gsap
+        .timeline({ delay, repeat, repeatDelay: 0 })
+        .set(chars, { ...hiddenState, autoAlpha: 1 })
+        .to(chars, {
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: step.enter,
+          ease: "power4.out",
+          stagger: step.staggerIn,
+          yPercent: 0,
+        })
+        .to(chars, { duration: step.hold, ease: "none" }, ">")
+        .to(chars, {
+          ...hiddenState,
+          duration: step.exit,
+          ease: "power2.in",
+          stagger: step.staggerOut,
+        });
+    };
+
+    const createMaskOut = (
+      chars: HTMLElement[],
+      delay: number,
+      direction: "top" | "bottom",
+      repeat = 0,
+    ) => {
+      const exitState =
+        direction === "top"
+          ? { clipPath: "inset(0% 0% 100% 0%)", yPercent: -120 }
+          : { clipPath: "inset(100% 0% 0% 0%)", yPercent: 120 };
+      const resetState =
+        direction === "top"
+          ? { clipPath: "inset(100% 0% 0% 0%)", yPercent: 120 }
+          : { clipPath: "inset(0% 0% 100% 0%)", yPercent: -120 };
+
+      return gsap
+        .timeline({ delay, repeat, repeatDelay: 0 })
+        .set(chars, {
+          autoAlpha: 1,
+          clipPath: "inset(0% 0% 0% 0%)",
+          yPercent: 0,
+        })
+        .to(chars, { duration: step.hold, ease: "none" }, 0)
+        .to(chars, {
+          ...exitState,
+          duration: step.exit,
+          ease: "power2.in",
+          stagger: step.staggerOut,
+        })
+        .set(chars, resetState)
+        .to(chars, {
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: step.enter,
+          ease: "power4.out",
+          stagger: step.staggerIn,
+          yPercent: 0,
+        });
+    };
+
+    const animationFactories: Record<
+      PresetName,
+      (
+        chars: HTMLElement[],
+        delay: number,
+        repeat?: number,
+      ) => gsap.core.Animation
+    > = {
+      "blur-in": createBlurIn,
+      "blur-slide": createBlurSlide,
+      "mask-in-bottom": (chars, delay, repeat) =>
+        createMaskIn(chars, delay, "bottom", repeat),
+      "mask-in-top": (chars, delay, repeat) =>
+        createMaskIn(chars, delay, "top", repeat),
+      "mask-out-bottom": (chars, delay, repeat) =>
+        createMaskOut(chars, delay, "bottom", repeat),
+      "mask-out-top": (chars, delay, repeat) =>
+        createMaskOut(chars, delay, "top", repeat),
+    };
+
+    const setSelection = (index: number) => {
+      selectionTiles.forEach((tile) =>
+        tile.classList.remove(...selectionClasses),
+      );
+      selectedBadges.forEach((badge) => badge.classList.add("invisible"));
+      selectionTiles[index]?.classList.add(...selectionClasses);
+      selectedBadges[index]?.classList.remove("invisible");
+    };
+
+    const runPanelPreset = (index: number) => {
+      panelAnimation?.kill();
+      panelAnimation = null;
+      panelSplit?.revert();
+      panelSplit = null;
+
+      const target = sampleTargets[index];
+      const presetName = target?.dataset.splitPreset as PresetName | undefined;
+
+      if (!target || !presetName || reducedMotion.matches) {
+        if (target && reducedMotion.matches) {
+          gsap.set(target, { autoAlpha: 1 });
+        }
+        return 0;
+      }
+
+      gsap.set(target, { autoAlpha: 1 });
+      const split = new SplitText(target, { type: "chars" });
+      panelSplit = split;
+      const chars = split.chars as HTMLElement[];
+
+      gsap.set(chars, {
+        display: "inline-block",
+        transformOrigin: "50% 50%",
+        willChange: "transform, opacity, filter, clip-path",
+      });
+
+      panelAnimation = animationFactories[presetName](chars, 0, 0);
+      return panelAnimation.totalDuration();
+    };
+
+    const runPreviewPreset = (presetName: PresetName) => {
+      clearPreviewAnimations();
+      const chars = splitPreset(previewText);
+
+      if (reducedMotion.matches) {
+        gsap.set(previewText, { autoAlpha: 1 });
+        gsap.set(chars, {
+          autoAlpha: 1,
+          yPercent: 0,
+          clipPath: "inset(0% 0% 0% 0%)",
+        });
+        return 0;
+      }
+
+      const tween = animationFactories[presetName](chars, 0);
+      previewAnimations.push(tween);
+      return tween.totalDuration();
+    };
+
+    const sequence: Array<{ name: PresetName; text: string }> = [
+      { name: "blur-in", text: "Text" },
+      { name: "blur-slide", text: "Text" },
+      { name: "mask-in-top", text: "Text" },
+      { name: "mask-in-bottom", text: "Text" },
+      { name: "mask-out-top", text: "Text" },
+      { name: "mask-out-bottom", text: "Text" },
+    ];
+
+    const getPresetDuration = (presetName: PresetName, text: string) => {
+      const charCount = Math.max(
+        1,
+        [...text].filter((char) => char.trim().length > 0).length,
+      );
+      const inStagger = Math.max(0, (charCount - 1) * step.staggerIn);
+      const outStagger = Math.max(0, (charCount - 1) * step.staggerOut);
+
+      if (presetName === "blur-in") {
+        return step.enter * 0.7 + inStagger + step.hold;
+      }
+
+      if (presetName === "blur-slide") {
+        return (
+          step.enter * 0.75 +
+          inStagger +
+          step.enter * 0.85 +
+          outStagger +
+          step.enter * 0.75 +
+          inStagger
+        );
+      }
+
+      if (presetName === "mask-in-top" || presetName === "mask-in-bottom") {
+        return step.enter + inStagger + step.hold + step.exit + outStagger;
+      }
+
+      return step.hold + step.exit + outStagger + step.enter + inStagger;
+    };
+
+    stepDuration = Math.max(
+      ...sequence.map((item) => getPresetDuration(item.name, item.text)),
+    );
+
+    let active = 0;
+
+    const render = (index: number) => {
+      const item = sequence[index];
+      const cardIndex = cards.findIndex(
+        (card) => card.dataset.presetName === item.name,
+      );
+      previewText.textContent = item.text;
+      previewText.dataset.presetName = item.name;
+      const safeIndex = cardIndex === -1 ? 0 : cardIndex;
+      setSelection(safeIndex);
+      const panelDuration = runPanelPreset(safeIndex);
+      const previewDuration = runPreviewPreset(item.name);
+      return Math.max(panelDuration, previewDuration);
+    };
+
+    let currentStepDuration = render(active);
+
+    let nextStepCall: gsap.core.Tween | null = null;
+
+    const queueNext = () => {
+      nextStepCall?.kill();
+      const transitionGap = reducedMotion.matches ? 0.8 : 0.15;
+      const delay = Math.max(currentStepDuration + transitionGap, stepDuration);
+
+      nextStepCall = gsap.delayedCall(delay, () => {
+        active = next(active + 1);
+        currentStepDuration = render(active);
+        queueNext();
+      });
+    };
+
+    const handleMotionChange = () => {
+      clearAll();
+      currentStepDuration = render(active);
+      queueNext();
+    };
+
+    const teardown = () => {
+      nextStepCall?.kill();
+      clearAll();
+      reducedMotion.removeEventListener("change", handleMotionChange);
+      window.removeEventListener("pagehide", teardown);
+      root.__createCleanup = undefined;
+    };
+
+    root.__createCleanup = teardown;
+    reducedMotion.addEventListener("change", handleMotionChange);
+    window.addEventListener("pagehide", teardown, { once: true });
+    queueNext();
+  }
+</script>
