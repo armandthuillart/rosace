@@ -3,37 +3,36 @@ import { DASHBOARD_URL } from "astro:env/client";
 ---
 
 <header class="px-5 fixed top-0 z-50 w-full bg-gray-50 dark:bg-gray-1000">
-	<nav class="max-w-7xl mx-auto flex h-13 items-center justify-between w-full">
-		<a
-			href="/"
-			class="relative h-7 inline-flex items-center before:absolute before:-inset-1 hover:opacity-80 focus-visible:outline-2"
-		>
-			<span class="sr-only">Go to homepage</span>
+  <nav class="max-w-7xl mx-auto flex h-13 items-center justify-between w-full">
+    <a
+      href="/"
+      class="relative h-7 inline-flex items-center before:absolute before:-inset-1 hover:opacity-80 focus-visible:outline-2"
+    >
+      <span class="sr-only">Go to homepage</span>
 
-			<svg
-				aria-hidden="true"
-				class="w-24 h-6"
-				fill="currentColor"
-				viewBox="0 0 96 24"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<use href="/sprite.svg#logotype" />
-			</svg>
-		</a>
+      <svg
+        aria-hidden="true"
+        class="w-24 h-6"
+        fill="currentColor"
+        viewBox="0 0 96 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#logotype"></use>
+      </svg>
+    </a>
 
-		<div class="flex gap-2">
-			<a
-				class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center hover:opacity-80 focus-visible:outline-2 before:absolute before:-inset-1"
-				href={DASHBOARD_URL}
-				>Sign in</a
-			>
+    <div class="flex gap-2">
+      <a
+        class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center hover:opacity-80 focus-visible:outline-2 before:absolute before:-inset-1"
+        href={DASHBOARD_URL}>Sign in</a
+      >
 
-			<a
-				class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-1"
-				href={DASHBOARD_URL}
-			>
-				Sign up for free
-			</a>
-		</div>
-	</nav>
+      <a
+        class="relative font-medium h-7 px-[calc(--spacing(2.5)-1px)] inline-flex items-center justify-center text-sm rounded-full text-center bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-1"
+        href={DASHBOARD_URL}
+      >
+        Sign up for free
+      </a>
+    </div>
+  </nav>
 </header>

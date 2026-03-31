@@ -6,68 +6,72 @@ import Toolbar from "@components/toolbar.astro";
 ---
 
 <section class="px-5">
-	<div class="max-w-7xl mx-auto flex flex-col gap-14">
-		<div class="flex flex-col gap-6 items-start max-w-160">
-			<h1
-				class="text-balance font-medium text-[1.625rem]/tight -tracking-[.0125em]"
-			>
-				Create motion designs so good people watch them on-repeat
-			</h1>
+  <div class="max-w-7xl mx-auto flex flex-col gap-14">
+    <div class="flex flex-col gap-6 items-start max-w-160">
+      <h1
+        class="text-balance font-medium text-[1.625rem]/tight -tracking-[.0125em]"
+      >
+        Create motion designs so good people watch them on-repeat
+      </h1>
 
-			<a
-				class="relative font-medium h-10.5 pl-[calc(--spacing(5)-1px)] pr-[calc(--spacing(6)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-6"
-				data-button
-				href={DASHBOARD_URL}
-			>
-				<svg
-					aria-hidden="true"
-					class="size-4"
-					data-icon
-					fill="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<use href="/sprite.svg#lockup" />
-				</svg>
-				Sign up for free
-			</a>
-		</div>
+      <a
+        class="relative font-medium h-10.5 pl-[calc(--spacing(5)-1px)] pr-[calc(--spacing(6)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-6"
+        data-button
+        href={DASHBOARD_URL}
+      >
+        <svg
+          aria-hidden="true"
+          class="size-4"
+          data-icon
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#lockup"></use>
+        </svg>
+        Sign up for free
+      </a>
+    </div>
 
-		<div
-			class="py-7 px-6 lg:py-8 lg:px-7 select-none overflow-hidden w-full bg-gray-100 dark:bg-gray-900 relative rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
-		>
-			<div class="h-150 w-full relative">
-				<Export />
-				<Toolbar />
-				<Timeline class="[--accent:var(--color-blue-400)] dark:[--accent:var(--color-blue-500)]" />
-			</div>
-		</div>
-	</div>
+    <div
+      class="py-7 px-6 lg:py-8 lg:px-7 select-none overflow-hidden w-full bg-gray-100 dark:bg-gray-900 relative rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
+    >
+      <div class="h-150 w-full relative">
+        <Export />
+        <Toolbar />
+        <Timeline
+          classes="[--accent:var(--color-blue-400)] dark:[--accent:var(--color-blue-500)]"
+          duration={5}
+          markers={[-0.073, 0.435, -0.073, 0.4, 0.6]}
+        />
+      </div>
+    </div>
+  </div>
 </section>
 
 <script>
-import gsap from "gsap";
+  import gsap from "gsap";
 
-const button = document.querySelector("[data-button]");
+  const button = document.querySelector("[data-button]");
 
-if (button) {
-	const icon = button.querySelector("[data-icon]");
+  if (button) {
+    const icon = button.querySelector("[data-icon]");
 
-	button.addEventListener("mouseenter", () => {
-		gsap
-			.timeline({
-				overwrite: true,
-			})
-			.to(icon, {
-				duration: 1,
-				ease: "power3.out",
-				rotation: "+=360",
-			})
-			.to(icon, {
-				duration: 1,
-				ease: "power4.out",
-				rotation: 0,
-			});
-	});
-}
+    button.addEventListener("mouseenter", () => {
+      gsap
+        .timeline({
+          overwrite: true,
+        })
+        .to(icon, {
+          duration: 1,
+          ease: "power3.out",
+          rotation: "+=360",
+        })
+        .to(icon, {
+          duration: 1,
+          ease: "power4.out",
+          rotation: 0,
+        });
+    });
+  }
 </script>

@@ -4,57 +4,57 @@ import ogImage from "@public/og-image.png";
 
 const title = "Rosace";
 const description =
-	"A new kind of motion design tool. Create videos so good people watch them twice.";
+  "A new kind of motion design tool. Create videos so good people watch them twice.";
 
 const ogImageUrl = new URL(ogImage.src, Astro.url);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+<link rel="manifest" href="/manifest.json" />
 
 <link
-	rel="icon"
-	href="/favicon.svg"
-	type="image/svg+xml"
->
-
-<link rel="manifest" href="/manifest.json">
-
+  rel="apple-touch-icon"
+  href="/apple-touch-icon-light.png"
+  media="(prefers-color-scheme: light)"
+/>
 <link
-	rel="apple-touch-icon"
-	href="/apple-touch-icon-light.png"
-	media="(prefers-color-scheme: light)"
->
-<link
-	rel="apple-touch-icon"
-	href="/apple-touch-icon-dark.png"
-	media="(prefers-color-scheme: dark)"
->
+  rel="apple-touch-icon"
+  href="/apple-touch-icon-dark.png"
+  media="(prefers-color-scheme: dark)"
+/>
 
-<link rel="canonical" href={canonicalUrl}>
+<link rel="canonical" href={canonicalUrl} />
 
 <title>{title}</title>
-<meta name="description" content={description}>
+<meta name="description" content={description} />
 
-<meta property="og:url" content={Astro.url}>
-<meta property="og:type" content="website">
-<meta property="og:title" content={title}>
-<meta property="og:image" content={ogImageUrl}>
-<meta property="og:description" content={description}>
+<meta property="og:url" content={Astro.url} />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:description" content={description} />
 
-<meta property="twitter:url" content={Astro.url}>
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content={title}>
-<meta property="twitter:image" content={ogImageUrl}>
-<meta property="twitter:description" content={description}>
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:image" content={ogImageUrl} />
+<meta property="twitter:description" content={description} />
 
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light dark" />
 <meta
-	name="theme-color"
-	media="(prefers-color-scheme: light)"
-	content="#FFFFFF"
->
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0D0D0D">
+  name="theme-color"
+  media="(prefers-color-scheme: light)"
+  content="#FFFFFF"
+/>
+<meta
+  name="theme-color"
+  media="(prefers-color-scheme: dark)"
+  content="#0D0D0D"
+/>
 
 <Font cssVariable="--font-inter" preload />
