@@ -1,11 +1,11 @@
 ---
 interface Props {
+  markers?: Array<number>;
+  animate: boolean;
   classes?: string;
-  duration: number;
-  markers: Array<number>;
 }
 
-const { classes, duration, markers } = Astro.props;
+const { animate, classes, markers } = Astro.props;
 
 function toLeft(value: number) {
   return `${value * 100}%`;
@@ -17,7 +17,7 @@ function toLeft(value: number) {
     "absolute overflow-hidden h-18 bottom-0 left-1/2 rounded-[.875rem] bg-white dark:bg-gray-800 shadow-timeline -translate-x-1/2 w-full max-w-xl inline-flex before:absolute before:left-0 before:h-full before:w-15 before:bg-linear-to-r before:z-1 before:from-white before:to-transparent dark:before:from-gray-800 before:from-10%",
     classes,
   ]}
-  data-animate="timeline"
+  data-animate={animate ? "timeline" : undefined}
 >
   <div
     class="z-20 absolute left-0 top-1 bottom-0 flex flex-col pointer-events-none"
@@ -63,19 +63,21 @@ function toLeft(value: number) {
 
   <div class="flex shrink-0" data-part="track">
     {
-      Array.from({ length: duration }, (_, index) => (
+      Array.from({ length: 5 }, (_, index) => (
         <div class="flex flex-col h-full w-48 border-r border-gray-200 dark:border-gray-600">
           <div class="h-6 pl-1.5 pt-1.25 text-xs text-gray-400 dark:text-gray-500">
             {index}s
           </div>
 
           <div class="relative h-6 bg-gray-50 border-y border-gray-150 dark:border-gray-600 dark:bg-gray-700">
-            <div
-              class="size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
-              style={`left: ${toLeft(markers[index % markers.length])}`}
-            >
-              <div class="size-full bg-(--accent) rounded-full" />
-            </div>
+            {markers?.length ? (
+              <div
+                class="size-6.25 p-0.75 border border-gray-150 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-full absolute top-1/2 -translate-y-1/2"
+                style={`left: ${toLeft(markers[index % markers.length])}`}
+              >
+                <div class="size-full bg-blue-400 dark:bg-blue-500 rounded-full" />
+              </div>
+            ) : null}
           </div>
         </div>
       ))
@@ -87,7 +89,7 @@ function toLeft(value: number) {
       <div
         class="absolute right-1.5 h-6 pt-1.25 text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap"
       >
-        {duration}s
+        5s
       </div>
 
       <div

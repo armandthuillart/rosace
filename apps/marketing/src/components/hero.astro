@@ -39,11 +39,7 @@ import Toolbar from "@components/toolbar.astro";
       <div class="h-150 w-full relative">
         <Export />
         <Toolbar />
-        <Timeline
-          classes="[--accent:var(--color-blue-400)] dark:[--accent:var(--color-blue-500)]"
-          duration={5}
-          markers={[-0.073, 0.435, -0.073, 0.4, 0.6]}
-        />
+        <Timeline animate={true} markers={[-0.073, 0.435, -0.073, 0.4, 0.6]} />
       </div>
     </div>
   </div>

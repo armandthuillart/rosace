@@ -2,16 +2,55 @@
 import Timeline from "@components/timeline.astro";
 
 const spikes = [
-  34, 7, 6, 8, 14, 8, 7, 9, 22, 8, 7, 9, 14, 8, 7, 9, 30, 8, 7, 9, 14, 8, 7, 9,
-  22, 8, 7, 9, 32, 8, 7, 10, 22, 8, 7, 9, 32, 8, 7, 10,
+  23, 7, 6, 8, 14, 8, 7, 9, 22, 8, 7, 9, 14, 8, 7, 9, 30, 8, 7, 9, 14, 8, 7, 9,
+  22, 8, 7, 9, 32, 8, 7, 10, 22, 8, 7, 9, 32, 8, 7, 10, 22, 8, 7, 9, 32, 8, 7,
+  10, 22, 8, 7, 9,
 ];
+
+const swatches = [
+  {
+    classes:
+      "rounded-sm relative w-full aspect-square bg-gray-50 dark:bg-gray-700 overflow-hidden before:absolute before:inset-0 before:rounded-sm before:border before:border-gray-100 before:z-1 dark:before:border-gray-700",
+    selected: true,
+    checkerboard: true,
+  },
+  {
+    classes:
+      "relative w-full aspect-square bg-white rounded-sm not-dark:before:border before:absolute before:inset-0 before:rounded-sm before:border-gray-200 overflow-hidden",
+  },
+  {
+    classes:
+      "relative w-full aspect-square bg-black rounded-sm overflow-hidden",
+  },
+  {
+    classes:
+      "relative w-full aspect-square bg-violet-400 rounded-sm dark:bg-violet-500 overflow-hidden",
+  },
+  {
+    classes:
+      "relative w-full aspect-square bg-green-400 rounded-sm dark:bg-green-500 overflow-hidden",
+  },
+  {
+    classes:
+      "relative w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700 overflow-hidden",
+  },
+];
+
+const camera = [
+  { axis: "X", value: "500" },
+  { axis: "Y", value: "1000" },
+  { axis: "Z", value: "50" },
+];
+
+const checkerboardTiles = Array.from({ length: 25 }, (_, index) => index);
+const previewPatternTiles = Array.from({ length: 20 }, (_, index) => index);
 ---
 
 <div
   class="absolute top-4 right-4 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-control"
 >
   <div
-    class="bg-violet-400 dark:bg-violet-500 text-white pr-3 pl-2.5 text-sm h-8 shrink-0 rounded-sm gap-1.5 inline-flex items-center justify-center"
+    class="bg-blue-400 dark:bg-blue-500 text-white pr-3 pl-2.5 text-sm h-8 shrink-0 rounded-sm gap-1.5 inline-flex items-center justify-center"
   >
     <svg
       aria-hidden="true"
@@ -27,6 +66,7 @@ const spikes = [
 </div>
 
 <div
+  data-animate="presets"
   class="w-3xs overflow-hidden absolute top-20 bottom-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-control flex flex-col"
 >
   <div
@@ -35,132 +75,44 @@ const spikes = [
     <div class="text-sm font-medium">Background</div>
 
     <div class="grid grid-cols-3 gap-4">
-      <div
-        class="ring-2 rounded-sm ring-violet-400 dark:ring-violet-600 relative w-full aspect-square bg-gray-50 dark:bg-gray-700 overflow-hidden"
-      >
-        <div
-          class="z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-violet-400 dark:bg-violet-600"
-        >
-          <svg
-            aria-hidden="true"
-            class="size-3"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <use href="/sprite.svg#check"></use>
-          </svg>
-        </div>
+      {
+        swatches.map((swatch) => (
+          <div class={swatch.classes} data-part="swatch">
+            <div
+              class:list={[
+                "z-10 absolute -bottom-0.5 rounded-tl-sm size-4.5 flex items-center justify-center -right-0.5 text-white bg-blue-400 dark:bg-blue-500",
+                !swatch.selected && "invisible",
+              ]}
+              data-part="selected"
+            >
+              <svg
+                aria-hidden="true"
+                class="size-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <use href="/sprite.svg#check" />
+              </svg>
+            </div>
 
-        <div class="z-0 absolute inset-0 grid grid-cols-5 auto-rows-min">
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-          <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-          <div class="w-full aspect-square bg-gray-100 dark:bg-gray-700"></div>
-        </div>
-      </div>
-
-      <div
-        class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700 grid grid-cols-5 p-1"
-      >
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-        <span
-          class="place-self-center bg-gray-300 dark:bg-gray-500 size-0.5 rounded-full"
-        ></span>
-      </div>
-
-      <div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700">
-      </div>
-      <div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700">
-      </div>
-      <div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700">
-      </div>
-      <div class="w-full aspect-square bg-gray-100 rounded-sm dark:bg-gray-700">
-      </div>
+            {swatch.checkerboard ? (
+              <div class="z-0 absolute inset-0 grid grid-cols-5 auto-rows-min">
+                {checkerboardTiles.map((tile) => (
+                  <div
+                    class:list={[
+                      "w-full aspect-square",
+                      tile % 2 === 0
+                        ? "bg-gray-100 dark:bg-gray-700"
+                        : "bg-white dark:bg-gray-800",
+                    ]}
+                  />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        ))
+      }
     </div>
   </div>
 
@@ -170,25 +122,19 @@ const spikes = [
     <div class="text-sm font-medium">Camera</div>
 
     <div class="grid grid-cols-2 gap-2">
-      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
-        <div
-          class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
-        >
-          X
-        </div>
+      {
+        camera.slice(0, 2).map((control) => (
+          <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
+            <div class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400">
+              {control.axis}
+            </div>
 
-        <div class="flex-1 flex items-center text-[.6875rem]">500</div>
-      </div>
-
-      <div class="h-6 rounded-sm bg-gray-100 dark:bg-gray-700 flex">
-        <div
-          class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
-        >
-          Y
-        </div>
-
-        <div class="flex-1 flex items-center text-[.6875rem]">1000</div>
-      </div>
+            <div class="flex-1 flex items-center text-[.6875rem]">
+              {control.value}
+            </div>
+          </div>
+        ))
+      }
 
       <div
         class="grid py-1 h-14 bg-gray-100 rounded-sm dark:bg-gray-700 grid-cols-3 grid-rows-3"
@@ -207,7 +153,7 @@ const spikes = [
         ></span>
         <svg
           aria-hidden="true"
-          class="size-3.5 text-violet-400 dark:text-violet-500 place-self-center"
+          class="size-3.5 text-blue-400 dark:text-blue-500 place-self-center"
           fill="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -232,10 +178,12 @@ const spikes = [
         <div
           class="text-center text-[.6875rem] size-6 flex items-center justify-center text-gray-500 dark:text-gray-400"
         >
-          Z
+          {camera[2].axis}
         </div>
 
-        <div class="flex-1 flex items-center text-[.6875rem]">50</div>
+        <div class="flex-1 flex items-center text-[.6875rem]">
+          {camera[2].value}
+        </div>
       </div>
     </div>
   </div>
@@ -245,38 +193,10 @@ const spikes = [
 
     <div
       aria-hidden="true"
-      class="relative rounded-sm bg-gray-100 h-12 dark:bg-gray-700 px-2 py-2 overflow-hidden before:absolute before:right-auto before:w-6 before:inset-0 before:bg-linear-to-r before:from-gray-50 before:dark:from-gray-700 before:to-transparent before:z-10 after:absolute after:left-auto after:w-6 after:inset-0 after:bg-linear-to-l after:from-gray-50 after:dark:from-gray-700 after:to-transparent after:z-10"
+      class="relative rounded-sm bg-gray-100 h-12 dark:bg-gray-700 px-2 py-2 overflow-hidden"
     >
-      <div class="flex h-full w-max items-center animate-waveform">
+      <div class="flex h-full w-max items-center">
         <div class="-ml-0.5 flex shrink-0 items-center gap-0.5">
-          {
-            spikes.map((height) => (
-              <div
-                class="h-(--bar-height) w-0.5 rounded-full bg-gray-400"
-                style={`--bar-height:${height}px`}
-              />
-            ))
-          }
-        </div>
-
-        <div
-          aria-hidden="true"
-          class="-ml-0.5 flex shrink-0 items-center gap-0.5"
-        >
-          {
-            spikes.map((height) => (
-              <div
-                class="h-(--bar-height) w-0.5 rounded-full bg-gray-400"
-                style={`--bar-height:${height}px`}
-              />
-            ))
-          }
-        </div>
-
-        <div
-          aria-hidden="true"
-          class="-ml-0.5 flex shrink-0 items-center gap-0.5"
-        >
           {
             spikes.map((height) => (
               <div
@@ -298,37 +218,129 @@ const spikes = [
 </div>
 
 <div
-  class="-mt-4 overflow-hidden rounded-[.875rem] bg-white absolute right-[calc(var(--container-3xs)+4rem)] shadow-control top-1/2 -translate-y-1/2 aspect-4/3 h-[calc(100%-12rem)] dark:bg-gray-800"
+  data-part="preview"
+  class="-mt-4 overflow-hidden absolute right-[calc(var(--container-3xs)+4rem)] shadow-control top-1/2 -translate-y-1/2 aspect-4/3 h-[calc(100%-12rem)] transition-colors duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
 >
-  <div class="absolute inset-0 grid grid-cols-5 auto-rows-fr">
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
-    <div class="w-full aspect-square bg-gray-50 dark:bg-gray-700"></div>
-    <div class="w-full aspect-square bg-white dark:bg-gray-800"></div>
+  <div
+    data-part="pattern"
+    class="invisible absolute inset-0 pointer-events-none grid grid-cols-5 auto-rows-fr"
+  >
+    {
+      previewPatternTiles.map((tile) => (
+        <div
+          class:list={[
+            "w-full aspect-square",
+            tile % 2 === 0
+              ? "bg-gray-50 dark:bg-gray-700"
+              : "bg-white dark:bg-gray-800",
+          ]}
+        />
+      ))
+    }
   </div>
 </div>
 
-<Timeline
-  classes="bottom-4 -translate-x-full [--accent:var(--color-violet-400)] dark:[--accent:var(--color-violet-500)]"
-  duration={3}
-  markers={[-0.5, 0.2, -0.075]}
-/>
+<Timeline animate={false} classes="bottom-4 -translate-x-full" />
+
+<script>
+  import gsap from "gsap";
+
+  const classes = {
+    selection: ["ring-2", "ring-blue-400", "dark:ring-blue-500"],
+    backgrounds: [
+      ["rounded-[.875rem]", "bg-white", "dark:bg-gray-800"],
+      ["rounded-[.875rem]", "bg-white", "dark:bg-gray-800"],
+      ["rounded-[.875rem]", "bg-black"],
+      ["rounded-[.875rem]", "bg-violet-400", "dark:bg-violet-500"],
+      ["rounded-[.875rem]", "bg-green-400", "dark:bg-green-500"],
+      ["rounded-[.875rem]", "bg-gray-100", "dark:bg-gray-700"],
+    ],
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-animate="presets"]')!;
+  const parent = root.parentElement!;
+  const selector = gsap.utils.selector(root);
+
+  const preview = parent.querySelector<HTMLElement>('[data-part="preview"]')!;
+  const pattern = parent.querySelector<HTMLElement>('[data-part="pattern"]')!;
+
+  const swatches = gsap.utils.toArray<HTMLElement>(
+    selector('[data-part="swatch"]'),
+  );
+  const selected = gsap.utils.toArray<HTMLElement>(
+    selector('[data-part="selected"]'),
+  );
+
+  const clearBgClasses = classes.backgrounds.flat();
+  const next = gsap.utils.wrap(0, swatches.length);
+
+  function render(i: number) {
+    for (const token of clearBgClasses) preview.classList.remove(token);
+
+    for (let j = 0; j < swatches.length; j++) {
+      swatches[j].classList.remove(...classes.selection);
+      selected[j].classList.add("invisible");
+    }
+
+    const swatch = swatches[i];
+
+    preview.classList.add(...classes.backgrounds[i]);
+    pattern.classList.toggle("invisible", i !== 0);
+    swatch.classList.add(...classes.selection);
+
+    selected[i].classList.remove("invisible");
+
+    gsap.killTweensOf([preview, swatch]);
+
+    gsap.fromTo(
+      preview,
+      {
+        opacity: 0.92,
+        scale: 0.985,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.24,
+        ease: "power2.out",
+      },
+    );
+
+    gsap.fromTo(
+      swatch,
+      {
+        opacity: 0.9,
+        scale: 0.97,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.18,
+        ease: "power2.out",
+      },
+    );
+  }
+
+  let i = 0;
+  render(i);
+
+  const tween = gsap.to(
+    {},
+    {
+      duration: 1.6,
+      repeat: -1,
+      onRepeat: () => {
+        i = next(i + 1);
+        render(i);
+      },
+    },
+  );
+
+  window.addEventListener(
+    "pagehide",
+    () => {
+      tween.kill();
+    },
+    { once: true },
+  );
+</script>

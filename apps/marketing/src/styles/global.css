@@ -213,7 +213,6 @@
 --ramp-yellow-1000: #71440f */
 
 @theme {
-  --animate-waveform: waveform 2.5s linear infinite;
   --color-blue-400: oklch(67% 0.183 249);
   --color-blue-500: oklch(62.7% 0.17 249);
   --color-gray-50: oklch(98.5% 0 0);
@@ -248,15 +247,6 @@
   --shadow-control: var(--shadow-control);
   --shadow-popover: var(--shadow-popover);
   --shadow-timeline: var(--shadow-timeline);
-
-  @keyframes waveform {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-33.3333%);
-    }
-  }
 }
 
 :root {
