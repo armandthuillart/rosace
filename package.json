@@ -9,9 +9,12 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "knip": "^6.1.0",
+    "knip": "^6.1.1",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-svelte": "^3.5.1",
     "vite": "npm:@voidzero-dev/vite-plus-core@alpha",
-    "vite-plus": "^0.1.15-alpha.6"
+    "vite-plus": "alpha"
   },
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@alpha",
