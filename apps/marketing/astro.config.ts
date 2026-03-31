@@ -5,8 +5,10 @@ import { getEnv } from "@repo/env";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
+const isDevelopment = process.argv.includes("dev");
+
 export default defineConfig({
-  adapter: cloudflare(),
+  adapter: isDevelopment ? undefined : cloudflare(),
   env: {
     schema: {
       DASHBOARD_URL: envField.string({
