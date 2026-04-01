@@ -3,6 +3,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 import Export from "@components/export.astro";
 import Timeline from "@components/timeline.astro";
 import Toolbar from "@components/toolbar.astro";
+import Composition from "@components/composition.astro";
 ---
 
 <section class="px-5">
@@ -36,11 +37,9 @@ import Toolbar from "@components/toolbar.astro";
     <div
       class="py-7 px-6 lg:py-8 lg:px-7 select-none overflow-hidden w-full bg-gray-100 dark:bg-gray-900 relative rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
     >
-      <div class="h-150 w-full relative">
-        <Export />
-        <Toolbar />
-        <Timeline animate={true} markers={[-0.073, 0.435, -0.073, 0.4, 0.6]} />
-      </div>
+      
+        <Composition />
+
     </div>
   </div>
 </section>

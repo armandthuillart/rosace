@@ -243,6 +243,7 @@
   --color-red-400: oklch(60.2% 0.204 33.5);
   --color-red-500: oklch(64.8% 0.208 35.7);
   --font-sans: var(--font-inter);
+  --font-mono: var(--font-cascadia-code);
   --shadow-4xl: 0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%);
   --shadow-control: var(--shadow-control);
   --shadow-popover: var(--shadow-popover);
