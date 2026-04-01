@@ -200,7 +200,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   />
 
   <div
-    class="overflow-hidden p-2 flex flex-col opacity-100 absolute left-0 shadow-control rounded-[.875rem] gap-2 top-14 w-60 bottom-20 bg-white dark:bg-gray-800"
+    class="overflow-hidden p-2 pb-0 flex flex-col opacity-0 absolute left-0 shadow-control rounded-[.875rem] gap-2 top-14 w-60 bottom-20 bg-white dark:bg-gray-800"
     data-part="elements"
   >
     <div
@@ -235,115 +235,122 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     </div>
 
     <div
-      class="flex gap-2 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
+      class="overflow-y-scroll [scrollbar-width:none] flex-1 flex flex-col gap-2"
+      data-part="starters"
     >
-      <div class="flex flex-col">
-        <div class="text-[.8125rem]/5">Edit</div>
-        <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
-          Drop a track and watch your animation snap to the beat on its own.
+      <div
+        class="flex gap-2 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
+        data-part="edit"
+      >
+        <div class="flex flex-col">
+          <div class="text-[.8125rem]/5">Edit</div>
+          <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+            Drop a track and watch your animation snap to the beat on its own.
+          </div>
+        </div>
+
+        <div class="flex gap-3 h-34"></div>
+      </div>
+
+      <div
+        class="flex gap-4 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
+      >
+        <div class="flex flex-col">
+          <div class="text-[.8125rem]/5">Code</div>
+          <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+            Pick a theme and let your code type itself out. Diffs, highlights,
+            and more.
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 items-center">
+          <div
+            class="relative pt-1.5 font-mono text-[.6875rem]/4 text-gray-500 dark:text-gray-400 grid grid-cols-[1.25rem_1fr] bg-white dark:bg-gray-800 grid-rows-[repeat(4,1rem)] w-38 h-20 border border-gray-200 dark:border-gray-600 rounded-md"
+            data-part="editor"
+          >
+            <div
+              class="absolute left-5 inset-y-0 w-px bg-gray-200 dark:bg-gray-600"
+            >
+            </div>
+
+            <div
+              class="flex items-center justify-end border-r border-transparent pr-0.75"
+            >
+              1
+            </div>
+
+            <div class="pl-1.5 inline-flex items-center">
+              <span class="text-[#B3013F] dark:text-[#83D2CD]">function</span>
+              <span>&nbsp;</span>
+              <span class="text-[#DB704B] dark:text-[#EFB080]">map</span>
+              <span class="text-[#05517F] dark:text-[#FFD700]">()</span>
+              <span>&nbsp;</span>
+              <span class="text-[#3D7CAB] dark:text-[#D970D6]">{"{"}</span>
+            </div>
+
+            <div
+              class="flex items-center justify-end border-r border-transparent pr-0.75"
+            >
+              2
+            </div>
+
+            <div
+              class="pl-1.5 flex items-center text-[#5E5E5E] dark:text-[#636363]"
+            >
+              &nbsp;&nbsp;
+              <span class="text-[#216595] dark:text-[#D6D6DD]">console</span>
+              <span class="text-[#262626] dark:text-[#D4D4D4]">.</span>
+              <span class="text-[#DB704B] dark:text-[#EFB080]">log</span>
+              <span class="text-[#05517F] dark:text-[#FFD700]">{"("}</span>
+              <span class="text-[#5E5E5E] dark:text-[#636363]">...</span>
+              <span class="text-[#05517F] dark:text-[#FFD700]">{")"}</span>
+            </div>
+
+            <div
+              class="flex items-center justify-end border-r border-transparent pr-0.75"
+            >
+              3
+            </div>
+
+            <div
+              class="pl-1.5 flex items-center text-[#B3013F] dark:text-[#83D2CD]"
+            >
+              &nbsp;&nbsp;{"return"}
+            </div>
+
+            <div
+              class="flex items-center justify-end border-r border-transparent pr-0.75"
+            >
+              4
+            </div>
+
+            <div
+              class="pl-1.5 flex items-center text-[#3D7CAB] dark:text-[#D970D6]"
+            >
+              {"}"}
+            </div>
+          </div>
+
+          <div
+            class="flex items-center text-[.6875rem]/4 text-gray-500 font-medium dark:text-gray-400"
+          >
+            Code editor
+          </div>
         </div>
       </div>
 
-      <div class="flex gap-3 h-34"></div>
-    </div>
-
-    <div
-      class="flex gap-4 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
-    >
-      <div class="flex flex-col">
-        <div class="text-[.8125rem]/5">Code</div>
-        <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
-          Pick a theme and let your code type itself out. Diffs, highlights, and
-          more.
+      <div
+        class="flex gap-2 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
+      >
+        <div class="flex flex-col">
+          <div class="text-[.8125rem]/5">Mockup</div>
+          <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+            Animate inside a phone, browser, or tablet frame in seconds.
+          </div>
         </div>
+
+        <div class="flex gap-3 h-34"></div>
       </div>
-
-      <div class="flex flex-col gap-2 items-center">
-        <div
-          class="relative pt-1.5 font-mono text-[.6875rem]/4 text-gray-500 dark:text-gray-400 grid grid-cols-[1.25rem_1fr] bg-white dark:bg-gray-800 grid-rows-[repeat(4,1rem)] w-38 h-20 border border-gray-200 dark:border-gray-600 rounded-md"
-        >
-          <div
-            class="absolute left-5 inset-y-0 w-px bg-gray-200 dark:bg-gray-600"
-          >
-          </div>
-
-          <div
-            class="flex items-center justify-end border-r border-transparent pr-0.75"
-          >
-            1
-          </div>
-
-          <div class="pl-1.5 inline-flex items-center">
-            <span class="text-[#B3013F] dark:text-[#83D2CD]">function</span>
-            <span>&nbsp;</span>
-            <span class="text-[#DB704B] dark:text-[#EFB080]">map</span>
-            <span class="text-[#05517F] dark:text-[#FFD700]">()</span>
-            <span>&nbsp;</span>
-            <span class="text-[#3D7CAB] dark:text-[#D970D6]">{"{"}</span>
-          </div>
-
-          <div
-            class="flex items-center justify-end border-r border-transparent pr-0.75"
-          >
-            2
-          </div>
-
-          <div
-            class="pl-1.5 flex items-center text-[#5E5E5E] dark:text-[#636363]"
-          >
-            &nbsp;&nbsp;
-            <span class="text-[#216595] dark:text-[#D6D6DD]">console</span>
-            <span class="text-[#262626] dark:text-[#D4D4D4]">.</span>
-            <span class="text-[#DB704B] dark:text-[#EFB080]">log</span>
-            <span class="text-[#05517F] dark:text-[#FFD700]">{"("}</span>
-            <span class="text-[#5E5E5E] dark:text-[#636363]">...</span>
-            <span class="text-[#05517F] dark:text-[#FFD700]">{")"}</span>
-          </div>
-
-          <div
-            class="flex items-center justify-end border-r border-transparent pr-0.75"
-          >
-            3
-          </div>
-
-          <div
-            class="pl-1.5 flex items-center text-[#B3013F] dark:text-[#83D2CD]"
-          >
-            &nbsp;&nbsp;{"return"}
-          </div>
-
-          <div
-            class="flex items-center justify-end border-r border-transparent pr-0.75"
-          >
-            4
-          </div>
-
-          <div
-            class="pl-1.5 flex items-center text-[#3D7CAB] dark:text-[#D970D6]"
-          >
-            {"}"}
-          </div>
-        </div>
-
-        <div
-          class="flex items-center text-[.6875rem]/4 text-gray-500 font-medium dark:text-gray-400"
-        >
-          Code editor
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="flex gap-2 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
-    >
-      <div class="flex flex-col">
-        <div class="text-[.8125rem]/5">Mockup</div>
-        <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
-          Animate inside a phone, browser, or tablet frame in seconds.
-        </div>
-      </div>
-
-      <div class="flex gap-3 h-34"></div>
     </div>
   </div>
 </div>
@@ -360,12 +367,16 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   let cursor = document.querySelector<HTMLImageElement>(
     '[data-part="cursor"]',
   )!;
+
+  let edit = document.querySelector<HTMLElement>('[data-part="edit"]')!;
+  let editor = document.querySelector<HTMLElement>('[data-part="editor"]')!;
+  let corners = gsap.utils.toArray<HTMLElement>('[data-part="corner"]')!;
   let trigger = document.querySelector<HTMLElement>('[data-part="trigger"]')!;
   let elements = document.querySelector<HTMLElement>('[data-part="elements"]')!;
+  let starters = document.querySelector<HTMLElement>('[data-part="starters"]')!;
 
-  let pointer = cursor.src;
-  let corners = gsap.utils.toArray<HTMLElement>('[data-part="corner"]');
   let grab = cursor.dataset.cursorGrab!;
+  let pointer = cursor.src;
   let grabbing = cursor.dataset.cursorGrabbing!;
 
   let box = (el: HTMLElement) => {
@@ -389,13 +400,13 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     a.y <= b.y + b.h;
 
   let ow = gsap.quickTo(motion, "outlineWidth", {
-    duration: 0.12,
+    duration: 0.1,
     ease: "power2.out",
   });
 
   let tl = gsap.timeline({
     defaults: {
-      duration: 0.12,
+      duration: 0.11,
       ease: "power2.out",
     },
     // repeat: -1,
@@ -420,7 +431,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   });
 
   tl.to(cursor, {
-    duration: 1,
+    duration: 0.65,
     ease: "power2.inOut",
     x: () => {
       let r = box(motion);
@@ -442,7 +453,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   });
 
   tl.to(cursor, {
-    duration: 0.3,
+    duration: 0.2,
     scale: 0.8,
     ease: "power2.inOut",
     yoyo: true,
@@ -455,11 +466,11 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
       scale: 1,
       opacity: 1,
     },
-    "-=0.5",
+    "-=0.4",
   );
 
   tl.to(cursor, {
-    duration: 1,
+    duration: 0.45,
     ease: "power2.inOut",
     x: () => box(motion).x - cursor.offsetWidth / 2,
     y: () => {
@@ -479,11 +490,11 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   tl.to(
     cursor,
     {
-      duration: 0.2,
+      duration: 0.16,
       scale: 0.9,
       ease: "power2.inOut",
     },
-    "+=0.05",
+    "+=0.04",
   );
 
   tl.call(
@@ -494,25 +505,33 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     "-=0.05",
   );
 
-  tl.to(
-    motion,
-    {
-      duration: 1,
-      width: () => (box(motion).h * 9) / 16,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        let r = box(motion);
-        gsap.set(cursor, {
-          x: r.x - cursor.offsetWidth / 2,
-          y: r.y + r.h / 2 - cursor.offsetHeight / 2,
-        });
-      },
+  tl.to(motion, {
+    duration: 0.84,
+    width: () => (box(motion).h * 9) / 16,
+    ease: "power4.inOut",
+    onUpdate: () => {
+      let r = box(motion);
+      gsap.set(cursor, {
+        x: r.x - cursor.offsetWidth / 2,
+        y: r.y + r.h / 2 - cursor.offsetHeight / 2,
+      });
     },
-    "+=0.1",
+  });
+
+  tl.to(
+    corners,
+    {
+      scale: 1.14,
+      duration: 0.42,
+      ease: "power3.inOut",
+      yoyo: true,
+      repeat: 1,
+    },
+    "<",
   );
 
   tl.to(cursor, {
-    duration: 1,
+    duration: 0.48,
     ease: "power2.inOut",
     x: () => {
       let r = box(trigger);
@@ -549,13 +568,13 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   tl.to(
     cursor,
     {
-      duration: 0.2,
+      duration: 0.16,
       scale: 0.8,
       ease: "power2.inOut",
       yoyo: true,
       repeat: 1,
     },
-    "+=0.2",
+    "+=0.1",
   );
 
   tl.set(elements, {
@@ -565,9 +584,47 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   });
 
   tl.to(elements, {
-    duration: 0.2,
+    duration: 0.22,
     scale: 1,
     opacity: 1,
+  });
+
+  tl.to(cursor, {
+    duration: 0.46,
+    ease: "power2.inOut",
+    x: () => {
+      let r = box(edit);
+      return r.x + r.w / 2 - cursor.offsetWidth / 2;
+    },
+    y: () => {
+      let r = box(edit);
+      return r.y + r.h / 2 - cursor.offsetHeight / 2;
+    },
+  });
+
+  tl.to(starters, {
+    duration: 0.68,
+    ease: "power2.inOut",
+    scrollTop: () => {
+      let c = box(cursor);
+      let e = box(editor);
+      let editorY = e.y + e.h / 2;
+      let cursorY = c.y + c.h / 2;
+      return starters.scrollTop + (editorY - cursorY);
+    },
+  });
+
+  tl.to(cursor, {
+    duration: 0.3,
+    ease: "power2.inOut",
+    x: () => {
+      let r = box(editor);
+      return r.x + r.w / 2 - cursor.offsetWidth / 2;
+    },
+    y: () => {
+      let r = box(editor);
+      return r.y + r.h / 2 - cursor.offsetHeight / 2;
+    },
   });
 
   window.addEventListener("resize", () => {
