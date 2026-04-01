@@ -73,7 +73,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
   <div
     class="aspect-square left-1/2 -translate-x-1/2 absolute shadow-control -translate-y-1/2 top-[calc(50%-1rem)] outline-0 outline-blue-400 dark:outline-blue-500 h-[calc(100%-12rem)] sm:h-[calc(100%-8rem)] sm:top-6 sm:translate-y-0 bg-white dark:bg-gray-800"
-    data-part="composition"
+    data-part="motion"
   >
     <div
       class="overflow-hidden absolute inset-0 pointer-events-none grid grid-cols-5"
@@ -361,9 +361,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   let root = document.querySelector<HTMLElement>(
     '[data-animate="composition"]',
   )!;
-  let motion = document.querySelector<HTMLElement>(
-    '[data-part="composition"]',
-  )!;
+  let motion = document.querySelector<HTMLElement>('[data-part="motion"]')!;
   let cursor = document.querySelector<HTMLImageElement>(
     '[data-part="cursor"]',
   )!;
@@ -517,18 +515,6 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
       });
     },
   });
-
-  tl.to(
-    corners,
-    {
-      scale: 1.14,
-      duration: 0.42,
-      ease: "power3.inOut",
-      yoyo: true,
-      repeat: 1,
-    },
-    "<",
-  );
 
   tl.to(cursor, {
     duration: 0.48,
