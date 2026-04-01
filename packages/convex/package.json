@@ -11,26 +11,26 @@
     }
   },
   "dependencies": {
-    "@convex-dev/resend": "^0.2.3",
-    "@convex-dev/stripe": "^0.1.4",
-    "@react-email/components": "^1.0.10",
-    "@react-email/render": "^2.0.4",
+    "@convex-dev/resend": "catalog:",
+    "@convex-dev/stripe": "catalog:",
+    "@react-email/components": "catalog:",
+    "@react-email/render": "catalog:",
     "@repo/better-auth": "workspace:*",
     "@repo/crpc": "workspace:*",
-    "convex-helpers": "^0.1.114",
-    "hono": "^4.12.9",
-    "stripe": "^21.0.1"
+    "convex-helpers": "catalog:",
+    "hono": "catalog:",
+    "stripe": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "better-auth": "^1.5.6",
-    "convex": "^1.34.1",
-    "typescript": "^5.9.3",
-    "zod": "^4.3.6"
+    "@types/node": "catalog:",
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "better-auth": "^1.5.6",
-    "convex": "^1.34.1",
-    "zod": "^4.3.6"
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "zod": "catalog:"
   }
 }
