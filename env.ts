@@ -9,15 +9,18 @@ const APP_PATHS: Record<string, string> = {
 const repo = import.meta.dirname;
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";
 
-const cwd = process.cwd();
+const cwd = path.normalize(process.cwd());
 
-const appFromCwd = Object.entries(APP_PATHS).find(([, appPath]) =>
-  cwd.includes(path.normalize(appPath)),
-)?.[0];
+let appName: string | undefined = undefined;
 
-const projectId = appFromCwd;
+for (const [appKey, appPath] of Object.entries(APP_PATHS)) {
+  if (cwd.includes(path.normalize(appPath))) {
+    appName = appKey;
+    break;
+  }
+}
 
-const apps = projectId && APP_PATHS[projectId] ? [APP_PATHS[projectId]] : Object.values(APP_PATHS);
+const apps = appName && APP_PATHS[appName] ? [APP_PATHS[appName]] : Object.values(APP_PATHS);
 
 const source = path.join(repo, `.env.${mode}`);
 
