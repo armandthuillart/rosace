@@ -245,12 +245,21 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-cascadia-code);
   --shadow-4xl: 0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%);
+  --shadow-block: var(--shadow-block);
+  --shadow-code: var(--shadow-code);
   --shadow-control: var(--shadow-control);
   --shadow-popover: var(--shadow-popover);
   --shadow-timeline: var(--shadow-timeline);
 }
 
 :root {
+  --shadow-block:
+    0 0 0 8px oklch(0% 0 0 / 2%), inset 0 1px oklch(100% 0 0 / 80%), 0 0 0 1px oklch(0% 0 0 / 4%),
+    0 113px 32px #0000, 0 72px 29px oklch(0% 0 0 / 1%), 0 41px 24px oklch(0% 0 0 / 2%),
+    0 18px 18px oklch(0% 0 0 / 4%), 0 5px 10px oklch(0% 0 0 / 4%);
+  --shadow-code:
+    0 0 0 1px oklch(0% 0 0 / 2%), 0 14px 6px oklch(0% 0 0 / 1%), 0 8px 5px oklch(0% 0 0 / 3%),
+    0 3px 3px oklch(0% 0 0 / 5%), 0 1px 2px oklch(0% 0 0 / 6%);
   --shadow-control: 0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
   --shadow-popover:
     0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
@@ -262,6 +271,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --shadow-block:
+      0 0 0 1px oklch(0% 0 0 / 35%), inset 0 1px oklch(100% 0 0 / 3%), 0 0 0 6px oklch(0% 0 0 / 8%),
+      0 72px 29px oklch(0% 0 0 / 2%), 0 41px 24px oklch(0% 0 0 / 7%),
+      0 18px 18px oklch(0% 0 0 / 11%), 0 5px 10px oklch(0% 0 0 / 13%);
+    --shadow-code:
+      0 0 0 1px oklch(0% 0 0 / 2%), 0 14px 6px oklch(0% 0 0 / 1%), 0 8px 5px oklch(0% 0 0 / 3%),
+      0 3px 3px oklch(0% 0 0 / 5%), 0 1px 2px oklch(0% 0 0 / 6%);
     --shadow-control:
       0px 0px 0.5px oklch(0% 0 0 / 50%), 0px 1px 3px oklch(0% 0 0 / 40%),
       inset 0px 0.5px 0px oklch(100% 0 0 / 10%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);

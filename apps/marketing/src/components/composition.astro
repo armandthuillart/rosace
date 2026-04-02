@@ -1,5 +1,6 @@
 ---
 import cursorImage from "@assets/images/cursor.svg?url";
+import pixelsImage from "@assets/images/pixels.svg?url";
 import grabImage from "@assets/images/grab.svg?url";
 import grabbingImage from "@assets/images/grabbing.svg?url";
 ---
@@ -53,8 +54,25 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   </div>
 
   <div
-    class="z-10 absolute top-0 right-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-control"
+    class="z-10 inline-flex gap-2 absolute top-0 right-0 p-2 rounded-xl bg-white dark:bg-gray-800 shadow-control"
   >
+    <div
+      class="size-8 shrink-0 rounded-md flex items-center justify-center"
+      data-part="effects"
+    >
+      <svg
+        aria-hidden="true"
+        class="size-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#sliders"></use>
+      </svg>
+    </div>
+
+    <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
     <div
       class="bg-blue-400 dark:bg-blue-500 text-white pr-3 pl-2.5 text-sm h-8 shrink-0 rounded-sm gap-1.5 inline-flex items-center justify-center"
     >
@@ -77,6 +95,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   >
     <div
       class="overflow-hidden absolute inset-0 pointer-events-none grid grid-cols-5"
+      data-part="pattern"
     >
       {
         Array.from({ length: 50 }, (_, i) => (
@@ -89,6 +108,50 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
           />
         ))
       }
+    </div>
+
+    <div
+      class="absolute opacity-0 inset-0 flex items-center justify-center"
+      data-part="paste"
+    >
+      <div
+        class="px-2 text-[.6875rem]/6 text-white bg-blue-400 dark:bg-blue-500 rounded-sm before:z-20"
+      >
+        Paste code
+      </div>
+    </div>
+
+    <div
+      class="opacity-0 overflow-hidden bg-[#f9f9f9] dark:bg-[#222] absolute flex items-center justify-center inset-0 p-8"
+      data-part="block"
+    >
+      <img
+        src={pixelsImage}
+        class="z-0 not-dark:opacity-20 h-32 w-[calc(100%+4rem)] pointer-events-none -left-8 bottom-0 absolute mask-radial-farthest-side mask-radial-at-[50%_100%] mask-radial-from-black mask-radial-to-transparent"
+      />
+
+      <div
+        class="z-10 font-mono [grid-template:auto/1fr] w-full min-h-0 grid bg-[#f8f8f8] dark:bg-[#111] rounded-lg p-0.75 relative shadow-block"
+      >
+        <div
+          class="overflow-hidden p-4 pl-12 [counter-increment:step_0] [counter-reset:step] text-[.75rem]/[1.35] sm:text-[.9375rem]/normal tracking-[.000625em] size-full bg-white dark:bg-[#191919] rounded-[.3125rem] shadow-code [tab-size:2] [grid-area:1/1/2/2]"
+        >
+          <pre
+            class="whitespace-normal">
+            <code class="text-[1em] leading-6 text-[#131316]">
+              <span class="block w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="1"><span class="text-[#6c47ff] dark:text-[#BAB1FF]">import</span><span class="text-[#131316] dark:text-white"> &#123; Fun &#125; </span><span class="text-[#6c47ff] dark:text-[#BAB1FF]">from</span><span class="text-[#06AEE3] dark:text-[#5DE3FF]"> &quot;rosace&quot;</span><span class="text-[#131316] dark:text-white">;</span></span>
+              <span class="block w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="2" />
+              <span class="block w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="3"><span class="text-[#6c47ff] dark:text-[#BAB1FF]">export</span><span class="text-[#6c47ff] dark:text-[#BAB1FF]"> function</span><span class="text-[#6c47ff] dark:text-[#BAB1FF]"> Video</span><span class="text-[#131316] dark:text-white">() &#123;</span></span>
+              <span class="block w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="4"><span class="max-[499px]:inline min-[500px]:hidden text-[#6c47ff] dark:text-[#BAB1FF]">&nbsp;&nbsp;return</span><span class="max-[499px]:inline min-[500px]:hidden text-[#131316] dark:text-white"> (</span><span class="max-[499px]:hidden min-[500px]:inline text-[#6c47ff] dark:text-[#BAB1FF]">&nbsp;&nbsp;return</span><span class="max-[499px]:hidden min-[500px]:inline text-[#131316] dark:text-white"> &lt;</span><span class="max-[499px]:hidden min-[500px]:inline text-[#22C542] dark:text-[#85EF9B]">Fun</span><span class="max-[499px]:hidden min-[500px]:inline text-[#6c47ff] dark:text-[#BAB1FF]"> animate</span><span class="max-[499px]:hidden min-[500px]:inline text-[#6c47ff] dark:text-[#BAB1FF]">=</span><span class="max-[499px]:hidden min-[500px]:inline text-[#131316] dark:text-white">&#123;</span><span class="max-[499px]:hidden min-[500px]:inline text-[#22C542] dark:text-[#85EF9B]">true</span><span class="max-[499px]:hidden min-[500px]:inline text-[#131316] dark:text-white">&#125;</span><span class="max-[499px]:hidden min-[500px]:inline text-[#131316] dark:text-white"> /&gt;</span></span>
+              <span class="block max-[499px]:block min-[500px]:hidden w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="5"><span class="text-[#131316] dark:text-white">&nbsp;&nbsp;&nbsp;&nbsp;&lt;</span><span class="text-[#22C542] dark:text-[#85EF9B]">Fun</span></span>
+              <span class="block max-[499px]:block min-[500px]:hidden w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="6"><span class="text-[#6c47ff] dark:text-[#BAB1FF]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animate</span><span class="text-[#6c47ff] dark:text-[#BAB1FF]">=</span><span class="text-[#131316] dark:text-white">&#123;</span><span class="text-[#22C542] dark:text-[#85EF9B]">true</span><span class="text-[#131316] dark:text-white">&#125;</span></span>
+              <span class="block max-[499px]:block min-[500px]:hidden w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="7"><span class="text-[#131316] dark:text-white">&nbsp;&nbsp;&nbsp;&nbsp;/&gt;</span></span>
+              <span class="block max-[499px]:block min-[500px]:hidden w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="8"><span class="text-[#131316] dark:text-white">&nbsp;&nbsp;)</span></span>
+              <span class="block w-[calc(100%+1rem+3.5rem)] pl-14 pr-4 -mr-4 -ml-14 before:w-1 before:text-[#484848] dark:before:text-[#c9c9c9] before:left-1.5 before:relative before:inline-block before:-ml-10 before:mr-6 before:text-right before:content-[attr(data-line)]" data-line="9"><span class="max-[499px]:hidden min-[500px]:inline text-[#131316] dark:text-white">;</span><span class="text-[#131316] dark:text-white">&#125;</span></span>
+            </code>
+          </pre>
+        </div>
+      </div>
     </div>
 
     <div
@@ -266,8 +329,18 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
         <div class="flex flex-col gap-2 items-center">
           <div
             class="relative pt-1.5 font-mono text-[.6875rem]/4 text-gray-500 dark:text-gray-400 grid grid-cols-[1.25rem_1fr] bg-white dark:bg-gray-800 grid-rows-[repeat(4,1rem)] w-38 h-20 border border-gray-200 dark:border-gray-600 rounded-md"
-            data-part="editor"
           >
+            <div
+              class="opacity-0 z-30 before:rounded-md absolute inset-0 flex items-center justify-center before:absolute before:inset-0 before:bg-white/90 dark:before:bg-gray-800/90 before:-z-10"
+              data-part="template"
+            >
+              <div
+                class="px-2 text-[.6875rem]/6 text-white bg-blue-400 dark:bg-blue-500 rounded-sm before:z-20"
+              >
+                Add template
+              </div>
+            </div>
+
             <div
               class="absolute left-5 inset-y-0 w-px bg-gray-200 dark:bg-gray-600"
             >
@@ -361,18 +434,22 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   let root = document.querySelector<HTMLElement>(
     '[data-animate="composition"]',
   )!;
-  let motion = document.querySelector<HTMLElement>('[data-part="motion"]')!;
   let cursor = document.querySelector<HTMLImageElement>(
     '[data-part="cursor"]',
   )!;
 
   let edit = document.querySelector<HTMLElement>('[data-part="edit"]')!;
-  let editor = document.querySelector<HTMLElement>('[data-part="editor"]')!;
+  let block = document.querySelector<HTMLElement>('[data-part="block"]')!;
+  let paste = document.querySelector<HTMLElement>('[data-part="paste"]')!;
+  let effects = document.querySelector<HTMLElement>('[data-part="effects"]')!;
+  let motion = document.querySelector<HTMLElement>('[data-part="motion"]')!;
   let corners = gsap.utils.toArray<HTMLElement>('[data-part="corner"]')!;
   let trigger = document.querySelector<HTMLElement>('[data-part="trigger"]')!;
+  let template = document.querySelector<HTMLElement>('[data-part="template"]')!;
   let elements = document.querySelector<HTMLElement>('[data-part="elements"]')!;
   let starters = document.querySelector<HTMLElement>('[data-part="starters"]')!;
 
+  let open = false;
   let grab = cursor.dataset.cursorGrab!;
   let pointer = cursor.src;
   let grabbing = cursor.dataset.cursorGrabbing!;
@@ -407,12 +484,10 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
       duration: 0.11,
       ease: "power2.out",
     },
-    // repeat: -1,
-    // repeatRefresh: true,
   });
 
   tl.set(motion, {
-    width: () => box(motion).h,
+    width: () => Math.min((box(motion).h * 9) / 16, box(root).w - 24),
     outlineWidth: 0,
   });
 
@@ -505,7 +580,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
   tl.to(motion, {
     duration: 0.84,
-    width: () => (box(motion).h * 9) / 16,
+    width: () => Math.min(box(motion).h, box(root).w - 24),
     ease: "power4.inOut",
     onUpdate: () => {
       let r = box(motion);
@@ -528,7 +603,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
       return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
     },
     onUpdate: () => {
-      let a = box(cursor);
+      let c = box(cursor);
       let m = box(motion);
 
       let e = {
@@ -538,15 +613,23 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
         h: m.h,
       };
 
-      if (!aabb(a, e)) {
+      if (!aabb(c, e)) {
         cursor.src = pointer;
         gsap.set(cursor, { scale: 1 });
       }
 
+      gsap.set(template, {
+        opacity: aabb(c, box(template)) ? 1 : 0,
+      });
+
       let b = box(trigger);
 
-      if (aabb(a, b)) {
+      trigger.classList.remove("bg-gray-50", "bg-gray-100", "dark:bg-gray-700");
+
+      if (aabb(c, b)) {
         trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+      } else if (open) {
+        trigger.classList.add("bg-gray-50", "dark:bg-gray-700");
       }
     },
   });
@@ -569,6 +652,10 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     transformOrigin: "top center",
   });
 
+  tl.call(() => {
+    open = true;
+  });
+
   tl.to(elements, {
     duration: 0.22,
     scale: 1,
@@ -586,6 +673,17 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
       let r = box(edit);
       return r.y + r.h / 2 - cursor.offsetHeight / 2;
     },
+    onUpdate: () => {
+      gsap.set(template, { opacity: aabb(box(cursor), box(template)) ? 1 : 0 });
+
+      trigger.classList.remove("bg-gray-50", "bg-gray-100", "dark:bg-gray-700");
+
+      if (aabb(box(cursor), box(trigger))) {
+        trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+      } else if (open) {
+        trigger.classList.add("bg-gray-50", "dark:bg-gray-700");
+      }
+    },
   });
 
   tl.to(starters, {
@@ -593,10 +691,15 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     ease: "power2.inOut",
     scrollTop: () => {
       let c = box(cursor);
-      let e = box(editor);
-      let editorY = e.y + e.h / 2;
+      let t = box(template);
       let cursorY = c.y + c.h / 2;
-      return starters.scrollTop + (editorY - cursorY);
+      let templateY = t.y + t.h / 2;
+      return starters.scrollTop + (templateY - cursorY) + 6;
+    },
+    onUpdate: () => {
+      gsap.set(template, {
+        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+      });
     },
   });
 
@@ -604,12 +707,124 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     duration: 0.3,
     ease: "power2.inOut",
     x: () => {
-      let r = box(editor);
+      let r = box(template);
       return r.x + r.w / 2 - cursor.offsetWidth / 2;
     },
     y: () => {
-      let r = box(editor);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2;
+      let r = box(template);
+      return r.y + r.h / 2 - cursor.offsetHeight / 2 + 6;
+    },
+    onUpdate: () => {
+      gsap.set(template, {
+        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+      });
+    },
+  });
+
+  tl.to(cursor, {
+    duration: 0.2,
+    scale: 0.8,
+    ease: "power2.inOut",
+    yoyo: true,
+    repeat: 1,
+  });
+
+  tl.to(
+    elements,
+    {
+      duration: 0.22,
+      scale: 0.9,
+      opacity: 0,
+      transformOrigin: "top center",
+      ease: "power2.inOut",
+    },
+    "-=0.05",
+  );
+
+  tl.call(() => {
+    open = false;
+    trigger.classList.remove("bg-gray-50", "dark:bg-gray-700");
+  });
+
+  tl.set(paste, { opacity: 0 });
+
+  tl.to(paste, {
+    duration: 0.28,
+    opacity: 1,
+    ease: "power2.out",
+  });
+
+  tl.to(
+    cursor,
+    {
+      duration: 1,
+      ease: "power3.inOut",
+      x: () => {
+        let r = box(paste);
+        return r.x + r.w / 2 - cursor.offsetWidth / 2 + 12;
+      },
+      y: () => {
+        let r = box(paste);
+        return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
+      },
+      onUpdate: () => {
+        gsap.set(template, {
+          opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+        });
+      },
+    },
+    "<",
+  );
+
+  tl.to(cursor, {
+    duration: 0.24,
+    scale: 0.8,
+    ease: "power2.in",
+    yoyo: true,
+    repeat: 1,
+  });
+
+  tl.to(
+    paste,
+    {
+      duration: 0.22,
+      opacity: 0,
+      ease: "power2.inOut",
+    },
+    "-=0.15",
+  );
+
+  tl.to(
+    block,
+    {
+      duration: 0.3,
+      opacity: 1,
+      ease: "power2.out",
+    },
+    ">-0.04",
+  );
+
+  tl.to(cursor, {
+    duration: 0.52,
+    ease: "power2.inOut",
+    x: () => {
+      let r = box(effects);
+      return r.x + r.w / 2 - cursor.offsetWidth / 2 + 12;
+    },
+    y: () => {
+      let r = box(effects);
+      return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
+    },
+    onUpdate: () => {
+      gsap.set(template, {
+        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+      });
+
+      effects.classList.remove("bg-gray-100", "dark:bg-gray-700");
+
+      if (aabb(box(cursor), box(effects))) {
+        effects.classList.add("bg-gray-100", "dark:bg-gray-700");
+      }
     },
   });
 
