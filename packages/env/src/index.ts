@@ -1,6 +1,7 @@
-import { config as loadEnv } from "dotenv";
 import { existsSync } from "node:fs";
 import { dirname, join, parse } from "node:path";
+
+import { config as loadEnv } from "dotenv";
 import { z } from "zod";
 
 const envSchema = z.object({

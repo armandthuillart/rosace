@@ -25,8 +25,8 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/inter-regular.woff2"],
             style: "normal",
+            src: ["./src/assets/fonts/inter-regular.woff2"],
             weight: "400",
           },
           {
@@ -44,7 +44,7 @@ export default defineConfig({
       provider: fontProviders.local(),
     },
     {
-      provider: fontProviders.fontsource(),
+      provider: fontProviders.google(),
       name: "Cascadia Code",
       cssVariable: "--font-cascadia-code",
     },

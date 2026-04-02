@@ -1,7 +1,7 @@
+import { env } from "$lib/env";
 import { convexClient } from "@repo/better-auth/client/plugins";
 import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient as createClient } from "better-auth/svelte";
-import { env } from "$lib/env";
 
 export const client = createClient({
   baseURL: env.PUBLIC_DASHBOARD_URL,

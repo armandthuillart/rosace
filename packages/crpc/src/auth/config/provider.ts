@@ -1,4 +1,5 @@
 import type { AuthProvider } from "convex/server";
+
 import { toJwkDataUri } from "./algorithm";
 
 interface ProviderOptions {

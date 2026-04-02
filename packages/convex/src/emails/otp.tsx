@@ -10,6 +10,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+
 import { getEnv } from "../env";
 
 const env = getEnv();
@@ -47,7 +48,7 @@ export function OTP({ otp, type }: OTPProps) {
         <Body className="mx-auto my-0 bg-white">
           <Preview>{PREVIEW_BY_TYPE[type]}</Preview>
           <Container className="mx-auto my-0 px-5 py-0">
-            <Heading className="mx-0 my-[30px] p-0 font-bold text-4xl text-[#1d1c1d] leading-[42px]">
+            <Heading className="mx-0 my-[30px] p-0 text-4xl leading-[42px] font-bold text-[#1d1c1d]">
               {HEADING_BY_TYPE[type]}
             </Heading>
 
@@ -60,7 +61,7 @@ export function OTP({ otp, type }: OTPProps) {
               <Text className="text-center align-middle text-3xl leading-[24px]">{otp}</Text>
             </Section>
 
-            <Text className="text-black text-sm leading-6">
+            <Text className="text-sm leading-6 text-black">
               If you didn't request this email, there's nothing to worry about, you can safely
               ignore it.
             </Text>
@@ -92,7 +93,7 @@ export function OTP({ otp, type }: OTPProps) {
               >
                 Legal Notice
               </Link>
-              <Text className="mb-[50px] text-left text-[#b7b7b7] text-xs leading-[15px]">
+              <Text className="mb-[50px] text-left text-xs leading-[15px] text-[#b7b7b7]">
                 ©{new Date().getFullYear()} Neap.
                 <br />
                 All rights reserved.

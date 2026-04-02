@@ -1,4 +1,5 @@
 import type { GenericDataModel } from "convex/server";
+
 import { ConvexBuilder } from "./factory";
 
 /**

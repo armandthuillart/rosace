@@ -1,5 +1,6 @@
 import { CRPCError, createBuilder } from "@repo/crpc/server";
 import type { Auth } from "convex/server";
+
 import type { DataModel, Id } from "./_generated/dataModel";
 
 export const convex = createBuilder<DataModel>();

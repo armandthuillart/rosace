@@ -6,10 +6,9 @@ const APP_PATHS: Record<string, string> = {
   marketing: "apps/marketing",
 };
 
+const cwd = path.normalize(process.cwd());
 const repo = import.meta.dirname;
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";
-
-const cwd = path.normalize(process.cwd());
 
 let appName: string | undefined = undefined;
 

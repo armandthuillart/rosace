@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { z } from "zod";
+
 import { build, deploy, runConvex, sync, watch } from "./codegen";
 
 const HELP = `

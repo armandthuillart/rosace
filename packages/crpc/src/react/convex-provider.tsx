@@ -14,6 +14,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createStore, type StoreApi } from "zustand/vanilla";
+
 import { CRPCError } from "./client-error";
 
 type AuthClient = {

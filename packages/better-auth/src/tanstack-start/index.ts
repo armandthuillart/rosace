@@ -2,6 +2,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { getSessionCookie as getCookie } from "better-auth/cookies";
 import { decodeJwt } from "jose";
 import { cache } from "react";
+
 import { handler } from "./handler";
 
 interface ProxyOptions {

@@ -5,6 +5,7 @@
 
 import type { MiddlewareOptions } from "@repo/crpc/auth/http";
 import { betterAuth as middleware } from "@repo/crpc/auth/http";
+
 import { getHandler } from "./auth";
 
 /**

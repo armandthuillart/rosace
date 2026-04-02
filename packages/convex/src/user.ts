@@ -1,5 +1,6 @@
 import { CRPCError } from "@repo/crpc/server";
 import { v } from "convex/values";
+
 import { authQuery } from "./crpc";
 
 export const getUser = authQuery

@@ -3,6 +3,7 @@
  * Used by the auth adapter; can be reused by other Convex adapters.
  */
 
+import { withoutSystemFields } from "convex-helpers";
 import type {
   GenericActionCtx,
   GenericDataModel,
@@ -10,7 +11,6 @@ import type {
   GenericQueryCtx,
 } from "convex/server";
 import type { GenericId } from "convex/values";
-import { withoutSystemFields } from "convex-helpers";
 
 // --- Types ---
 

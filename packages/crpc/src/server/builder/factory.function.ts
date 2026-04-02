@@ -1,5 +1,6 @@
 import type { GenericDataModel } from "convex/server";
 import type { GenericValidator, PropertyValidators } from "convex/values";
+
 import { ConvexBuilderWithHandler } from "./factory.handler";
 import type {
   AnyConvexMiddleware,

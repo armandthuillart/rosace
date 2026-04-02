@@ -1,4 +1,5 @@
 import type { GenericDataModel } from "convex/server";
+
 import { ConvexBuilderWithFunction } from "./factory.function";
 import type {
   ActionCtx,

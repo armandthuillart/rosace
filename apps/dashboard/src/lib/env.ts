@@ -1,10 +1,10 @@
-import { z } from "zod";
 import {
   PUBLIC_CONVEX_SITE_URL,
   PUBLIC_CONVEX_URL,
   PUBLIC_DASHBOARD_URL,
   PUBLIC_MARKETING_URL,
 } from "$env/static/public";
+import { z } from "zod";
 
 const envSchema = z.object({
   PUBLIC_CONVEX_SITE_URL: z.url(),

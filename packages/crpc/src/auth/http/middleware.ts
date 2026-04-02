@@ -1,5 +1,6 @@
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { cors } from "hono/cors";
+
 import { tryCatch } from "../../utils/try-catch";
 
 export interface MiddlewareOptions {

@@ -1,15 +1,16 @@
 import type {
+  GenericAuthBeforeResult,
+  GenericAuthTriggerChange,
+  GenericAuthTriggers,
+} from "@repo/better-auth/server";
+import type {
   GenericDataModel,
   GenericMutationCtx,
   GenericSchema,
   SchemaDefinition,
 } from "convex/server";
 import type { GenericId } from "convex/values";
-import type {
-  GenericAuthBeforeResult,
-  GenericAuthTriggerChange,
-  GenericAuthTriggers,
-} from "@repo/better-auth/server";
+
 import {
   type DbRecord,
   isPlainObject,

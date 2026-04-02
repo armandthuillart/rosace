@@ -1,5 +1,6 @@
 import { betterAuth } from "@repo/crpc/auth/config";
 import type { AuthConfig } from "convex/server";
+
 import { getEnv } from "./env";
 
 export default {

@@ -1,5 +1,6 @@
 import { convex } from "@repo/crpc/auth/plugins";
 import { emailOTP } from "better-auth/plugins";
+
 import { internal } from "./_generated/api";
 import betterAuth from "./auth.config";
 import { defineAuth } from "./crpc/auth";

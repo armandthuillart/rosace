@@ -6,8 +6,8 @@ import {
   jwt as jwtPlugin,
   oidcProvider as oidcProviderPlugin,
 } from "better-auth/plugins";
-import type { AuthConfig, AuthProvider } from "convex/server";
 import { omit } from "convex-helpers";
+import type { AuthConfig, AuthProvider } from "convex/server";
 
 const JWT_COOKIE_NAME = "auth:jwt";
 const JWT_EXPIRATION_SECONDS = 60 * 15;
