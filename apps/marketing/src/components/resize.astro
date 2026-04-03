@@ -1,0 +1,168 @@
+---
+import Scale from "./scale.astro";
+---
+
+<div class="h-146 relative @container" id="vertical">
+  <div
+    class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.5rem,6.25rem)] origin-[50%_100%] bottom-1/2 mb-[clamp(6.875rem,12.5cqw+4rem,13.5rem)]"
+    id="any"
+  >
+    Any
+  </div>
+
+  <div
+    class="absolute top-1/2 left-1/2 w-[clamp(18.75rem,50cqw+8rem,43.75rem)] mt-[clamp(-12.5rem,-12.5cqw-3.5rem,-6.25rem)] ml-[clamp(-22rem,-25cqw-4rem,-9.5rem)] h-[clamp(12.5rem,25cqw+7rem,25rem)]"
+  >
+    <div
+      class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-900 shadow-4xl"
+      id="video"
+    >
+      <div
+        class="absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+      >
+      </div>
+      <div
+        class="absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+      >
+      </div>
+      <div
+        class="absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+      >
+      </div>
+      <div
+        class="absolute -bottom-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+      >
+      </div>
+
+      <Scale />
+    </div>
+  </div>
+
+  <div
+    class="text-center right-0 leading-none absolute -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.75rem,6.25rem)] origin-[50%_0] top-1/2 mt-[clamp(6.5625rem,12.5cqw+4rem,12.5rem)]"
+    id="size"
+  >
+    Size
+  </div>
+</div>
+
+<script>
+  import gsap from "gsap";
+
+  const any = document.getElementById("any")!;
+  const size = document.getElementById("size")!;
+  const video = document.getElementById("video")!;
+
+  let box = () => {
+    const r = video.getBoundingClientRect();
+    return { h: r.height };
+  };
+
+  let tl = gsap.timeline({
+    defaults: {
+      duration: 0.7,
+      ease: "power4.inOut",
+    },
+    repeat: -1,
+    repeatDelay: 1,
+    repeatRefresh: true,
+  });
+
+  tl.set(video, {
+    height: "90%",
+    width: "100%",
+  });
+
+  tl.addLabel("toVertical");
+
+  tl.to(
+    video,
+    {
+      height: "100%",
+      width: "35%",
+    },
+    "toVertical",
+  );
+
+  tl.to(
+    any,
+    {
+      scale: 1,
+      y: 0,
+    },
+    "toVertical",
+  );
+
+  tl.to(
+    size,
+    {
+      scale: 1,
+      y: 0,
+    },
+    "toVertical",
+  );
+
+  tl.addLabel("toSquare", "+=1");
+
+  tl.to(
+    video,
+    {
+      height: "70%",
+      width: "42.5%",
+    },
+    "toSquare",
+  );
+
+  tl.to(
+    any,
+    {
+      scale: 1.2,
+      y: () => box().h * 0.125,
+    },
+    "toSquare",
+  );
+
+  tl.to(
+    size,
+    {
+      scale: 1.2,
+      y: () => box().h * -0.125,
+    },
+    "toSquare",
+  );
+
+  tl.addLabel("toDesktop", "+=1");
+
+  tl.to(
+    video,
+    {
+      height: "90%",
+      width: "100%",
+    },
+    "toDesktop",
+  );
+
+  tl.to(
+    any,
+    {
+      scale: 0.8,
+      y: () => box().h * 0.05,
+    },
+    "toDesktop",
+  );
+
+  tl.to(
+    size,
+    {
+      scale: 0.8,
+      y: () => box().h * -0.05,
+    },
+    "toDesktop",
+  );
+
+  window.addEventListener("resize", () => {
+    let p = tl.progress();
+    tl.progress(0).invalidate();
+    tl.progress(p);
+  });
+</script>

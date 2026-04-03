@@ -39,7 +39,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
     <div
       class="size-8 shrink-0 rounded-md flex items-center justify-center"
-      data-part="trigger"
+      data-part="starters-trigger"
     >
       <svg
         aria-hidden="true"
@@ -58,7 +58,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   >
     <div
       class="size-8 shrink-0 rounded-md flex items-center justify-center"
-      data-part="effects"
+      data-part="sliders-trigger"
     >
       <svg
         aria-hidden="true"
@@ -90,12 +90,19 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   </div>
 
   <div
+    class="z-10 overflow-hidden p-2 pb-0 flex flex-col opacity-0 absolute right-0 shadow-control rounded-[.875rem] gap-2 top-14 w-3xs bottom-20 bg-white dark:bg-gray-800"
+    data-part="sliders-popover"
+  >
+  
+  </div>
+
+  <div
     class="aspect-square left-1/2 -translate-x-1/2 absolute shadow-control -translate-y-1/2 top-[calc(50%-1rem)] outline-0 outline-blue-400 dark:outline-blue-500 h-[calc(100%-12rem)] sm:h-[calc(100%-8rem)] sm:top-6 sm:translate-y-0 bg-white dark:bg-gray-800"
-    data-part="motion"
+    data-part="video-preview"
   >
     <div
       class="overflow-hidden absolute inset-0 pointer-events-none grid grid-cols-5"
-      data-part="pattern"
+      data-part="checkerboard"
     >
       {
         Array.from({ length: 50 }, (_, i) => (
@@ -112,7 +119,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
     <div
       class="absolute opacity-0 inset-0 flex items-center justify-center"
-      data-part="paste"
+      data-part="code-block-trigger"
     >
       <div
         class="px-2 text-[.6875rem]/6 text-white bg-blue-400 dark:bg-blue-500 rounded-sm before:z-20"
@@ -123,7 +130,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
     <div
       class="opacity-0 overflow-hidden bg-[#f9f9f9] dark:bg-[#222] absolute flex items-center justify-center inset-0 p-8"
-      data-part="block"
+      data-part="code-block"
     >
       <img
         src={pixelsImage}
@@ -156,25 +163,25 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
     <div
       class="opacity-0 absolute -top-1 -left-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
-      data-part="corner"
+      data-part="handles"
     >
     </div>
 
     <div
       class="opacity-0 absolute -top-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
-      data-part="corner"
+      data-part="handles"
     >
     </div>
 
     <div
       class="opacity-0 absolute -bottom-1 -left-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
-      data-part="corner"
+      data-part="handles"
     >
     </div>
 
     <div
       class="opacity-0 absolute -bottom-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
-      data-part="corner"
+      data-part="handles"
     >
     </div>
   </div>
@@ -263,8 +270,8 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   />
 
   <div
-    class="overflow-hidden p-2 pb-0 flex flex-col opacity-0 absolute left-0 shadow-control rounded-[.875rem] gap-2 top-14 w-60 bottom-20 bg-white dark:bg-gray-800"
-    data-part="elements"
+    class="overflow-hidden p-2 pb-0 flex flex-col absolute left-0 shadow-control origin-[top_center] opacity-0 rounded-[.875rem] gap-2 top-14 w-3xs bottom-20 bg-white dark:bg-gray-800"
+    data-part="starters-popover"
   >
     <div
       class="items-center text-[.8125rem] text-gray-500/70 dark:text-gray-400/70 rounded-md h-8 w-full bg-gray-100 dark:bg-gray-700 inline-flex"
@@ -299,11 +306,11 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
 
     <div
       class="overflow-y-scroll [scrollbar-width:none] flex-1 flex flex-col gap-2"
-      data-part="starters"
+      data-part="starters-scrollport"
     >
       <div
         class="flex gap-2 flex-col p-3 bg-gray-100 dark:bg-gray-700 rounded-md"
-        data-part="edit"
+        data-part="beat-sync"
       >
         <div class="flex flex-col">
           <div class="text-[.8125rem]/5">Edit</div>
@@ -332,7 +339,7 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
           >
             <div
               class="opacity-0 z-30 before:rounded-md absolute inset-0 flex items-center justify-center before:absolute before:inset-0 before:bg-white/90 dark:before:bg-gray-800/90 before:-z-10"
-              data-part="template"
+              data-part="code-block-overlay"
             >
               <div
                 class="px-2 text-[.6875rem]/6 text-white bg-blue-400 dark:bg-blue-500 rounded-sm before:z-20"
@@ -437,17 +444,37 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
   let cursor = document.querySelector<HTMLImageElement>(
     '[data-part="cursor"]',
   )!;
-
-  let edit = document.querySelector<HTMLElement>('[data-part="edit"]')!;
-  let block = document.querySelector<HTMLElement>('[data-part="block"]')!;
-  let paste = document.querySelector<HTMLElement>('[data-part="paste"]')!;
-  let effects = document.querySelector<HTMLElement>('[data-part="effects"]')!;
-  let motion = document.querySelector<HTMLElement>('[data-part="motion"]')!;
-  let corners = gsap.utils.toArray<HTMLElement>('[data-part="corner"]')!;
-  let trigger = document.querySelector<HTMLElement>('[data-part="trigger"]')!;
-  let template = document.querySelector<HTMLElement>('[data-part="template"]')!;
-  let elements = document.querySelector<HTMLElement>('[data-part="elements"]')!;
-  let starters = document.querySelector<HTMLElement>('[data-part="starters"]')!;
+  let handles = gsap.utils.toArray<HTMLElement>('[data-part="handles"]')!;
+  let beatSync = document.querySelector<HTMLElement>(
+    '[data-part="beat-sync"]',
+  )!;
+  let codeBlock = document.querySelector<HTMLElement>(
+    '[data-part="code-block"]',
+  )!;
+  let videoPreview = document.querySelector<HTMLElement>(
+    '[data-part="video-preview"]',
+  )!;
+  let slidersTrigger = document.querySelector<HTMLElement>(
+    '[data-part="sliders-trigger"]',
+  )!;
+  let slidersPopover = document.querySelector<HTMLElement>(
+    '[data-part="sliders-popover"]',
+  )!;
+  let startersPopover = document.querySelector<HTMLElement>(
+    '[data-part="starters-popover"]',
+  )!;
+  let startersTrigger = document.querySelector<HTMLElement>(
+    '[data-part="starters-trigger"]',
+  )!;
+  let codeBlockTrigger = document.querySelector<HTMLElement>(
+    '[data-part="code-block-trigger"]',
+  )!;
+  let codeBlockOverlay = document.querySelector<HTMLElement>(
+    '[data-part="code-block-overlay"]',
+  )!;
+  let startersScrollport = document.querySelector<HTMLElement>(
+    '[data-part="starters-scrollport"]',
+  )!;
 
   let open = false;
   let grab = cursor.dataset.cursorGrab!;
@@ -474,50 +501,48 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     a.y + a.h >= b.y &&
     a.y <= b.y + b.h;
 
-  let ow = gsap.quickTo(motion, "outlineWidth", {
+  let centerOf = (el: HTMLElement, offsetX = 0, offsetY = 0) => {
+    let r = box(el);
+    return {
+      x: r.x + r.w / 2 - cursor.offsetWidth / 2 + offsetX,
+      y: r.y + r.h / 2 - cursor.offsetHeight / 2 + offsetY,
+    };
+  };
+
+  let ow = gsap.quickTo(videoPreview, "outlineWidth", {
     duration: 0.1,
     ease: "power2.out",
   });
 
   let tl = gsap.timeline({
-    defaults: {
-      duration: 0.11,
-      ease: "power2.out",
-    },
+    defaults: { duration: 0.15, ease: "power2.inOut" },
   });
 
-  tl.set(motion, {
-    width: () => Math.min((box(motion).h * 9) / 16, box(root).w - 24),
+  tl.set(videoPreview, {
+    width: () => Math.min((box(videoPreview).h * 9) / 16, box(root).w - 24),
     outlineWidth: 0,
   });
 
-  tl.set(corners, {
+  tl.set(handles, {
     scale: 0,
     opacity: 0,
   });
 
   tl.set(cursor, {
-    x: () => box(root).w * 0.8,
-    y: () => box(root).h * 0.8,
-    scale: 1,
+    x: () => box(root).w * 0.7,
+    y: () => box(root).h * 0.7,
     opacity: 0,
   });
 
+  // 1. Move cursor to the center of the video preview.
   tl.to(cursor, {
-    duration: 0.65,
-    ease: "power2.inOut",
-    x: () => {
-      let r = box(motion);
-      return r.x + r.w / 2 - cursor.offsetWidth / 2;
-    },
-    y: () => {
-      let r = box(motion);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2;
-    },
+    duration: 0.5,
+    x: () => centerOf(videoPreview).x,
+    y: () => centerOf(videoPreview).y,
     opacity: 1,
     onUpdate: () => {
       let a = box(cursor);
-      let b = box(motion);
+      let b = box(videoPreview);
 
       if (aabb(a, b)) {
         ow(2);
@@ -525,65 +550,46 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     },
   });
 
+  // 2. Make a click gesture.
+  tl.to(cursor, { scale: 0.8, yoyo: true, repeat: 1 }, "+=0.1");
+
+  // 3. Selects the video preview.
+  tl.to(handles, { scale: 1, opacity: 1 }, "-=0.4");
+
+  // 4. Move the cursor to the center of the left edge of the video preview.
   tl.to(cursor, {
-    duration: 0.2,
-    scale: 0.8,
-    ease: "power2.inOut",
-    yoyo: true,
-    repeat: 1,
+    duration: 0.5,
+    x: () => box(videoPreview).x - cursor.offsetWidth / 2,
+    y: () => centerOf(videoPreview).y,
   });
 
-  tl.to(
-    corners,
-    {
-      scale: 1,
-      opacity: 1,
-    },
-    "-=0.4",
-  );
-
-  tl.to(cursor, {
-    duration: 0.45,
-    ease: "power2.inOut",
-    x: () => box(motion).x - cursor.offsetWidth / 2,
-    y: () => {
-      let r = box(motion);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2;
-    },
-  });
-
+  // 5. Change the cursor to the grab cursor.
   tl.call(
     () => {
       cursor.src = grab;
     },
     [],
-    "-=0.25",
+    "-=0.1",
   );
 
-  tl.to(
-    cursor,
-    {
-      duration: 0.16,
-      scale: 0.9,
-      ease: "power2.inOut",
-    },
-    "+=0.04",
-  );
+  // 6. Makes a press gesture.
+  tl.to(cursor, { scale: 0.9 }, "+=0.1");
 
+  // 7. Change the cursor to the grabbing cursor.
   tl.call(
     () => {
       cursor.src = grabbing;
     },
     [],
-    "-=0.05",
+    "-=0.1",
   );
 
-  tl.to(motion, {
-    duration: 0.84,
-    width: () => Math.min(box(motion).h, box(root).w - 24),
-    ease: "power4.inOut",
+  // 8. Resize the video preview from 9:16 to 1:1 aspect ratio.
+  tl.to(videoPreview, {
+    duration: 0.5,
+    width: () => Math.min(box(videoPreview).h, box(root).w - 24),
     onUpdate: () => {
-      let r = box(motion);
+      let r = box(videoPreview);
       gsap.set(cursor, {
         x: r.x - cursor.offsetWidth / 2,
         y: r.y + r.h / 2 - cursor.offsetHeight / 2,
@@ -591,20 +597,14 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
     },
   });
 
+  // 9. Move the cursor to the center of the starters trigger.
   tl.to(cursor, {
-    duration: 0.48,
-    ease: "power2.inOut",
-    x: () => {
-      let r = box(trigger);
-      return r.x + r.w / 2 - cursor.offsetWidth / 2 + 12;
-    },
-    y: () => {
-      let r = box(trigger);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
-    },
+    duration: 0.5,
+    x: () => centerOf(startersTrigger, 12, 12).x,
+    y: () => centerOf(startersTrigger, 12, 12).y,
     onUpdate: () => {
       let c = box(cursor);
-      let m = box(motion);
+      let m = box(videoPreview);
 
       let e = {
         x: m.x,
@@ -618,215 +618,160 @@ import grabbingImage from "@assets/images/grabbing.svg?url";
         gsap.set(cursor, { scale: 1 });
       }
 
-      gsap.set(template, {
-        opacity: aabb(c, box(template)) ? 1 : 0,
+      gsap.set(codeBlockOverlay, {
+        opacity: aabb(c, box(codeBlockOverlay)) ? 1 : 0,
       });
 
-      let b = box(trigger);
+      let b = box(startersTrigger);
 
-      trigger.classList.remove("bg-gray-50", "bg-gray-100", "dark:bg-gray-700");
+      startersTrigger.classList.remove(
+        "bg-gray-50",
+        "bg-gray-100",
+        "dark:bg-gray-700",
+      );
 
       if (aabb(c, b)) {
-        trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+        startersTrigger.classList.add("bg-gray-100", "dark:bg-gray-700");
       } else if (open) {
-        trigger.classList.add("bg-gray-50", "dark:bg-gray-700");
+        startersTrigger.classList.add("bg-gray-50", "dark:bg-gray-700");
       }
     },
   });
 
-  tl.to(
-    cursor,
-    {
-      duration: 0.16,
-      scale: 0.8,
-      ease: "power2.inOut",
-      yoyo: true,
-      repeat: 1,
-    },
-    "+=0.1",
-  );
+  // 10. Makes a click gesture.
+  tl.to(cursor, { scale: 0.8, yoyo: true, repeat: 1 }, "+=0.1");
 
-  tl.set(elements, {
-    scale: 0.9,
-    opacity: 0,
-    transformOrigin: "top center",
-  });
+  // 11. Opens the starters popover.
+  tl.set(startersPopover, { scale: 0.9, opacity: 0 });
 
   tl.call(() => {
     open = true;
   });
 
-  tl.to(elements, {
-    duration: 0.22,
-    scale: 1,
-    opacity: 1,
-  });
+  tl.to(startersPopover, { scale: 1, opacity: 1, duration: 0.2 });
 
+  // 12. Move the cursor to the center of the beat sync.
   tl.to(cursor, {
-    duration: 0.46,
-    ease: "power2.inOut",
-    x: () => {
-      let r = box(edit);
-      return r.x + r.w / 2 - cursor.offsetWidth / 2;
-    },
-    y: () => {
-      let r = box(edit);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2;
-    },
+    duration: 0.5,
+    x: () => centerOf(beatSync).x,
+    y: () => centerOf(beatSync).y,
     onUpdate: () => {
-      gsap.set(template, { opacity: aabb(box(cursor), box(template)) ? 1 : 0 });
+      gsap.set(codeBlockOverlay, {
+        opacity: aabb(box(cursor), box(codeBlockOverlay)) ? 1 : 0,
+      });
 
-      trigger.classList.remove("bg-gray-50", "bg-gray-100", "dark:bg-gray-700");
+      startersTrigger.classList.remove(
+        "bg-gray-50",
+        "bg-gray-100",
+        "dark:bg-gray-700",
+      );
 
-      if (aabb(box(cursor), box(trigger))) {
-        trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+      if (aabb(box(cursor), box(startersTrigger))) {
+        startersTrigger.classList.add("bg-gray-100", "dark:bg-gray-700");
       } else if (open) {
-        trigger.classList.add("bg-gray-50", "dark:bg-gray-700");
+        startersTrigger.classList.add("bg-gray-50", "dark:bg-gray-700");
       }
     },
   });
 
-  tl.to(starters, {
-    duration: 0.68,
-    ease: "power2.inOut",
+  // 13. Scroll the starters scrollport to land on the center of the code block overlay.
+  tl.to(startersScrollport, {
+    duration: 0.7,
     scrollTop: () => {
       let c = box(cursor);
-      let t = box(template);
+      let t = box(codeBlockOverlay);
       let cursorY = c.y + c.h / 2;
       let templateY = t.y + t.h / 2;
-      return starters.scrollTop + (templateY - cursorY) + 6;
+      return startersScrollport.scrollTop + (templateY - cursorY) + 6;
     },
     onUpdate: () => {
-      gsap.set(template, {
-        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+      gsap.set(codeBlockOverlay, {
+        opacity: aabb(box(cursor), box(codeBlockOverlay)) ? 1 : 0,
       });
     },
   });
 
+  // 14. Move the cursor in-sync with the scrollport.
   tl.to(cursor, {
-    duration: 0.3,
-    ease: "power2.inOut",
-    x: () => {
-      let r = box(template);
-      return r.x + r.w / 2 - cursor.offsetWidth / 2;
-    },
-    y: () => {
-      let r = box(template);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2 + 6;
-    },
+    x: () => centerOf(codeBlockOverlay).x,
+    y: () => centerOf(codeBlockOverlay, 0, 6).y,
     onUpdate: () => {
-      gsap.set(template, {
-        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+      gsap.set(codeBlockOverlay, {
+        opacity: aabb(box(cursor), box(codeBlockOverlay)) ? 1 : 0,
       });
     },
   });
 
-  tl.to(cursor, {
-    duration: 0.2,
-    scale: 0.8,
-    ease: "power2.inOut",
-    yoyo: true,
-    repeat: 1,
-  });
+  // 15. Makes a click gesture.
+  tl.to(cursor, { scale: 0.8, yoyo: true, repeat: 1 }, "-=0.1");
 
-  tl.to(
-    elements,
-    {
-      duration: 0.22,
-      scale: 0.9,
-      opacity: 0,
-      transformOrigin: "top center",
-      ease: "power2.inOut",
-    },
-    "-=0.05",
-  );
+  // 16. Closes the starters popover.
+  tl.to(startersPopover, { scale: 0.9, opacity: 0, duration: 0.2 });
 
   tl.call(() => {
     open = false;
-    trigger.classList.remove("bg-gray-50", "dark:bg-gray-700");
+    startersTrigger.classList.remove("bg-gray-50", "dark:bg-gray-700");
   });
 
-  tl.set(paste, { opacity: 0 });
+  tl.set(codeBlockTrigger, { opacity: 0 });
 
-  tl.to(paste, {
-    duration: 0.28,
-    opacity: 1,
-    ease: "power2.out",
-  });
+  // 17. Shows the code block paste prompt.
+  tl.to(codeBlockTrigger, { opacity: 1 }, "+=0.1");
 
+  // 18. Move the cursor to the center of the prompt.
   tl.to(
     cursor,
     {
-      duration: 1,
-      ease: "power3.inOut",
-      x: () => {
-        let r = box(paste);
-        return r.x + r.w / 2 - cursor.offsetWidth / 2 + 12;
-      },
-      y: () => {
-        let r = box(paste);
-        return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
-      },
+      duration: 0.5,
+      x: () => centerOf(codeBlockTrigger, 12, 12).x,
+      y: () => centerOf(codeBlockTrigger, 12, 12).y,
       onUpdate: () => {
-        gsap.set(template, {
-          opacity: aabb(box(cursor), box(template)) ? 1 : 0,
+        gsap.set(codeBlockOverlay, {
+          opacity: aabb(box(cursor), box(codeBlockOverlay)) ? 1 : 0,
         });
+      },
+    },
+    "-=0.25",
+  );
+
+  // 19. Makes a click gesture.
+  tl.to(cursor, { scale: 0.8, yoyo: true, repeat: 1 });
+
+  // 20. Hides the prompt.
+  tl.to(codeBlockTrigger, { opacity: 0 }, "-=0.1");
+
+  // 21. Shows the code block.
+  tl.to(codeBlock, { opacity: 1, duration: 0.2 }, "-=0.1");
+
+  // 22. Move the cursor to the center of the sliders trigger.
+  tl.to(
+    cursor,
+    {
+      duration: 0.7,
+      x: () => centerOf(slidersTrigger, 12, 12).x,
+      y: () => centerOf(slidersTrigger, 12, 12).y,
+      onUpdate: () => {
+        gsap.set(codeBlockOverlay, {
+          opacity: aabb(box(cursor), box(codeBlockOverlay)) ? 1 : 0,
+        });
+
+        slidersTrigger.classList.remove("bg-gray-100", "dark:bg-gray-700");
+
+        if (aabb(box(cursor), box(slidersTrigger))) {
+          slidersTrigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+        }
       },
     },
     "<",
   );
 
-  tl.to(cursor, {
-    duration: 0.24,
-    scale: 0.8,
-    ease: "power2.in",
-    yoyo: true,
-    repeat: 1,
-  });
+  // 23. Makes a click gesture.
+  tl.to(cursor, { scale: 0.8, yoyo: true, repeat: 1 }, "-=0.1");
 
-  tl.to(
-    paste,
-    {
-      duration: 0.22,
-      opacity: 0,
-      ease: "power2.inOut",
-    },
-    "-=0.15",
-  );
+  tl.set(slidersPopover, { scale: 0.9, opacity: 0 });
 
-  tl.to(
-    block,
-    {
-      duration: 0.3,
-      opacity: 1,
-      ease: "power2.out",
-    },
-    ">-0.04",
-  );
-
-  tl.to(cursor, {
-    duration: 0.52,
-    ease: "power2.inOut",
-    x: () => {
-      let r = box(effects);
-      return r.x + r.w / 2 - cursor.offsetWidth / 2 + 12;
-    },
-    y: () => {
-      let r = box(effects);
-      return r.y + r.h / 2 - cursor.offsetHeight / 2 + 12;
-    },
-    onUpdate: () => {
-      gsap.set(template, {
-        opacity: aabb(box(cursor), box(template)) ? 1 : 0,
-      });
-
-      effects.classList.remove("bg-gray-100", "dark:bg-gray-700");
-
-      if (aabb(box(cursor), box(effects))) {
-        effects.classList.add("bg-gray-100", "dark:bg-gray-700");
-      }
-    },
-  });
+  // 24. Opens the sliders popover.
+  tl.to(slidersPopover, { scale: 1, opacity: 1, duration: 0.2 });
 
   window.addEventListener("resize", () => {
     let p = tl.progress();

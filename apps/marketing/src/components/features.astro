@@ -1,7 +1,5 @@
 ---
-import Scale from "@components/scale.astro";
-import Refine from "@components/refine.astro";
-import Create from "@components/create.astro";
+import Resize from "@components/resize.astro";
 ---
 
 <section class="px-5">
@@ -23,9 +21,12 @@ import Create from "@components/create.astro";
     </div>
 
     <div
-      class="overflow-hidden bg-pale-blue-400 dark:bg-pale-blue-800 rounded-sm relative inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 pl-6 lg:py-8 lg:pl-7"
+      class="overflow-hidden bg-gray-150 dark:bg-gray-800 rounded-sm relative inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 pl-6 lg:py-8 lg:pl-7"
     >
-      <Create />
+      <div
+        class="relative ring ring-black/5 dark:ring-white/5 rounded-[.625rem] shrink-0 bg-gray-100 dark:bg-gray-900 shadow-4xl w-230 h-150"
+      >
+      </div>
     </div>
   </div>
 </section>
@@ -51,12 +52,11 @@ import Create from "@components/create.astro";
     </div>
 
     <div
-      class="flex justify-end overflow-hidden bg-pale-blue-400 dark:bg-pale-blue-800 rounded-sm relative gap-6 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-1 lg:col-end-17 lg:row-start-1 py-7 pr-6 lg:py-8 lg:pr-7"
+      class="flex justify-end overflow-hidden bg-gray-150 dark:bg-gray-800 rounded-sm relative gap-6 inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-1 lg:col-end-17 lg:row-start-1 py-7 pr-6 lg:py-8 lg:pr-7"
     >
       <div
         class="relative ring ring-black/5 dark:ring-white/5 rounded-[.625rem] bg-gray-100 dark:bg-gray-900 shadow-4xl shrink-0 w-230 h-146"
       >
-        <Refine animate={true} />
       </div>
     </div>
   </div>
@@ -81,23 +81,9 @@ import Create from "@components/create.astro";
     </div>
 
     <div
-      class="overflow-hidden bg-pale-teal-400 dark:bg-pale-teal-800 rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 px-6 lg:py-8 lg:px-7"
+      class="overflow-hidden bg-gray-150 dark:bg-gray-800 rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5 lg:col-start-9 lg:col-end-25 py-7 px-6 lg:py-8 lg:px-7"
     >
-      <div
-        class="h-120 min-[25rem]:h-122.5 min-[31.25rem]:h-146 w-full relative"
-      >
-        <div
-          class="z-10 absolute top-0 left-0 aspect-9/16 h-8/10 md:aspect-square min-[31.25rem]:h-8/10 min-[34.375rem]:w-13/20 md:h-auto ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
-        >
-          <Scale />
-        </div>
-
-        <div
-          class="z-20 absolute bottom-0 right-0 aspect-square w-8/10 md:h-auto sm:aspect-9/5 md:w-15/20 ring ring-black/10 dark:ring-white/10 rounded-[.625rem] shrink-0 bg-white dark:bg-gray-900 shadow-4xl"
-        >
-          <Scale />
-        </div>
-      </div>
+      <Resize />
     </div>
   </div>
 </section>
