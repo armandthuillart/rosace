@@ -1,73 +1,1107 @@
-<div class="h-146 w-full relative @container">
-  <div
-    class="z-10 absolute bottom-0 left-1/2 -translate-x-1/2 p-2 inline-flex gap-2 rounded-xl bg-white dark:bg-gray-800 shadow-panel"
-  >
+---
+import cursor from "@assets/images/cursor.svg?url";
+---
+
+<div
+  aria-hidden="true"
+  class="h-146 w-full flex items-center justify-center relative @container"
+  id="root"
+>
+  <img
+    class="absolute top-0 left-0 size-12 z-50 opacity-0"
+    id="cursor"
+    src={cursor}
+  />
+
+  <div class="absolute w-full bottom-0 flex flex-col gap-2">
     <div
-      class="bg-blue-400 dark:bg-blue-500 text-white size-8 shrink-0 rounded-sm flex items-center justify-center"
+      class="z-50 origin-bottom w-full max-w-md invisible scale-0 mx-auto h-52 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
+      id="popover-popup"
     >
-      <svg
-        aria-hidden="true"
-        class="size-5 translate-x-px"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use href="/sprite.svg#cursor"></use>
-      </svg>
-    </div>
-
-    <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
-      <svg
-        aria-hidden="true"
-        class="size-5"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use href="/sprite.svg#hold"></use>
-      </svg>
-    </div>
-
-    <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
-
-    <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
-      <svg
-        aria-hidden="true"
-        class="size-5"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use href="/sprite.svg#geometric-shapes"></use>
-      </svg>
     </div>
 
     <div
-      class="size-8 shrink-0 rounded-md flex items-center justify-center"
-      id="popover-trigger"
+      class="z-10 mx-auto p-2 inline-flex gap-2 rounded-xl bg-white dark:bg-gray-800 shadow-timeline"
     >
-      <svg
-        aria-hidden="true"
-        class="size-5"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="bg-blue-400 dark:bg-blue-500 text-white size-8 shrink-0 rounded-sm flex items-center justify-center"
       >
-        <use href="/sprite.svg#toolcase"></use>
-      </svg>
+        <svg
+          aria-hidden="true"
+          class="size-5 translate-x-px"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#cursor"></use>
+        </svg>
+      </div>
+
+      <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#hold"></use>
+        </svg>
+      </div>
+
+      <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
+      <div
+        class="size-8 shrink-0 rounded-md flex items-center justify-center transition-colors"
+        id="popover-trigger"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#toolcase"></use>
+        </svg>
+      </div>
+
+      <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
+      <div
+        class="h-8 overflow-hidden p-0.5 gap-0.5 inline-flex rounded-md bg-gray-100 dark:bg-gray-600"
+      >
+        <div
+          class="size-7 flex items-center justify-center rounded-sm text-gray-500 dark:text-gray-400"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-4"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="/sprite.svg#geometric-shapes"></use>
+          </svg>
+        </div>
+
+        <div
+          class="shadow-panel size-7 flex items-center justify-center rounded-sm bg-white dark:bg-gray-800 text-blue-400 dark:text-blue-500"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-4"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="/sprite.svg#keyframe"></use>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 
   <div
-    class="absolute origin-bottom size-full max-w-md max-h-52 bottom-14 left-1/2 -translate-x-1/2 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
-    id="popover"
+    class="flex flex-col items-center justify-center font-medium -tracking-[.03em] mb-12 text-[clamp(5.5rem,15cqw+1.5rem,12.5rem)]/none"
   >
+    <div class="inline-flex">
+      <div class="perspective-[46.875rem]">
+        <div class="origin-bottom overflow-hidden" id="a1-wrap">
+          <div class="pr-1" id="a1-char">A</div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div
+          class="absolute left-[clamp(.3125rem,.711974cqw+.145631rem,1rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)] outline-0 outline-blue-400 dark:outline-blue-500"
+          id="target"
+        >
+          <div
+            class="z-10 invisible absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            data-handle
+          >
+          </div>
+
+          <div
+            class="z-10 invisible absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            data-handle
+          >
+          </div>
+
+          <div
+            class="z-10 invisible absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            data-handle
+          >
+          </div>
+
+          <div
+            class="z-10 invisible absolute -bottom-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            data-handle
+          >
+          </div>
+
+          <div class="absolute size-full invisible" id="n1-windmill">
+            <svg
+              aria-hidden="true"
+              class="size-full text-red-400 dark:text-red-500"
+              fill="currentColor"
+              viewBox="0 0 137 135"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M84.1148 67.3453H136.194C136.637 67.3453 137 67.7028 137 68.1397V134.043C137 134.484 136.633 134.845 136.186 134.841C99.0222 134.416 68.9737 104.827 68.502 68.2191V134.206C68.502 134.643 68.1392 135 67.6958 135H0.814284C0.366822 135 -2.06673e-05 134.639 0.00401052 134.198C0.439379 97.2879 30.9354 67.5042 68.498 67.5002H0.806238C0.362807 67.5002 0 67.1427 0 66.7057V0.802561C0 0.361644 0.366822 0.000171863 0.814284 0.00414409C37.9778 0.429172 68.0263 30.0183 68.498 66.6263V0.794617C68.498 0.357672 68.8608 0.000171819 69.3042 0.000171819H136.186C136.633 0.000171819 137 0.361644 136.996 0.802561C136.621 32.4969 114.079 58.94 83.9334 65.7802C83.0022 65.9907 83.1594 67.3453 84.1189 67.3453H84.1148Z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div
+          class="absolute invisible left-[clamp(.3125rem,.323625cqw+.23665rem,.625rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)]"
+          id="n1-circles-wrap"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-full text-teal-400 dark:text-teal-500"
+            fill="currentColor"
+            id="n1-circles-svg"
+            viewBox="0 0 156 156"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M45.9341 76.316C43.4159 76.8454 40.8068 77.1236 38.1333 77.1236C17.0729 77.1236 0 59.8589 0 38.5618C0 17.2647 17.0729 0 38.1333 0C59.1938 0 76.2666 17.2647 76.2666 38.5618C76.2666 40.3457 76.1469 42.1013 75.915 43.8209H80.0849C79.853 42.1013 79.7332 40.3457 79.7332 38.5618C79.7332 17.2647 96.8061 0 117.867 0C138.927 0 156 17.2647 156 38.5618C156 59.8589 138.927 77.1236 117.867 77.1236C115.499 77.1236 113.182 76.9054 110.934 76.4879V79.5128C113.182 79.0953 115.499 78.8771 117.867 78.8771C138.927 78.8771 156 96.1418 156 117.439C156 138.736 138.927 156.001 117.867 156.001C96.8064 156.001 79.7335 138.736 79.7335 117.439C79.7335 114.736 80.0086 112.097 80.5319 109.551H75.6376C76.0508 111.825 76.2667 114.169 76.2667 116.564C76.2667 137.861 59.1938 155.126 38.1334 155.126C17.0729 155.126 6.30037e-05 137.861 6.30037e-05 116.564C6.30037e-05 95.2671 17.0729 78.0024 38.1334 78.0024C40.8068 78.0024 43.416 78.2806 45.9341 78.8099V76.316Z"
+              fill-rule="evenodd"></path>
+          </svg>
+        </div>
+
+        <div class="overflow-hidden">
+          <div class="relative" id="n1-wrap">
+            <div class="backface-hidden" id="n1-char-n">n</div>
+
+            <div
+              class="absolute bottom-0 left-0 invisible flex backface-hidden"
+              id="n1-char-a"
+            >
+              a
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative block overflow-hidden" data-aa-char="i1">
+        <div class="relative block" data-aa="i1-letter">i</div>
+      </div>
+
+      <div class="relative block overflow-hidden">
+        <div class="relative block" data-aa="m-letter">m</div>
+      </div>
+
+      <div class="relative block overflow-hidden" data-aa-char="a2">
+        <div
+          class="absolute -z-10 text-[0] invisible bottom-[clamp(.5625rem,.970874cqw+.334951rem,1.5rem)] left-[clamp(.25rem,.582524cqw+.113471rem,.8125rem)] h-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)] w-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)]"
+          data-aa-flair="star"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-full"
+            fill="none"
+            viewBox="0 0 157 156"
+            xmlns="http://www.w3.org/2000/svg"
+            data-aa-svg="star"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M82.2214 104.04L105.483 143.586C108.242 148.276 114.274 149.852 118.974 147.112V147.112C123.675 144.371 125.275 138.345 122.552 133.634L99.5971 93.9091L144.009 105.424C149.276 106.79 154.656 103.639 156.042 98.3773V98.3773C157.428 93.1154 154.298 87.7233 149.042 86.317L104.72 74.4593L144.266 51.1978C148.957 48.439 150.533 42.407 147.792 37.7062V37.7062C145.052 33.0054 139.026 31.4057 134.314 34.1282L94.5898 57.0835L106.105 12.6719C107.471 7.40463 104.32 2.02469 99.058 0.638673V0.638673C93.7961 -0.747342 88.4041 2.38242 86.9977 7.63895L75.14 51.9603L51.8786 12.4142C49.1197 7.72403 43.0878 6.14763 38.387 8.8883V8.8883C33.6862 11.629 32.0865 17.6548 34.809 22.3662L57.7643 62.0908L13.3526 50.5758C8.08539 49.2101 2.70545 52.3607 1.31944 57.6226V57.6226C-0.0665745 62.8845 3.06319 68.2766 8.31971 69.6829L52.6411 81.5406L13.095 104.802C8.4048 107.561 6.8284 113.593 9.56907 118.294V118.294C12.3097 122.994 18.3356 124.594 23.0469 121.872L62.7716 98.9164L51.2566 143.328C49.8909 148.595 53.0414 153.975 58.3034 155.361V155.361C63.5653 156.747 68.9573 153.617 70.3637 148.361L82.2214 104.04Z"
+              class="fill-purple-400 dark:fill-purple-500"
+              fill-rule="evenodd"></path>
+          </svg>
+        </div>
+
+        <div class="relative block overflow-hidden">
+          <div class="relative block" data-aa="a2-letter">a</div>
+        </div>
+      </div>
+
+      <div class="relative block">
+        <div class="relative block overflow-hidden w-[500%]">
+          <div class="relative block backface-hidden" data-aa="t-letter">t</div>
+
+          <div
+            class="absolute bottom-0 left-0 invisible flex backface-hidden"
+            data-aa="t-numbers-wrap"
+          >
+            <div class="relative block" data-aa="t-number">1</div>
+            <div class="relative block" data-aa="t-number">0</div>
+            <div class="relative block" data-aa="t-number">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative block overflow-hidden">
+        <div class="relative block" data-aa="e-letter">e</div>
+      </div>
+    </div>
+
+    <div class="inline-flex" data-aa="heading-anything">
+      <div class="relative block overflow-hidden">
+        <div class="relative block font-normal" data-aa="any-a-top">a</div>
+        <div class="absolute bottom-0 left-0 block" data-aa="any-a-bottom">
+          a
+        </div>
+      </div>
+
+      <div class="relative block overflow-hidden">
+        <div class="relative block font-normal" data-aa="any-n-top">n</div>
+        <div class="absolute bottom-0 left-0 block" data-aa="any-n-bottom">
+          n
+        </div>
+      </div>
+
+      <div class="relative block perspective-[750px]">
+        <div class="relative block" data-aa="any-y-letter">y</div>
+      </div>
+
+      <div class="relative block">
+        <div
+          class="absolute -z-10 text-[0] invisible left-0 top-[clamp(.0625rem,.323625cqw-.0133495rem,.375rem)] h-[clamp(4.375rem,12.2977cqw+1.49272rem,16.25rem)] w-[clamp(2.1875rem,6.14887cqw+.746359rem,8.125rem)]"
+          data-aa-flair="bolt"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-full"
+            fill="none"
+            viewBox="0 0 134 229"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              id="bolt-path"
+              data-aa-path="bolt"
+              clip-rule="evenodd"
+              class="stroke-green-400 dark:stroke-green-500"
+              d="M101.08 11C102.439 11 103.402 12.3264 102.982 13.6187L78.6746 88.3335C78.2542 89.6259 79.2175 90.9522 80.5765 90.9522H108.983C110.634 90.9522 111.574 92.8401 110.579 94.1577L10.2304 227L39.4408 125.708C39.8095 124.429 38.8499 123.154 37.5191 123.154H7.82733C6.44727 123.154 5.48193 121.789 5.94147 120.488L44.1353 12.334C44.4176 11.5346 45.1733 11 46.0211 11H101.08Z"
+              fill-rule="evenodd"
+              stroke-width="4"></path>
+
+            <mask
+              id="mask0_animate_anything_bolt"
+              mask-type="alpha"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="134"
+              height="227"
+            >
+              <rect
+                id="bolt-rect"
+                data-aa-rect="bolt"
+                width="134"
+                height="227"
+                fill="#D9D9D9"></rect>
+            </mask>
+
+            <g mask="url(#mask0_animate_anything_bolt)">
+              <path
+                clip-rule="evenodd"
+                d="M102.08 10C103.439 10 104.402 11.3264 103.982 12.6187L79.6746 87.3335C79.2542 88.6259 80.2175 89.9522 81.5765 89.9522H109.983C111.634 89.9522 112.574 91.8401 111.579 93.1577L11.2304 226L40.4408 124.708C40.8095 123.429 39.8499 122.154 38.5191 122.154H8.82733C7.44727 122.154 6.48193 120.789 6.94147 119.488L45.1353 11.334C45.4176 10.5346 46.1733 10 47.0211 10H102.08Z"
+                class="fill-green-400 dark:fill-green-500"
+                fill-rule="evenodd"></path>
+            </g>
+          </svg>
+        </div>
+
+        <div class="relative block" data-aa="any-t-letter">t</div>
+      </div>
+
+      <div class="relative block">
+        <div class="relative block overflow-hidden">
+          <div class="relative block" data-aa="any-h-letter">h</div>
+        </div>
+      </div>
+
+      <div class="relative block perspective-[750px]">
+        <div class="relative block" data-aa="any-i-letter">i</div>
+      </div>
+
+      <div class="relative block overflow-hidden">
+        <div class="relative block" data-aa="any-n2-letter">n</div>
+      </div>
+
+      <div class="relative block">
+        <div class="relative block" data-aa="any-g-letter">g</div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
   import gsap from "gsap";
 
-  const popover = document.getElementById("popover")!;
-  const trigger = document.getElementById("popover-trigger")!;
+  const root = document.getElementById("root")!;
+  const cursor = document.getElementById("cursor")!;
+  const target = document.getElementById("target")!;
+  const handles = gsap.utils.toArray<HTMLElement>("[data-handle]")!;
+
+  const popover = {
+    popup: document.getElementById("popover-popup")!,
+    trigger: document.getElementById("popover-trigger")!,
+  };
+
+  const chars = {
+    a1: {
+      wrap: document.getElementById("a1-wrap")!,
+      char: document.getElementById("a1-char")!,
+    },
+    n1: {
+      windmill: document.getElementById("n1-windmill")!,
+      circles: {
+        wrap: document.getElementById("n1-circles-wrap")!,
+        svg: document.getElementById("n1-circles-svg")!,
+      },
+      char: {
+        n: document.getElementById("n1-char-n")!,
+        a: document.getElementById("n1-char-a")!,
+      },
+      wrap: document.getElementById("n1-wrap")!,
+    },
+  };
+
+  let aabb = (
+    a: {
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+    },
+    b: {
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+    },
+  ) =>
+    a.x + a.w >= b.x &&
+    a.x <= b.x + b.w &&
+    a.y + a.h >= b.y &&
+    a.y <= b.y + b.h;
+
+  let box = (el: HTMLElement) => {
+    let b = root.getBoundingClientRect();
+    let r = el.getBoundingClientRect();
+    return {
+      x: r.left - b.left,
+      y: r.top - b.top,
+      w: r.width,
+      h: r.height,
+    };
+  };
+
+  let to = (el: HTMLElement, offsetX = 0, offsetY = 0) => {
+    let r = box(el);
+    let x = r.x + r.w / 2 - cursor.offsetWidth / 2 + offsetX;
+    let y = r.y + r.h / 2 - cursor.offsetHeight / 2 + offsetY;
+    return { x, y };
+  };
+
+  let ow = gsap.quickTo(target, "outlineWidth", {
+    ease: "power4",
+    duration: 0.15,
+  });
+
+  let open = false;
+
+  let tl = gsap.timeline({
+    defaults: {
+      duration: 0.3,
+      ease: "power2.inOut",
+    },
+  });
+
+  tl.set(handles, {
+    autoAlpha: 0,
+    scale: 0,
+  });
+
+  tl.set(popover.popup, {
+    opacity: 0,
+    scale: 0.9,
+  });
+
+  tl.set(cursor, {
+    x: () => box(root).w * 0.7,
+    y: () => box(root).h * 0.7,
+    opacity: 0,
+  });
+
+  tl.from(chars.a1.char, {
+    ease: "power2.inOut",
+    duration: 0.6,
+    yPercent: 100,
+  });
+
+  tl.from(
+    chars.a1.wrap,
+    {
+      duration: 1,
+      ease: "back.out(1.7)",
+      rotationX: -180,
+    },
+    "-=0.4",
+  );
+
+  tl.set(chars.n1.char.a, {
+    autoAlpha: 1,
+  });
+
+  tl.set(chars.n1.circles.wrap, {
+    autoAlpha: 1,
+    yPercent: 100,
+  });
+
+  tl.set(chars.n1.windmill, {
+    autoAlpha: 1,
+  });
+
+  tl.from(chars.n1.circles.svg, {
+    ease: "back.out(1.7)",
+    scale: 0,
+  });
+
+  tl.to(chars.n1.circles.wrap, {
+    autoAlpha: 0,
+    duration: 1.5,
+    ease: "power4.out",
+    yPercent: -200,
+  });
+
+  tl.from(
+    chars.n1.wrap,
+    {
+      duration: 0.4,
+      yPercent: 100,
+    },
+    "<",
+  );
+
+  tl.from(
+    chars.n1.windmill,
+    {
+      duration: 1,
+      rotationZ: -360,
+      x: () => window.innerWidth / -2,
+    },
+    "<",
+  );
+
+  tl.from(
+    chars.n1.char.n,
+    {
+      rotationY: -180,
+    },
+    "+=0.4",
+  );
+
+  tl.to(
+    chars.n1.char.a,
+    {
+      rotationY: 180,
+    },
+    "<",
+  );
+
+  tl.to(
+    chars.n1.windmill,
+    {
+      repeat: -1,
+      rotationZ: 90,
+      repeatDelay: 1,
+    },
+    "<",
+  );
+
+  tl.to(
+    cursor,
+    {
+      x: () => to(target, 9, 9).x,
+      y: () => to(target, 9, 9).y,
+      ease: "power2",
+      opacity: 1,
+      duration: 1,
+      onUpdate: () => {
+        let a = box(cursor);
+        let b = box(target);
+
+        if (aabb(a, b)) {
+          ow(2);
+        }
+      },
+    },
+    ">-1.5",
+  );
+
+  tl.to(
+    cursor,
+    {
+      yoyo: true,
+      scale: 0.8,
+      repeat: 1,
+      duration: 0.2,
+    },
+    "-=0.1",
+  );
+
+  tl.to(
+    handles,
+    {
+      autoAlpha: 1,
+      scale: 1,
+    },
+    "-=0.2",
+  );
+
+  tl.to(
+    cursor,
+    {
+      x: () => to(popover.trigger, 9, 9).x,
+      y: () => to(popover.trigger, 9, 9).y,
+      ease: "power3",
+      duration: 1,
+      onUpdate: () => {
+        let a = box(cursor);
+        let b = box(popover.trigger);
+
+        if (!open && aabb(a, b)) {
+          popover.trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+        }
+      },
+    },
+    "+=0.1",
+  );
+
+  tl.to(
+    cursor,
+    {
+      yoyo: true,
+      scale: 0.8,
+      repeat: 1,
+      duration: 0.2,
+    },
+    "-=0.1",
+  );
+
+  tl.to(
+    popover.popup,
+    {
+      ease: "power3",
+      scale: 1,
+      onStart: () => {
+        open = true;
+        popover.trigger.classList.remove("bg-gray-100", "dark:bg-gray-700");
+        popover.trigger.classList.add(
+          "text-white",
+          "bg-blue-400",
+          "dark:bg-blue-500",
+        );
+      },
+      duration: 0.2,
+      autoAlpha: 1,
+    },
+    "-=0.1",
+  );
+
+  // space
+  // const roots = Array.from(
+  //   document.querySelectorAll<HTMLElement>("[data-animate-anything]"),
+  // );
+
+  // for (const root of roots) {
+  //   const heading1 = root.querySelector<HTMLElement>(
+  //     "[data-aa='heading-animate']",
+  //   );
+  //   const heading2 = root.querySelector<HTMLElement>(
+  //     "[data-aa='heading-anything']",
+  //   );
+  //   const button = root.querySelector<HTMLElement>("[data-aa='button']");
+  //   const squiggle = root.querySelector<HTMLElement>("[data-aa='squiggle']");
+
+  //   if (!(heading1 && heading2)) {
+  //     continue;
+  //   }
+
+  //   const animate = <T extends Element = HTMLElement>(selector: string) =>
+  //     Array.from(heading1.querySelectorAll<T>(selector));
+  //   const anything = <T extends Element = HTMLElement>(selector: string) =>
+  //     Array.from(heading2.querySelectorAll<T>(selector));
+
+  //   const defaults = {
+  //     duration: 0.6,
+  //     ease: "power2.out",
+  //   };
+
+  //   const initSquiggleMouseMovement = () => {
+  //     if (!squiggle) {
+  //       return () => {};
+  //     }
+
+  //     let windowWidth = window.innerWidth;
+  //     let windowHeight = window.innerHeight;
+
+  //     const setWindowSize = () => {
+  //       windowWidth = window.innerWidth;
+  //       windowHeight = window.innerHeight;
+  //     };
+
+  //     const xTo = gsap.quickTo(squiggle, "xPercent", {
+  //       duration: 1,
+  //       ease: "power3",
+  //     });
+  //     const yTo = gsap.quickTo(squiggle, "yPercent", {
+  //       duration: 1,
+  //       ease: "power3",
+  //     });
+  //     const rotateTo = gsap.quickTo(squiggle, "rotation", {
+  //       duration: 1,
+  //       ease: "power3",
+  //     });
+
+  //     const onResize = () => setWindowSize();
+  //     const onMouseMove = (event: MouseEvent) => {
+  //       const xPercent = gsap.utils.mapRange(0, windowWidth, -20, 20, event.x);
+  //       const yPercent = gsap.utils.mapRange(0, windowHeight, -20, 20, event.y);
+  //       const rotateRange = gsap.utils.clamp(
+  //         -1,
+  //         1,
+  //         gsap.utils.mapRange(
+  //           windowWidth * 0.25,
+  //           windowWidth * 0.75,
+  //           1,
+  //           -1,
+  //           event.x,
+  //         ),
+  //       );
+
+  //       rotateTo(yPercent * rotateRange);
+  //       xTo(xPercent);
+  //       yTo(yPercent);
+  //     };
+
+  //     window.addEventListener("resize", onResize);
+  //     window.addEventListener("mousemove", onMouseMove);
+
+  //     return () => {
+  //       window.removeEventListener("resize", onResize);
+  //       window.removeEventListener("mousemove", onMouseMove);
+  //     };
+  //   };
+
+  //   const char1 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const wrap = animate("[data-aa='a1-wrap']");
+  //     const char = animate("[data-aa='a1-letter']");
+
+  //     tl.set(wrap, { transformOrigin: "50% 100%" });
+  //     tl.from(char, { yPercent: 100 });
+  //     tl.from(
+  //       wrap,
+  //       { duration: 1, ease: "back.out(1.7)", rotationX: -180 },
+  //       "-=.4",
+  //     );
+
+  //     return tl;
+  //   };
+
+  //   const char2 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const circles = animate("[data-aa-flair='circles']");
+  //     const circlesSvg = animate("[data-aa-svg='circles']");
+  //     const windmill = animate("[data-aa-flair='windmill']");
+  //     const wrap = animate("[data-aa='n-wrap']");
+  //     const chars = animate("[data-aa='n-char']");
+
+  //     if (chars[1]) {
+  //       tl.set(chars[1], { autoAlpha: 1 });
+  //     }
+  //     tl.set(circles, { autoAlpha: 1, yPercent: 100 });
+  //     tl.from(circlesSvg, { ease: "back.out(1.7)", scale: 0 });
+  //     tl.to(circles, {
+  //       autoAlpha: 0,
+  //       duration: 1.5,
+  //       ease: "power4.out",
+  //       yPercent: -200,
+  //     });
+  //     tl.from(wrap, { duration: 0.4, yPercent: 100 }, "<");
+  //     tl.from(
+  //       windmill,
+  //       {
+  //         duration: 1,
+  //         rotationZ: -360,
+  //         x: () => window.innerWidth / -2,
+  //       },
+  //       "<",
+  //     );
+
+  //     if (chars[0]) {
+  //       tl.from(chars[0], { duration: 0.3, rotationY: -180 }, "+=.4");
+  //     }
+  //     if (chars[1]) {
+  //       tl.to(chars[1], { duration: 0.3, rotationY: 180 }, "<");
+  //     }
+  //     tl.to(
+  //       windmill,
+  //       {
+  //         duration: 0.3,
+  //         repeat: -1,
+  //         repeatDelay: 1,
+  //         rotationZ: 90,
+  //       },
+  //       "<",
+  //     );
+
+  //     return tl;
+  //   };
+
+  //   const char3 = () =>
+  //     gsap.from(animate("[data-aa='i1-letter']"), {
+  //       duration: 1,
+  //       ease: "back.out(1.4)",
+  //       yPercent: -100,
+  //     });
+
+  //   const char4 = () =>
+  //     gsap.from(animate("[data-aa='m-letter']"), {
+  //       xPercent: -100,
+  //       ...defaults,
+  //     });
+
+  //   const char5 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const wrap = animate("[data-aa-char='a2']");
+  //     const star = animate("[data-aa-flair='star']");
+  //     const starSvg = animate("[data-aa-svg='star']");
+  //     const char = animate("[data-aa='a2-letter']");
+
+  //     tl.set(star, { autoAlpha: 1, xPercent: -150 });
+  //     tl.from(starSvg, { duration: 0.4, scale: 0 });
+  //     tl.add(char4(), "+=.6");
+  //     tl.to(star, { xPercent: 0 }, "<");
+  //     tl.set(wrap, { overflow: "hidden" });
+  //     tl.to(star, { ease: "power2.in", yPercent: 130 }, "+=.5");
+  //     tl.from(char, { yPercent: 100 }, "-=.3");
+  //     tl.to(
+  //       starSvg,
+  //       { duration: 2, ease: "none", repeat: 2, rotationZ: 360 },
+  //       0,
+  //     );
+
+  //     return tl;
+  //   };
+
+  //   const char7 = () =>
+  //     gsap.from(animate("[data-aa='e-letter']"), {
+  //       duration: 0.9,
+  //       yPercent: 100,
+  //     });
+
+  //   const char6 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const [char] = animate("[data-aa='t-letter']");
+  //     const numbersWrap = animate("[data-aa='t-numbers-wrap']");
+  //     const numbers = animate("[data-aa='t-number']");
+
+  //     tl.set(numbersWrap, { autoAlpha: 1 });
+  //     if (numbers[0]) {
+  //       tl.from(numbers[0], { duration: 0.4, yPercent: 100 }, "<");
+  //     }
+  //     tl.fromTo(
+  //       [numbers[1], numbers[2]].filter(Boolean),
+  //       { yPercent: 100 },
+  //       { duration: 0.9, ease: "power2.inOut", stagger: 0.1, yPercent: -100 },
+  //       "+=.2",
+  //     );
+  //     if (numbers[0]) {
+  //       tl.to(numbers[0], { yPercent: -100 }, "-=.6");
+  //     }
+  //     if (char) {
+  //       tl.from(char, { duration: 0.9, yPercent: 100 }, "<");
+  //     }
+  //     tl.add(char7(), "<");
+
+  //     return tl;
+  //   };
+
+  //   const char8to9 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const topChars = anything("[data-aa='any-a-top'], [data-aa='any-n-top']");
+  //     const bottomChars = anything(
+  //       "[data-aa='any-a-bottom'], [data-aa='any-n-bottom']",
+  //     );
+
+  //     tl.fromTo(
+  //       bottomChars,
+  //       { yPercent: 100 },
+  //       {
+  //         duration: 3,
+  //         keyframes: {
+  //           ease: "power1.out",
+  //           yPercent: [100, 0, 100, 0],
+  //         },
+  //         stagger: 0.4,
+  //       },
+  //     );
+
+  //     tl.fromTo(
+  //       topChars,
+  //       { yPercent: -100 },
+  //       {
+  //         duration: 3,
+  //         keyframes: {
+  //           ease: "power1.out",
+  //           yPercent: [-100, -100, 20, -100],
+  //         },
+  //         stagger: 0.4,
+  //       },
+  //       "<",
+  //     );
+
+  //     return tl;
+  //   };
+
+  //   const char10 = () =>
+  //     gsap.from(anything("[data-aa='any-y-letter']"), {
+  //       duration: 1,
+  //       rotationY: -180,
+  //       scale: 0,
+  //     });
+
+  //   const char11 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const bolt = anything("[data-aa-flair='bolt']");
+  //     const [path] = anything<SVGPathElement>("[data-aa-path='bolt']");
+  //     const rect = anything<SVGRectElement>("[data-aa-rect='bolt']");
+  //     const char = anything("[data-aa='any-t-letter']");
+
+  //     tl.set(bolt, { autoAlpha: 1 });
+  //     if (path) {
+  //       const length = path.getTotalLength();
+  //       tl.set(path, {
+  //         strokeDasharray: `${length} ${length}`,
+  //         strokeDashoffset: length,
+  //       });
+  //       tl.to(path, { duration: 1, ease: "power3.inOut", strokeDashoffset: 0 });
+  //     }
+  //     tl.from(
+  //       rect,
+  //       {
+  //         duration: 3.5,
+  //         ease: "power4.out",
+  //         transformOrigin: "50% 100%",
+  //         yPercent: 100,
+  //       },
+  //       "<.5",
+  //     );
+  //     tl.from(
+  //       bolt,
+  //       {
+  //         keyframes: {
+  //           duration: 2,
+  //           scale: [1, 1.1, 0.6, 0.7, 0.2, 0.3, 0],
+  //         },
+  //       },
+  //       "-=2",
+  //     );
+  //     tl.from(char, { ease: "back.out(1.4)", scale: 0 }, "<.5");
+
+  //     return tl;
+  //   };
+
+  //   const char12 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const char = anything("[data-aa='any-h-letter']");
+  //     tl.from(char, { yPercent: -100 });
+  //     return tl;
+  //   };
+
+  //   const char14 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     tl.from(anything("[data-aa='any-n2-letter']"), { xPercent: -100 });
+  //     return tl;
+  //   };
+
+  //   const char13 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     const char = anything("[data-aa='any-i-letter']");
+
+  //     tl.from(char, { autoAlpha: 0, duration: 0.1 }, "<");
+  //     tl.from(char, { duration: 1.3, rotationX: -450 }, "<.14");
+  //     tl.add(char14(), "<+=.5");
+  //     tl.to(
+  //       char,
+  //       {
+  //         duration: 1.5,
+  //         repeat: -1,
+  //         repeatDelay: 3,
+  //         rotationX: 540,
+  //         yoyo: true,
+  //         yoyoEase: "power2.out",
+  //       },
+  //       "+=2",
+  //     );
+
+  //     return tl;
+  //   };
+
+  //   const char15 = () => {
+  //     const tl = gsap.timeline({ defaults });
+  //     tl.from(
+  //       anything("[data-aa='any-g-letter']"),
+  //       {
+  //         autoAlpha: 0,
+  //         duration: 2,
+  //         ease: "elastic.out(1, 0.4)",
+  //         rotationZ: -120,
+  //       },
+  //       "<.6",
+  //     );
+  //     return tl;
+  //   };
+
+  //   const buttonIn = () => {
+  //     if (!button) {
+  //       return null;
+  //     }
+  //     return gsap.from(button, {
+  //       autoAlpha: 0,
+  //       yPercent: 30,
+  //       ...defaults,
+  //     });
+  //   };
+
+  //   const prefersReducedMotion = window.matchMedia(
+  //     "(prefers-reduced-motion: reduce)",
+  //   );
+  //   let timeline: gsap.core.Timeline | undefined;
+  //   const cleanupSquiggle = initSquiggleMouseMovement();
+
+  //   let animationStarted = false;
+  //   let inViewObserver: IntersectionObserver | null = null;
+
+  //   const disconnectInViewObserver = () => {
+  //     inViewObserver?.disconnect();
+  //     inViewObserver = null;
+  //   };
+
+  //   const startAnimation = () => {
+  //     if (animationStarted) {
+  //       return;
+  //     }
+  //     animationStarted = true;
+  //     disconnectInViewObserver();
+  //     buildTimeline();
+  //   };
+
+  //   const attachInViewObserver = () => {
+  //     disconnectInViewObserver();
+  //     inViewObserver = new IntersectionObserver(
+  //       (entries) => {
+  //         if (entries.some((entry) => entry.isIntersecting)) {
+  //           startAnimation();
+  //         }
+  //       },
+  //       { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+  //     );
+  //     inViewObserver.observe(root);
+  //   };
+
+  //   /** Full-motion: play when in view; reduced motion: settle immediately. */
+  //   const beginWhenInView = () => {
+  //     if (prefersReducedMotion.matches) {
+  //       startAnimation();
+  //       return;
+  //     }
+  //     const rect = root.getBoundingClientRect();
+  //     const vh = window.innerHeight || document.documentElement.clientHeight;
+  //     const alreadyVisible =
+  //       rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < vh;
+  //     if (alreadyVisible) {
+  //       startAnimation();
+  //     } else {
+  //       attachInViewObserver();
+  //     }
+  //   };
+
+  //   const buildTimeline = () => {
+  //     timeline?.kill();
+
+  //     if (prefersReducedMotion.matches) {
+  //       gsap.set([heading1, heading2], { autoAlpha: 1 });
+  //       gsap.set(
+  //         [
+  //           ...animate("[data-aa-flair]"),
+  //           ...anything("[data-aa-flair]"),
+  //           ...anything("[data-aa='any-i-letter']"),
+  //         ],
+  //         { clearProps: "all" },
+  //       );
+  //       gsap.set(anything("[data-aa='any-a-top'], [data-aa='any-n-top']"), {
+  //         autoAlpha: 0,
+  //       });
+  //       gsap.set(
+  //         anything("[data-aa='any-a-bottom'], [data-aa='any-n-bottom']"),
+  //         {
+  //           clearProps: "transform",
+  //         },
+  //       );
+  //       return;
+  //     }
+
+  //     timeline = gsap.timeline({
+  //       defaults,
+  //       id: "home-hero",
+  //     });
+
+  //     timeline.set([heading1, heading2], { autoAlpha: 1 });
+
+  //     timeline.add(char1());
+  //     timeline.add(char2(), 0.4);
+  //     timeline.add(char3(), 1);
+  //     timeline.add(char5(), 0.8);
+  //     timeline.add(char6(), 1.1);
+  //     timeline.add(char8to9(), 1.5);
+  //     timeline.add(char10(), 1.7);
+  //     timeline.add(char11(), 2);
+  //     timeline.add(char12(), 1.9);
+  //     timeline.add(char13(), 2.4);
+  //     timeline.add(char15(), 2.2);
+
+  //     const buttonTween = buttonIn();
+  //     if (buttonTween) {
+  //       timeline.add(buttonTween, 1);
+  //     }
+  //   };
+
+  //   const onMotionChange = () => {
+  //     timeline?.kill();
+  //     if (prefersReducedMotion.matches) {
+  //       disconnectInViewObserver();
+  //       animationStarted = true;
+  //       buildTimeline();
+  //       return;
+  //     }
+  //     animationStarted = false;
+  //     beginWhenInView();
+  //   };
+  //   prefersReducedMotion.addEventListener("change", onMotionChange);
+  //   beginWhenInView();
+
+  //   window.addEventListener(
+  //     "pagehide",
+  //     () => {
+  //       prefersReducedMotion.removeEventListener("change", onMotionChange);
+  //       disconnectInViewObserver();
+  //       timeline?.kill();
+  //       cleanupSquiggle();
+  //     },
+  //     { once: true },
+  //   );
+  // }
 </script>
