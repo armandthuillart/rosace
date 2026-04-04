@@ -11,7 +11,7 @@ import Scale from "@components/scale.astro";
   </div>
 
   <div
-    class="absolute top-1/2 left-1/2 aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
+    class="absolute top-1/2 left-1/2 max-w-full aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
   >
     <div
       class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-800 shadow-4xl"
@@ -35,7 +35,7 @@ import Scale from "@components/scale.astro";
       </div>
 
       <div
-        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-800 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-800"
+        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-3/10 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-800 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-3/10 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-800"
       >
         <div class="-z-10 absolute inset-0" id="motion">
           <Scale />
@@ -65,135 +65,154 @@ import Scale from "@components/scale.astro";
     return { h: r.height };
   };
 
-  let tl = gsap.timeline({
-    defaults: {
-      duration: 0.8,
-      ease: "back.out(1.1)",
-    },
-    repeat: -1,
-    repeatDelay: 1,
-    repeatRefresh: true,
-  });
+  let mm = gsap.matchMedia();
+  let breakpoint = 450;
 
-  tl.set(video, {
-    height: "60%",
-    width: "100%",
-  });
-
-  tl.addLabel("toSquare");
-
-  tl.to(
-    video,
+  mm.add(
     {
-      height: "80%",
-      width: "80%",
+      mobile: `(max-width: ${breakpoint - 1}px)`,
+      tablet: `(min-width: ${breakpoint}px)`,
     },
-    "toSquare",
-  );
+    (context) => {
+      const { mobile } = context.conditions!;
 
-  tl.to(
-    motion,
-    {
-      scale: 1,
+      let tl = gsap.timeline({
+        defaults: {
+          duration: 0.8,
+          ease: "back.out(1.1)",
+        },
+        repeat: -1,
+        repeatDelay: 1,
+        repeatRefresh: true,
+      });
+
+      tl.set(video, {
+        height: mobile ? "50%" : "60%",
+        width: "100%",
+      });
+
+      tl.addLabel("toSquare");
+
+      tl.to(
+        video,
+        {
+          height: "80%",
+          width: mobile ? "100%" : "80%",
+        },
+        "toSquare",
+      );
+
+      tl.to(
+        motion,
+        {
+          scale: mobile ? 0.9 : 1,
+        },
+        "toSquare",
+      );
+
+      tl.to(
+        any,
+        {
+          scale: 1,
+          y: () => box().h * -0.4,
+        },
+        "toSquare",
+      );
+
+      tl.to(
+        size,
+        {
+          scale: 1,
+          y: () => box().h * 0.35,
+        },
+        "toSquare",
+      );
+
+      tl.addLabel("toVertical", "+=1");
+
+      tl.to(
+        video,
+        {
+          height: "100%",
+          width: mobile ? "70%" : "60%",
+        },
+        "toVertical",
+      );
+
+      tl.to(
+        motion,
+        {
+          scale: mobile ? 0.6 : 0.9,
+        },
+        "toVertical",
+      );
+
+      tl.to(
+        any,
+        {
+          scale: 0.8,
+          y: () => box().h * -0.425,
+        },
+        "toVertical",
+      );
+
+      tl.to(
+        size,
+        {
+          scale: 0.8,
+          y: () => box().h * 0.425,
+        },
+        "toVertical",
+      );
+
+      tl.addLabel("toWide", "+=1");
+
+      tl.to(
+        video,
+        {
+          height: mobile ? "50%" : "60%",
+          width: "100%",
+        },
+        "toWide",
+      );
+
+      tl.to(
+        motion,
+        {
+          scale: mobile ? 0.8 : 1.2,
+        },
+        "toWide",
+      );
+
+      tl.to(
+        any,
+        {
+          scale: mobile ? 1 : 1.2,
+          y: () => box().h * -0.15,
+        },
+        "toWide",
+      );
+
+      tl.to(
+        size,
+        {
+          scale: mobile ? 1 : 1.2,
+          y: () => box().h * 0.15,
+        },
+        "toWide",
+      );
+
+      function resize() {
+        let p = tl.progress();
+        tl.progress(0).invalidate();
+        tl.progress(p);
+      }
+
+      window.addEventListener("resize", resize);
+
+      return () => {
+        window.removeEventListener("resize", resize);
+      };
     },
-    "toSquare",
   );
-
-  tl.to(
-    any,
-    {
-      scale: 1,
-      y: () => box().h * -0.4,
-    },
-    "toSquare",
-  );
-
-  tl.to(
-    size,
-    {
-      scale: 1,
-      y: () => box().h * 0.35,
-    },
-    "toSquare",
-  );
-
-  tl.addLabel("toVertical", "+=1");
-
-  tl.to(
-    video,
-    {
-      height: "100%",
-      width: "60%",
-    },
-    "toVertical",
-  );
-
-  tl.to(
-    motion,
-    {
-      scale: 0.8,
-    },
-    "toVertical",
-  );
-
-  tl.to(
-    any,
-    {
-      scale: 0.8,
-      y: () => box().h * -0.425,
-    },
-    "toVertical",
-  );
-
-  tl.to(
-    size,
-    {
-      scale: 0.8,
-      y: () => box().h * 0.425,
-    },
-    "toVertical",
-  );
-
-  tl.addLabel("toWide", "+=1");
-
-  tl.to(
-    video,
-    {
-      height: "60%",
-      width: "100%",
-    },
-    "toWide",
-  );
-
-  tl.to(
-    motion,
-    {
-      scale: 1.2,
-    },
-    "toWide",
-  );
-
-  tl.to(
-    any,
-    {
-      scale: 1.2,
-      y: () => box().h * -0.15,
-    },
-    "toWide",
-  );
-
-  tl.to(
-    size,
-    {
-      scale: 1.2,
-      y: () => box().h * 0.15,
-    },
-    "toWide",
-  );
-
-  window.addEventListener("resize", () => {
-    let p = tl.progress();
-    tl.progress(0).invalidate();
-    tl.progress(p);
-  });
 </script>
