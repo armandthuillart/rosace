@@ -1,94 +1,119 @@
 <div
-  class="select-none @container w-full mx-auto max-w-xs size-full relative overflow-hidden"
-  data-pills
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-blue-400 dark:bg-blue-500 text-white leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
 >
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-blue-400 dark:bg-blue-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    Resize
-  </div>
+  Resize
+</div>
 
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    to
-  </div>
+<div
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-gray-200 dark:bg-gray-700 leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
+>
+  to
+</div>
 
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-blue-400 dark:bg-blue-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    any
-  </div>
+<div
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-blue-400 dark:bg-blue-500 text-white leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
+>
+  any
+</div>
 
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    format
-  </div>
+<div
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-gray-200 dark:bg-gray-700 leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
+>
+  format
+</div>
 
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-blue-400 dark:bg-blue-500 text-white text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-[25cqw] leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    in
-  </div>
+<div
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-blue-400 dark:bg-blue-500 text-white leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
+>
+  in
+</div>
 
-  <div
-    class="left-1/2 top-1/2 absolute text-center inline-flex bg-gray-200 dark:bg-gray-700 text-[16cqw] @min-[18.75rem]:text-[20cqw] @min-[31.25rem]:text-6xl leading-none rounded-full py-[4cqw] px-[8cqw] [text-box-trim:trim-both] will-change-transform"
-    data-pill
-  >
-    seconds
-  </div>
+<div
+  class="-translate-1/2 left-1/2 top-1/2 absolute inline-flex bg-gray-200 dark:bg-gray-700 leading-none text-[2.5rem] rounded-full px-8 py-4"
+  data-pill
+>
+  seconds
 </div>
 
 <script>
   import gsap from "gsap";
 
-  let root = document.querySelector<HTMLElement>("[data-pills]");
-  let pills = gsap.utils.toArray<HTMLElement>("[data-pill]", root);
-  let scroll = { offset: 0 };
+  const motion = document.getElementById("motion")!;
+  const els = gsap.utils.toArray<HTMLElement>("[data-pill]", motion);
+
+  const scroll = {
+    offset: 0,
+  };
+
+  gsap.set(els, {
+    scale: 1,
+    rotation: 0,
+  });
+
+  const rotateTo = els.map((el) =>
+    gsap.quickTo(el, "rotation", {
+      duration: 0.25,
+      ease: "back.out(1.35)",
+    }),
+  );
 
   function tick() {
-    let height = pills[0]!.offsetHeight;
-    let half = pills.length / 2;
-    let wrap = gsap.utils.wrap(-half * height, (pills.length - half) * height);
+    const h = els[0].offsetHeight;
+    const half = els.length / 2;
+    const wrap = gsap.utils.wrap(-half * h, (els.length - half) * h);
 
-    for (let i = 0; i < pills.length; i++) {
-      let y = wrap(i * height + scroll.offset * height);
-      let distance = Math.abs(y);
-      let steps = distance / height;
-      let focus = steps < 1 ? 1 - steps : 0;
-      let visible = steps < 2;
+    const fadeSpan = 1.35;
+    const minOpacity = 0.14;
+    const opacityGamma = 1.45;
+    const maxTilt = 6;
+    const tiltCurve = 1.12;
 
-      gsap.set(pills[i], {
-        xPercent: -50,
-        yPercent: -50,
+    for (let i = 0; i < els.length; i++) {
+      const y = wrap(i * h + scroll.offset * h);
+      const d = Math.abs(y);
+      const steps = d / h;
+
+      const u = gsap.utils.clamp(0, 1, steps / fadeSpan);
+      const presence = 1 - u * u * (3 - 2 * u);
+      const opacity = minOpacity + (1 - minOpacity) * presence ** opacityGamma;
+
+      const offAxis = (1 - presence) ** tiltCurve;
+      const slideIn = 4 * presence * (1 - presence);
+      const targetRotation =
+        (y < 0 ? -1 : 1) * maxTilt * offAxis * (1 + 0.28 * slideIn);
+
+      rotateTo[i](targetRotation);
+
+      gsap.set(els[i], {
         y,
-        filter: visible ? (focus > 0.5 ? "none" : "blur(2px)") : "blur(4px)",
-        rotation: (y < 0 ? -1 : 1) * (1 - focus) * 8,
-        autoAlpha: visible ? 0.1 + focus * 0.9 : 0,
-        scale: 0.8 + focus * 0.2,
-        zIndex: 100 - Math.round(distance),
+        autoAlpha: opacity,
+        zIndex: 100 - Math.round(d),
       });
     }
   }
 
-  let tl = gsap.timeline({
+  const steps = [0.3, 0.34, 0.28, 0.32, 0.31, 0.35];
+
+  const tl = gsap.timeline({
     defaults: {
-      duration: 0.5,
-      ease: "power4.out",
+      ease: "power2.inOut",
     },
     repeat: -1,
+    repeatDelay: 0.5,
     repeatRefresh: true,
     onUpdate: tick,
   });
 
-  for (let i = 0; i < pills.length; i++) {
-    tl.to(scroll, { offset: "-=1" });
+  for (let i = 0; i < els.length; i++) {
+    tl.to(scroll, {
+      offset: "-=1",
+      duration: steps[i],
+    });
   }
 
   tick();

@@ -43,11 +43,6 @@ export default defineConfig({
       },
       provider: fontProviders.local(),
     },
-    {
-      provider: fontProviders.google(),
-      name: "Cascadia Code",
-      cssVariable: "--font-cascadia-code",
-    },
   ],
   integrations: [mdx(), sitemap()],
   site: getEnv().MARKETING_URL,

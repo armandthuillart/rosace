@@ -1,17 +1,17 @@
 ---
-import Scale from "./scale.astro";
+import Scale from "@components/scale.astro";
 ---
 
 <div class="h-146 relative @container" id="vertical">
   <div
-    class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.5rem,6.25rem)] origin-[50%_100%] bottom-1/2 mb-[clamp(6.875rem,12.5cqw+4rem,13.5rem)]"
+    class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(5rem,5cqw,10rem)] origin-[bottom_center] bottom-1/2 mb-[clamp(5rem,5cqw,10rem)]"
     id="any"
   >
     Any
   </div>
 
   <div
-    class="absolute top-1/2 left-1/2 w-[clamp(18.75rem,50cqw+8rem,43.75rem)] mt-[clamp(-12.5rem,-12.5cqw-3.5rem,-6.25rem)] ml-[clamp(-22rem,-25cqw-4rem,-9.5rem)] h-[clamp(12.5rem,25cqw+7rem,25rem)]"
+    class="absolute top-1/2 left-1/2 aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
   >
     <div
       class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-900 shadow-4xl"
@@ -34,12 +34,17 @@ import Scale from "./scale.astro";
       >
       </div>
 
-      <Scale />
+      <div
+        class="overflow-hidden absolute inset-0 before:absolute before:top-0 before:w-full before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-900 after:absolute after:bottom-0 after:w-full after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-900"
+        id="motion"
+      >
+        <Scale />
+      </div>
     </div>
   </div>
 
   <div
-    class="text-center right-0 leading-none absolute -tracking-[.03em] left-0 text-[clamp(3.75rem,4.5cqw+2.75rem,6.25rem)] origin-[50%_0] top-1/2 mt-[clamp(6.5625rem,12.5cqw+4rem,12.5rem)]"
+    class="text-center right-0 leading-none absolute -tracking-[.03em] left-0 text-[clamp(5rem,5cqw,10rem)] origin-[top_center] top-1/2 mt-[clamp(5rem,5cqw,10rem)]"
     id="size"
   >
     Size
@@ -52,6 +57,7 @@ import Scale from "./scale.astro";
   const any = document.getElementById("any")!;
   const size = document.getElementById("size")!;
   const video = document.getElementById("video")!;
+  const motion = document.getElementById("motion")!;
 
   let box = () => {
     const r = video.getBoundingClientRect();
@@ -61,7 +67,7 @@ import Scale from "./scale.astro";
   let tl = gsap.timeline({
     defaults: {
       duration: 0.7,
-      ease: "power4.inOut",
+      ease: "back.out(1.1)",
     },
     repeat: -1,
     repeatDelay: 1,
@@ -69,17 +75,62 @@ import Scale from "./scale.astro";
   });
 
   tl.set(video, {
-    height: "90%",
+    height: "60%",
     width: "100%",
   });
 
-  tl.addLabel("toVertical");
+  tl.addLabel("toSquare");
+
+  tl.to(
+    video,
+    {
+      height: "80%",
+      width: "80%",
+    },
+    "toSquare",
+  );
+
+  tl.to(
+    motion,
+    {
+      scale: 1,
+    },
+    "toSquare",
+  );
+
+  tl.to(
+    any,
+    {
+      scale: 1,
+      y: () => box().h * -0.4,
+    },
+    "toSquare",
+  );
+
+  tl.to(
+    size,
+    {
+      scale: 1,
+      y: () => box().h * 0.35,
+    },
+    "toSquare",
+  );
+
+  tl.addLabel("toVertical", "+=1");
 
   tl.to(
     video,
     {
       height: "100%",
-      width: "35%",
+      width: "60%",
+    },
+    "toVertical",
+  );
+
+  tl.to(
+    motion,
+    {
+      scale: 0.8,
     },
     "toVertical",
   );
@@ -87,8 +138,8 @@ import Scale from "./scale.astro";
   tl.to(
     any,
     {
-      scale: 1,
-      y: 0,
+      scale: 0.8,
+      y: () => box().h * -0.425,
     },
     "toVertical",
   );
@@ -96,68 +147,47 @@ import Scale from "./scale.astro";
   tl.to(
     size,
     {
-      scale: 1,
-      y: 0,
+      scale: 0.8,
+      y: () => box().h * 0.425,
     },
     "toVertical",
   );
 
-  tl.addLabel("toSquare", "+=1");
+  tl.addLabel("toWide", "+=1");
 
   tl.to(
     video,
     {
-      height: "70%",
-      width: "42.5%",
-    },
-    "toSquare",
-  );
-
-  tl.to(
-    any,
-    {
-      scale: 1.2,
-      y: () => box().h * 0.125,
-    },
-    "toSquare",
-  );
-
-  tl.to(
-    size,
-    {
-      scale: 1.2,
-      y: () => box().h * -0.125,
-    },
-    "toSquare",
-  );
-
-  tl.addLabel("toDesktop", "+=1");
-
-  tl.to(
-    video,
-    {
-      height: "90%",
+      height: "60%",
       width: "100%",
     },
-    "toDesktop",
+    "toWide",
+  );
+
+  tl.to(
+    motion,
+    {
+      scale: 0.9,
+    },
+    "toWide",
   );
 
   tl.to(
     any,
     {
-      scale: 0.8,
-      y: () => box().h * 0.05,
+      scale: 1.2,
+      y: () => box().h * -0.15,
     },
-    "toDesktop",
+    "toWide",
   );
 
   tl.to(
     size,
     {
-      scale: 0.8,
-      y: () => box().h * -0.05,
+      scale: 1.2,
+      y: () => box().h * 0.15,
     },
-    "toDesktop",
+    "toWide",
   );
 
   window.addEventListener("resize", () => {
