@@ -2,7 +2,7 @@
 import Scale from "@components/scale.astro";
 ---
 
-<div class="h-146 relative @container" id="vertical">
+<div aria-hidden="true" class="h-146 relative @container">
   <div
     class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(5rem,5cqw,10rem)] origin-[bottom_center] bottom-1/2 mb-[clamp(5rem,5cqw,10rem)]"
     id="any"
@@ -14,30 +14,30 @@ import Scale from "@components/scale.astro";
     class="absolute top-1/2 left-1/2 aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
   >
     <div
-      class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-900 shadow-4xl"
+      class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-800 shadow-4xl"
       id="video"
     >
       <div
-        class="z-10 absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-20 absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="z-10 absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-20 absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="z-10 absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-20 absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="z-10 absolute -bottom-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-20 absolute -bottom-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
 
       <div
-        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-900 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-900"
+        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-800 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-800"
       >
-        <div class="absolute inset-0" id="motion">
+        <div class="-z-10 absolute inset-0" id="motion">
           <Scale />
         </div>
       </div>
@@ -67,7 +67,7 @@ import Scale from "@components/scale.astro";
 
   let tl = gsap.timeline({
     defaults: {
-      duration: 0.7,
+      duration: 0.8,
       ease: "back.out(1.1)",
     },
     repeat: -1,

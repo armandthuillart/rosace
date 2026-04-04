@@ -1,0 +1,73 @@
+<div class="h-146 w-full relative @container">
+  <div
+    class="z-10 absolute bottom-0 left-1/2 -translate-x-1/2 p-2 inline-flex gap-2 rounded-xl bg-white dark:bg-gray-800 shadow-panel"
+  >
+    <div
+      class="bg-blue-400 dark:bg-blue-500 text-white size-8 shrink-0 rounded-sm flex items-center justify-center"
+    >
+      <svg
+        aria-hidden="true"
+        class="size-5 translate-x-px"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#cursor"></use>
+      </svg>
+    </div>
+
+    <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
+      <svg
+        aria-hidden="true"
+        class="size-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#hold"></use>
+      </svg>
+    </div>
+
+    <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
+    <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
+      <svg
+        aria-hidden="true"
+        class="size-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#geometric-shapes"></use>
+      </svg>
+    </div>
+
+    <div
+      class="size-8 shrink-0 rounded-md flex items-center justify-center"
+      id="popover-trigger"
+    >
+      <svg
+        aria-hidden="true"
+        class="size-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use href="/sprite.svg#toolcase"></use>
+      </svg>
+    </div>
+  </div>
+
+  <div
+    class="absolute origin-bottom size-full max-w-md max-h-52 bottom-14 left-1/2 -translate-x-1/2 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
+    id="popover"
+  >
+  </div>
+</div>
+
+<script>
+  import gsap from "gsap";
+
+  const popover = document.getElementById("popover")!;
+  const trigger = document.getElementById("popover-trigger")!;
+</script>
