@@ -18,27 +18,28 @@ import Scale from "@components/scale.astro";
       id="video"
     >
       <div
-        class="absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-10 absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-10 absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-10 absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
       <div
-        class="absolute -bottom-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
+        class="z-10 absolute -bottom-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
       >
       </div>
 
       <div
-        class="overflow-hidden absolute inset-0 before:absolute before:top-0 before:w-full before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-900 after:absolute after:bottom-0 after:w-full after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-900"
-        id="motion"
+        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-32 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-900 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-32 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-900"
       >
-        <Scale />
+        <div class="absolute inset-0" id="motion">
+          <Scale />
+        </div>
       </div>
     </div>
   </div>
@@ -167,7 +168,7 @@ import Scale from "@components/scale.astro";
   tl.to(
     motion,
     {
-      scale: 0.9,
+      scale: 1.2,
     },
     "toWide",
   );
