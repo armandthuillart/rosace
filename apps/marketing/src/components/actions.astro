@@ -103,7 +103,7 @@ import cursor from "@assets/images/cursor.svg?url";
   </div>
 
   <div
-    class="flex flex-col items-center justify-center font-medium -tracking-[.03em] mb-12 text-[clamp(5.5rem,15cqw+1.5rem,12.5rem)]/none"
+    class="flex flex-col items-center justify-center font-medium -tracking-[.03em] mb-12 text-[clamp(4rem,15cqw+1.5rem,12.5rem)]/none"
   >
     <div class="inline-flex">
       <div class="perspective-[46.875rem]">
@@ -189,83 +189,78 @@ import cursor from "@assets/images/cursor.svg?url";
         </div>
       </div>
 
-      <div class="relative block overflow-hidden" data-aa-char="i1">
-        <div class="relative block" data-aa="i1-letter">i</div>
+      <div class="overflow-hidden">
+        <div id="i1-char">i</div>
       </div>
 
-      <div class="relative block overflow-hidden">
-        <div class="relative block" data-aa="m-letter">m</div>
+      <div class="overflow-hidden">
+        <div id="m-char">m</div>
       </div>
 
-      <div class="relative block overflow-hidden" data-aa-char="a2">
+      <div class="relative overflow-hidden" id="a2-wrap">
         <div
-          class="absolute -z-10 text-[0] invisible bottom-[clamp(.5625rem,.970874cqw+.334951rem,1.5rem)] left-[clamp(.25rem,.582524cqw+.113471rem,.8125rem)] h-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)] w-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)]"
-          data-aa-flair="star"
+          class="absolute invisible bottom-[clamp(.5625rem,.970874cqw+.334951rem,1.5rem)] left-[clamp(.25rem,.582524cqw+.113471rem,.8125rem)] h-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)] w-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)]"
+          id="a2-star-wrap"
         >
           <svg
             aria-hidden="true"
-            class="size-full"
-            fill="none"
+            class="size-full text-purple-400 dark:text-purple-500"
+            fill="currentColor"
+            id="a2-star-svg"
             viewBox="0 0 157 156"
             xmlns="http://www.w3.org/2000/svg"
-            data-aa-svg="star"
           >
             <path
               clip-rule="evenodd"
               d="M82.2214 104.04L105.483 143.586C108.242 148.276 114.274 149.852 118.974 147.112V147.112C123.675 144.371 125.275 138.345 122.552 133.634L99.5971 93.9091L144.009 105.424C149.276 106.79 154.656 103.639 156.042 98.3773V98.3773C157.428 93.1154 154.298 87.7233 149.042 86.317L104.72 74.4593L144.266 51.1978C148.957 48.439 150.533 42.407 147.792 37.7062V37.7062C145.052 33.0054 139.026 31.4057 134.314 34.1282L94.5898 57.0835L106.105 12.6719C107.471 7.40463 104.32 2.02469 99.058 0.638673V0.638673C93.7961 -0.747342 88.4041 2.38242 86.9977 7.63895L75.14 51.9603L51.8786 12.4142C49.1197 7.72403 43.0878 6.14763 38.387 8.8883V8.8883C33.6862 11.629 32.0865 17.6548 34.809 22.3662L57.7643 62.0908L13.3526 50.5758C8.08539 49.2101 2.70545 52.3607 1.31944 57.6226V57.6226C-0.0665745 62.8845 3.06319 68.2766 8.31971 69.6829L52.6411 81.5406L13.095 104.802C8.4048 107.561 6.8284 113.593 9.56907 118.294V118.294C12.3097 122.994 18.3356 124.594 23.0469 121.872L62.7716 98.9164L51.2566 143.328C49.8909 148.595 53.0414 153.975 58.3034 155.361V155.361C63.5653 156.747 68.9573 153.617 70.3637 148.361L82.2214 104.04Z"
-              class="fill-purple-400 dark:fill-purple-500"
               fill-rule="evenodd"></path>
           </svg>
         </div>
 
-        <div class="relative block overflow-hidden">
-          <div class="relative block" data-aa="a2-letter">a</div>
+        <div class="overflow-hidden">
+          <div id="a2-char">a</div>
         </div>
       </div>
 
-      <div class="relative block">
-        <div class="relative block overflow-hidden w-[500%]">
-          <div class="relative block backface-hidden" data-aa="t-letter">t</div>
+      <div>
+        <div class="relative overflow-hidden w-5/1">
+          <div class="backface-hidden" id="t-char">t</div>
 
           <div
             class="absolute bottom-0 left-0 invisible flex backface-hidden"
-            data-aa="t-numbers-wrap"
+            id="t-binaries-wrap"
           >
-            <div class="relative block" data-aa="t-number">1</div>
-            <div class="relative block" data-aa="t-number">0</div>
-            <div class="relative block" data-aa="t-number">0</div>
+            <div data-binary>1</div>
+            <div data-binary>0</div>
+            <div data-binary>0</div>
           </div>
         </div>
       </div>
 
-      <div class="relative block overflow-hidden">
-        <div class="relative block" data-aa="e-letter">e</div>
+      <div class="overflow-hidden">
+        <div id="e-char">e</div>
       </div>
     </div>
 
-    <div class="inline-flex" data-aa="heading-anything">
-      <div class="relative block overflow-hidden">
-        <div class="relative block font-normal" data-aa="any-a-top">a</div>
-        <div class="absolute bottom-0 left-0 block" data-aa="any-a-bottom">
-          a
-        </div>
+    <div class="inline-flex">
+      <div class="relative overflow-hidden">
+        <div id="a3-char-top">a</div>
+        <div class="absolute bottom-0 left-0" id="a3-char-bottom">a</div>
       </div>
 
-      <div class="relative block overflow-hidden">
-        <div class="relative block font-normal" data-aa="any-n-top">n</div>
-        <div class="absolute bottom-0 left-0 block" data-aa="any-n-bottom">
-          n
-        </div>
+      <div class="relative overflow-hidden">
+        <div id="n2-char-top">n</div>
+        <div class="absolute bottom-0 left-0" id="n2-char-bottom">n</div>
       </div>
 
-      <div class="relative block perspective-[750px]">
-        <div class="relative block" data-aa="any-y-letter">y</div>
+      <div class="perspective-[46.875rem]">
+        <div id="y-char">y</div>
       </div>
 
-      <div class="relative block">
+      <div class="relative">
         <div
-          class="absolute -z-10 text-[0] invisible left-0 top-[clamp(.0625rem,.323625cqw-.0133495rem,.375rem)] h-[clamp(4.375rem,12.2977cqw+1.49272rem,16.25rem)] w-[clamp(2.1875rem,6.14887cqw+.746359rem,8.125rem)]"
-          data-aa-flair="bolt"
+          class="absolute invisible left-0 top-[clamp(.0625rem,.323625cqw-.0133495rem,.375rem)] h-[clamp(4.375rem,12.2977cqw+1.49272rem,16.25rem)] w-[clamp(2.1875rem,6.14887cqw+.746359rem,8.125rem)]"
+          id="t2-bolt-wrap"
         >
           <svg
             aria-hidden="true"
@@ -275,16 +270,15 @@ import cursor from "@assets/images/cursor.svg?url";
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              id="bolt-path"
-              data-aa-path="bolt"
-              clip-rule="evenodd"
               class="stroke-green-400 dark:stroke-green-500"
+              clip-rule="evenodd"
               d="M101.08 11C102.439 11 103.402 12.3264 102.982 13.6187L78.6746 88.3335C78.2542 89.6259 79.2175 90.9522 80.5765 90.9522H108.983C110.634 90.9522 111.574 92.8401 110.579 94.1577L10.2304 227L39.4408 125.708C39.8095 124.429 38.8499 123.154 37.5191 123.154H7.82733C6.44727 123.154 5.48193 121.789 5.94147 120.488L44.1353 12.334C44.4176 11.5346 45.1733 11 46.0211 11H101.08Z"
               fill-rule="evenodd"
+              id="t2-bolt-path"
               stroke-width="4"></path>
 
             <mask
-              id="mask0_animate_anything_bolt"
+              id="t2-bolt-mask"
               mask-type="alpha"
               maskUnits="userSpaceOnUse"
               x="0"
@@ -293,14 +287,14 @@ import cursor from "@assets/images/cursor.svg?url";
               height="227"
             >
               <rect
-                id="bolt-rect"
-                data-aa-rect="bolt"
-                width="134"
+                class="origin-bottom"
+                fill="white"
                 height="227"
-                fill="#D9D9D9"></rect>
+                id="t2-bolt-rect"
+                width="134"></rect>
             </mask>
 
-            <g mask="url(#mask0_animate_anything_bolt)">
+            <g mask="url(#t2-bolt-mask)">
               <path
                 clip-rule="evenodd"
                 d="M102.08 10C103.439 10 104.402 11.3264 103.982 12.6187L79.6746 87.3335C79.2542 88.6259 80.2175 89.9522 81.5765 89.9522H109.983C111.634 89.9522 112.574 91.8401 111.579 93.1577L11.2304 226L40.4408 124.708C40.8095 123.429 39.8499 122.154 38.5191 122.154H8.82733C7.44727 122.154 6.48193 120.789 6.94147 119.488L45.1353 11.334C45.4176 10.5346 46.1733 10 47.0211 10H102.08Z"
@@ -310,26 +304,22 @@ import cursor from "@assets/images/cursor.svg?url";
           </svg>
         </div>
 
-        <div class="relative block" data-aa="any-t-letter">t</div>
+        <div id="t2-char">t</div>
       </div>
 
-      <div class="relative block">
-        <div class="relative block overflow-hidden">
-          <div class="relative block" data-aa="any-h-letter">h</div>
-        </div>
+      <div class="overflow-hidden">
+        <div id="h-char">h</div>
       </div>
 
-      <div class="relative block perspective-[750px]">
-        <div class="relative block" data-aa="any-i-letter">i</div>
+      <div class="perspective-[46.875rem]">
+        <div id="i2-char">i</div>
       </div>
 
-      <div class="relative block overflow-hidden">
-        <div class="relative block" data-aa="any-n2-letter">n</div>
+      <div class="overflow-hidden">
+        <div id="n3-char">n</div>
       </div>
 
-      <div class="relative block">
-        <div class="relative block" data-aa="any-g-letter">g</div>
-      </div>
+      <div id="g-char">g</div>
     </div>
   </div>
 </div>
@@ -364,6 +354,46 @@ import cursor from "@assets/images/cursor.svg?url";
       },
       wrap: document.getElementById("n1-wrap")!,
     },
+    i1: document.getElementById("i1-char")!,
+    m: document.getElementById("m-char")!,
+    a2: {
+      char: document.getElementById("a2-char")!,
+      star: {
+        wrap: document.getElementById("a2-star-wrap")!,
+        svg: document.getElementById("a2-star-svg")!,
+      },
+      wrap: document.getElementById("a2-wrap")!,
+    },
+    t: {
+      binaries: {
+        wrap: document.getElementById("t-binaries-wrap")!,
+        bits: gsap.utils.toArray<HTMLElement>("[data-binary]")!,
+      },
+      char: document.getElementById("t-char")!,
+    },
+    e: document.getElementById("e-char")!,
+    a3: {
+      bottom: document.getElementById("a3-char-bottom")!,
+      top: document.getElementById("a3-char-top")!,
+    },
+    n2: {
+      bottom: document.getElementById("n2-char-bottom")!,
+      top: document.getElementById("n2-char-top")!,
+    },
+    y: document.getElementById("y-char")!,
+    t2: {
+      bolt: {
+        wrap: document.getElementById("t2-bolt-wrap")!,
+        path: document.querySelector<SVGPathElement>("#t2-bolt-path")!,
+        rect: document.querySelector<SVGRectElement>("#t2-bolt-rect")!,
+        mask: document.querySelector<SVGMaskElement>("#t2-bolt-mask")!,
+      },
+      char: document.getElementById("t2-char")!,
+    },
+    h: document.getElementById("h-char")!,
+    i2: document.getElementById("i2-char")!,
+    n3: document.getElementById("n3-char")!,
+    g: document.getElementById("g-char")!,
   };
 
   let aabb = (
@@ -410,158 +440,172 @@ import cursor from "@assets/images/cursor.svg?url";
 
   let open = false;
 
-  let tl = gsap.timeline({
-    defaults: {
-      duration: 0.3,
-      ease: "power2.inOut",
-    },
-  });
-
-  tl.set(handles, {
-    autoAlpha: 0,
-    scale: 0,
-  });
-
-  tl.set(popover.popup, {
-    opacity: 0,
-    scale: 0.9,
-  });
-
-  tl.set(cursor, {
-    x: () => box(root).w * 0.7,
-    y: () => box(root).h * 0.7,
-    opacity: 0,
-  });
-
-  tl.from(chars.a1.char, {
-    ease: "power2.inOut",
+  const defaults: GSAPTweenVars = {
     duration: 0.6,
-    yPercent: 100,
+    ease: "power2.out",
+  };
+
+  let tl = gsap.timeline({
+    defaults,
   });
 
-  tl.from(
-    chars.a1.wrap,
-    {
-      duration: 1,
-      ease: "back.out(1.7)",
-      rotationX: -180,
-    },
-    "-=0.4",
-  );
+  function char1() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  tl.set(chars.n1.char.a, {
-    autoAlpha: 1,
-  });
-
-  tl.set(chars.n1.circles.wrap, {
-    autoAlpha: 1,
-    yPercent: 100,
-  });
-
-  tl.set(chars.n1.windmill, {
-    autoAlpha: 1,
-  });
-
-  tl.from(chars.n1.circles.svg, {
-    ease: "back.out(1.7)",
-    scale: 0,
-  });
-
-  tl.to(chars.n1.circles.wrap, {
-    autoAlpha: 0,
-    duration: 1.5,
-    ease: "power4.out",
-    yPercent: -200,
-  });
-
-  tl.from(
-    chars.n1.wrap,
-    {
-      duration: 0.4,
+    tl.from(chars.a1.char, {
+      ease: "power2.inOut",
       yPercent: 100,
-    },
-    "<",
-  );
+    });
 
-  tl.from(
-    chars.n1.windmill,
-    {
-      duration: 1,
-      rotationZ: -360,
-      x: () => window.innerWidth / -2,
-    },
-    "<",
-  );
-
-  tl.from(
-    chars.n1.char.n,
-    {
-      rotationY: -180,
-    },
-    "+=0.4",
-  );
-
-  tl.to(
-    chars.n1.char.a,
-    {
-      rotationY: 180,
-    },
-    "<",
-  );
-
-  tl.to(
-    chars.n1.windmill,
-    {
-      repeat: -1,
-      rotationZ: 90,
-      repeatDelay: 1,
-    },
-    "<",
-  );
-
-  tl.to(
-    cursor,
-    {
-      x: () => to(target, 9, 9).x,
-      y: () => to(target, 9, 9).y,
-      ease: "power2",
-      opacity: 1,
-      duration: 1,
-      onUpdate: () => {
-        let a = box(cursor);
-        let b = box(target);
-
-        if (aabb(a, b)) {
-          ow(2);
-        }
+    tl.from(
+      chars.a1.wrap,
+      {
+        duration: 1,
+        ease: "back.out(1.7)",
+        rotationX: -180,
       },
-    },
-    ">-1.5",
-  );
+      "-=0.4",
+    );
 
-  tl.to(
-    cursor,
-    {
-      yoyo: true,
-      scale: 0.8,
-      repeat: 1,
-      duration: 0.2,
-    },
-    "-=0.1",
-  );
+    return tl;
+  }
 
-  tl.to(
-    handles,
-    {
+  function char2() {
+    const tl = gsap.timeline({
+      defaults,
+    });
+
+    tl.set(handles, {
+      autoAlpha: 0,
+      scale: 0,
+    });
+
+    tl.set(popover.popup, {
+      opacity: 0,
+      scale: 0.9,
+    });
+
+    tl.set(cursor, {
+      x: () => 0,
+      y: () => 0,
+      opacity: 0,
+    });
+
+    tl.set(chars.n1.char.a, {
       autoAlpha: 1,
-      scale: 1,
-    },
-    "-=0.2",
-  );
+    });
 
-  tl.to(
-    cursor,
-    {
+    tl.set(chars.n1.circles.wrap, {
+      autoAlpha: 1,
+      yPercent: 100,
+    });
+
+    tl.set(chars.n1.windmill, {
+      autoAlpha: 1,
+    });
+
+    tl.from(chars.n1.circles.svg, {
+      ease: "back.out(1.7)",
+      scale: 0,
+    });
+
+    tl.to(chars.n1.circles.wrap, {
+      autoAlpha: 0,
+      duration: 1.5,
+      ease: "power4.out",
+      yPercent: -200,
+    });
+
+    tl.from(
+      chars.n1.wrap,
+      {
+        duration: 0.4,
+        yPercent: 100,
+      },
+      "<",
+    );
+
+    tl.from(
+      chars.n1.windmill,
+      {
+        duration: 1,
+        rotationZ: -360,
+        x: () => window.innerWidth / -2,
+      },
+      "<",
+    );
+
+    tl.from(
+      chars.n1.char.n,
+      {
+        rotationY: -180,
+      },
+      "+=0.4",
+    );
+
+    tl.to(
+      chars.n1.char.a,
+      {
+        rotationY: 180,
+      },
+      "<",
+    );
+
+    tl.to(
+      chars.n1.windmill,
+      {
+        repeat: -1,
+        rotationZ: 90,
+        repeatDelay: 1,
+      },
+      "<",
+    );
+
+    tl.to(
+      cursor,
+      {
+        x: () => to(target, 9, 9).x,
+        y: () => to(target, 9, 9).y,
+        ease: "power2",
+        opacity: 1,
+        duration: 1,
+        onUpdate: () => {
+          let a = box(cursor);
+          let b = box(target);
+
+          if (aabb(a, b)) {
+            ow(2);
+          }
+        },
+      },
+      "-=2",
+    );
+
+    tl.to(
+      cursor,
+      {
+        yoyo: true,
+        scale: 0.8,
+        repeat: 1,
+        duration: 0.2,
+      },
+      "-=0.1",
+    );
+
+    tl.to(
+      handles,
+      {
+        autoAlpha: 1,
+        duration: 0.3,
+        ease: "power4",
+        scale: 1,
+      },
+      "-=0.1",
+    );
+
+    tl.to(cursor, {
       x: () => to(popover.trigger, 9, 9).x,
       y: () => to(popover.trigger, 9, 9).y,
       ease: "power3",
@@ -574,534 +618,364 @@ import cursor from "@assets/images/cursor.svg?url";
           popover.trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
         }
       },
-    },
-    "+=0.1",
-  );
+    });
 
-  tl.to(
-    cursor,
-    {
-      yoyo: true,
-      scale: 0.8,
-      repeat: 1,
-      duration: 0.2,
-    },
-    "-=0.1",
-  );
-
-  tl.to(
-    popover.popup,
-    {
-      ease: "power3",
-      scale: 1,
-      onStart: () => {
-        open = true;
-        popover.trigger.classList.remove("bg-gray-100", "dark:bg-gray-700");
-        popover.trigger.classList.add(
-          "text-white",
-          "bg-blue-400",
-          "dark:bg-blue-500",
-        );
+    tl.to(
+      cursor,
+      {
+        yoyo: true,
+        scale: 0.8,
+        repeat: 1,
+        duration: 0.2,
       },
-      duration: 0.2,
+      "-=0.1",
+    );
+
+    tl.to(
+      popover.popup,
+      {
+        ease: "power3",
+        scale: 1,
+        onStart: () => {
+          open = true;
+          popover.trigger.classList.remove("bg-gray-100", "dark:bg-gray-700");
+          popover.trigger.classList.add(
+            "text-white",
+            "bg-blue-400",
+            "dark:bg-blue-500",
+          );
+        },
+        duration: 0.2,
+        autoAlpha: 1,
+      },
+      "-=0.1",
+    );
+
+    return tl;
+  }
+
+  function char3() {
+    const tl = gsap.timeline({
+      defaults,
+    });
+
+    tl.from(chars.i1, {
+      ease: "back.out(1.4)",
+      duration: 1,
+      yPercent: -100,
+    });
+
+    return tl;
+  }
+
+  function char4() {
+    const tl = gsap.timeline({
+      defaults,
+    });
+
+    tl.from(chars.m, {
+      xPercent: -100,
+    });
+
+    return tl;
+  }
+
+  function char5() {
+    const tl = gsap.timeline({
+      defaults,
+    });
+
+    tl.set(chars.a2.star.wrap, {
       autoAlpha: 1,
-    },
-    "-=0.1",
-  );
+      xPercent: -150,
+    });
 
-  // space
-  // const roots = Array.from(
-  //   document.querySelectorAll<HTMLElement>("[data-animate-anything]"),
-  // );
+    tl.from(chars.a2.star.svg, {
+      duration: 0.4,
+      scale: 0,
+    });
 
-  // for (const root of roots) {
-  //   const heading1 = root.querySelector<HTMLElement>(
-  //     "[data-aa='heading-animate']",
-  //   );
-  //   const heading2 = root.querySelector<HTMLElement>(
-  //     "[data-aa='heading-anything']",
-  //   );
-  //   const button = root.querySelector<HTMLElement>("[data-aa='button']");
-  //   const squiggle = root.querySelector<HTMLElement>("[data-aa='squiggle']");
+    tl.add(char4(), "+=0.6");
 
-  //   if (!(heading1 && heading2)) {
-  //     continue;
-  //   }
+    tl.to(
+      chars.a2.star.wrap,
+      {
+        xPercent: 0,
+      },
+      "<",
+    );
 
-  //   const animate = <T extends Element = HTMLElement>(selector: string) =>
-  //     Array.from(heading1.querySelectorAll<T>(selector));
-  //   const anything = <T extends Element = HTMLElement>(selector: string) =>
-  //     Array.from(heading2.querySelectorAll<T>(selector));
+    tl.to(
+      chars.a2.star.wrap,
+      {
+        ease: "power2.in",
+        yPercent: 130,
+      },
+      "+=0.5",
+    );
 
-  //   const defaults = {
-  //     duration: 0.6,
-  //     ease: "power2.out",
-  //   };
+    tl.from(
+      chars.a2.char,
+      {
+        yPercent: 100,
+      },
+      "-=0.3",
+    );
 
-  //   const initSquiggleMouseMovement = () => {
-  //     if (!squiggle) {
-  //       return () => {};
-  //     }
+    tl.to(
+      chars.a2.star.svg,
+      {
+        duration: 2,
+        ease: "none",
+        repeat: 2,
+        rotationZ: 360,
+      },
+      0,
+    );
 
-  //     let windowWidth = window.innerWidth;
-  //     let windowHeight = window.innerHeight;
+    return tl;
+  }
 
-  //     const setWindowSize = () => {
-  //       windowWidth = window.innerWidth;
-  //       windowHeight = window.innerHeight;
-  //     };
+  const char7 = () =>
+    gsap.from(chars.e, {
+      duration: 0.9,
+      yPercent: 100,
+    });
 
-  //     const xTo = gsap.quickTo(squiggle, "xPercent", {
-  //       duration: 1,
-  //       ease: "power3",
-  //     });
-  //     const yTo = gsap.quickTo(squiggle, "yPercent", {
-  //       duration: 1,
-  //       ease: "power3",
-  //     });
-  //     const rotateTo = gsap.quickTo(squiggle, "rotation", {
-  //       duration: 1,
-  //       ease: "power3",
-  //     });
+  function char6() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  //     const onResize = () => setWindowSize();
-  //     const onMouseMove = (event: MouseEvent) => {
-  //       const xPercent = gsap.utils.mapRange(0, windowWidth, -20, 20, event.x);
-  //       const yPercent = gsap.utils.mapRange(0, windowHeight, -20, 20, event.y);
-  //       const rotateRange = gsap.utils.clamp(
-  //         -1,
-  //         1,
-  //         gsap.utils.mapRange(
-  //           windowWidth * 0.25,
-  //           windowWidth * 0.75,
-  //           1,
-  //           -1,
-  //           event.x,
-  //         ),
-  //       );
+    tl.set(chars.t.binaries.wrap, {
+      autoAlpha: 1,
+    });
 
-  //       rotateTo(yPercent * rotateRange);
-  //       xTo(xPercent);
-  //       yTo(yPercent);
-  //     };
+    tl.from(
+      chars.t.binaries.bits[0],
+      {
+        duration: 0.4,
+        yPercent: 100,
+      },
+      "<",
+    );
 
-  //     window.addEventListener("resize", onResize);
-  //     window.addEventListener("mousemove", onMouseMove);
+    tl.fromTo(
+      [chars.t.binaries.bits[1], chars.t.binaries.bits[2]].filter(Boolean),
+      {
+        yPercent: 100,
+      },
+      {
+        duration: 0.9,
+        ease: "power2.inOut",
+        stagger: 0.1,
+        yPercent: -100,
+      },
+      "+=0.2",
+    );
 
-  //     return () => {
-  //       window.removeEventListener("resize", onResize);
-  //       window.removeEventListener("mousemove", onMouseMove);
-  //     };
-  //   };
+    tl.to(
+      chars.t.binaries.bits[0],
+      {
+        yPercent: -100,
+      },
+      "-=0.6",
+    );
 
-  //   const char1 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const wrap = animate("[data-aa='a1-wrap']");
-  //     const char = animate("[data-aa='a1-letter']");
+    tl.from(
+      chars.t.char,
+      {
+        yPercent: 100,
+      },
+      "<",
+    );
 
-  //     tl.set(wrap, { transformOrigin: "50% 100%" });
-  //     tl.from(char, { yPercent: 100 });
-  //     tl.from(
-  //       wrap,
-  //       { duration: 1, ease: "back.out(1.7)", rotationX: -180 },
-  //       "-=.4",
-  //     );
+    tl.add(char7(), "<");
 
-  //     return tl;
-  //   };
+    return tl;
+  }
 
-  //   const char2 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const circles = animate("[data-aa-flair='circles']");
-  //     const circlesSvg = animate("[data-aa-svg='circles']");
-  //     const windmill = animate("[data-aa-flair='windmill']");
-  //     const wrap = animate("[data-aa='n-wrap']");
-  //     const chars = animate("[data-aa='n-char']");
+  function char8to9() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  //     if (chars[1]) {
-  //       tl.set(chars[1], { autoAlpha: 1 });
-  //     }
-  //     tl.set(circles, { autoAlpha: 1, yPercent: 100 });
-  //     tl.from(circlesSvg, { ease: "back.out(1.7)", scale: 0 });
-  //     tl.to(circles, {
-  //       autoAlpha: 0,
-  //       duration: 1.5,
-  //       ease: "power4.out",
-  //       yPercent: -200,
-  //     });
-  //     tl.from(wrap, { duration: 0.4, yPercent: 100 }, "<");
-  //     tl.from(
-  //       windmill,
-  //       {
-  //         duration: 1,
-  //         rotationZ: -360,
-  //         x: () => window.innerWidth / -2,
-  //       },
-  //       "<",
-  //     );
+    tl.fromTo(
+      [chars.a3.bottom, chars.n2.bottom],
+      {
+        yPercent: 100,
+      },
+      {
+        duration: 3,
+        keyframes: {
+          ease: "power1.out",
+          yPercent: [100, 0, 100, 0],
+        },
+        stagger: 0.4,
+      },
+    );
 
-  //     if (chars[0]) {
-  //       tl.from(chars[0], { duration: 0.3, rotationY: -180 }, "+=.4");
-  //     }
-  //     if (chars[1]) {
-  //       tl.to(chars[1], { duration: 0.3, rotationY: 180 }, "<");
-  //     }
-  //     tl.to(
-  //       windmill,
-  //       {
-  //         duration: 0.3,
-  //         repeat: -1,
-  //         repeatDelay: 1,
-  //         rotationZ: 90,
-  //       },
-  //       "<",
-  //     );
+    tl.fromTo(
+      [chars.a3.top, chars.n2.top],
+      {
+        yPercent: -100,
+      },
+      {
+        duration: 3,
+        keyframes: {
+          ease: "power1.out",
+          yPercent: [-100, -100, 20, -100],
+        },
+        stagger: 0.4,
+      },
+      "<",
+    );
 
-  //     return tl;
-  //   };
+    return tl;
+  }
 
-  //   const char3 = () =>
-  //     gsap.from(animate("[data-aa='i1-letter']"), {
-  //       duration: 1,
-  //       ease: "back.out(1.4)",
-  //       yPercent: -100,
-  //     });
+  const char10 = () =>
+    gsap.from(chars.y, {
+      rotationY: -180,
+      scale: 0,
+    });
 
-  //   const char4 = () =>
-  //     gsap.from(animate("[data-aa='m-letter']"), {
-  //       xPercent: -100,
-  //       ...defaults,
-  //     });
+  function char11() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  //   const char5 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const wrap = animate("[data-aa-char='a2']");
-  //     const star = animate("[data-aa-flair='star']");
-  //     const starSvg = animate("[data-aa-svg='star']");
-  //     const char = animate("[data-aa='a2-letter']");
+    tl.set(chars.t2.bolt.wrap, {
+      autoAlpha: 1,
+    });
 
-  //     tl.set(star, { autoAlpha: 1, xPercent: -150 });
-  //     tl.from(starSvg, { duration: 0.4, scale: 0 });
-  //     tl.add(char4(), "+=.6");
-  //     tl.to(star, { xPercent: 0 }, "<");
-  //     tl.set(wrap, { overflow: "hidden" });
-  //     tl.to(star, { ease: "power2.in", yPercent: 130 }, "+=.5");
-  //     tl.from(char, { yPercent: 100 }, "-=.3");
-  //     tl.to(
-  //       starSvg,
-  //       { duration: 2, ease: "none", repeat: 2, rotationZ: 360 },
-  //       0,
-  //     );
+    const length = chars.t2.bolt.path.getTotalLength();
 
-  //     return tl;
-  //   };
+    tl.set(chars.t2.bolt.path, {
+      strokeDasharray: `${length} ${length}`,
+      strokeDashoffset: length,
+    });
 
-  //   const char7 = () =>
-  //     gsap.from(animate("[data-aa='e-letter']"), {
-  //       duration: 0.9,
-  //       yPercent: 100,
-  //     });
+    tl.to(chars.t2.bolt.path, {
+      duration: 1,
+      ease: "power3.inOut",
+      strokeDashoffset: 0,
+    });
 
-  //   const char6 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const [char] = animate("[data-aa='t-letter']");
-  //     const numbersWrap = animate("[data-aa='t-numbers-wrap']");
-  //     const numbers = animate("[data-aa='t-number']");
+    tl.from(
+      chars.t2.bolt.rect,
+      {
+        duration: 3.5,
+        ease: "power4.out",
+        yPercent: 100,
+      },
+      "<0.5",
+    );
 
-  //     tl.set(numbersWrap, { autoAlpha: 1 });
-  //     if (numbers[0]) {
-  //       tl.from(numbers[0], { duration: 0.4, yPercent: 100 }, "<");
-  //     }
-  //     tl.fromTo(
-  //       [numbers[1], numbers[2]].filter(Boolean),
-  //       { yPercent: 100 },
-  //       { duration: 0.9, ease: "power2.inOut", stagger: 0.1, yPercent: -100 },
-  //       "+=.2",
-  //     );
-  //     if (numbers[0]) {
-  //       tl.to(numbers[0], { yPercent: -100 }, "-=.6");
-  //     }
-  //     if (char) {
-  //       tl.from(char, { duration: 0.9, yPercent: 100 }, "<");
-  //     }
-  //     tl.add(char7(), "<");
+    tl.from(
+      chars.t2.bolt.wrap,
+      {
+        keyframes: {
+          duration: 2,
+          scale: [1, 1.1, 0.6, 0.7, 0.2, 0.3, 0],
+        },
+      },
+      "-=2",
+    );
 
-  //     return tl;
-  //   };
+    tl.from(
+      chars.t2.char,
+      {
+        ease: "back.out(1.4)",
+        scale: 0,
+      },
+      "<0.5",
+    );
 
-  //   const char8to9 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const topChars = anything("[data-aa='any-a-top'], [data-aa='any-n-top']");
-  //     const bottomChars = anything(
-  //       "[data-aa='any-a-bottom'], [data-aa='any-n-bottom']",
-  //     );
+    return tl;
+  }
 
-  //     tl.fromTo(
-  //       bottomChars,
-  //       { yPercent: 100 },
-  //       {
-  //         duration: 3,
-  //         keyframes: {
-  //           ease: "power1.out",
-  //           yPercent: [100, 0, 100, 0],
-  //         },
-  //         stagger: 0.4,
-  //       },
-  //     );
+  const char12 = () =>
+    gsap.from(chars.h, {
+      yPercent: -100,
+      ...defaults,
+    });
 
-  //     tl.fromTo(
-  //       topChars,
-  //       { yPercent: -100 },
-  //       {
-  //         duration: 3,
-  //         keyframes: {
-  //           ease: "power1.out",
-  //           yPercent: [-100, -100, 20, -100],
-  //         },
-  //         stagger: 0.4,
-  //       },
-  //       "<",
-  //     );
+  const char14 = () =>
+    gsap.from(chars.n3, {
+      xPercent: -100,
+      ...defaults,
+    });
 
-  //     return tl;
-  //   };
+  function char13() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  //   const char10 = () =>
-  //     gsap.from(anything("[data-aa='any-y-letter']"), {
-  //       duration: 1,
-  //       rotationY: -180,
-  //       scale: 0,
-  //     });
+    tl.from(
+      chars.i2,
+      {
+        autoAlpha: 0,
+        duration: 0.1,
+      },
+      "<",
+    );
 
-  //   const char11 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const bolt = anything("[data-aa-flair='bolt']");
-  //     const [path] = anything<SVGPathElement>("[data-aa-path='bolt']");
-  //     const rect = anything<SVGRectElement>("[data-aa-rect='bolt']");
-  //     const char = anything("[data-aa='any-t-letter']");
+    tl.from(
+      chars.i2,
+      {
+        duration: 1.3,
+        rotationX: -450,
+      },
+      "<0.14",
+    );
 
-  //     tl.set(bolt, { autoAlpha: 1 });
-  //     if (path) {
-  //       const length = path.getTotalLength();
-  //       tl.set(path, {
-  //         strokeDasharray: `${length} ${length}`,
-  //         strokeDashoffset: length,
-  //       });
-  //       tl.to(path, { duration: 1, ease: "power3.inOut", strokeDashoffset: 0 });
-  //     }
-  //     tl.from(
-  //       rect,
-  //       {
-  //         duration: 3.5,
-  //         ease: "power4.out",
-  //         transformOrigin: "50% 100%",
-  //         yPercent: 100,
-  //       },
-  //       "<.5",
-  //     );
-  //     tl.from(
-  //       bolt,
-  //       {
-  //         keyframes: {
-  //           duration: 2,
-  //           scale: [1, 1.1, 0.6, 0.7, 0.2, 0.3, 0],
-  //         },
-  //       },
-  //       "-=2",
-  //     );
-  //     tl.from(char, { ease: "back.out(1.4)", scale: 0 }, "<.5");
+    tl.add(char14(), "<+=0.5");
 
-  //     return tl;
-  //   };
+    tl.to(
+      chars.i2,
+      {
+        duration: 1.5,
+        repeat: -1,
+        repeatDelay: 3,
+        rotationX: 540,
+        yoyo: true,
+        yoyoEase: "power2.out",
+      },
+      "+=2",
+    );
 
-  //   const char12 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const char = anything("[data-aa='any-h-letter']");
-  //     tl.from(char, { yPercent: -100 });
-  //     return tl;
-  //   };
+    return tl;
+  }
 
-  //   const char14 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     tl.from(anything("[data-aa='any-n2-letter']"), { xPercent: -100 });
-  //     return tl;
-  //   };
+  function char15() {
+    const tl = gsap.timeline({
+      defaults,
+    });
 
-  //   const char13 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     const char = anything("[data-aa='any-i-letter']");
+    tl.from(
+      chars.g,
+      {
+        autoAlpha: 0,
+        duration: 2,
+        ease: "elastic.out(1, 0.4)",
+        rotationZ: -120,
+      },
+      "<0.6",
+    );
 
-  //     tl.from(char, { autoAlpha: 0, duration: 0.1 }, "<");
-  //     tl.from(char, { duration: 1.3, rotationX: -450 }, "<.14");
-  //     tl.add(char14(), "<+=.5");
-  //     tl.to(
-  //       char,
-  //       {
-  //         duration: 1.5,
-  //         repeat: -1,
-  //         repeatDelay: 3,
-  //         rotationX: 540,
-  //         yoyo: true,
-  //         yoyoEase: "power2.out",
-  //       },
-  //       "+=2",
-  //     );
+    return tl;
+  }
 
-  //     return tl;
-  //   };
-
-  //   const char15 = () => {
-  //     const tl = gsap.timeline({ defaults });
-  //     tl.from(
-  //       anything("[data-aa='any-g-letter']"),
-  //       {
-  //         autoAlpha: 0,
-  //         duration: 2,
-  //         ease: "elastic.out(1, 0.4)",
-  //         rotationZ: -120,
-  //       },
-  //       "<.6",
-  //     );
-  //     return tl;
-  //   };
-
-  //   const buttonIn = () => {
-  //     if (!button) {
-  //       return null;
-  //     }
-  //     return gsap.from(button, {
-  //       autoAlpha: 0,
-  //       yPercent: 30,
-  //       ...defaults,
-  //     });
-  //   };
-
-  //   const prefersReducedMotion = window.matchMedia(
-  //     "(prefers-reduced-motion: reduce)",
-  //   );
-  //   let timeline: gsap.core.Timeline | undefined;
-  //   const cleanupSquiggle = initSquiggleMouseMovement();
-
-  //   let animationStarted = false;
-  //   let inViewObserver: IntersectionObserver | null = null;
-
-  //   const disconnectInViewObserver = () => {
-  //     inViewObserver?.disconnect();
-  //     inViewObserver = null;
-  //   };
-
-  //   const startAnimation = () => {
-  //     if (animationStarted) {
-  //       return;
-  //     }
-  //     animationStarted = true;
-  //     disconnectInViewObserver();
-  //     buildTimeline();
-  //   };
-
-  //   const attachInViewObserver = () => {
-  //     disconnectInViewObserver();
-  //     inViewObserver = new IntersectionObserver(
-  //       (entries) => {
-  //         if (entries.some((entry) => entry.isIntersecting)) {
-  //           startAnimation();
-  //         }
-  //       },
-  //       { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
-  //     );
-  //     inViewObserver.observe(root);
-  //   };
-
-  //   /** Full-motion: play when in view; reduced motion: settle immediately. */
-  //   const beginWhenInView = () => {
-  //     if (prefersReducedMotion.matches) {
-  //       startAnimation();
-  //       return;
-  //     }
-  //     const rect = root.getBoundingClientRect();
-  //     const vh = window.innerHeight || document.documentElement.clientHeight;
-  //     const alreadyVisible =
-  //       rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < vh;
-  //     if (alreadyVisible) {
-  //       startAnimation();
-  //     } else {
-  //       attachInViewObserver();
-  //     }
-  //   };
-
-  //   const buildTimeline = () => {
-  //     timeline?.kill();
-
-  //     if (prefersReducedMotion.matches) {
-  //       gsap.set([heading1, heading2], { autoAlpha: 1 });
-  //       gsap.set(
-  //         [
-  //           ...animate("[data-aa-flair]"),
-  //           ...anything("[data-aa-flair]"),
-  //           ...anything("[data-aa='any-i-letter']"),
-  //         ],
-  //         { clearProps: "all" },
-  //       );
-  //       gsap.set(anything("[data-aa='any-a-top'], [data-aa='any-n-top']"), {
-  //         autoAlpha: 0,
-  //       });
-  //       gsap.set(
-  //         anything("[data-aa='any-a-bottom'], [data-aa='any-n-bottom']"),
-  //         {
-  //           clearProps: "transform",
-  //         },
-  //       );
-  //       return;
-  //     }
-
-  //     timeline = gsap.timeline({
-  //       defaults,
-  //       id: "home-hero",
-  //     });
-
-  //     timeline.set([heading1, heading2], { autoAlpha: 1 });
-
-  //     timeline.add(char1());
-  //     timeline.add(char2(), 0.4);
-  //     timeline.add(char3(), 1);
-  //     timeline.add(char5(), 0.8);
-  //     timeline.add(char6(), 1.1);
-  //     timeline.add(char8to9(), 1.5);
-  //     timeline.add(char10(), 1.7);
-  //     timeline.add(char11(), 2);
-  //     timeline.add(char12(), 1.9);
-  //     timeline.add(char13(), 2.4);
-  //     timeline.add(char15(), 2.2);
-
-  //     const buttonTween = buttonIn();
-  //     if (buttonTween) {
-  //       timeline.add(buttonTween, 1);
-  //     }
-  //   };
-
-  //   const onMotionChange = () => {
-  //     timeline?.kill();
-  //     if (prefersReducedMotion.matches) {
-  //       disconnectInViewObserver();
-  //       animationStarted = true;
-  //       buildTimeline();
-  //       return;
-  //     }
-  //     animationStarted = false;
-  //     beginWhenInView();
-  //   };
-  //   prefersReducedMotion.addEventListener("change", onMotionChange);
-  //   beginWhenInView();
-
-  //   window.addEventListener(
-  //     "pagehide",
-  //     () => {
-  //       prefersReducedMotion.removeEventListener("change", onMotionChange);
-  //       disconnectInViewObserver();
-  //       timeline?.kill();
-  //       cleanupSquiggle();
-  //     },
-  //     { once: true },
-  //   );
-  // }
+  tl.add(char1(), 0);
+  tl.add(char2(), 0.4);
+  tl.add(char3(), 1);
+  tl.add(char5(), 0.8);
+  tl.add(char6(), 1.1);
+  tl.add(char8to9(), 1.4);
+  tl.add(char10(), 1.7);
+  tl.add(char11(), 2);
+  tl.add(char12(), 1.9);
+  tl.add(char13(), 2.4);
+  tl.add(char15(), 2.2);
 </script>

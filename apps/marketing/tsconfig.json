@@ -8,10 +8,10 @@
       "@layouts/*": ["./src/layouts/*"],
       "@public/*": ["./public/*"],
       "@styles/*": ["./src/styles/*"]
-    }
+    },
+    "verbatimModuleSyntax": true
   },
   "exclude": ["dist", "node_modules", "public"],
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "verbatimModuleSyntax": true
+  "include": [".astro/types.d.ts", "**/*"]
 }
