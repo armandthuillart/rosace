@@ -1,7 +1,3 @@
----
-import Scale from "@components/scale.astro";
----
-
 <div aria-hidden="true" class="h-146 relative @container">
   <div
     class="text-center right-0 absolute leading-none -tracking-[.03em] left-0 text-[clamp(5rem,5cqw,10rem)] origin-[bottom_center] bottom-1/2 mb-[clamp(5rem,5cqw,10rem)]"
@@ -11,11 +7,11 @@ import Scale from "@components/scale.astro";
   </div>
 
   <div
-    class="absolute top-1/2 left-1/2 max-w-full aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
+    class="absolute top-1/2 left-1/2 aspect-square -translate-1/2 h-[clamp(20rem,75cqw,25rem)]"
   >
     <div
       class="size-full aspect-video border-2 border-blue-400 dark:border-blue-500 top-1/2 -translate-1/2 absolute left-1/2 bg-white dark:bg-gray-800 shadow-4xl"
-      id="video"
+      id="frame"
     >
       <div
         class="z-20 absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-800 outline-2 outline-blue-400 dark:outline-blue-500"
@@ -35,10 +31,368 @@ import Scale from "@components/scale.astro";
       </div>
 
       <div
-        class="relative size-full overflow-hidden before:absolute before:top-0 before:inset-x-0 before:h-3/10 before:bg-linear-to-b before:from-white before:to-transparent dark:before:from-gray-800 after:absolute after:bottom-0 after:inset-x-0 after:z-10 before:z-10 after:h-3/10 after:bg-linear-to-t after:from-white after:to-transparent dark:after:from-gray-800"
+        class="relative size-full overflow-hidden before:absolute before:inset-0 before:bg-pale-purple-100 before:dark:bg-pale-purple-1000 before:-z-20"
       >
-        <div class="-z-10 absolute inset-0" id="motion">
-          <Scale />
+        <div
+          class="flex items-center justify-center text-center absolute inset-0 size-full"
+          id="motion"
+        >
+          <div
+            class="overflow-hidden inline-flex shrink-0 font-semibold opacity-0 -tracking-[0.02em] text-[8.525rem]/[0.9] bg-clip-text bg-radial-[at_120%_80%] text-transparent from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400 *:not-first:left-[clamp(-1.875rem,-1.294cqw-0.321602rem,-0.625rem)]"
+            id="text"
+          >
+            Easy
+          </div>
+
+          <div class="hidden" id="svgs">
+            <svg
+              aria-hidden="true"
+              fill="none"
+              viewBox="0 0 203 203"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <pattern
+                  id="noise-0"
+                  width="1.97"
+                  height="1.97"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00394)"></use>
+                </pattern>
+                <pattern
+                  id="noise-1"
+                  width="1.97"
+                  height="1.97"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00394)"></use>
+                </pattern>
+                <pattern
+                  id="noise-2"
+                  width=".985"
+                  height=".985"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00197)"></use>
+                </pattern>
+                <linearGradient
+                  id="paint0_linear_4108_14478"
+                  x1="-56.81"
+                  x2="123.466"
+                  y1="191.259"
+                  y2="262.082"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <linearGradient
+                  id="paint1_linear_4108_14478"
+                  x1="44.69"
+                  x2="224.966"
+                  y1="191.259"
+                  y2="262.082"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <linearGradient
+                  id="paint3_linear_4108_14478"
+                  x1="-56.81"
+                  x2="123.466"
+                  y1="89.759"
+                  y2="160.582"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <radialGradient
+                  id="paint2_radial_4108_14478"
+                  cx="0"
+                  cy="0"
+                  r="1"
+                  gradientTransform="matrix(-130.96726 -101.50078 48.72907 -62.87551 224.282 285.673)"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".271" stop-color="#DFDCFF"></stop>
+                  <stop offset="1" stop-color="#A69EFF"></stop>
+                </radialGradient>
+                <radialGradient
+                  id="paint4_radial_4108_14478"
+                  cx="0"
+                  cy="0"
+                  r="1"
+                  gradientTransform="matrix(-130.96726 -101.50078 48.72907 -62.87551 122.782 184.173)"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".271" stop-color="#DFDCFF"></stop>
+                  <stop offset="1" stop-color="#A69EFF"></stop>
+                </radialGradient>
+              </defs>
+              <g id="Flair">
+                <g id="Tube Regular" transform="rotate(-90 0 203)">
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="203"
+                    fill="url(#paint0_linear_4108_14478)"
+                    rx="50.75"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="203"
+                    fill="url(#noise-0)"
+                    fill-opacity=".6"
+                    rx="50.75"
+                    style="mix-blend-mode:multiply"></rect>
+                </g>
+                <g id="Tube Regular_2" transform="rotate(-90 101.5 203)">
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    x="101.5"
+                    y="203"
+                    fill="url(#paint1_linear_4108_14478)"
+                    rx="50.75"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    x="101.5"
+                    y="203"
+                    fill="url(#noise-1)"
+                    fill-opacity=".6"
+                    rx="50.75"
+                    style="mix-blend-mode:multiply"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    x="101.5"
+                    y="203"
+                    fill="url(#paint2_radial_4108_14478)"
+                    rx="50.75"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    x="101.5"
+                    y="203"
+                    fill="url(#noise-2)"
+                    fill-opacity=".6"
+                    rx="50.75"
+                    style="mix-blend-mode:multiply"></rect>
+                </g>
+                <g id="Tube Regular_3" transform="rotate(-90 0 101.5)">
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="101.5"
+                    fill="url(#paint3_linear_4108_14478)"
+                    rx="50.75"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="101.5"
+                    fill="url(#noise-1)"
+                    fill-opacity=".6"
+                    rx="50.75"
+                    style="mix-blend-mode:multiply"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="101.5"
+                    fill="url(#paint4_radial_4108_14478)"
+                    rx="50.75"></rect>
+                  <rect
+                    width="101.5"
+                    height="101.5"
+                    y="101.5"
+                    fill="url(#noise-2)"
+                    fill-opacity=".6"
+                    rx="50.75"
+                    style="mix-blend-mode:multiply"></rect>
+                </g>
+              </g>
+            </svg>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              fill="none"
+              viewBox="0 0 203 203"
+              aria-hidden="true"
+            >
+              <g id="Frame 1401">
+                <g id="Ellipse 185">
+                  <path
+                    fill="#D9D9D9"
+                    d="M203 47a68.434 68.434 0 0 0-26.022 5.138 68.023 68.023 0 0 0-22.061 14.632 67.47 67.47 0 0 0-14.741 21.899A67.076 67.076 0 0 0 135 114.5a67.074 67.074 0 0 0 5.176 25.831 67.468 67.468 0 0 0 14.741 21.899 68.02 68.02 0 0 0 22.061 14.632A68.438 68.438 0 0 0 203 182V47Z"
+                  ></path>
+                  <path
+                    fill="url(#paint0_linear_4108_14482)"
+                    d="M203 47a68.434 68.434 0 0 0-26.022 5.138 68.023 68.023 0 0 0-22.061 14.632 67.47 67.47 0 0 0-14.741 21.899A67.076 67.076 0 0 0 135 114.5a67.074 67.074 0 0 0 5.176 25.831 67.468 67.468 0 0 0 14.741 21.899 68.02 68.02 0 0 0 22.061 14.632A68.438 68.438 0 0 0 203 182V47Z"
+                  ></path>
+                  <path
+                    fill="url(#noise-3)"
+                    fill-opacity=".6"
+                    d="M203 47a68.434 68.434 0 0 0-26.022 5.138 68.023 68.023 0 0 0-22.061 14.632 67.47 67.47 0 0 0-14.741 21.899A67.076 67.076 0 0 0 135 114.5a67.074 67.074 0 0 0 5.176 25.831 67.468 67.468 0 0 0 14.741 21.899 68.02 68.02 0 0 0 22.061 14.632A68.438 68.438 0 0 0 203 182V47Z"
+                    style="mix-blend-mode:multiply"></path>
+                </g>
+                <g id="Ellipse 184">
+                  <ellipse cx="67.5" cy="115" fill="#D9D9D9" rx="67.5" ry="68"
+                  ></ellipse>
+                  <ellipse
+                    cx="67.5"
+                    cy="115"
+                    fill="url(#paint1_linear_4108_14482)"
+                    rx="67.5"
+                    ry="68"></ellipse>
+                  <ellipse
+                    cx="67.5"
+                    cy="115"
+                    fill="url(#noise-4)"
+                    fill-opacity=".6"
+                    rx="67.5"
+                    ry="68"
+                    style="mix-blend-mode:multiply"></ellipse>
+                </g>
+              </g>
+              <defs>
+                <linearGradient
+                  id="paint0_linear_4108_14482"
+                  x1="119.269"
+                  x2="212.957"
+                  y1="257.56"
+                  y2="17.313"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <linearGradient
+                  id="paint1_linear_4108_14482"
+                  x1="-75.56"
+                  x2="191.085"
+                  y1="15.537"
+                  y2="67.529"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <pattern
+                  id="noise-3"
+                  width="1.481"
+                  height="2.941"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00296 .00588)"
+                  ></use>
+                </pattern>
+                <pattern
+                  id="noise-4"
+                  width="1.481"
+                  height="1.471"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00296 .00294)"
+                  ></use>
+                </pattern>
+              </defs>
+            </svg>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              fill="none"
+              viewBox="0 0 203 204"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id="paint0_linear_3926_14428"
+                  x1="-113.619"
+                  x2="246.933"
+                  y1="179.769"
+                  y2="321.414"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <pattern
+                  id="noise-5"
+                  width=".985"
+                  height=".985"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00197)"></use>
+                </pattern>
+              </defs>
+              <g id="Tube Regular" transform="rotate(-90 0 203.25)">
+                <rect
+                  width="203"
+                  height="203"
+                  y="203.25"
+                  fill="url(#paint0_linear_3926_14428)"
+                  rx="16"></rect>
+                <rect
+                  width="203"
+                  height="203"
+                  y="203.25"
+                  fill="url(#noise-5)"
+                  fill-opacity=".6"
+                  rx="16"
+                  style="mix-blend-mode:multiply"></rect>
+              </g>
+            </svg>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              fill="none"
+              viewBox="0 0 203 204"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id="paint0_linear_3926_14436"
+                  x1="-113.619"
+                  x2="287.117"
+                  y1="-46.463"
+                  y2="32.253"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset=".427" stop-color="#FF8709"></stop>
+                  <stop offset=".792" stop-color="#F7BDF8"></stop>
+                </linearGradient>
+                <pattern
+                  id="noise-6"
+                  width=".985"
+                  height=".985"
+                  patternContentUnits="objectBoundingBox"
+                >
+                  <use xlink:href="#svg-noise" transform="scale(.00197)"></use>
+                </pattern>
+              </defs>
+              <g id="Ellipse 188">
+                <circle cx="101.5" cy="102" r="101.5" fill="#D9D9D9"></circle>
+                <circle
+                  cx="101.5"
+                  cy="102"
+                  r="101.5"
+                  fill="url(#paint0_linear_3926_14436)"></circle>
+                <circle
+                  cx="101.5"
+                  cy="102"
+                  r="101.5"
+                  fill="url(#noise-6)"
+                  fill-opacity=".6"
+                  style="mix-blend-mode:multiply"></circle>
+              </g>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -54,19 +408,24 @@ import Scale from "@components/scale.astro";
 
 <script>
   import gsap from "gsap";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(SplitText);
 
   const any = document.getElementById("any")!;
   const size = document.getElementById("size")!;
-  const video = document.getElementById("video")!;
+  const text = document.getElementById("text")!;
+  const svgs = gsap.utils.toArray<SVGElement>("#svgs svg")!;
+  const frame = document.getElementById("frame")!;
   const motion = document.getElementById("motion")!;
 
   let box = () => {
-    const r = video.getBoundingClientRect();
+    const r = frame.getBoundingClientRect();
     return { h: r.height };
   };
 
   let mm = gsap.matchMedia();
-  let breakpoint = 450;
+  let breakpoint = 425;
 
   mm.add(
     {
@@ -76,143 +435,264 @@ import Scale from "@components/scale.astro";
     (context) => {
       const { mobile } = context.conditions!;
 
+      const defaults: GSAPTweenVars = {
+        duration: 0.8,
+        ease: "back.out(1.1)",
+      };
+
       let tl = gsap.timeline({
-        defaults: {
-          duration: 0.8,
-          ease: "back.out(1.1)",
-        },
+        defaults,
         repeat: -1,
-        repeatDelay: 1,
-        repeatRefresh: true,
       });
 
-      tl.set(video, {
-        height: mobile ? "50%" : "60%",
-        width: "100%",
+      tl.set(frame, {
+        height: mobile ? "100%" : "80%",
+        width: mobile ? "100%" : "80%",
       });
 
-      tl.addLabel("toSquare");
+      tl.set(text, {
+        autoAlpha: 1,
+        duration: 1,
+        ease: "power4.inOut",
+      });
 
-      tl.to(
-        video,
-        {
-          height: "80%",
-          width: mobile ? "100%" : "80%",
-        },
-        "toSquare",
-      );
+      function roll() {
+        const tl = gsap.timeline();
 
-      tl.to(
-        motion,
-        {
-          scale: mobile ? 0.9 : 1,
-        },
-        "toSquare",
-      );
+        const split = new SplitText(text, {
+          type: "chars",
+        });
 
-      tl.to(
-        any,
-        {
-          scale: 1,
-          y: () => box().h * -0.4,
-        },
-        "toSquare",
-      );
+        split.chars.forEach((obj, objIndex) => {
+          let char = (obj as HTMLElement).innerText;
+          let chars = ["E", "a", "s", "y"].filter((c) => c !== char);
+          let random = gsap.utils.random(chars);
 
-      tl.to(
-        size,
-        {
-          scale: 1,
-          y: () => box().h * 0.35,
-        },
-        "toSquare",
-      );
+          let svg = svgs[objIndex].outerHTML;
+          let svgFilter = svgs.filter((svg) => svg !== svgs[objIndex]);
+          let svgTwo = gsap.utils.random(svgFilter).outerHTML;
 
-      tl.addLabel("toVertical", "+=1");
+          let sHTML = `
+            <div class="text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${char}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svgTwo}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svgTwo}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 top-0 absolute opacity-0 bg-clip-text text-transparent bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${char}
+            </div>
+          `;
 
-      tl.to(
-        video,
-        {
-          height: "100%",
-          width: mobile ? "70%" : "60%",
-        },
-        "toVertical",
-      );
+          let eHTML = `
+            <div class="text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${char}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svgTwo}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svgTwo}
+            </div>
+            <div class="left-0 flex size-full items-center justify-center absolute top-0 opacity-0">
+              ${svg}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${random}
+            </div>
+            <div class="left-1/2 -translate-1/2 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${char}
+            </div>
+            <div class="left-0 top-0 absolute opacity-0 text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
+              ${char}
+            </div>
+          `;
 
-      tl.to(
-        motion,
-        {
-          scale: mobile ? 0.6 : 0.9,
-        },
-        "toVertical",
-      );
+          obj.innerHTML = objIndex === 1 ? eHTML : sHTML;
 
-      tl.to(
-        any,
-        {
-          scale: 0.8,
-          y: () => box().h * -0.425,
-        },
-        "toVertical",
-      );
+          Array.from(obj.children).forEach((child, childIndex) => {
+            gsap.set(child, {
+              autoAlpha: 1,
+              yPercent: childIndex * 100,
+            });
 
-      tl.to(
-        size,
-        {
-          scale: 0.8,
-          y: () => box().h * 0.425,
-        },
-        "toVertical",
-      );
+            tl.to(
+              child,
+              {
+                ease: "power4.inOut",
+                duration: 2.5,
+                yPercent: "-=1100",
+              },
+              objIndex * 0.05,
+            );
+          });
+        });
 
-      tl.addLabel("toWide", "+=1");
-
-      tl.to(
-        video,
-        {
-          height: mobile ? "50%" : "60%",
-          width: "100%",
-        },
-        "toWide",
-      );
-
-      tl.to(
-        motion,
-        {
-          scale: mobile ? 0.8 : 1.2,
-        },
-        "toWide",
-      );
-
-      tl.to(
-        any,
-        {
-          scale: mobile ? 1 : 1.2,
-          y: () => box().h * -0.15,
-        },
-        "toWide",
-      );
-
-      tl.to(
-        size,
-        {
-          scale: mobile ? 1 : 1.2,
-          y: () => box().h * 0.15,
-        },
-        "toWide",
-      );
-
-      function resize() {
-        let p = tl.progress();
-        tl.progress(0).invalidate();
-        tl.progress(p);
+        return tl;
       }
 
-      window.addEventListener("resize", resize);
+      function square() {
+        const tl = gsap.timeline({
+          defaults,
+        });
 
-      return () => {
-        window.removeEventListener("resize", resize);
-      };
+        tl.to(frame, {
+          height: mobile ? "100%" : "80%",
+          width: mobile ? "100%" : "80%",
+        });
+
+        tl.to(
+          motion,
+          {
+            scale: mobile ? 0.9 : 0.8,
+          },
+          "<",
+        );
+
+        tl.to(
+          any,
+          {
+            scale: 1,
+            y: () => box().h * -0.4,
+          },
+          "<",
+        );
+
+        tl.to(
+          size,
+          {
+            scale: 1,
+            y: () => box().h * 0.35,
+          },
+          "<",
+        );
+
+        return tl;
+      }
+
+      function vertical() {
+        const tl = gsap.timeline({
+          defaults,
+        });
+
+        tl.to(frame, {
+          height: mobile ? "100%" : "100%",
+          width: mobile ? "70%" : "55%",
+        });
+
+        tl.to(
+          motion,
+          {
+            scale: mobile ? 0.6 : 0.6,
+          },
+          "<",
+        );
+
+        tl.to(
+          any,
+          {
+            scale: 0.7,
+            y: () => box().h * -0.55,
+          },
+          "<",
+        );
+
+        tl.to(
+          size,
+          {
+            scale: 0.7,
+            y: () => box().h * 0.55,
+          },
+          "<",
+        );
+
+        return tl;
+      }
+
+      function wide() {
+        const tl = gsap
+          .timeline({
+            defaults,
+          })
+          .to(frame, {
+            height: mobile ? "50%" : "60%",
+            width: mobile ? "100%" : "120%",
+          })
+          .to(
+            motion,
+            {
+              scale: mobile ? 0.8 : 1,
+            },
+            "<",
+          )
+          .to(
+            any,
+            {
+              scale: mobile ? 1 : 1.2,
+              y: () => box().h * -0.15,
+            },
+            "<",
+          )
+          .to(
+            size,
+            {
+              scale: mobile ? 1 : 1.2,
+              y: () => box().h * 0.15,
+            },
+            "<",
+          );
+
+        return tl;
+      }
+
+      tl.add(roll(), 0);
+      tl.add(wide(), 2.5);
+      tl.add(vertical(), 5);
+      tl.add(square(), 7.5);
+
+      return () => {};
     },
   );
 </script>
