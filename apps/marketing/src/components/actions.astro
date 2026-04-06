@@ -327,11 +327,15 @@ import cursor from "@assets/images/cursor.svg?url";
 
 <script>
   import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
 
   const root = document.getElementById("root")!;
   const cursor = document.getElementById("cursor")!;
   const target = document.getElementById("target")!;
   const handles = gsap.utils.toArray<HTMLElement>("[data-handle]")!;
+  const section = document.getElementById("have-fun")!;
 
   const popover = {
     popup: document.getElementById("popover-popup")!,
@@ -447,6 +451,10 @@ import cursor from "@assets/images/cursor.svg?url";
   };
 
   let tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top bottom",
+    },
     defaults,
   });
 
