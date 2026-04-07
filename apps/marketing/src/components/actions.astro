@@ -331,74 +331,75 @@ import cursor from "@assets/images/cursor.svg?url";
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const root = document.getElementById("root")!;
-  const cursor = document.getElementById("cursor")!;
-  const target = document.getElementById("target")!;
-  const handles = gsap.utils.toArray<HTMLElement>("[data-handle]")!;
-  const section = document.getElementById("have-fun")!;
+  let section = document.getElementById("have-fun")!;
 
-  const popover = {
-    popup: document.getElementById("popover-popup")!,
-    trigger: document.getElementById("popover-trigger")!,
+  let root = section.querySelector<HTMLElement>("#root")!;
+  let cursor = section.querySelector<HTMLImageElement>("#cursor")!;
+  let target = section.querySelector<HTMLElement>("#target")!;
+  let handles = gsap.utils.toArray<HTMLElement>("[data-handle]", section)!;
+
+  let popover = {
+    popup: section.querySelector<HTMLElement>("#popover-popup")!,
+    trigger: section.querySelector<HTMLElement>("#popover-trigger")!,
   };
 
-  const chars = {
+  let chars = {
     a1: {
-      wrap: document.getElementById("a1-wrap")!,
-      char: document.getElementById("a1-char")!,
+      wrap: section.querySelector<HTMLElement>("#a1-wrap")!,
+      char: section.querySelector<HTMLElement>("#a1-char")!,
     },
     n1: {
-      windmill: document.getElementById("n1-windmill")!,
+      windmill: section.querySelector<HTMLElement>("#n1-windmill")!,
       circles: {
-        wrap: document.getElementById("n1-circles-wrap")!,
-        svg: document.getElementById("n1-circles-svg")!,
+        wrap: section.querySelector<HTMLElement>("#n1-circles-wrap")!,
+        svg: section.querySelector<SVGElement>("#n1-circles-svg")!,
       },
       char: {
-        n: document.getElementById("n1-char-n")!,
-        a: document.getElementById("n1-char-a")!,
+        n: section.querySelector<HTMLElement>("#n1-char-n")!,
+        a: section.querySelector<HTMLElement>("#n1-char-a")!,
       },
-      wrap: document.getElementById("n1-wrap")!,
+      wrap: section.querySelector<HTMLElement>("#n1-wrap")!,
     },
-    i1: document.getElementById("i1-char")!,
-    m: document.getElementById("m-char")!,
+    i1: section.querySelector<HTMLElement>("#i1-char")!,
+    m: section.querySelector<HTMLElement>("#m-char")!,
     a2: {
-      char: document.getElementById("a2-char")!,
+      char: section.querySelector<HTMLElement>("#a2-char")!,
       star: {
-        wrap: document.getElementById("a2-star-wrap")!,
-        svg: document.getElementById("a2-star-svg")!,
+        wrap: section.querySelector<HTMLElement>("#a2-star-wrap")!,
+        svg: section.querySelector<SVGElement>("#a2-star-svg")!,
       },
-      wrap: document.getElementById("a2-wrap")!,
+      wrap: section.querySelector<HTMLElement>("#a2-wrap")!,
     },
     t: {
       binaries: {
-        wrap: document.getElementById("t-binaries-wrap")!,
-        bits: gsap.utils.toArray<HTMLElement>("[data-binary]")!,
+        wrap: section.querySelector<HTMLElement>("#t-binaries-wrap")!,
+        bits: gsap.utils.toArray<HTMLElement>("[data-binary]", section)!,
       },
-      char: document.getElementById("t-char")!,
+      char: section.querySelector<HTMLElement>("#t-char")!,
     },
-    e: document.getElementById("e-char")!,
+    e: section.querySelector<HTMLElement>("#e-char")!,
     a3: {
-      bottom: document.getElementById("a3-char-bottom")!,
-      top: document.getElementById("a3-char-top")!,
+      bottom: section.querySelector<HTMLElement>("#a3-char-bottom")!,
+      top: section.querySelector<HTMLElement>("#a3-char-top")!,
     },
     n2: {
-      bottom: document.getElementById("n2-char-bottom")!,
-      top: document.getElementById("n2-char-top")!,
+      bottom: section.querySelector<HTMLElement>("#n2-char-bottom")!,
+      top: section.querySelector<HTMLElement>("#n2-char-top")!,
     },
-    y: document.getElementById("y-char")!,
+    y: section.querySelector<HTMLElement>("#y-char")!,
     t2: {
       bolt: {
-        wrap: document.getElementById("t2-bolt-wrap")!,
-        path: document.querySelector<SVGPathElement>("#t2-bolt-path")!,
-        rect: document.querySelector<SVGRectElement>("#t2-bolt-rect")!,
-        mask: document.querySelector<SVGMaskElement>("#t2-bolt-mask")!,
+        wrap: section.querySelector<HTMLElement>("#t2-bolt-wrap")!,
+        path: section.querySelector<SVGPathElement>("#t2-bolt-path")!,
+        rect: section.querySelector<SVGRectElement>("#t2-bolt-rect")!,
+        mask: section.querySelector<SVGMaskElement>("#t2-bolt-mask")!,
       },
-      char: document.getElementById("t2-char")!,
+      char: section.querySelector<HTMLElement>("#t2-char")!,
     },
-    h: document.getElementById("h-char")!,
-    i2: document.getElementById("i2-char")!,
-    n3: document.getElementById("n3-char")!,
-    g: document.getElementById("g-char")!,
+    h: section.querySelector<HTMLElement>("#h-char")!,
+    i2: section.querySelector<HTMLElement>("#i2-char")!,
+    n3: section.querySelector<HTMLElement>("#n3-char")!,
+    g: section.querySelector<HTMLElement>("#g-char")!,
   };
 
   let aabb = (
@@ -445,7 +446,7 @@ import cursor from "@assets/images/cursor.svg?url";
 
   let open = false;
 
-  const defaults: GSAPTweenVars = {
+  let defaults: GSAPTweenVars = {
     duration: 0.6,
     ease: "power2.out",
   };

@@ -404,93 +404,93 @@
   >
     Size
   </div>
-</div>
 
-<script>
-  import gsap from "gsap";
-  import { SplitText } from "gsap/SplitText";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  <script>
+    import gsap from "gsap";
+    import { SplitText } from "gsap/SplitText";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-  gsap.registerPlugin(SplitText, ScrollTrigger);
+    gsap.registerPlugin(SplitText, ScrollTrigger);
 
-  const any = document.getElementById("any")!;
-  const size = document.getElementById("size")!;
-  const text = document.getElementById("text")!;
-  const svgs = gsap.utils.toArray<SVGElement>("#svgs svg")!;
-  const frame = document.getElementById("frame")!;
-  const motion = document.getElementById("motion")!;
-  const section = document.getElementById("scale-content")!;
+    const section = document.getElementById("scale-content")!;
 
-  let box = () => {
-    const r = frame.getBoundingClientRect();
-    return { h: r.height };
-  };
+    let any = section.querySelector<HTMLElement>("#any")!;
+    let size = section.querySelector<HTMLElement>("#size")!;
+    let text = section.querySelector<HTMLElement>("#text")!;
+    let svgs = gsap.utils.toArray<SVGElement>("#svgs svg", section)!;
+    let frame = section.querySelector<HTMLElement>("#frame")!;
+    let motion = section.querySelector<HTMLElement>("#motion")!;
 
-  let mm = gsap.matchMedia();
-  let duration = 2.5;
-  let breakpoint = 450;
+    let mm = gsap.matchMedia();
+    let duration = 2.5;
+    let breakpoint = 450;
 
-  mm.add(
-    {
-      desktop: `(min-width: 1024px)`,
-      mobile: `(max-width: ${breakpoint - 1}px)`,
-      tablet: `(min-width: ${breakpoint}px)`,
-    },
-    (context) => {
-      const { mobile, desktop } = context.conditions!;
+    let box = () => {
+      const r = frame.getBoundingClientRect();
+      return { h: r.height };
+    };
 
-      const defaults: GSAPTweenVars = {
-        duration: 0.8,
-        ease: "back.out(1.1)",
-      };
+    mm.add(
+      {
+        desktop: `(min-width: 1024px)`,
+        mobile: `(max-width: ${breakpoint - 1}px)`,
+        tablet: `(min-width: ${breakpoint}px)`,
+      },
+      (context) => {
+        const { mobile, desktop } = context.conditions!;
 
-      let tl = gsap.timeline({
-        defaults,
-        repeat: -1,
-        repeatDelay: 1,
-        repeatRefresh: true,
-        scrollTrigger: {
-          start: "top bottom",
-          trigger: section,
-        },
-      });
+        const defaults: GSAPTweenVars = {
+          duration: 0.8,
+          ease: "back.out(1.1)",
+        };
 
-      tl.set(
-        frame,
-        {
-          height: mobile ? "100%" : "80%",
-          width: mobile ? "100%" : "80%",
-        },
-        0,
-      );
-
-      tl.set(text, {
-        autoAlpha: 1,
-      });
-
-      type Store = {
-        split: SplitText;
-        slots: HTMLElement[][];
-        shift: number;
-      };
-
-      function split(): Store {
-        const split = new SplitText(text, {
-          type: "chars",
+        let tl = gsap.timeline({
+          defaults,
+          repeat: -1,
+          repeatDelay: 1,
+          repeatRefresh: true,
+          scrollTrigger: {
+            start: "top bottom",
+            trigger: section,
+          },
         });
 
-        const slots = split.chars.map((obj, objIndex) => {
-          const el = obj as HTMLElement;
+        tl.set(
+          frame,
+          {
+            height: mobile ? "100%" : "80%",
+            width: mobile ? "100%" : "80%",
+          },
+          0,
+        );
 
-          const char = el.innerText;
-          const chars = ["E", "a", "s", "y"].filter((c) => c !== char);
-          const random = gsap.utils.random(chars);
+        tl.set(text, {
+          autoAlpha: 1,
+        });
 
-          const svg = svgs[objIndex].outerHTML;
-          const svgFilter = svgs.filter((s) => s !== svgs[objIndex]);
-          const svgTwo = gsap.utils.random(svgFilter).outerHTML;
+        type Store = {
+          split: SplitText;
+          slots: HTMLElement[][];
+          shift: number;
+        };
 
-          const sHTML = `
+        function split(): Store {
+          const split = new SplitText(text, {
+            type: "chars",
+          });
+
+          const slots = split.chars.map((obj, objIndex) => {
+            const el = obj as HTMLElement;
+
+            const char = el.innerText;
+            const chars = ["E", "a", "s", "y"].filter((c) => c !== char);
+            const random = gsap.utils.random(chars);
+
+            const svg = svgs[objIndex].outerHTML;
+            const svgFilter = svgs.filter((s) => s !== svgs[objIndex]);
+            const svgTwo = gsap.utils.random(svgFilter).outerHTML;
+
+            const sHTML = `
             <div class="text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
               ${char}
             </div>
@@ -529,7 +529,7 @@
             </div>
           `;
 
-          const eHTML = `
+            const eHTML = `
             <div class="text-transparent bg-clip-text bg-radial-[at_120%_80%] from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400">
               ${char}
             </div>
@@ -568,204 +568,205 @@
             </div>
           `;
 
-          el.innerHTML = objIndex === 1 ? eHTML : sHTML;
+            el.innerHTML = objIndex === 1 ? eHTML : sHTML;
 
-          const children = Array.from(el.children) as HTMLElement[];
+            const children = Array.from(el.children) as HTMLElement[];
 
-          gsap.set(children, {
-            autoAlpha: 1,
-            yPercent: (i) => i * 100,
-          });
-
-          return children;
-        });
-
-        let threshold = 1;
-
-        for (const s of slots) {
-          if (s.length > threshold) {
-            threshold = s.length;
-          }
-        }
-
-        const shift = (threshold - 1) * 100;
-
-        return {
-          split,
-          slots,
-          shift,
-        };
-      }
-
-      function roll(ctx: Store) {
-        const tl = gsap.timeline();
-
-        ctx.slots.forEach((slot) => {
-          tl.set(
-            slot,
-            {
+            gsap.set(children, {
               autoAlpha: 1,
               yPercent: (i) => i * 100,
-            },
-            0,
-          );
-        });
+            });
 
-        let stagger = 0.05;
+            return children;
+          });
 
-        ctx.slots.forEach((slot, i) => {
-          tl.to(
-            slot,
-            {
-              duration: duration - (ctx.slots.length - 1) * stagger,
-              yPercent: `-=${ctx.shift}`,
-              ease: "power4.inOut",
-            },
-            i * stagger,
-          );
-        });
+          let threshold = 1;
 
-        return tl;
-      }
+          for (const s of slots) {
+            if (s.length > threshold) {
+              threshold = s.length;
+            }
+          }
 
-      function square() {
-        const tl = gsap
-          .timeline({
-            defaults,
-          })
-          .addLabel("toSquare")
-          .to(
-            frame,
-            {
-              height: mobile ? "100%" : "80%",
-              width: mobile ? "100%" : "80%",
-            },
-            "toSquare",
-          )
-          .to(
-            motion,
-            {
-              scale: mobile ? 0.7 : 0.8,
-            },
-            "toSquare",
-          )
-          .to(
-            any,
-            {
-              scale: mobile ? 0.9 : 1,
-              y: () => box().h * -0.25,
-            },
-            "toSquare",
-          )
-          .to(
-            size,
-            {
-              scale: mobile ? 0.9 : 1,
-              y: () => box().h * 0.25,
-            },
-            "toSquare",
-          );
+          const shift = (threshold - 1) * 100;
 
-        return tl;
-      }
+          return {
+            split,
+            slots,
+            shift,
+          };
+        }
 
-      function vertical() {
-        const tl = gsap
-          .timeline({
-            defaults,
-          })
-          .addLabel("toVertical")
-          .to(
-            frame,
-            {
-              height: mobile ? "120%" : "100%",
-              width: mobile ? "65%" : "55%",
-            },
-            "toVertical",
-          )
-          .to(
-            motion,
-            {
-              scale: mobile ? 0.4 : 0.5,
-            },
-            "toVertical",
-          )
-          .to(
-            any,
-            {
-              scale: 0.7,
-              y: () => (mobile ? box().h * -0.75 : box().h * -0.55),
-            },
-            "toVertical",
-          )
-          .to(
-            size,
-            {
-              scale: 0.7,
-              y: () => (mobile ? box().h * 0.75 : box().h * 0.55),
-            },
-            "toVertical",
-          );
+        function roll(ctx: Store) {
+          const tl = gsap.timeline();
 
-        return tl;
-      }
+          ctx.slots.forEach((slot) => {
+            tl.set(
+              slot,
+              {
+                autoAlpha: 1,
+                yPercent: (i) => i * 100,
+              },
+              0,
+            );
+          });
 
-      function wide() {
-        const tl = gsap
-          .timeline({
-            defaults,
-          })
-          .addLabel("toWide")
-          .to(
-            frame,
-            {
-              height: mobile ? "55%" : "60%",
-              width: desktop ? "120%" : "100%",
-            },
-            "toWide",
-          )
-          .to(
-            motion,
-            {
-              scale: mobile ? 0.5 : 0.7,
-            },
-            "toWide",
-          )
-          .to(
-            any,
-            {
-              scale: mobile ? 0.9 : 1.1,
-              y: () => (mobile ? box().h * -0.1 : box().h * -0.175),
-            },
-            "toWide",
-          )
-          .to(
-            size,
-            {
-              scale: mobile ? 0.9 : 1.1,
-              y: () => (mobile ? box().h * 0.1 : box().h * 0.175),
-            },
-            "toWide",
-          );
+          let stagger = 0.05;
 
-        return tl;
-      }
+          ctx.slots.forEach((slot, i) => {
+            tl.to(
+              slot,
+              {
+                duration: duration - (ctx.slots.length - 1) * stagger,
+                yPercent: `-=${ctx.shift}`,
+                ease: "power4.inOut",
+              },
+              i * stagger,
+            );
+          });
 
-      let ctx: Store | null = null;
-      ctx = split();
+          return tl;
+        }
 
-      tl.add(wide())
-        .add(roll(ctx), "-=1")
-        .add(vertical(), "+=1")
-        .add(roll(ctx), "-=1")
-        .add(square(), "+=1")
-        .add(roll(ctx), "-=1");
+        function square() {
+          const tl = gsap
+            .timeline({
+              defaults,
+            })
+            .addLabel("toSquare")
+            .to(
+              frame,
+              {
+                height: mobile ? "100%" : "80%",
+                width: mobile ? "100%" : "80%",
+              },
+              "toSquare",
+            )
+            .to(
+              motion,
+              {
+                scale: mobile ? 0.7 : 0.8,
+              },
+              "toSquare",
+            )
+            .to(
+              any,
+              {
+                scale: mobile ? 0.9 : 1,
+                y: () => box().h * -0.25,
+              },
+              "toSquare",
+            )
+            .to(
+              size,
+              {
+                scale: mobile ? 0.9 : 1,
+                y: () => box().h * 0.25,
+              },
+              "toSquare",
+            );
 
-      return () => {
-        tl.kill();
-        ctx!.split.revert();
-        ctx = null;
-      };
-    },
-  );
-</script>
+          return tl;
+        }
+
+        function vertical() {
+          const tl = gsap
+            .timeline({
+              defaults,
+            })
+            .addLabel("toVertical")
+            .to(
+              frame,
+              {
+                height: mobile ? "120%" : "100%",
+                width: mobile ? "65%" : "55%",
+              },
+              "toVertical",
+            )
+            .to(
+              motion,
+              {
+                scale: mobile ? 0.4 : 0.5,
+              },
+              "toVertical",
+            )
+            .to(
+              any,
+              {
+                scale: 0.7,
+                y: () => (mobile ? box().h * -0.75 : box().h * -0.55),
+              },
+              "toVertical",
+            )
+            .to(
+              size,
+              {
+                scale: 0.7,
+                y: () => (mobile ? box().h * 0.75 : box().h * 0.55),
+              },
+              "toVertical",
+            );
+
+          return tl;
+        }
+
+        function wide() {
+          const tl = gsap
+            .timeline({
+              defaults,
+            })
+            .addLabel("toWide")
+            .to(
+              frame,
+              {
+                height: mobile ? "55%" : "60%",
+                width: desktop ? "120%" : "100%",
+              },
+              "toWide",
+            )
+            .to(
+              motion,
+              {
+                scale: mobile ? 0.5 : 0.7,
+              },
+              "toWide",
+            )
+            .to(
+              any,
+              {
+                scale: mobile ? 0.9 : 1.1,
+                y: () => (mobile ? box().h * -0.1 : box().h * -0.175),
+              },
+              "toWide",
+            )
+            .to(
+              size,
+              {
+                scale: mobile ? 0.9 : 1.1,
+                y: () => (mobile ? box().h * 0.1 : box().h * 0.175),
+              },
+              "toWide",
+            );
+
+          return tl;
+        }
+
+        let ctx: Store | null = null;
+        ctx = split();
+
+        tl.add(wide())
+          .add(roll(ctx), "-=1.1")
+          .add(vertical(), "+=1")
+          .add(roll(ctx), "-=1.1")
+          .add(square(), "+=1")
+          .add(roll(ctx), "-=1.1");
+
+        return () => {
+          tl.kill();
+          ctx!.split.revert();
+          ctx = null;
+        };
+      },
+    );
+  </script>
+</div>

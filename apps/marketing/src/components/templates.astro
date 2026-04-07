@@ -1,1 +1,368 @@
-<div aria-hidden="true" class="h-146 relative @container"></div>
+---
+import cursor from "@assets/images/cursor.svg?url";
+---
+
+<div
+  aria-hidden="true"
+  class="h-146 relative @container flex items-center justify-center"
+  id="container"
+>
+  <img
+    alt="Cursor"
+    class="absolute top-0 left-0 size-12 z-50 invisible"
+    id="cursor"
+    src={cursor}
+  />
+
+  <div
+    class="invisible h-1/2 w-3/4 rounded-[1.125rem] bg-white dark:bg-gray-800 border-dashed border-2 border-gray-200 dark:border-gray-600"
+    id="empty"
+  >
+    <div
+      class="flex size-full flex-col gap-6 items-center justify-center"
+      id="prompt"
+    >
+      <div class="shrink-0 relative size-32 rounded-b-full overflow-hidden">
+        <div
+          class="absolute bottom-0 inset-0 rounded-full bg-gray-150 dark:bg-gray-900"
+        >
+        </div>
+
+        <div
+          class="flex items-center justify-center absolute bottom-0 w-20 left-1/2 -translate-x-1/2 h-24 bg-white dark:bg-gray-700 rounded-t-[.625rem] shadow-4xl"
+          id="icon"
+        >
+          <div
+            class="size-9 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-gray-400 dark:text-gray-500"
+          >
+            <svg
+              aria-hidden="true"
+              class="size-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#plus"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="max-w-60 gap-4 w-full flex flex-col md:grid md:grid-cols-2 md:max-w-md"
+        id="triggers"
+      >
+        <div
+          class="rounded-md h-14 px-4 inline-flex items-center gap-3 border border-dashed border-gray-200 dark:border-gray-600"
+        >
+          <div
+            class="size-6 bg-gray-150 dark:bg-gray-600 rounded-full text-gray-500 dark:text-gray-400 flex items-center justify-center"
+          >
+            <svg
+              aria-hidden="true"
+              class="size-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#plus"></use>
+            </svg>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="font-medium text-[.6875rem]/4">Start from scratch</div>
+            <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+              Blank project
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="rounded-md h-14 px-4 inline-flex items-center gap-3 border border-dashed border-gray-200 dark:border-gray-600 transition-colors text-gray-500 dark:text-gray-400"
+          id="trigger"
+        >
+          <div class="size-6 flex items-center justify-center">
+            <svg
+              aria-hidden="true"
+              class="size-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#gallery"></use>
+            </svg>
+          </div>
+
+          <div class="flex flex-col">
+            <div
+              class="font-medium text-[.6875rem]/4 text-gray-800 dark:text-gray-200"
+            >
+              Start with a template
+            </div>
+
+            <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+              Pre-built animations
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="invisible flex flex-col size-full absolute inset-0"
+      id="templates"
+    >
+      <div
+        class="border-b h-14 p-4 inline-flex items-center border-gray-200 dark:border-gray-600"
+      >
+        <div
+          class="h-8 rounded-md items-center grid grid-cols-[2rem_1fr] w-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-[.6875rem]/4"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-4 m-2"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="/sprite.svg#search"></use>
+          </svg>
+
+          Search templates...
+        </div>
+      </div>
+
+      <div class="p-4 pb-0 flex-1 gap-4">
+        <div class="overflow-y-auto flex flex-col size-full">
+          <div class="flex flex-col gap-4">
+            <div class="text-[.8125rem]/4 font-semibold">Code</div>
+
+            <div
+              class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+            >
+              <div class="flex flex-col gap-2">
+                <div
+                  class="aspect-video border rounded-md border-gray-200 dark:border-gray-600"
+                >
+                </div>
+
+                <div class="text-[.6875rem]/4 font-medium">Typewriter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let section = document.getElementById("create-faster")!;
+
+  let icon = section.querySelector<HTMLElement>("#icon")!;
+  let empty = section.querySelector<HTMLElement>("#empty")!;
+  let cursor = section.querySelector<HTMLImageElement>("#cursor")!;
+  let prompt = section.querySelector<HTMLElement>("#prompt")!;
+  let trigger = section.querySelector<HTMLElement>("#trigger")!;
+  let container = section.querySelector<HTMLElement>("#container")!;
+  let templates = section.querySelector<HTMLElement>("#templates")!;
+
+  type Box = {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  };
+
+  const aabb = (a: Box, b: Box) =>
+    a.x + a.w >= b.x &&
+    a.x <= b.x + b.w &&
+    a.y + a.h >= b.y &&
+    a.y <= b.y + b.h;
+
+  const box = (target: HTMLElement): Box => {
+    let c = container.getBoundingClientRect();
+    let t = target.getBoundingClientRect();
+    return { x: t.left - c.left, y: t.top - c.top, w: t.width, h: t.height };
+  };
+
+  const to = (target: HTMLElement, offsetX = 0, offsetY = 0) => {
+    let b = box(target);
+    let x = b.x + b.w / 2 - cursor.offsetWidth / 2 + offsetX;
+    let y = b.y + b.h / 2 - cursor.offsetHeight / 2 + offsetY;
+    return { x, y };
+  };
+
+  let mm = gsap.matchMedia();
+  let breakpoint = 1024;
+
+  mm.add(
+    {
+      mobile: `(max-width: ${breakpoint - 1}px)`,
+      tablet: `(min-width: ${breakpoint}px)`,
+    },
+    (context) => {
+      const { mobile } = context.conditions!;
+
+      let tl = gsap.timeline({
+        defaults: {
+          duration: 0.5,
+          ease: "back.out(1.1)",
+        },
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+        },
+        // repeat: -1,
+        // repeatDelay: 1,
+        // repeatRefresh: true,
+      });
+
+      tl.set(cursor, {
+        x: () => box(container).x + box(container).w * 0.9,
+        y: () => box(container).y + box(container).h * 0.9,
+      });
+
+      tl.set(icon, {
+        autoAlpha: 0,
+        scale: 0.8,
+        yPercent: 20,
+      });
+
+      tl.set(empty, {
+        scale: 0.9,
+        width: "75%",
+        height: mobile ? "80%" : "50%",
+      });
+
+      tl.set(prompt, {
+        autoAlpha: 0,
+        filter: "blur(8px)",
+        scale: 0.9,
+      });
+
+      tl.set(templates, {
+        autoAlpha: 0,
+        scale: 0.9,
+        filter: "blur(8px)",
+      });
+
+      tl.to(empty, {
+        autoAlpha: 1,
+        scale: 1,
+      });
+
+      tl.to(
+        prompt,
+        {
+          autoAlpha: 1,
+          filter: "blur(0px)",
+          scale: 1,
+        },
+        "<",
+      );
+
+      tl.to(
+        icon,
+        {
+          autoAlpha: 1,
+          scale: 1,
+          yPercent: 0,
+        },
+        "<",
+      );
+
+      tl.to(
+        cursor,
+        {
+          autoAlpha: 1,
+          duration: 0.7,
+          ease: "power2.out",
+          onUpdate: () => {
+            let a = box(cursor);
+            let b = box(trigger);
+
+            if (aabb(a, b)) {
+              trigger.classList.remove(
+                "border-dashed",
+                "text-gray-500",
+                "border-gray-200",
+                "dark:text-gray-400",
+                "dark:border-gray-600",
+              );
+              trigger.classList.add(
+                "bg-blue-100",
+                "text-blue-400",
+                "border-blue-400",
+                "dark:bg-blue-900",
+                "dark:text-blue-500",
+                "dark:border-blue-500",
+              );
+            }
+          },
+          x: () => to(trigger, 96, 0).x,
+          y: () => to(trigger, 0, 16).y,
+        },
+        "<",
+      );
+
+      tl.to(
+        cursor,
+        {
+          duration: 0.15,
+          repeat: 1,
+          scale: 0.8,
+          yoyo: true,
+        },
+        "+=.1",
+      );
+
+      tl.to(
+        empty,
+        {
+          height: "90%",
+          width: "90%",
+        },
+        "-=.1",
+      );
+
+      tl.call(
+        () => {
+          empty.classList.remove("border-dashed", "border-2");
+          empty.classList.add("border", "shadow-4xl");
+        },
+        [],
+        "<",
+      );
+
+      tl.to(
+        prompt,
+        {
+          autoAlpha: 0,
+          filter: "blur(8px)",
+          scale: 0.9,
+        },
+        "-=.5",
+      );
+
+      tl.to(
+        templates,
+        {
+          autoAlpha: 1,
+          filter: "blur(0px)",
+          scale: 1,
+        },
+        ">-.3",
+      );
+
+      return () => {
+        tl.kill();
+      };
+    },
+  );
+</script>

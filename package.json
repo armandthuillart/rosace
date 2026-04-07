@@ -43,13 +43,13 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
     "stripe": "^22.0.0",
-    "svelte": "^5.55.1",
+    "svelte": "^5.55.2",
     "svelte-check": "^4.4.6",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.16",
     "vite-plus": "^0.1.16",
-    "wrangler": "^4.80.0",
+    "wrangler": "^4.81.0",
     "zod": "^4.3.6"
   }
 }
