@@ -38,7 +38,7 @@
           id="motion"
         >
           <div
-            class="inline-flex shrink-0 overflow-hidden whitespace-nowrap font-semibold opacity-0 -tracking-[0.02em] text-[8.525rem]/[0.9] bg-clip-text bg-radial-[at_120%_80%] text-transparent from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400 *:not-first:left-[clamp(-1.875rem,-1.294cqw-0.321602rem,-0.625rem)]"
+            class="inline-flex shrink-0 overflow-hidden whitespace-nowrap font-semibold opacity-0 -tracking-[0.02em] text-[8.525rem]/[1.1] bg-clip-text bg-radial-[at_120%_80%] text-transparent from-purple-400 dark:from-purple-500 from-30% to-purple-500 dark:to-purple-400 *:not-first:left-[clamp(-1.875rem,-1.294cqw-0.321602rem,-0.625rem)]"
             id="text"
           >
             Easy
@@ -445,12 +445,14 @@
       };
 
       let tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-        },
         defaults,
         repeat: -1,
+        repeatDelay: 1,
+        repeatRefresh: true,
+        scrollTrigger: {
+          start: "top bottom",
+          trigger: section,
+        },
       });
 
       tl.set(
@@ -458,32 +460,6 @@
         {
           height: mobile ? "100%" : "80%",
           width: mobile ? "100%" : "80%",
-        },
-        0,
-      );
-
-      tl.set(
-        motion,
-        {
-          scale: mobile ? 0.7 : 0.6,
-        },
-        0,
-      );
-
-      tl.set(
-        any,
-        {
-          scale: mobile ? 0.9 : 1,
-          y: () => box().h * -0.275,
-        },
-        0,
-      );
-
-      tl.set(
-        size,
-        {
-          scale: mobile ? 0.9 : 1,
-          y: () => box().h * 0.275,
         },
         0,
       );
@@ -657,32 +633,37 @@
           .timeline({
             defaults,
           })
-          .to(frame, {
-            height: mobile ? "100%" : "80%",
-            width: mobile ? "100%" : "80%",
-          })
+          .addLabel("toSquare")
+          .to(
+            frame,
+            {
+              height: mobile ? "100%" : "80%",
+              width: mobile ? "100%" : "80%",
+            },
+            "toSquare",
+          )
           .to(
             motion,
             {
-              scale: mobile ? 0.7 : 0.6,
+              scale: mobile ? 0.7 : 0.8,
             },
-            "<",
+            "toSquare",
           )
           .to(
             any,
             {
               scale: mobile ? 0.9 : 1,
-              y: () => box().h * -0.275,
+              y: () => box().h * -0.25,
             },
-            "<",
+            "toSquare",
           )
           .to(
             size,
             {
               scale: mobile ? 0.9 : 1,
-              y: () => box().h * 0.275,
+              y: () => box().h * 0.25,
             },
-            "<",
+            "toSquare",
           );
 
         return tl;
@@ -693,16 +674,21 @@
           .timeline({
             defaults,
           })
-          .to(frame, {
-            height: mobile ? "120%" : "100%",
-            width: mobile ? "65%" : "55%",
-          })
+          .addLabel("toVertical")
+          .to(
+            frame,
+            {
+              height: mobile ? "120%" : "100%",
+              width: mobile ? "65%" : "55%",
+            },
+            "toVertical",
+          )
           .to(
             motion,
             {
               scale: mobile ? 0.4 : 0.5,
             },
-            "<",
+            "toVertical",
           )
           .to(
             any,
@@ -710,7 +696,7 @@
               scale: 0.7,
               y: () => (mobile ? box().h * -0.75 : box().h * -0.55),
             },
-            "<",
+            "toVertical",
           )
           .to(
             size,
@@ -718,7 +704,7 @@
               scale: 0.7,
               y: () => (mobile ? box().h * 0.75 : box().h * 0.55),
             },
-            "<",
+            "toVertical",
           );
 
         return tl;
@@ -729,32 +715,37 @@
           .timeline({
             defaults,
           })
-          .to(frame, {
-            height: mobile ? "55%" : "60%",
-            width: desktop ? "120%" : "100%",
-          })
+          .addLabel("toWide")
+          .to(
+            frame,
+            {
+              height: mobile ? "55%" : "60%",
+              width: desktop ? "120%" : "100%",
+            },
+            "toWide",
+          )
           .to(
             motion,
             {
-              scale: mobile ? 0.5 : 0.6,
+              scale: mobile ? 0.5 : 0.7,
             },
-            "<",
+            "toWide",
           )
           .to(
             any,
             {
-              scale: mobile ? 0.9 : 1.2,
+              scale: mobile ? 0.9 : 1.1,
               y: () => (mobile ? box().h * -0.1 : box().h * -0.175),
             },
-            "<",
+            "toWide",
           )
           .to(
             size,
             {
-              scale: mobile ? 0.9 : 1.2,
+              scale: mobile ? 0.9 : 1.1,
               y: () => (mobile ? box().h * 0.1 : box().h * 0.175),
             },
-            "<",
+            "toWide",
           );
 
         return tl;
@@ -763,16 +754,12 @@
       let ctx: Store | null = null;
       ctx = split();
 
-      let t1 = duration;
-      let t2 = duration * 2;
-      let t3 = duration * 3;
-
-      tl.add(roll(ctx), 0)
-        .add(wide(), t1 - 0.8)
-        .add(roll(ctx), t1)
-        .add(vertical(), t2 - 0.8)
-        .add(roll(ctx), t2)
-        .add(square(), t3 - 0.8);
+      tl.add(wide())
+        .add(roll(ctx), "-=1")
+        .add(vertical(), "+=1")
+        .add(roll(ctx), "-=1")
+        .add(square(), "+=1")
+        .add(roll(ctx), "-=1");
 
       return () => {
         tl.kill();
