@@ -1,11 +1,9 @@
 {
-  "$schema": "./node_modules/convex/schemas/convex.schema.json",
+  "$schema": "../../node_modules/convex/schemas/convex.schema.json",
   "codegen": {
+    "fileType": "ts",
     "staticApi": true,
     "staticDataModel": true
   },
-  "functions": "src",
-  "node": {
-    "nodeVersion": "22"
-  }
+  "functions": "src/"
 }
