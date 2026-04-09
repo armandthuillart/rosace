@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@convex-dev/resend": "catalog:",
-    "@convex-dev/stripe": "catalog:",
     "@react-email/components": "catalog:",
     "@react-email/render": "catalog:",
     "@repo/better-auth": "workspace:*",

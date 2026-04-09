@@ -189,20 +189,10 @@ const isActionCtx = <DataModel extends GenericDataModel>(
   ctx: GenericCtx<DataModel>,
 ): ctx is GenericActionCtx<DataModel> => "runAction" in ctx;
 
-const requireActionCtx = <DataModel extends GenericDataModel>(
-  ctx: GenericCtx<DataModel>,
-): GenericActionCtx<DataModel> => {
-  if (!isActionCtx(ctx)) {
-    throw new Error("Action context required");
-  }
-  return ctx;
-};
-
 export {
   isPlainObject,
   matchesWhere,
   normalizeWriteData,
-  requireActionCtx,
   selectFields,
   sortDocs,
   stripWriteFields,

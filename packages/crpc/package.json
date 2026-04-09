@@ -7,10 +7,8 @@
   },
   "type": "module",
   "exports": {
-    "./auth/": "./src/auth/plugin/index.ts",
     "./auth/http": "./src/auth/http/polyfills.ts",
     "./auth/provider": "./src/auth/provider.ts",
-    "./react": "./src/react/index.ts",
     "./server": "./src/server/index.ts",
     "./svelte": "./src/svelte/index.ts"
   },
