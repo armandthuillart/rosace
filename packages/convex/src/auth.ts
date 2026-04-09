@@ -1,8 +1,9 @@
-import { convex } from "@repo/crpc/auth/plugins";
+import { convex } from "@repo/better-auth/plugins";
 import { emailOTP } from "better-auth/plugins";
 
 import { internal } from "./_generated/api";
 import betterAuth from "./auth.config";
+import { DAY } from "./constants";
 import { defineAuth } from "./crpc/auth";
 import { getEnv } from "./env";
 
@@ -60,8 +61,8 @@ export default defineAuth((ctx) => {
       }),
     ],
     session: {
-      expiresIn: 60 * 60 * 24 * 30, // 30 days
-      updateAge: 60 * 60 * 24 * 15, // 15 days
+      expiresIn: DAY * 30,
+      updateAge: DAY * 15,
     },
     socialProviders: {
       apple: {

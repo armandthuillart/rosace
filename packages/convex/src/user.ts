@@ -1,4 +1,4 @@
-import { CRPCError } from "@repo/crpc/server";
+import { ServerError } from "@repo/crpc/server";
 import { v } from "convex/values";
 
 import { authQuery } from "./crpc";
@@ -14,9 +14,7 @@ export const getUser = authQuery
     const user = await ctx.db.get(ctx.userId);
 
     if (!user) {
-      throw new CRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-      });
+      throw new ServerError({ code: "INTERNAL_SERVER_ERROR" });
     }
 
     return {

@@ -1,7 +1,7 @@
 import type { GenericDataModel } from "convex/server";
 import type { GenericValidator, PropertyValidators } from "convex/values";
 
-import { ConvexBuilderWithHandler } from "./factory.handler";
+import { ConvexBuilderWithHandler } from "./factory-handler";
 import type {
   AnyConvexMiddleware,
   CallableBuilder,
@@ -29,10 +29,6 @@ class ConvexBuilderWithFunction<
     this.def = def;
   }
 
-  /**
-   * Factory for new builder instances. Subclasses (plugins) override this to return their own
-   * type so .use(), .input(), .returns() keep the plugin type through the chain.
-   */
   protected _clone(def: ConvexBuilderDef<any, any, any>): any {
     return new ConvexBuilderWithFunction(def);
   }
@@ -133,12 +129,7 @@ class ConvexBuilderWithFunction<
     if (this.def.handler) {
       throw new Error("Handler already defined. Only one handler can be set per function chain.");
     }
-    /**
-     * Store the raw handler function - it will be composed with all middlewares
-     * (including those added after .handler()) when .public() or .internal() is called.
-     *
-     * The handler signature matches what Convex expects: (ctx, args) => Promise<return>
-     */
+
     const rawHandler = async (transformedCtx: Context, baseArgs: InferredArgs<TArgsValidator>) =>
       handlerFn(transformedCtx as TCurrentContext, baseArgs);
 

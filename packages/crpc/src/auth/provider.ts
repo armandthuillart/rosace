@@ -1,29 +1,27 @@
+import type { Jwk } from "better-auth/plugins";
 import type { AuthProvider } from "convex/server";
 
-import { toJwkDataUri } from "./algorithm";
-
 interface ProviderOptions {
-  /**
-   * The base URL for the application.
-   * @required
-   */
   baseURL: string;
-  /**
-   * The JWK JSON string. If set, token verification uses it instead of fetching.
-   * @optional
-   */
   jwks?: string;
 }
 
-/**
- * @param options - baseURL and JWK.
- * @returns Convex AuthProvider for custom JWT (RS256).
- */
+const toDataURI = (jwks: Jwk[]) =>
+  `data:text/plain;charset=utf-8;base64,${btoa(JSON.stringify(mapJWKS(jwks)))}`;
+
+const mapJWKS = (jwks: Jwk[]) => ({
+  keys: jwks.map((key) => ({
+    ...JSON.parse(key.publicKey),
+    alg: "RS256",
+    kid: key.id,
+  })),
+});
+
 function betterAuth({ baseURL, jwks }: ProviderOptions) {
   let parsed = jwks ? JSON.parse(jwks) : undefined;
 
   if (parsed) {
-    parsed = toJwkDataUri(parsed);
+    parsed = toDataURI(parsed);
   } else {
     parsed = `${baseURL}/api/auth/convex/jwks`;
   }

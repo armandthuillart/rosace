@@ -69,7 +69,6 @@ type GenericAuthTriggerChange<
     };
 
 type GenericAuthBeforeResult<TData extends Record<string, unknown>> =
-  // biome-ignore lint/suspicious/noConfusingVoidType: before hooks intentionally support "return nothing".
   | void
   | false
   | {

@@ -1,8 +1,3 @@
-/**
- * Generic DB helpers for Convex: filtering, sorting, doc normalization.
- * Used by the auth adapter; can be reused by other Convex adapters.
- */
-
 import { withoutSystemFields } from "convex-helpers";
 import type {
   GenericActionCtx,
@@ -11,8 +6,6 @@ import type {
   GenericQueryCtx,
 } from "convex/server";
 import type { GenericId } from "convex/values";
-
-// --- Types ---
 
 type MaybePromise<T> = T | Promise<T>;
 type DbRecord = Record<string, unknown>;
@@ -44,8 +37,6 @@ interface SortBy {
   field: string;
 }
 
-// --- Record helpers ---
-
 const isPlainObject = (value: unknown): value is DbRecord =>
   Boolean(value) && typeof value === "object" && !Array.isArray(value);
 
@@ -62,19 +53,6 @@ const getDocCreatedAt = (doc: DbRecord): number | undefined => {
   return undefined;
 };
 
-/**
- * Converts a Convex document to the shape returned to Better Auth: system fields removed,
- * `id` and `createdAt` set from `_id` and `_creationTime`.
-c *
- * Every doc returned by the adapter (findOne, findMany, create, updateOne, deleteOne) goes
- * through this. So on all reads Better Auth receives docs with `createdAt` set from
- * `_creationTime` and has `createdAt` internally—even though we don't store it in the schema.
- *
- * We don't store separate id/createdAt columns; see stripWriteFields.
- *
- * @param doc - Convex document or null
- * @returns Document without system fields, with id and createdAt from _id and _creationTime, or null
- */
 const toExternalDoc = (doc: DbRecord | null): DbRecord | null => {
   if (!doc) {
     return null;
@@ -94,8 +72,6 @@ const getFieldValue = (doc: DbRecord, field: string): unknown => {
   }
   return doc[field];
 };
-
-// --- Where / filter ---
 
 const compare = (
   left: unknown,
@@ -148,8 +124,6 @@ const matchesWhere = (doc: DbRecord, where: Where[] = []): boolean => {
   return current;
 };
 
-// --- Select / sort ---
-
 const selectFields = (doc: DbRecord | null, select?: string[]): DbRecord | null => {
   if (!(doc && select && select.length > 0)) {
     return doc;
@@ -191,15 +165,6 @@ const sortDocs = (docs: DbRecord[], sortBy?: SortBy): DbRecord[] => {
   });
 };
 
-// --- Write helpers ---
-
-/**
- * Strips the write fields from the data.
- * We don’t store the Better Auth system fields in the database, so we need to strip them.
- *
- * @param data - The data to strip the write fields from.
- * @returns The data without the write fields.
- */
 const stripWriteFields = (data: DbRecord): DbRecord => {
   const { _creationTime: _1, _id: _2, id: _3, createdAt: _4, ...rest } = data;
   return rest;
@@ -224,28 +189,6 @@ const isActionCtx = <DataModel extends GenericDataModel>(
   ctx: GenericCtx<DataModel>,
 ): ctx is GenericActionCtx<DataModel> => "runAction" in ctx;
 
-/**
- * Asserts the context is an action context (has runAction, runMutation, runQuery). Use it in auth
- * definition or plugins when you need runMutation/runQuery from an action-only path.
- *
- * @typeParam DataModel - Convex data model
- * @param ctx - Query, mutation, or action context
- * @returns The same context typed as ActionCtx
- * @throws Error when ctx is not an action context
- *
- * @example
- * ```typescript
- * plugins: [
- *   convex({ provider: [betterAuth], ... }),
- *   emailOTP({
- *     async sendVerificationOTP({ type }) {
- *       const ctx = requireActionCtx(myCtx);
- *       await ctx.runMutation(internal.sendEmail, { type });
- *     },
- *   }),
- * ],
- * ```
- */
 const requireActionCtx = <DataModel extends GenericDataModel>(
   ctx: GenericCtx<DataModel>,
 ): GenericActionCtx<DataModel> => {

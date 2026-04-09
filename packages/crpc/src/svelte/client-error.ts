@@ -5,8 +5,8 @@ type ClientErrorCode =
   | "BAD_REQUEST"
   | "TOO_MANY_REQUESTS";
 
-class CRPCError extends Error {
-  readonly name = "CRPCError";
+class ClientError extends Error {
+  readonly name = "ClientError";
   readonly code: ClientErrorCode;
   readonly functionName: string;
 
@@ -19,4 +19,4 @@ class CRPCError extends Error {
   }
 }
 
-export { CRPCError };
+export { ClientError };

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CRPCError } from "./crpc-error";
+import { ServerError } from "./server-error";
 
 type EnvKey = string;
 type EnvObject = Record<EnvKey, EnvValue>;
@@ -13,12 +13,6 @@ interface CreateEnvOptions<TSchema extends EnvSchema> {
   envSchema: TSchema;
 }
 
-/**
- * Provides dummy env values during codegen.
- *
- * @param schema - The Zod schema to generate placeholder values for.
- * @returns A record of placeholder values for the schema.
- */
 function getFakeEnv(schema: EnvSchema): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(schema.shape).map(([envKey, zodType]) => {
@@ -44,22 +38,6 @@ function getFakeEnv(schema: EnvSchema): Record<string, unknown> {
   );
 }
 
-/**
- * Returns a getter for typed, validated env. Parses once and caches.
- *
- * @example
- * ```ts
- * const envSchema = z.object({
- *   API_KEY: z.string(),
- * });
- *
- * const getEnv = createEnv({
- *   envSchema,
- * });
- *
- * console.log(getEnv().API_KEY);
- * ```
- */
 export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOptions<TSchema>) {
   type Env = z.infer<TSchema>;
 
@@ -72,20 +50,14 @@ export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOpt
 
     const _globalThis = globalThis as GlobalThis;
 
-    /**
-     * Bundlers treat `process.env` specially: they replace it at build time with static values or inject polyfill.
-     * This obfuscates it from the bundler, the time the codegen runs.
-     *
-     * @returns The obfuscated environment.
-     */
-    function obfuscateEnv(): EnvObject | undefined {
+    function hideEnvFromConvex(): EnvObject | undefined {
       const processObj = _globalThis[["pro", "cess"].join("")] as { env: EnvObject } | undefined;
 
       return processObj?.env;
     }
 
     function getEnv(key: EnvKey): EnvValue {
-      return obfuscateEnv()?.[key];
+      return hideEnvFromConvex()?.[key];
     }
 
     function hasSentinel(_globalThis: GlobalThis): boolean {
@@ -103,16 +75,6 @@ export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOpt
     const parsedEnv = envSchema.safeParse(envForParse);
 
     if (!parsedEnv.success) {
-      /**
-       * Format the error messages for the client.
-       *
-       * @example
-       * ```
-       * Invalid or missing environment variables:
-       *   - API_KEY: This field is required.
-       *   - API_URL: This field is required.
-       * ```
-       */
       const missingOrInvalid = parsedEnv.error.issues
         .map((issue) => {
           const key = issue.path.join(".") || "env";
@@ -120,7 +82,7 @@ export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOpt
         })
         .join("\n");
 
-      throw new CRPCError({
+      throw new ServerError({
         code: "PARSE_ERROR",
         message: `Invalid or missing environment variables:\n${missingOrInvalid}`,
       });

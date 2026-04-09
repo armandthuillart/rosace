@@ -36,7 +36,7 @@ export declare const api: {
 export declare const internal: {
   crpc: {
     auth: {
-      getLatestJwk: FunctionReference<"action", "internal", {}, any>;
+      getJwks: FunctionReference<"action", "internal", {}, any>;
       mutationAdapter: FunctionReference<
         "mutation",
         "internal",
@@ -61,7 +61,6 @@ export declare const internal: {
         },
         any
       >;
-      rotateKeys: FunctionReference<"action", "internal", {}, any>;
     };
   };
   email: {

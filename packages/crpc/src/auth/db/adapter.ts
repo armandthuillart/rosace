@@ -60,12 +60,6 @@ class TriggerCancelledError extends Error {
   }
 }
 
-/**
- * Gets the auth model from the model name.
- *
- * @param model - The model name.
- * @returns The auth model.
- */
 const getAuthModel = (model: string): AuthModel => {
   if (!AUTH_MODELS.has(model as AuthModel)) {
     throw new Error(`Unsupported Better Auth model '${model}'.`);
@@ -73,16 +67,6 @@ const getAuthModel = (model: string): AuthModel => {
   return model as AuthModel;
 };
 
-/**
- * Ensures the runtime table triggers are valid.
- *
- * @typeParam DataModel - The data model type.
- * @typeParam Schema - The schema type.
- * @typeParam TriggerCtx - The trigger context type.
- * @param model - The model name.
- * @param triggers - The triggers.
- * @returns The runtime table triggers.
- */
 const ensureRuntimeTableTriggers = <
   DataModel extends GenericDataModel,
   Schema extends SchemaDefinition<GenericSchema, true>,
@@ -114,13 +98,6 @@ const ensureRuntimeTableTriggers = <
   return tableTriggers as RuntimeTableTriggers<TriggerCtx>;
 };
 
-/**
- * Applies the before hook to the input data.
- *
- * @typeParam TriggerCtx - The trigger context type.
- * @param options - The options for the applyBefore function.
- * @returns The input data after the before hook is applied.
- */
 const applyBefore = async <TriggerCtx>(options: {
   ctx: TriggerCtx;
   hook:
@@ -149,13 +126,6 @@ const applyBefore = async <TriggerCtx>(options: {
   return input;
 };
 
-/**
- * Provides CRUD operations and trigger hooks for the auth tables.
- *
- * @returns Adapter object containing CRUD methods (create, findOne, findMany, updateOne, updateMany, deleteOne, deleteMany) with integrated trigger hooks.
- *
- * @internal
- */
 const createAdapter = <
   DataModel extends GenericDataModel,
   Schema extends SchemaDefinition<GenericSchema, true>,

@@ -136,9 +136,9 @@ async function syncJwks(options: SyncEnvOptions = {}): Promise<void> {
   }
 
   const currentEnvVars = await listConvexEnvVars(options);
-  const currentJwk = currentEnvVars.get("JWK");
+  const currentJwks = currentEnvVars.get("JWKS");
 
-  if (!options.force && currentJwk && currentJwk !== "undefined") {
+  if (!options.force && currentJwks && currentJwks !== "undefined") {
     return;
   }
 
@@ -146,14 +146,11 @@ async function syncJwks(options: SyncEnvOptions = {}): Promise<void> {
 
   try {
     generatedJwks = normalizeJwksValue(
-      execSync(
-        `${getBunxCommand()} convex run crpc/auth:getLatestJwk${options.prod ? " --prod" : ""}`,
-        {
-          cwd: process.cwd(),
-          encoding: "utf8",
-          stdio: ["ignore", "pipe", "ignore"],
-        },
-      ),
+      execSync(`${getBunxCommand()} convex run crpc/auth:getJwks${options.prod ? " --prod" : ""}`, {
+        cwd: process.cwd(),
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }),
     );
   } catch {
     generatedJwks = undefined;
@@ -163,7 +160,7 @@ async function syncJwks(options: SyncEnvOptions = {}): Promise<void> {
     return;
   }
 
-  await setConvexEnvVar("JWK", generatedJwks, options);
+  await setConvexEnvVar("JWKS", generatedJwks, options);
 }
 
 export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {

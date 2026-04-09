@@ -8,11 +8,6 @@ import type { GenericValidator, PropertyValidators } from "convex/values";
 
 type EmptyObject = Record<never, never>;
 
-type GenericCtx<DataModel extends GenericDataModel = GenericDataModel> =
-  | QueryCtx<DataModel>
-  | MutationCtx<DataModel>
-  | ActionCtx<DataModel>;
-
 type QueryCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericQueryCtx<DataModel>;
 
 type MutationCtx<DataModel extends GenericDataModel = GenericDataModel> =
@@ -107,7 +102,6 @@ export type {
   ConvexBuilderDef,
   Context,
   ExpectedReturnType,
-  InferArgs,
   InferredArgs,
   InferredHandlerReturn,
   ConvexArgsValidator,
@@ -116,7 +110,6 @@ export type {
   ConvexMiddleware,
   EmptyObject,
   CallableBuilder,
-  GenericCtx,
   QueryCtx,
   MutationCtx,
   ActionCtx,

@@ -21,11 +21,10 @@ Usage:
   crpc env rm <name> [--prod]
       Remove an environment variable. Use --prod for production.
 
-  crpc env sync [--auth] [--force] [--prod]
+  crpc env sync [--auth] [--prod]
       Sync environment variables.
       --auth    Generate or update authentication secrets.
       --prod    Apply to production environment.
-      --force   Force update of environment variables.
 
 `;
 

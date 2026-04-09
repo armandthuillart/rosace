@@ -37,4 +37,5 @@ export function httpPolyfills(): void {
 httpPolyfills();
 
 export { betterAuth } from "./middleware";
+export type { MiddlewareOptions } from "./middleware";
 export { HttpRouter } from "./router";

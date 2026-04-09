@@ -1,10 +1,6 @@
 import type { RequestHandler } from "@sveltejs/kit";
 
-interface HandlerOptions {
-  baseURL: string;
-}
-
-function handler(req: Request, opts: HandlerOptions) {
+function handler(req: Request, opts: { baseURL: string }) {
   const { baseURL } = opts;
 
   const requestURL = new URL(req.url);
@@ -22,7 +18,7 @@ function handler(req: Request, opts: HandlerOptions) {
   return response;
 }
 
-function betterAuth(opts: HandlerOptions) {
+function betterAuth(opts: { baseURL: string }) {
   const requestHandler: RequestHandler = async ({ request }) => {
     return handler(request, opts);
   };

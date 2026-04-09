@@ -1,6 +1,6 @@
 import { ConvexError } from "convex/values";
 
-const CRPC_ERROR_CODES = [
+const ERROR_CODES = [
   "PARSE_ERROR",
   "BAD_REQUEST",
   "INTERNAL_SERVER_ERROR",
@@ -24,36 +24,23 @@ const CRPC_ERROR_CODES = [
   "CLIENT_CLOSED_REQUEST",
 ] as const;
 
-/**
- * Standard CRPC error codes. We extend the ConvexError class to add a code and message, for simpler error handling on the client.
- */
-export type CRPCErrorCode = (typeof CRPC_ERROR_CODES)[number];
+type ErrorCode = (typeof ERROR_CODES)[number];
 
-interface CRPCErrorData {
-  code: CRPCErrorCode;
+interface ErrorData {
+  code: ErrorCode;
   message: string;
   [key: string]: string | undefined;
 }
 
-interface CRPCErrorOptions {
-  code: CRPCErrorCode;
+interface ErrorOptions {
+  code: ErrorCode;
   message?: string;
 }
 
-/**
- * Convex-compatible error with a code and message.
- *
- * @example
- * ```typescript
- * throw new CRPCError({ code: "UNAUTHORIZED" });
- * ```
- *
- * @see {@link CRPCErrorCode}
- */
-export class CRPCError extends ConvexError<CRPCErrorData> {
-  readonly code: CRPCErrorCode;
+export class ServerError extends ConvexError<ErrorData> {
+  readonly code: ErrorCode;
 
-  constructor(opts: CRPCErrorOptions) {
+  constructor(opts: ErrorOptions) {
     const { code, message = code } = opts;
 
     super({
@@ -61,7 +48,7 @@ export class CRPCError extends ConvexError<CRPCErrorData> {
       message,
     });
 
-    this.name = "CRPCError";
+    this.name = "ServerError";
     this.code = code;
   }
 }

@@ -1,4 +1,4 @@
-import { CRPCError, createBuilder } from "@repo/crpc/server";
+import { ServerError, createBuilder } from "@repo/crpc/server";
 import type { Auth } from "convex/server";
 
 import type { DataModel, Id } from "./_generated/dataModel";
@@ -13,7 +13,7 @@ export const authMiddleware = convex
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
-      throw new CRPCError({ code: "UNAUTHORIZED" });
+      throw new ServerError({ code: "UNAUTHORIZED" });
     }
 
     const userId = identity.subject as Id<"users">;

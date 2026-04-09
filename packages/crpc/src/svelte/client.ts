@@ -1,3 +1,5 @@
+// ⚠️ being worked on
+
 import { ConvexClient } from "convex/browser";
 import { getContext, setContext, untrack } from "svelte";
 
@@ -17,7 +19,7 @@ type AuthClientWithPlugins<Plugins extends PluginsWithCrossDomain | PluginsWitho
       }
     >
   >;
-export type AuthClient =
+type AuthClient =
   | AuthClientWithPlugins<PluginsWithCrossDomain>
   | AuthClientWithPlugins<PluginsWithoutCrossDomain>;
 
@@ -51,17 +53,17 @@ export const useConvexClient = (): ConvexClient => {
   return client;
 };
 
-export type ConvexAuthProvider = {
+type ConvexAuthProvider = {
   isLoading: boolean;
   isAuthenticated: boolean;
   fetchAccessToken: FetchAccessToken;
 };
 
-export type SetupAuthOptions = {
+type SetupAuthOptions = {
   initialState?: { isAuthenticated: boolean };
 };
 
-export type UseAuthReturn = {
+type UseAuthReturn = {
   readonly isLoading: boolean;
   readonly isAuthenticated: boolean;
 };
