@@ -13,7 +13,8 @@
     "./auth/plugins": "./src/auth/plugin/index.ts",
     "./auth/plugins/client": "./src/auth/plugin/client.ts",
     "./react": "./src/react/index.ts",
-    "./server": "./src/server/index.ts"
+    "./server": "./src/server/index.ts",
+    "./svelte": "./src/svelte/index.ts"
   },
   "dependencies": {
     "convex-helpers": "catalog:",

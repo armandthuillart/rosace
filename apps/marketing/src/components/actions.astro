@@ -16,9 +16,47 @@ import cursor from "@assets/images/cursor.svg?url";
 
   <div class="absolute w-full bottom-0 flex flex-col gap-2">
     <div
-      class="z-50 origin-bottom w-full max-w-md invisible scale-0 mx-auto h-52 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
+      class="z-40 flex flex-col text-[.8125rem]/8 origin-bottom w-full max-w-md invisible mx-auto h-52 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
       id="popover-popup"
     >
+      <div
+        class="bg-gray-100 m-2 text-gray-500 rounded-md grid grid-cols-[2rem_1fr] dark:bg-gray-700 dark:text-gray-400"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-4 m-2"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#search"></use>
+        </svg>
+        Search...
+      </div>
+
+      <div class="px-2 pt-1 flex-1 flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
+          <div class="ml-1 text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+            Suggestions
+          </div>
+
+          <div
+            class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1"
+            id="action"
+          >
+            <svg
+              aria-hidden="true"
+              class="size-4 m-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#repeat"></use>
+            </svg>
+            Repeat forever
+          </div>
+        </div>
+      </div>
     </div>
 
     <div
@@ -340,6 +378,7 @@ import cursor from "@assets/images/cursor.svg?url";
 
   let popover = {
     popup: section.querySelector<HTMLElement>("#popover-popup")!,
+    action: section.querySelector<HTMLElement>("#action")!,
     trigger: section.querySelector<HTMLElement>("#popover-trigger")!,
   };
 
@@ -564,16 +603,6 @@ import cursor from "@assets/images/cursor.svg?url";
     );
 
     tl.to(
-      chars.n1.windmill,
-      {
-        repeat: -1,
-        rotationZ: 90,
-        repeatDelay: 1,
-      },
-      "<",
-    );
-
-    tl.to(
       cursor,
       {
         x: () => to(target, 9, 9).x,
@@ -601,7 +630,7 @@ import cursor from "@assets/images/cursor.svg?url";
         repeat: 1,
         duration: 0.2,
       },
-      "-=0.1",
+      "-=1",
     );
 
     tl.to(
@@ -612,23 +641,27 @@ import cursor from "@assets/images/cursor.svg?url";
         ease: "power4",
         scale: 1,
       },
-      "-=0.1",
+      "-=1",
     );
 
-    tl.to(cursor, {
-      x: () => to(popover.trigger, 9, 9).x,
-      y: () => to(popover.trigger, 9, 9).y,
-      ease: "power3",
-      duration: 1,
-      onUpdate: () => {
-        let a = box(cursor);
-        let b = box(popover.trigger);
+    tl.to(
+      cursor,
+      {
+        x: () => to(popover.trigger, 9, 9).x,
+        y: () => to(popover.trigger, 9, 9).y,
+        ease: "power3",
+        duration: 1,
+        onUpdate: () => {
+          let a = box(cursor);
+          let b = box(popover.trigger);
 
-        if (!open && aabb(a, b)) {
-          popover.trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
-        }
+          if (!open && aabb(a, b)) {
+            popover.trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+          }
+        },
       },
-    });
+      "-=.6",
+    );
 
     tl.to(
       cursor,
@@ -659,6 +692,48 @@ import cursor from "@assets/images/cursor.svg?url";
         autoAlpha: 1,
       },
       "-=0.1",
+    );
+
+    tl.to(cursor, {
+      x: () => to(popover.action, 9, 9).x,
+      y: () => to(popover.action, 9, 9).y,
+      ease: "power3",
+      duration: 1,
+      onUpdate: () => {
+        let a = box(cursor);
+        let b = box(popover.action);
+
+        if (aabb(a, b)) {
+          popover.action.classList.add("bg-gray-100", "dark:bg-gray-700");
+        }
+      },
+    });
+
+    tl.to(
+      cursor,
+      {
+        yoyo: true,
+        scale: 0.8,
+        repeat: 1,
+        duration: 0.2,
+      },
+      "-=0.1",
+    );
+
+    tl.to(popover.popup, {
+      duration: 0.2,
+      opacity: 0,
+      scale: 0.9,
+    });
+
+    tl.to(
+      chars.n1.windmill,
+      {
+        repeat: -1,
+        rotationZ: 90,
+        repeatDelay: 1,
+      },
+      "<",
     );
 
     return tl;

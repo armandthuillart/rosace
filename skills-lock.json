@@ -1,10 +1,15 @@
 {
+  "version": 1,
   "skills": {
+    "deslop": {
+      "source": "mikecann/agent-skills",
+      "sourceType": "github",
+      "computedHash": "a238a8b75519a21b5d99223b927461a32fc311dcca145ff4f56c6cd55d97e860"
+    },
     "git-commit": {
       "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21",
       "source": "github/awesome-copilot",
       "sourceType": "github"
     }
-  },
-  "version": 1
+  }
 }

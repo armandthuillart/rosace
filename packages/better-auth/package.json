@@ -6,9 +6,8 @@
   "exports": {
     "./plugins": "./src/convex/plugin.ts",
     "./client/plugins": "./src/convex/client.ts",
-    "./react": "./src/react/index.ts",
-    "./server": "./src/server/index.ts",
-    "./tanstack-start": "./src/tanstack-start/index.ts"
+    "./svelte": "./src/svelte/index.ts",
+    "./server": "./src/server/index.ts"
   },
   "dependencies": {
     "convex-helpers": "catalog:",

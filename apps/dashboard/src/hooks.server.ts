@@ -1,6 +1,5 @@
 import { getJWKS } from "@repo/better-auth/svelte";
-import { createAuth } from "@repo/convex/auth";
-import { setJWKS } from "@repo/convex/svelte";
+import { setJWKS } from "@repo/crpc/svelte";
 import type { Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
