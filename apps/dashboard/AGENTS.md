@@ -1,2 +1,0 @@
-- Use `svelte-code-writer` skill to work with up-to-date knowledge
-- Always use `svelte-core-bestpractices` skill when writing code
