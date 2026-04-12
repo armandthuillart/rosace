@@ -47,6 +47,7 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   site: getEnv().MARKETING_URL,
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()],
   },
 });
