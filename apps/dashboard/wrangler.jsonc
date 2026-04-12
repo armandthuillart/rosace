@@ -1,8 +1,0 @@
-{
-  "account_id": "4dde812758b46f7b68ea3279249ea3e6",
-  "build": { "command": "vp build" },
-  "compatibility_date": "2026-03-25",
-  "main": "./.cloudflare/worker.js",
-  "name": "rosace-dashboard",
-  "site": { "bucket": "./.cloudflare/public" },
-}

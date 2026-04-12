@@ -2,7 +2,10 @@
   "recommendations": [
     "VoidZero.vite-plus-extension-pack",
     "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
     "oxc.oxc-vscode",
-    "svelte.svelte-vscode"
+    "svelte.svelte-vscode",
+    "unifiedjs.vscode-mdx"
   ]
 }

@@ -1,0 +1,1 @@
+- Use `search_astro_docs` MCP command to work with up-to-date knowledge
