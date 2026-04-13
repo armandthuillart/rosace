@@ -1,14 +1,13 @@
 import type { RequestHandler } from "@sveltejs/kit";
 
-function handler(req: Request, opts: { baseURL: string }) {
-  const { baseURL } = opts;
+function handler(req: Request, opts: { siteURL: string }) {
+  const { siteURL } = opts;
 
   const requestURL = new URL(req.url);
-  const nextURL = new URL(`${baseURL}${requestURL.pathname}${requestURL.search}`);
+  const nextURL = new URL(`${siteURL}${requestURL.pathname}${requestURL.search}`);
 
   const request = new Request(nextURL, req);
   request.headers.set("accept-encoding", "application/json");
-  request.headers.set("host", new URL(nextURL).host);
 
   const response = fetch(request, {
     method: req.method,
@@ -18,7 +17,7 @@ function handler(req: Request, opts: { baseURL: string }) {
   return response;
 }
 
-function betterAuth(opts: { baseURL: string }) {
+function betterAuth(opts: { siteURL: string }) {
   const requestHandler: RequestHandler = async ({ request }) => {
     return handler(request, opts);
   };

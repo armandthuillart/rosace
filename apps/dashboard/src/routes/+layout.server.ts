@@ -5,17 +5,22 @@ import { convexClient } from "@repo/crpc/svelte";
 
 import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({ locals }) => {
-  const auth = getAuth();
-  const jwks = locals.jwks;
+const PUBLIC_PATHS = new Set(["/login", "/register"]);
 
-  if (!jwks) {
-    return { auth, data: undefined };
+export const load: LayoutServerLoad = async ({ locals, url }) => {
+  const auth = getAuth();
+
+  if (PUBLIC_PATHS.has(url.pathname)) {
+    return { auth };
+  }
+
+  if (!locals.jwks) {
+    return { auth };
   }
 
   const convex = convexClient({
     baseURL: PUBLIC_CONVEX_URL,
-    jwks,
+    jwks: locals.jwks,
   });
 
   const user = await convex.query(api.user.getUser);

@@ -4,14 +4,17 @@
   import regular from "@fontsource/inter/files/inter-latin-400-normal.woff2?url";
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
-  import { authClient } from "$lib/auth";
-  import { setupConvex } from "@repo/crpc/svelte";
+  import { PUBLIC_CONVEX_URL } from "$env/static/public";
+  import { auth } from "$lib/auth";
+  import { syncConvex } from "@repo/crpc/svelte";
+  import type { LayoutProps } from "./$types";
 
-  let { children, data } = $props();
+  let { children, data }: LayoutProps = $props();
 
-  setupConvex({
-    authClient,
-    getServerState: () => data.authState,
+  syncConvex({
+    client: auth,
+    server: () => data.auth,
+    url: PUBLIC_CONVEX_URL,
   });
 </script>
 
