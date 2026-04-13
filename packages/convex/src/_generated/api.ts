@@ -9,8 +9,8 @@
  */
 
 import type { FunctionReference } from "convex/server";
-import { anyApi, componentsGeneric } from "convex/server";
 import type { GenericId as Id } from "convex/values";
+import { anyApi, componentsGeneric } from "convex/server";
 
 /**
  * A utility for referencing Convex functions in your app's public API.
@@ -22,7 +22,12 @@ import type { GenericId as Id } from "convex/values";
  */
 export const api: {
   user: {
-    getUser: FunctionReference<"query", "public", {}, { email: string; name: string }>;
+    getUser: FunctionReference<
+      "query",
+      "public",
+      {},
+      { email: string; name: string }
+    >;
   };
 } = anyApi as any;
 
@@ -43,7 +48,12 @@ export const internal: {
         "internal",
         {
           input: any;
-          op: "create" | "updateOne" | "updateMany" | "deleteOne" | "deleteMany";
+          op:
+            | "create"
+            | "updateOne"
+            | "updateMany"
+            | "deleteOne"
+            | "deleteMany";
           select?: Array<string>;
         },
         any
@@ -65,9 +75,24 @@ export const internal: {
     };
   };
   email: {
-    changeEmail: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
-    resetPassword: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
-    sendOtp: FunctionReference<"action", "internal", { otp: string; to: string }, string>;
+    changeEmail: FunctionReference<
+      "action",
+      "internal",
+      { otp: string; to: string },
+      string
+    >;
+    resetPassword: FunctionReference<
+      "action",
+      "internal",
+      { otp: string; to: string },
+      string
+    >;
+    sendOtp: FunctionReference<
+      "action",
+      "internal",
+      { otp: string; to: string },
+      string
+    >;
   };
 } = anyApi as any;
 

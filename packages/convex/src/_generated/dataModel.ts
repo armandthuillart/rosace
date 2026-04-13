@@ -78,7 +78,14 @@ export type DataModel = {
       _id: Id<"customers">;
       _creationTime: number;
     };
-    fieldPaths: "_creationTime" | "_id" | "customerId" | "email" | "metadata" | "name" | "userId";
+    fieldPaths:
+      | "_creationTime"
+      | "_id"
+      | "customerId"
+      | "email"
+      | "metadata"
+      | "name"
+      | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -167,7 +174,13 @@ export type DataModel = {
       _id: Id<"sessions">;
       _creationTime: number;
     };
-    fieldPaths: "_creationTime" | "_id" | "expiresAt" | "token" | "updatedAt" | "userId";
+    fieldPaths:
+      | "_creationTime"
+      | "_id"
+      | "expiresAt"
+      | "token"
+      | "updatedAt"
+      | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -222,7 +235,13 @@ export type DataModel = {
       _id: Id<"users">;
       _creationTime: number;
     };
-    fieldPaths: "_creationTime" | "_id" | "email" | "emailVerified" | "name" | "updatedAt";
+    fieldPaths:
+      | "_creationTime"
+      | "_id"
+      | "email"
+      | "emailVerified"
+      | "name"
+      | "updatedAt";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -241,7 +260,13 @@ export type DataModel = {
       _id: Id<"verifications">;
       _creationTime: number;
     };
-    fieldPaths: "_creationTime" | "_id" | "expiresAt" | "identifier" | "updatedAt" | "value";
+    fieldPaths:
+      | "_creationTime"
+      | "_id"
+      | "expiresAt"
+      | "identifier"
+      | "updatedAt"
+      | "value";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -263,7 +288,10 @@ export type TableNames = TableNamesInDataModel<DataModel>;
  *
  * @typeParam TableName - A string literal type of the table name (like "users").
  */
-export type Doc<TableName extends TableNames> = DocumentByName<DataModel, TableName>;
+export type Doc<TableName extends TableNames> = DocumentByName<
+  DataModel,
+  TableName
+>;
 
 /**
  * An identifier for a document in Convex.
@@ -278,4 +306,5 @@ export type Doc<TableName extends TableNames> = DocumentByName<DataModel, TableN
  *
  * @typeParam TableName - A string literal type of the table name (like "users").
  */
-export type Id<TableName extends TableNames | SystemTableNames> = GenericId<TableName>;
+export type Id<TableName extends TableNames | SystemTableNames> =
+  GenericId<TableName>;
