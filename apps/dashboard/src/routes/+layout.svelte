@@ -5,13 +5,13 @@
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
   import { authClient } from "$lib/auth";
-  import { createAuth } from "@repo/crpc/svelte";
+  import { setupConvex } from "@repo/crpc/svelte";
 
   let { children, data } = $props();
 
-  createAuth({
-    client: authClient,
-    server: () => data.auth,
+  setupConvex({
+    authClient,
+    getServerState: () => data.authState,
   });
 </script>
 

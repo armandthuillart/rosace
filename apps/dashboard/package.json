@@ -17,6 +17,7 @@
     "@repo/crpc": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
+    "dexie": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@ function getJWKS(cookies: Cookies) {
   const jwks = cookies.get(cookie.name);
 
   if (!jwks) {
-    console.log("Reverse proxy detected. Align your baseURL with the external URL.");
+    console.log("Reverse proxy detected. baseURL is not aligned with the external URL.");
   }
 
   return jwks;

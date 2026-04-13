@@ -6,4 +6,8 @@ function setJWKS<T>(jwks: string | undefined, fn: () => T): T {
   return localStorage.run(jwks, fn);
 }
 
-export { setJWKS };
+function readJWKS(): string | undefined {
+  return localStorage.getStore();
+}
+
+export { setJWKS, readJWKS };
