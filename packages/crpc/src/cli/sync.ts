@@ -1,18 +1,26 @@
-import { execSync, spawn } from "node:child_process";
+import { execSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
+import { symmetricEncrypt } from "better-auth/crypto";
 import { parse } from "dotenv";
+import { exportJWK, generateKeyPair } from "jose";
+
+import {
+  getConvexEnvVar,
+  listConvexEnvVars,
+  setConvexEnvVar,
+  setConvexEnvVarFromFile,
+} from "./convex-env";
 
 interface SyncEnvOptions {
   auth?: boolean;
-  force?: boolean;
   prod?: boolean;
+  reset?: boolean;
 }
 
 const BUILT_IN_CONVEX_ENV_VARS = new Set(["CONVEX_SITE_URL", "CONVEX_URL"]);
-
-const getBunxCommand = () => (process.platform === "win32" ? "bunx.cmd" : "bunx");
 
 function findWorkspaceRoot(cwd: string): string {
   let currentDir = resolve(cwd);
@@ -32,86 +40,8 @@ function findWorkspaceRoot(cwd: string): string {
   }
 }
 
-async function runConvex(args: string[], cwd = process.cwd()): Promise<number> {
-  return new Promise((resolvePromise, rejectPromise) => {
-    const child = spawn(getBunxCommand(), ["convex", ...args], {
-      cwd,
-      stdio: "inherit",
-    });
-
-    child.on("error", rejectPromise);
-
-    child.on("exit", (code) => {
-      if (code === 0) {
-        resolvePromise(0);
-        return;
-      }
-      rejectPromise(new Error(`convex ${args.join(" ")} failed with exit code ${code ?? -1}`));
-    });
-  });
-}
-
-async function listConvexEnvVars(options: SyncEnvOptions = {}): Promise<Map<string, string>> {
-  return new Promise((resolvePromise, rejectPromise) => {
-    const child = spawn(
-      getBunxCommand(),
-      ["convex", "env", "list", ...(options.prod ? ["--prod"] : [])],
-      { cwd: process.cwd(), stdio: ["ignore", "pipe", "ignore"] },
-    );
-
-    let stdout = "";
-
-    child.stdout?.on("data", (chunk) => {
-      stdout += chunk.toString();
-    });
-
-    child.on("error", rejectPromise);
-
-    child.on("exit", (code) => {
-      if (code === 0) {
-        const envMap = new Map<string, string>();
-
-        for (const line of stdout.split(/\r?\n/u)) {
-          if (line) {
-            const sep = line.indexOf("=");
-
-            if (sep !== -1) {
-              envMap.set(line.slice(0, sep), line.slice(sep + 1));
-            }
-          }
-        }
-
-        resolvePromise(envMap);
-        return;
-      }
-
-      rejectPromise(new Error(`convex env list failed with exit code ${code ?? -1}`));
-    });
-  });
-}
-
-async function setConvexEnvVar(
-  name: string,
-  value: string,
-  options: SyncEnvOptions = {},
-): Promise<void> {
-  await runConvex(["env", "set", name, value, ...(options.prod ? ["--prod"] : [])], process.cwd());
-}
-
 function generateSecret(): string {
   return execSync("openssl rand -base64 32", { encoding: "utf8" }).trim();
-}
-
-function normalizeJwksValue(value: string | undefined): string | undefined {
-  if (!value) {
-    return;
-  }
-
-  try {
-    return JSON.stringify(JSON.parse(value));
-  } catch {
-    return value.trim() || undefined;
-  }
 }
 
 function ensureAuthEnvVars(envVars: Record<string, string>, options: SyncEnvOptions): void {
@@ -130,52 +60,67 @@ function ensureAuthEnvVars(envVars: Record<string, string>, options: SyncEnvOpti
   }
 }
 
-async function syncJwks(options: SyncEnvOptions = {}): Promise<void> {
+async function buildStaticJwksJson(secret: string): Promise<string> {
+  const { publicKey, privateKey } = await generateKeyPair("RS256", { extractable: true });
+  const publicWebKey = await exportJWK(publicKey);
+  const privateWebKey = await exportJWK(privateKey);
+  const stringifiedPrivate = JSON.stringify(privateWebKey);
+  const jwk = {
+    alg: "RS256" as const,
+    publicKey: JSON.stringify(publicWebKey),
+    privateKey: JSON.stringify(await symmetricEncrypt({ key: secret, data: stringifiedPrivate })),
+    createdAt: new Date(),
+    id: randomUUID(),
+  };
+  return JSON.stringify([jwk]);
+}
+
+async function syncJwks(
+  options: SyncEnvOptions = {},
+  betterAuthSecretFromSync: string | undefined,
+  cwd: string = process.cwd(),
+): Promise<void> {
   if (!options.auth) {
     return;
   }
 
-  const currentEnvVars = await listConvexEnvVars(options);
-  const currentJwks = currentEnvVars.get("JWKS");
+  const convexOpts = { prod: options.prod };
+  const currentJwks = (await getConvexEnvVar("JWKS", convexOpts, cwd))?.trim();
 
-  if (!options.force && currentJwks && currentJwks !== "undefined") {
-    return;
+  if (!options.reset && currentJwks && currentJwks !== "undefined") {
+    try {
+      JSON.parse(currentJwks);
+      console.log("✔ JWKS is already set and valid");
+      return;
+    } catch {}
   }
 
-  let generatedJwks: string | undefined;
-
-  try {
-    generatedJwks = normalizeJwksValue(
-      execSync(`${getBunxCommand()} convex run crpc/auth:getJwks${options.prod ? " --prod" : ""}`, {
-        cwd: process.cwd(),
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "ignore"],
-      }),
+  const secret = betterAuthSecretFromSync?.trim();
+  if (!secret) {
+    throw new Error(
+      "BETTER_AUTH_SECRET is required to generate JWKS. With --auth it must be in your env file or generated in this run.",
     );
-  } catch {
-    generatedJwks = undefined;
   }
 
-  if (!generatedJwks) {
-    return;
-  }
-
-  await setConvexEnvVar("JWKS", generatedJwks, options);
+  await setConvexEnvVarFromFile("JWKS", await buildStaticJwksJson(secret), convexOpts, cwd);
 }
 
 export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {
-  const workspaceRoot = findWorkspaceRoot(process.cwd());
+  const cwd = process.cwd();
+  const workspaceRoot = findWorkspaceRoot(cwd);
   const envPath = join(workspaceRoot, options.prod ? ".env.production" : ".env.development");
+
   if (!existsSync(envPath)) {
     throw new Error(`Missing env file: ${envPath}`);
   }
   const envVars = parse(readFileSync(envPath, "utf8"));
-  const currentEnvVars = await listConvexEnvVars(options);
+  const currentEnvVars = await listConvexEnvVars({ prod: options.prod }, cwd);
   const deployEnv = options.prod ? "production" : "development";
   if (!envVars.DEPLOY_ENV) {
     envVars.DEPLOY_ENV = deployEnv;
   }
   ensureAuthEnvVars(envVars, options);
+
   for (const [name, rawValue] of Object.entries(envVars)) {
     if (BUILT_IN_CONVEX_ENV_VARS.has(name)) {
       continue;
@@ -187,12 +132,15 @@ export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {
       continue;
     }
 
-    if (!options.force && currentEnvVars.get(name) === value) {
+    if (!options.reset && currentEnvVars.get(name) === value) {
       continue;
     }
 
-    await setConvexEnvVar(name, value, options);
+    await setConvexEnvVar(name, value, { prod: options.prod }, cwd);
   }
-  await syncJwks(options);
+
+  const secretForJwks =
+    envVars.BETTER_AUTH_SECRET != null ? String(envVars.BETTER_AUTH_SECRET) : undefined;
+  await syncJwks(options, secretForJwks, cwd);
   return envPath;
 }

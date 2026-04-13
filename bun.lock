@@ -123,13 +123,14 @@
         "crpc": "./src/cli/runner.ts",
       },
       "dependencies": {
+        "better-auth": "catalog:",
         "convex-helpers": "catalog:",
         "dotenv": "catalog:",
         "hono": "catalog:",
+        "jose": "catalog:",
       },
       "devDependencies": {
         "@types/node": "catalog:",
-        "better-auth": "catalog:",
         "convex": "catalog:",
         "svelte": "catalog:",
         "typescript": "catalog:",
@@ -179,6 +180,7 @@
     "dotenv": "^17.4.2",
     "gsap": "^3.15.0",
     "hono": "^4.12.12",
+    "jose": "^6.2.2",
     "knip": "^6.4.1",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",

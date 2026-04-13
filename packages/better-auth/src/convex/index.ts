@@ -35,13 +35,20 @@ export function convex(options: ConvexPluginOptions): BetterAuthPlugin {
       createdAt: new Date(k.createdAt),
     }));
 
-  const parsed = JSON.parse(jwks) as Jwk | Jwk[];
+  const parsed = JSON.parse((jwks ?? "").trim() || "[]") as Jwk | Jwk[];
 
   const staticJwks = normalizeJwks(Array.isArray(parsed) ? parsed : [parsed]);
 
   const jwt = jwtPlugin({
     adapter: {
-      getJwks: async () => staticJwks,
+      createJwk: async () => {
+        throw new Error(
+          "JWKS can only be statically set. Use `bunx crpc env sync --auth` to generate a new JWKS.",
+        );
+      },
+      getJwks: async () => {
+        return staticJwks;
+      },
     },
     jwks: {
       keyPairConfig: {

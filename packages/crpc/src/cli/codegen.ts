@@ -4,8 +4,6 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { syncEnv } from "./sync";
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const TEMPLATES = resolve(__dirname, "generated");
@@ -50,40 +48,7 @@ async function runConvex(
   });
 }
 
-async function convexPipe(args: string[], cwd: string): Promise<string | undefined> {
-  return new Promise((ok) => {
-    const child = spawn("bunx", ["convex", ...args], {
-      cwd,
-      stdio: ["ignore", "pipe", "ignore"],
-    });
-
-    let out = "";
-
-    child.stdout?.on("data", (c) => {
-      out += c.toString();
-    });
-
-    child.on("error", () => ok(undefined));
-
-    child.on("exit", (code) => ok(code === 0 ? out.trim() : undefined));
-  });
-}
-
 const CRPC_DIR = "crpc";
-
-async function checkOrSetJwks(cwd: string, prod: boolean): Promise<void> {
-  const args = prod ? ["--prod"] : [];
-
-  if ((await convexPipe(["env", "get", "JWKS", ...args], cwd)) !== undefined) {
-    return;
-  }
-
-  const jwks = await convexPipe(["run", `${CRPC_DIR}/auth:getJwks`, ...args], cwd);
-
-  if (jwks) {
-    await runConvex(["env", "set", "JWKS", jwks, ...args], cwd);
-  }
-}
 
 async function generateFiles(cwd: string): Promise<void> {
   const out = resolve(cwd, "src", CRPC_DIR);
@@ -150,7 +115,6 @@ function createConvexWatcher(cwd: string) {
 }
 
 async function runCodegen(cwd: string, prod: boolean): Promise<void> {
-  await checkOrSetJwks(cwd, prod);
   await generateFiles(cwd);
 
   const watcher = createConvexWatcher(cwd);
@@ -192,13 +156,4 @@ async function deploy(args: string[] = []): Promise<void> {
   });
 }
 
-interface SyncOptions {
-  auth?: boolean;
-  prod?: boolean;
-}
-
-async function sync(opts: SyncOptions) {
-  await syncEnv(opts);
-}
-
-export { build, deploy, runConvex, sync, watch };
+export { build, deploy, runConvex, watch };
