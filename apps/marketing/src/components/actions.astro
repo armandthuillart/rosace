@@ -55,6 +55,38 @@ import cursor from "@assets/images/cursor.svg?url";
             </svg>
             Repeat forever
           </div>
+
+          <div class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1">
+            <svg
+              aria-hidden="true"
+              class="size-4 m-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#paint-bucket"></use>
+            </svg>
+            Change color
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <div class="ml-1 text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
+            Suggestions
+          </div>
+
+          <div class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1">
+            <svg
+              aria-hidden="true"
+              class="size-4 m-1"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprite.svg#background"></use>
+            </svg>
+            Add filters
+          </div>
         </div>
       </div>
     </div>
@@ -491,11 +523,13 @@ import cursor from "@assets/images/cursor.svg?url";
   };
 
   let tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: "top bottom",
-    },
     defaults,
+    repeat: -1,
+    repeatDelay: 1,
+    scrollTrigger: {
+      start: "top bottom",
+      trigger: section,
+    },
   });
 
   function char1() {
@@ -721,6 +755,14 @@ import cursor from "@assets/images/cursor.svg?url";
     );
 
     tl.to(popover.popup, {
+      onStart: () => {
+        open = false;
+        popover.trigger.classList.remove(
+          "text-white",
+          "bg-blue-400",
+          "dark:bg-blue-500",
+        );
+      },
       duration: 0.2,
       opacity: 0,
       scale: 0.9,
@@ -729,9 +771,9 @@ import cursor from "@assets/images/cursor.svg?url";
     tl.to(
       chars.n1.windmill,
       {
-        repeat: -1,
-        rotationZ: 90,
+        repeat: 4,
         repeatDelay: 1,
+        rotationZ: 90,
       },
       "<",
     );
@@ -1021,7 +1063,7 @@ import cursor from "@assets/images/cursor.svg?url";
       chars.i2,
       {
         duration: 1.5,
-        repeat: -1,
+        repeat: 1,
         repeatDelay: 3,
         rotationX: 540,
         yoyo: true,
