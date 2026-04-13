@@ -1,0 +1,352 @@
+---
+import pointerURL from "@assets/images/cursor.svg?url";
+import grabURL from "@assets/images/grab.svg?url";
+import grabbingURL from "@assets/images/grabbing.svg?url";
+---
+
+<div
+  class="h-150 relative @container flex items-center justify-center"
+  id="demo"
+>
+  <img
+    alt="Cursor"
+    class="absolute top-0 left-0 size-12 z-50 invisible"
+    data-grab={grabURL}
+    data-grabbing={grabbingURL}
+    id="cursor"
+    src={pointerURL}
+  />
+
+  <div
+    class="aspect-square left-1/2 -translate-x-1/2 absolute shadow-panel -translate-y-1/2 top-[calc(50%-1rem)] outline-0 outline-blue-400 dark:outline-blue-500 h-[calc(100%-12rem)] sm:h-[calc(100%-8rem)] sm:top-6 sm:translate-y-0 bg-white dark:bg-gray-800"
+    id="output"
+  >
+    <div
+      class="z-10 invisible absolute -top-1 -left-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+      data-handle
+    >
+    </div>
+
+    <div
+      class="z-10 invisible absolute -top-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+      data-handle
+    >
+    </div>
+
+    <div
+      class="z-10 invisible absolute -bottom-1 -left-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+      data-handle
+    >
+    </div>
+
+    <div
+      class="z-10 invisible absolute -bottom-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+      data-handle
+    >
+    </div>
+
+    <div
+      class="overflow-hidden absolute inset-0 pointer-events-none grid grid-cols-5"
+    >
+      {
+        Array.from({ length: 50 }, (_, i) => (
+          <div
+            class:list={[
+              "w-full aspect-square",
+              { "bg-gray-50 dark:bg-gray-700": i % 2 === 0 },
+              { "bg-white dark:bg-gray-800": i % 2 !== 0 },
+            ]}
+          />
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="absolute w-full bottom-0 flex flex-col gap-2">
+    <div
+      class="z-10 mx-auto p-2 inline-flex gap-2 rounded-xl bg-white dark:bg-gray-800 shadow-timeline"
+    >
+      <div
+        class="bg-blue-400 dark:bg-blue-500 text-white size-8 shrink-0 rounded-sm flex items-center justify-center"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-5 translate-x-px"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#cursor"></use>
+        </svg>
+      </div>
+
+      <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#hold"></use>
+        </svg>
+      </div>
+
+      <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
+      <div
+        class="size-8 shrink-0 rounded-md flex items-center justify-center"
+        id="popover-trigger"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#toolcase"></use>
+        </svg>
+      </div>
+
+      <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
+
+      <div
+        class="h-8 overflow-hidden p-0.5 gap-0.5 inline-flex rounded-md bg-gray-100 dark:bg-gray-600"
+      >
+        <div
+          class="shadow-panel size-7 flex items-center justify-center rounded-sm bg-white dark:bg-gray-800 text-blue-400 dark:text-blue-500"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-4"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="/sprite.svg#geometric-shapes"></use>
+          </svg>
+        </div>
+
+        <div
+          class="size-7 flex items-center justify-center rounded-sm text-gray-500 dark:text-gray-400"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-4"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <use href="/sprite.svg#keyframe"></use>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let root = document.querySelector<HTMLElement>("#demo")!;
+  let cursor = root.querySelector<HTMLImageElement>("#cursor")!;
+  let output = root.querySelector<HTMLElement>("#output")!;
+  let handles = gsap.utils.toArray<HTMLElement>("[data-handle]", output)!;
+
+  let popover = {
+    trigger: root.querySelector<HTMLElement>("#popover-trigger")!,
+    popup: root.querySelector<HTMLElement>("#popover-popup")!,
+    open: false,
+  };
+
+  let grab = cursor.dataset.grab!;
+  let pointer = cursor.src;
+  let grabbing = cursor.dataset.grabbing!;
+
+  let aabb = (
+    a: { x: number; y: number; w: number; h: number },
+    b: { x: number; y: number; w: number; h: number },
+  ) =>
+    a.x + a.w >= b.x &&
+    a.x <= b.x + b.w &&
+    a.y + a.h >= b.y &&
+    a.y <= b.y + b.h;
+
+  let box = (el: HTMLElement) => {
+    let b = root!.getBoundingClientRect();
+    let r = el.getBoundingClientRect();
+    return { x: r.left - b.left, y: r.top - b.top, w: r.width, h: r.height };
+  };
+
+  let to = (el: HTMLElement, offsetX = 0, offsetY = 0) => {
+    let r = box(el);
+    let x = r.x + r.w / 2 - cursor.offsetWidth / 2 + offsetX;
+    let y = r.y + r.h / 2 - cursor.offsetHeight / 2 + offsetY;
+    return { x, y };
+  };
+
+  let defaults: GSAPTweenVars = {
+    duration: 0.2,
+    ease: "power3",
+  };
+
+  let ow = gsap.quickTo(output, "outlineWidth", {
+    duration: 0.1,
+    ease: "power2.out",
+  });
+
+  let tl = gsap.timeline({
+    defaults,
+    repeat: -1,
+    repeatDelay: 1,
+    scrollTrigger: {
+      start: "top bottom",
+      trigger: root,
+    },
+  });
+
+  tl.set(output, {
+    outlineWidth: 0,
+    width: () => Math.min(box(output).h, box(root).w),
+  })
+    .set(handles, {
+      autoAlpha: 0,
+      scale: 0,
+    })
+    .set(cursor, {
+      autoAlpha: 0,
+      x: () => box(root).w * 0.7,
+      y: () => box(root).h * 0.7,
+    })
+    .set(popover.popup, {
+      autoAlpha: 0,
+      scale: 0.9,
+    });
+
+  tl.to(cursor, {
+    autoAlpha: 1,
+    duration: 0.7,
+    ease: "power3",
+    onUpdate: () => {
+      let a = box(cursor);
+      let b = box(output);
+
+      if (aabb(a, b)) {
+        ow(2);
+      }
+    },
+    x: () => to(output).x,
+    y: () => to(output).y,
+  });
+
+  tl.to(
+    cursor,
+    {
+      duration: 0.2,
+      repeat: 1,
+      scale: 0.8,
+      yoyo: true,
+    },
+    "-=.1",
+  )
+    .to(
+      handles,
+      {
+        autoAlpha: 1,
+        scale: 1,
+      },
+      "<",
+    )
+    .to(cursor, {
+      duration: 0.7,
+      ease: "power3",
+      x: () => box(output).x - cursor.offsetWidth / 2,
+      y: () => to(output).y,
+    })
+    .call(
+      () => {
+        cursor.src = grab;
+      },
+      [],
+      "-=.5",
+    )
+    .to(
+      cursor,
+      {
+        scale: 0.9,
+      },
+      "+=0.1",
+    )
+    .call(
+      () => {
+        cursor.src = grabbing;
+      },
+      [],
+      "-=0.1",
+    )
+    .to(output, {
+      duration: 0.7,
+      ease: "power4",
+      onUpdate: () => {
+        let r = box(output);
+        gsap.set(cursor, {
+          x: r.x - cursor.offsetWidth / 2,
+          y: r.y + r.h / 2 - cursor.offsetHeight / 2,
+        });
+      },
+      width: () => (box(output).h * 9) / 16,
+    })
+    .to(
+      cursor,
+      {
+        duration: 1,
+        ease: "power4",
+        x: () => to(popover.trigger, 12, 12).x,
+        y: () => to(popover.trigger, 12, 12).y,
+        onUpdate: () => {
+          let c = box(cursor);
+          let m = box(output);
+
+          let e = {
+            x: m.x,
+            y: m.y,
+            w: Math.min(16, m.w),
+            h: m.h,
+          };
+
+          if (!aabb(c, e)) {
+            cursor.src = pointer;
+            gsap.set(cursor, { scale: 1 });
+          }
+
+          let b = box(popover.trigger);
+
+          popover.trigger.classList.remove(
+            "bg-gray-50",
+            "bg-gray-100",
+            "dark:bg-gray-700",
+          );
+
+          if (aabb(c, b)) {
+            popover.trigger.classList.add("bg-gray-100", "dark:bg-gray-700");
+          } else if (popover.open) {
+            popover.trigger.classList.add("bg-gray-50", "dark:bg-gray-700");
+          }
+        },
+      },
+      "+=.2",
+    )
+    .to(
+      cursor,
+      {
+        repeat: 1,
+        scale: 0.8,
+        yoyo: true,
+      },
+      "-=.1",
+    );
+</script>
