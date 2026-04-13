@@ -36,7 +36,7 @@
     "convex": "^1.35.1",
     "convex-helpers": "^0.1.114",
     "dotenv": "^17.4.2",
-    "gsap": "^3.14.2",
+    "gsap": "^3.15.0",
     "hono": "^4.12.12",
     "knip": "^6.4.1",
     "prettier": "^3.8.1",
@@ -50,7 +50,7 @@
     "typescript": "^6.0.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.16",
     "vite-plus": "^0.1.16",
-    "wrangler": "^4.81.1",
+    "wrangler": "^4.82.0",
     "zod": "^4.3.6"
   }
 }

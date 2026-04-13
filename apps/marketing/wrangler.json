@@ -1,4 +1,5 @@
 {
+  "$schema": "../../node_modules/wrangler/config-schema.json",
   "assets": { "directory": "./dist" },
   "compatibility_date": "2026-03-12",
   "name": "rosace-marketing",
