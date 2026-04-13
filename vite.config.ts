@@ -7,6 +7,7 @@ export default defineConfig({
     sortPackageJson: { sortScripts: true },
   },
   lint: {
+    ignorePatterns: ["**/_generated/**"],
     options: {
       typeAware: true,
       typeCheck: true,
