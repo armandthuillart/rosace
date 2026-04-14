@@ -1,7 +1,7 @@
 import { ConvexHttpClient } from "convex/browser";
 
-function convexClient({ baseURL, jwks }: { baseURL: string; jwks?: string }) {
-  const client = new ConvexHttpClient(baseURL);
+function convexClient({ convexURL, jwks }: { convexURL: string; jwks?: string }) {
+  const client = new ConvexHttpClient(convexURL);
 
   if (jwks) {
     client.setAuth(jwks);

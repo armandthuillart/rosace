@@ -1,4 +1,4 @@
-import { PUBLIC_CONVEX_URL } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { getAuth } from "@repo/better-auth/svelte";
 import { api } from "@repo/convex/api";
 import { convexClient } from "@repo/crpc/svelte";
@@ -19,7 +19,7 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
   }
 
   const convex = convexClient({
-    baseURL: PUBLIC_CONVEX_URL,
+    convexURL: env.PUBLIC_CONVEX_URL ?? "",
     jwks: locals.jwks,
   });
 

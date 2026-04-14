@@ -1,9 +1,10 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "account_id": "4dde812758b46f7b68ea3279249ea3e6",
+  "assets": { "binding": "ASSETS", "directory": "./.cloudflare/public" },
   "build": { "command": "vp build" },
   "compatibility_date": "2026-03-25",
+  "compatibility_flags": ["nodejs_compat"],
   "main": "./.cloudflare/worker.js",
-  "name": "rosace-dashboard",
-  "site": { "bucket": "./.cloudflare/public" }
+  "name": "rosace-dashboard"
 }

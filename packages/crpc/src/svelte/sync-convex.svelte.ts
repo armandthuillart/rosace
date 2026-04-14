@@ -29,7 +29,7 @@ type InitialAuthState = {
 };
 
 type SyncConvexArgs = {
-  url: string;
+  convexURL: string;
   client: AuthClient;
   server: InitialAuthState | undefined | (() => InitialAuthState | undefined);
 };
@@ -80,11 +80,11 @@ const fetchTokenWithRetry = async (client: AuthClient): Promise<string | null> =
   return run();
 };
 
-function syncConvex({ url, client, server }: SyncConvexArgs): void {
-  if (!url) {
+function syncConvex({ convexURL, client, server }: SyncConvexArgs): void {
+  if (!convexURL) {
     throw new Error("Missing PUBLIC_CONVEX_URL");
   }
-  const convexClient = new ConvexClient(url, { disabled: false });
+  const convexClient = new ConvexClient(convexURL, { disabled: false });
   setContext(CONVEX_CONTEXT_KEY, convexClient);
 
   let sessionData: SessionState["data"] = $state(null);

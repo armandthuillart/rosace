@@ -1,4 +1,4 @@
-import { env } from "$lib/env";
+import { env } from "$env/dynamic/public";
 import { convexClient } from "@repo/better-auth/client/plugins";
 import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/svelte";
