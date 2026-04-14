@@ -3,6 +3,6 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (locals.jwks) throw redirect(302, "/");
+  if (locals.token) throw redirect(302, "/");
   return {};
 };

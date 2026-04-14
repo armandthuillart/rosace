@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/public";
 import type { RequestHandler } from "@sveltejs/kit";
 
 function proxy(req: Request, siteURL: string) {
@@ -15,9 +16,9 @@ function proxy(req: Request, siteURL: string) {
   return response;
 }
 
-function handler({ siteURL }: { siteURL: string }) {
+function handler() {
   const requestHandler: RequestHandler = async ({ request }) => {
-    return proxy(request, siteURL);
+    return proxy(request, env.PUBLIC_CONVEX_SITE_URL);
   };
 
   return {

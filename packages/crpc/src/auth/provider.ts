@@ -23,7 +23,7 @@ function betterAuth({ baseURL, jwks }: ProviderOptions) {
   if (parsed) {
     parsed = toDataURI(parsed);
   } else {
-    parsed = `${baseURL}/api/auth/convex/jwks`;
+    parsed = `${baseURL}/api/auth/convex/token`;
   }
 
   const provider: AuthProvider = {

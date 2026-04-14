@@ -4,7 +4,7 @@ import { bearer as bearerPlugin, type Jwk, jwt as jwtPlugin } from "better-auth/
 import { omit } from "convex-helpers";
 import type { AuthConfig, AuthProvider } from "convex/server";
 
-const COOKIE_NAME = "auth:jwt";
+const COOKIE_NAME = "auth:token";
 const FIFTEEN_MINUTES = 60 * 15;
 
 interface HookMatcherContext {
@@ -41,11 +41,6 @@ export function convex(options: ConvexPluginOptions): BetterAuthPlugin {
 
   const jwt = jwtPlugin({
     adapter: {
-      createJwk: async () => {
-        throw new Error(
-          "JWKS can only be statically set. Use `bunx crpc env sync --auth` to generate a new JWKS.",
-        );
-      },
       getJwks: async () => {
         return staticJwks;
       },
@@ -72,7 +67,7 @@ export function convex(options: ConvexPluginOptions): BetterAuthPlugin {
   return {
     ...jwt,
     endpoints: {
-      getJwks: createAuthEndpoint("/convex/jwks", { method: "GET" }, async (ctx) =>
+      getToken: createAuthEndpoint("/convex/token", { method: "GET" }, async (ctx) =>
         jwt.endpoints.getJwks({
           ...ctx,
           method: "GET",

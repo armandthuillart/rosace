@@ -3,13 +3,13 @@
   "assets": { "binding": "ASSETS", "directory": "./.cloudflare/public" },
   "compatibility_date": "2026-03-25",
   "compatibility_flags": ["nodejs_compat"],
-  "vars": {
-    "PUBLIC_CONVEX_URL": "https://knowing-buzzard-594.convex.cloud",
-    "PUBLIC_CONVEX_SITE_URL": "https://knowing-buzzard-594.convex.site",
-    "PUBLIC_DASHBOARD_URL": "https://app.rosace.app",
-    "PUBLIC_MARKETING_URL": "https://rosace.app"
-  },
   "main": "./.cloudflare/worker.js",
   "name": "rosace-dashboard",
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "vars": {
+    "PUBLIC_CONVEX_SITE_URL": "https://knowing-buzzard-594.convex.site",
+    "PUBLIC_CONVEX_URL": "https://knowing-buzzard-594.convex.cloud",
+    "PUBLIC_DASHBOARD_URL": "https://app.rosace.app",
+    "PUBLIC_MARKETING_URL": "https://rosace.app"
+  }
 }

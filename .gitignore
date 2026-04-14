@@ -5,7 +5,7 @@ node_modules
 .DS_Store
 
 # Environment variables
-.env*
+.env.*
 !.env.template
 
 # TypeScript

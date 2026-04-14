@@ -1,13 +1,13 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
-const localStorage = new AsyncLocalStorage<string | undefined>();
+const tokenStorage = new AsyncLocalStorage<string | undefined>();
 
-function setJWKS<T>(jwks: string | undefined, fn: () => T): T {
-  return localStorage.run(jwks, fn);
+function setToken<T>(token: string | undefined, fn: () => T): T {
+  return tokenStorage.run(token, fn);
 }
 
-function readJWKS(): string | undefined {
-  return localStorage.getStore();
+function readToken(): string | undefined {
+  return tokenStorage.getStore();
 }
 
-export { setJWKS, readJWKS };
+export { setToken, readToken };

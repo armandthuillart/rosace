@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/public";
 import { ConvexClient } from "convex/browser";
 import { setContext } from "svelte";
 
@@ -29,7 +30,6 @@ type InitialAuthState = {
 };
 
 type SyncConvexArgs = {
-  convexURL?: string;
   client: AuthClient;
   server: InitialAuthState | undefined | (() => InitialAuthState | undefined);
 };
@@ -80,7 +80,8 @@ const fetchTokenWithRetry = async (client: AuthClient): Promise<string | null> =
   return run();
 };
 
-function syncConvex({ convexURL, client, server }: SyncConvexArgs): void {
+function syncConvex({ client, server }: SyncConvexArgs): void {
+  const convexURL = env.PUBLIC_CONVEX_URL;
   if (!convexURL) return;
   const convexClient = new ConvexClient(convexURL, { disabled: false });
   setContext(CONVEX_CONTEXT_KEY, convexClient);

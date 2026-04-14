@@ -1,9 +1,9 @@
-import { readJWKS } from "./store";
+import { readToken } from "./store";
 
 function getAuth() {
-  const jwks = readJWKS();
+  const token = readToken();
 
-  if (jwks) {
+  if (token) {
     return { isAuthenticated: true };
   }
 
