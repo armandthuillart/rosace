@@ -1,13 +1,69 @@
 <div
   class="py-7 px-6 lg:py-8 lg:px-7 select-none overflow-hidden w-full bg-gray-300 dark:bg-gray-900 relative rounded-sm inset-ring inset-ring-black/2.5 dark:inset-ring-white/2.5"
 >
-  <div class="h-150 flex gap-14 place-self-center" id="demo">
-    <div class="hidden lg:flex w-48 flex-col self-center">
-      <div class=""></div>
+  <div class="h-150 flex gap-14 place-self-center max-sm:w-full" id="demo">
+    <div class="hidden lg:flex w-48 flex-col gap-2.5 self-center">
+      <div
+        class="text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        Content
+      </div>
+
+      <div
+        class="p-4 text-center bg-white rounded-3xl text-[1.125rem]/8 font-medium text-gray-500 dark:text-gray-400 dark:bg-gray-700"
+      >
+        hello
+      </div>
+
+      <div
+        class="text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        Color
+      </div>
+
+      <div
+        class="flex p-2.5 bg-white rounded-full self-center dark:bg-gray-700"
+      >
+        <div class="bg-blue-400 dark:bg-blue-500 size-7 rounded-full"></div>
+      </div>
+
+      <div
+        class="text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        Font
+      </div>
+
+      <div
+        class="px-4 py-12 flex items-center justify-between text-center bg-white rounded-3xl text-[2.25rem] font-semibold text-gray-500 dark:text-gray-400 dark:bg-gray-700"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#chevron-left"></use>
+        </svg>
+
+        <span class="-translate-y-0.5">abc</span>
+
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#chevron-right"></use>
+        </svg>
+      </div>
     </div>
 
-    <div class="flex flex-col gap-8">
-      <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-8 max-sm:w-full">
+      <div
+        class="flex flex-col gap-3 place-self-center max-sm:max-w-3xs max-sm:w-full"
+      >
         <div class="h-7 flex justify-between">
           <div
             class="flex px-2.5 rounded-lg items-center text-gray-500 bg-gray-200 dark:text-gray-400 dark:bg-gray-800"
@@ -73,7 +129,7 @@
           </div>
 
           <div
-            class="aspect-9/16 bg-white shadow-panel rounded-[.875rem] dark:bg-gray-800"
+            class="max-sm:size-full sm:aspect-9/16 bg-white shadow-panel rounded-[.875rem] dark:bg-gray-800"
           >
           </div>
         </div>
@@ -108,7 +164,100 @@
       </div>
     </div>
 
-    <div class="hidden lg:flex w-48 flex-col self-center"></div>
+    <div class="hidden lg:flex w-48 flex-col gap-2.5 self-center">
+      <div
+        class="relative text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        <div
+          class="absolute left-2 top-1/2 -translate-y-1/2 flex justify-end h-4.5 rounded-full w-8 bg-blue-400 dark:bg-blue-500 p-0.75"
+        >
+          <div class="bg-white rounded-full h-full aspect-square"></div>
+        </div>
+        Animation
+      </div>
+
+      <div
+        class="px-4 py-12 flex items-center justify-between text-center bg-white rounded-3xl text-[2.25rem] font-semibold text-gray-500 dark:text-gray-400 dark:bg-gray-700"
+      >
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#chevron-left"></use>
+        </svg>
+
+        <span class="-translate-y-0.5">abc</span>
+
+        <svg
+          aria-hidden="true"
+          class="size-5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#chevron-right"></use>
+        </svg>
+      </div>
+
+      <div
+        class="text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        Color
+      </div>
+
+      <div
+        class="flex px-3 text-gray-500 overflow-hidden dark:text-gray-400 justify-between items-center h-10 bg-gray-50 dark:bg-gray-800 rounded-2xl relative"
+      >
+        <svg
+          aria-hidden="true"
+          class="z-10 size-4.5"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#turtle"></use>
+        </svg>
+
+        <span class="z-10 size-1 rounded-full bg-gray-400 dark:bg-gray-500"
+        ></span>
+        <span class="z-10 size-1 rounded-full bg-gray-400 dark:bg-gray-500"
+        ></span>
+        <span class="z-10 size-1 rounded-full bg-gray-400 dark:bg-gray-500"
+        ></span>
+
+        <svg
+          aria-hidden="true"
+          class="z-10 size-4"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprite.svg#rabbit"></use>
+        </svg>
+
+        <div
+          class="absolute z-0 left-0 top-0 w-[calc(50%+1px)] h-full bg-gray-150 dark:bg-gray-700"
+        >
+        </div>
+      </div>
+
+      <div
+        class="relative text-center font-medium p-1 text-[.8125rem]/6 bg-gray-200 rounded-xl text-gray-500 dark:text-gray-400 dark:bg-gray-800"
+      >
+        <div
+          class="absolute left-2 top-1/2 -translate-y-1/2 flex h-4.5 rounded-full w-8 bg-white dark:bg-gray-600 p-0.75"
+        >
+          <div
+            class="bg-gray-500 dark:bg-gray-400 rounded-full h-full aspect-square"
+          >
+          </div>
+        </div>
+        Camera
+      </div>
+    </div>
   </div>
 </div>
 
