@@ -4,13 +4,13 @@ import { unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-export interface ConvexEnvOpts {
+interface ConvexEnvOpts {
   prod?: boolean;
 }
 
-export const getBunxCommand = () => (process.platform === "win32" ? "bunx.cmd" : "bunx");
+const getBunxCommand = () => (process.platform === "win32" ? "bunx.cmd" : "bunx");
 
-export async function runConvexInherit(args: string[], cwd: string = process.cwd()): Promise<void> {
+async function runConvexInherit(args: string[], cwd: string = process.cwd()): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     const child = spawn(getBunxCommand(), ["convex", ...args], {
       cwd,

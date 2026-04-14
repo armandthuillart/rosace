@@ -24,7 +24,7 @@ type AuthClient = {
   };
 };
 
-export type InitialAuthState = {
+type InitialAuthState = {
   isAuthenticated: boolean;
 };
 
