@@ -4,6 +4,7 @@
   import regular from "@fontsource/inter/files/inter-latin-400-normal.woff2?url";
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
+  import { env } from "$env/dynamic/public";
   import { auth } from "$lib/auth";
   import { syncConvex } from "@repo/crpc/svelte";
   import type { LayoutProps } from "./$types";
@@ -11,6 +12,7 @@
   let { children, data }: LayoutProps = $props();
 
   syncConvex({
+    convexURL: env.PUBLIC_CONVEX_URL,
     client: auth,
     server: () => data.auth,
   });

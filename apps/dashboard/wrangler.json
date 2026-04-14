@@ -1,11 +1,15 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "account_id": "4dde812758b46f7b68ea3279249ea3e6",
   "assets": { "binding": "ASSETS", "directory": "./.cloudflare/public" },
-  "build": { "command": "vp build" },
   "compatibility_date": "2026-03-25",
   "compatibility_flags": ["nodejs_compat"],
-  "observability": { "enabled": true },
+  "vars": {
+    "PUBLIC_CONVEX_URL": "https://knowing-buzzard-594.convex.cloud",
+    "PUBLIC_CONVEX_SITE_URL": "https://knowing-buzzard-594.convex.site",
+    "PUBLIC_DASHBOARD_URL": "https://app.rosace.app",
+    "PUBLIC_MARKETING_URL": "https://rosace.app"
+  },
   "main": "./.cloudflare/worker.js",
-  "name": "rosace-dashboard"
+  "name": "rosace-dashboard",
+  "observability": { "enabled": true }
 }

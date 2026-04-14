@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vp build",
+    "build": "NODE_ENV=production node ../../env.ts && vp build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "deploy": "wrangler deploy",
-    "dev": "vp dev",
+    "deploy": "wrangler deploy --keep-vars",
+    "dev": "NODE_ENV=development node ../../env.ts && vp dev",
     "preview": "vp preview"
   },
   "dependencies": {

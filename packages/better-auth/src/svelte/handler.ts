@@ -1,17 +1,6 @@
 import type { RequestHandler } from "@sveltejs/kit";
 
-declare global {
-  interface ImportMetaEnv {
-    readonly PUBLIC_CONVEX_SITE_URL: string;
-  }
-
-  interface ImportMeta {
-    readonly env: ImportMetaEnv;
-  }
-}
-
-function proxy(req: Request) {
-  const siteURL = import.meta.env.PUBLIC_CONVEX_SITE_URL;
+function proxy(req: Request, siteURL: string) {
   const requestURL = new URL(req.url);
   const nextURL = new URL(`${siteURL}${requestURL.pathname}${requestURL.search}`);
 
@@ -26,9 +15,9 @@ function proxy(req: Request) {
   return response;
 }
 
-function handler() {
+function handler({ siteURL }: { siteURL: string }) {
   const requestHandler: RequestHandler = async ({ request }) => {
-    return proxy(request);
+    return proxy(request, siteURL);
   };
 
   return {

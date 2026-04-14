@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node ../../env.ts && astro build",
+    "build": "NODE_ENV=production node ../../env.ts && astro build",
     "check": "astro check",
-    "deploy": "wrangler deploy",
-    "dev": "astro dev",
+    "deploy": "wrangler deploy --keep-vars",
+    "dev": "NODE_ENV=development node ../../env.ts && astro dev",
     "preview": "astro preview"
   },
   "dependencies": {
