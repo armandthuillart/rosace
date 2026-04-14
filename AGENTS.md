@@ -1,33 +1,3 @@
-# AGENTS.md
-
-- Only create an abstraction if it's actually needed
-- Prefer clear function/variable names over inline comments
-- Avoid helper functions when a simple inline expression would suffice
-- Use `knip` to remove unused code if making large changes
-- The `gh` CLI is installed, use it
-- Don't use emojis
-- Assume good intent
-- Aim for high skimmability
-- Only explain what isn’t trivial
-- Have strong opinions, loosely held
-- Seek the collective truth, not just one opinion
-
-## Tailwind
-
-- Mostly use built-in values, occasionally allow dynamic values, rarely globals
-- Always use v4 + global CSS file format
-
-## TypeScript
-
-- Don't unnecessarily add `try`/`catch`
-- Don't cast to `any`
-
-## Git
-
-- Use the `git-commit` skill to commit
-- Prefer small, focused commits over large ones
-- After commit, run `git pull` to sync local with origin
-
 # Using Vite+, the Unified Toolchain for the Web
 
 This project is using Vite+, a unified toolchain built on top of Vite, Rolldown, Vitest, tsdown, Oxlint, Oxfmt, and Vite Task. Vite+ wraps runtime management, package management, and frontend tooling in a single global CLI called `vp`. Vite+ is distinct from Vite, but it invokes Vite through `vp dev` and `vp build`.
