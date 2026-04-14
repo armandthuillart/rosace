@@ -1,6 +1,16 @@
 import { ConvexClient } from "convex/browser";
 import { setContext } from "svelte";
 
+declare global {
+  interface ImportMetaEnv {
+    readonly PUBLIC_CONVEX_URL: string;
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
+
 type FetchAccessToken = (args: { forceRefreshToken: boolean }) => Promise<string | null>;
 const CONVEX_CONTEXT_KEY = "$$_convexClient";
 
@@ -29,7 +39,6 @@ type InitialAuthState = {
 };
 
 type SyncConvexArgs = {
-  convexURL: string;
   client: AuthClient;
   server: InitialAuthState | undefined | (() => InitialAuthState | undefined);
 };
@@ -80,10 +89,8 @@ const fetchTokenWithRetry = async (client: AuthClient): Promise<string | null> =
   return run();
 };
 
-function syncConvex({ convexURL, client, server }: SyncConvexArgs): void {
-  if (!convexURL) {
-    throw new Error("Missing PUBLIC_CONVEX_URL");
-  }
+function syncConvex({ client, server }: SyncConvexArgs): void {
+  const convexURL = import.meta.env.PUBLIC_CONVEX_URL;
   const convexClient = new ConvexClient(convexURL, { disabled: false });
   setContext(CONVEX_CONTEXT_KEY, convexClient);
 
