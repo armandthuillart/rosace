@@ -2,15 +2,15 @@
 // Do not edit manually. Managed internally by @repo/crpc.
 
 import type { MiddlewareOptions } from "@repo/crpc/auth/http";
-import { betterAuth as middleware } from "@repo/crpc/auth/http";
+import { betterAuth as baseMiddleware } from "@repo/crpc/auth/http";
 
 import { getHandler } from "./auth";
 
-function betterAuth(options: Omit<MiddlewareOptions, "getAuth">) {
-  return middleware({
+function middleware(options: Omit<MiddlewareOptions, "getAuth">) {
+  return baseMiddleware({
     ...options,
     getAuth: getHandler,
   });
 }
 
-export { betterAuth };
+export { middleware };
