@@ -6,6 +6,5 @@
     "strict": true,
     "target": "esnext",
     "types": ["node"]
-  },
-  "include": ["env.ts"]
+  }
 }

@@ -7,12 +7,17 @@
     "packages/*"
   ],
   "type": "module",
+  "scripts": {
+    "prepare": "tsx ./prepare.ts"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
+    "dotenv": "catalog:",
     "knip": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-astro": "catalog:",
     "prettier-plugin-svelte": "catalog:",
+    "tsx": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
@@ -50,6 +55,7 @@
     "svelte-check": "^4.4.6",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
+    "tsx": "^4.20.5",
     "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.16",
     "vite-plus": "^0.1.16",
     "wrangler": "^4.82.2",

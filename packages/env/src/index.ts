@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { dirname, join, parse } from "node:path";
+import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
 import { z } from "zod";
@@ -16,21 +16,8 @@ type Env = z.infer<typeof envSchema>;
 let cachedEnv: Env | undefined;
 
 function resolveEnvPath(filename: string): string {
-  const rootDir = parse(process.cwd()).root;
-  let currentDir = process.cwd();
-
-  while (true) {
-    const candidatePath = join(currentDir, filename);
-    if (existsSync(candidatePath)) {
-      return candidatePath;
-    }
-
-    if (currentDir === rootDir) {
-      return filename;
-    }
-
-    currentDir = dirname(currentDir);
-  }
+  const candidatePath = join(process.cwd(), filename);
+  return existsSync(candidatePath) ? candidatePath : filename;
 }
 
 function getEnv(): Env {
