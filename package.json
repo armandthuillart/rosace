@@ -34,7 +34,7 @@
     "astro": "^6.1.6",
     "jose": "^6.2.2",
     "dexie": "^4.4.2",
-    "better-auth": "^1.6.2",
+    "better-auth": "^1.6.3",
     "convex": "^1.35.1",
     "convex-helpers": "^0.1.114",
     "dotenv": "^17.4.2",
