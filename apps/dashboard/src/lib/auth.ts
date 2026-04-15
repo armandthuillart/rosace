@@ -5,3 +5,5 @@ import { createAuthClient } from "better-auth/svelte";
 export const authClient = createAuthClient({
   plugins: [convexClient(), emailOTPClient()],
 });
+
+export const { signIn, signOut } = authClient;
