@@ -12,7 +12,7 @@ import {
   defineAuth as baseDefineAuth,
   type GenericAuthDefinition,
   type GenericAuthTriggers,
-} from "../../../better-auth/old-src/server";
+} from "../../../../better-auth/old-src/server";
 import { createAdapter as createAuthCrud } from "../../../crpc/src/auth/db/adapter";
 import type {
   MutationCtx as BaseMutationCtx,
@@ -83,8 +83,12 @@ const getConvexPlugin = (ctx: ActionCtx) => {
   };
 };
 
-const authCrud = createAuthCrud<DataModel, SchemaDefinition<GenericSchema, true>, MutationCtx>({
-  getTriggers: (ctx) => authDefinition(ctx).triggers,
+const { findOne, findMany, create, updateOne, updateMany, deleteOne, deleteMany } = createAuthCrud<
+  DataModel,
+  SchemaDefinition<GenericSchema, true>,
+  MutationCtx
+>({
+  getTriggers: (ctx: RuntimeActionCtx<DataModel>) => authDefinition(ctx).triggers,
 });
 
 export function getAuthDefinition(ctx: RuntimeActionCtx<DataModel>) {
@@ -109,7 +113,7 @@ export async function runEndpoint(ctx: RuntimeActionCtx<DataModel>, endpointName
 
   return await endpoint({
     context: {
-      adapter: createAdapter(ctx),
+      adapter: databaseAdapter(ctx),
       baseURL: authOptions.baseURL,
       logger: console,
       options: {
@@ -127,68 +131,99 @@ export async function runEndpoint(ctx: RuntimeActionCtx<DataModel>, endpointName
   });
 }
 
-type FindOneQueryArgs = {
-  model: string;
-  op: "findOne";
-  select?: string[];
-  where?: WhereClause[];
-};
-type FindManyQueryArgs = {
-  limit?: number;
-  model: string;
-  offset?: number;
-  op: "findMany";
-  select?: string[];
-  sortBy?: SortBy;
-  where?: WhereClause[];
-};
-type QueryAdapterArgs = FindOneQueryArgs | FindManyQueryArgs;
-type MutationModelInput = { model: string };
-type CreateMutationArgs = {
-  input: MutationModelInput & { data: unknown };
-  op: "create";
-  select?: string[];
-};
-type UpdateOneMutationArgs = {
-  input: MutationModelInput & { update: unknown; where?: WhereClause[] };
-  op: "updateOne";
-};
-type UpdateManyMutationArgs = {
-  input: MutationModelInput & { update: unknown; where?: WhereClause[] };
-  op: "updateMany";
-};
-type DeleteOneMutationArgs = {
-  input: MutationModelInput & { where?: WhereClause[] };
-  op: "deleteOne";
-};
-type DeleteManyMutationArgs = {
-  input: MutationModelInput & { where?: WhereClause[] };
-  op: "deleteMany";
-};
-type MutationAdapterArgs =
-  | CreateMutationArgs
-  | UpdateOneMutationArgs
-  | UpdateManyMutationArgs
-  | DeleteOneMutationArgs
-  | DeleteManyMutationArgs;
+const getToken = internalAction({
+  args: {},
+  handler: (ctx: RuntimeActionCtx<DataModel>) => runEndpoint(ctx, "getJwks"),
+});
 
-function defineAdapter(ctx: RuntimeActionCtx<DataModel>) {
+const querySchema = v.object({
+  limit: v.optional(v.number()),
+  model: v.string(),
+  offset: v.optional(v.number()),
+  op: v.union(v.literal("findOne"), v.literal("findMany")),
+  select: v.optional(v.array(v.string())),
+  sortBy: v.optional(
+    v.object({ direction: v.union(v.literal("asc"), v.literal("desc")), field: v.string() }),
+  ),
+  where: v.optional(v.array(v.any())),
+});
+
+const mutationSchema = v.object({
+  input: v.any(),
+  op: v.union(
+    v.literal("create"),
+    v.literal("updateOne"),
+    v.literal("updateMany"),
+    v.literal("deleteOne"),
+    v.literal("deleteMany"),
+  ),
+  select: v.optional(v.array(v.string())),
+});
+
+function databaseAdapter(ctx: RuntimeActionCtx<DataModel>) {
   const adapter = createAdapter({
     adapter: () => {
-      function query(args: FindManyQueryArgs): ReturnType<typeof authCrud.findMany>;
-      function query(args: FindOneQueryArgs): ReturnType<typeof authCrud.findOne>;
-      function query(args: QueryAdapterArgs) {
-        return ctx.runQuery(internal.crpc.auth.queryAdapter, args);
-      }
+      const convex = createBuilder<DataModel>();
 
-      function mutate(args: CreateMutationArgs): ReturnType<typeof authCrud.create>;
-      function mutate(args: UpdateOneMutationArgs): ReturnType<typeof authCrud.updateOne>;
-      function mutate(args: UpdateManyMutationArgs): ReturnType<typeof authCrud.updateMany>;
-      function mutate(args: DeleteOneMutationArgs): ReturnType<typeof authCrud.deleteOne>;
-      function mutate(args: DeleteManyMutationArgs): ReturnType<typeof authCrud.deleteMany>;
-      function mutate(args: MutationAdapterArgs) {
-        return ctx.runMutation(internal.crpc.auth.mutationAdapter, args);
-      }
+      const query = convex
+        .query()
+        .input(querySchema)
+        .handler(async (ctx, args) => {
+          switch (args.op) {
+            case "findOne":
+              return await findOne(ctx, {
+                model: args.model,
+                select: args.select,
+                where: args.where,
+              });
+            case "findMany":
+              return await findMany(ctx, {
+                limit: args.limit,
+                model: args.model,
+                offset: args.offset,
+                sortBy: args.sortBy,
+                where: args.where,
+              });
+          }
+        })
+        .internal();
+
+      const mutate = convex
+        .mutation()
+        .input(mutationSchema)
+        .handler(async (ctx, args) => {
+          switch (args.op) {
+            case "create":
+              return await create(ctx, {
+                data: args.input.data,
+                model: args.input.model,
+                select: args.select,
+              });
+            case "updateOne":
+              return await updateOne(ctx, {
+                model: args.input.model,
+                update: args.input.update,
+                where: args.input.where,
+              });
+            case "updateMany":
+              return await updateMany(ctx, {
+                model: args.input.model,
+                update: args.input.update,
+                where: args.input.where,
+              });
+            case "deleteOne":
+              return await deleteOne(ctx, {
+                model: args.input.model,
+                where: args.input.where,
+              });
+            case "deleteMany":
+              return await deleteMany(ctx, {
+                model: args.input.model,
+                where: args.input.where,
+              });
+          }
+        })
+        .internal();
 
       return {
         count: async (input) => {
@@ -200,13 +235,13 @@ function defineAdapter(ctx: RuntimeActionCtx<DataModel>) {
           return items.length;
         },
         create: async ({ select, ...input }) =>
-          mutate({
+          await mutate({
             input,
             op: "create",
             select,
           }),
         delete: async (input) =>
-          mutate({
+          await mutate({
             input,
             op: "deleteOne",
           }),
@@ -229,7 +264,7 @@ function defineAdapter(ctx: RuntimeActionCtx<DataModel>) {
             op: "findMany",
           }),
         update: async (input) =>
-          mutate({
+          await mutate({
             input,
             op: "updateOne",
           }),
@@ -281,97 +316,4 @@ function defineTriggers<Schema extends SchemaDefinition<GenericSchema, true>>(
   return baseDefineTriggers<Schema, DataModel, MutationCtx>(schema, triggers);
 }
 
-export { defineAuth, defineAdapter, defineTriggers };
-
-const convex = createBuilder<DataModel>();
-
-export const queryAdapter = convex
-  .query()
-  .input(
-    v.object({
-      limit: v.optional(v.number()),
-      model: v.string(),
-      offset: v.optional(v.number()),
-      op: v.union(v.literal("findOne"), v.literal("findMany")),
-      select: v.optional(v.array(v.string())),
-      sortBy: v.optional(
-        v.object({
-          direction: v.union(v.literal("asc"), v.literal("desc")),
-          field: v.string(),
-        }),
-      ),
-      where: v.optional(v.array(v.any())),
-    }),
-  )
-  .handler(async (ctx, args) => {
-    if (args.op === "findOne") {
-      return await authCrud.findOne(ctx, {
-        model: args.model,
-        select: args.select,
-        where: args.where,
-      });
-    }
-
-    return await authCrud.findMany(ctx, {
-      limit: args.limit,
-      model: args.model,
-      offset: args.offset,
-      sortBy: args.sortBy,
-      where: args.where,
-    });
-  })
-  .internal();
-
-export const mutationAdapter = convex
-  .mutation()
-  .input(
-    v.object({
-      input: v.any(),
-      op: v.union(
-        v.literal("create"),
-        v.literal("updateOne"),
-        v.literal("updateMany"),
-        v.literal("deleteOne"),
-        v.literal("deleteMany"),
-      ),
-      select: v.optional(v.array(v.string())),
-    }),
-  )
-  .handler(async (ctx, args) => {
-    switch (args.op) {
-      case "create":
-        return await authCrud.create(ctx, {
-          data: args.input.data,
-          model: args.input.model,
-          select: args.select,
-        });
-      case "updateOne":
-        return await authCrud.updateOne(ctx, {
-          model: args.input.model,
-          update: args.input.update,
-          where: args.input.where,
-        });
-      case "updateMany":
-        return await authCrud.updateMany(ctx, {
-          model: args.input.model,
-          update: args.input.update,
-          where: args.input.where,
-        });
-      case "deleteOne":
-        return await authCrud.deleteOne(ctx, {
-          model: args.input.model,
-          where: args.input.where,
-        });
-      case "deleteMany":
-        return await authCrud.deleteMany(ctx, {
-          model: args.input.model,
-          where: args.input.where,
-        });
-    }
-  })
-  .internal();
-
-export const getJwks = internalAction({
-  args: {},
-  handler: (ctx: RuntimeActionCtx<DataModel>) => runEndpoint(ctx, "getJwks"),
-});
+export { getToken, defineAuth, defineTriggers, databaseAdapter };

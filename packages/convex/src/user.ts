@@ -1,4 +1,4 @@
-import { ServerError } from "@repo/crpc/server";
+import { ServerError } from "@repo/crpc";
 import { v } from "convex/values";
 
 import { authQuery } from "./crpc";

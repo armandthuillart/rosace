@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "add-educational-comments": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "65f6defd9f7da4af496d3c706839d2f48da6761b5eb1bb21ffc7f7aa35288670"
+    },
     "better-auth-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",

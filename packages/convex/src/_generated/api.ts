@@ -67,8 +67,8 @@ export const internal: {
           offset?: number;
           op: "findOne" | "findMany";
           select?: Array<string>;
-          sortBy?: any;
-          where?: any;
+          sortBy?: { direction: "asc" | "desc"; field: string };
+          where?: Array<any>;
         },
         any
       >;

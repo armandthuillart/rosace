@@ -7,10 +7,7 @@
   },
   "type": "module",
   "exports": {
-    "./auth/http": "./src/auth/http/polyfills.ts",
-    "./auth/provider": "./src/auth/provider.ts",
-    "./server": "./src/server/index.ts",
-    "./svelte": "./src/svelte/index.ts"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "better-auth": "catalog:",

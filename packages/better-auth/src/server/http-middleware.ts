@@ -1,21 +1,20 @@
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { cors } from "hono/cors";
 
-import { isObject, isNumber, isString, tryCatch } from "../../utils/try-catch";
+import { isObject, isNumber, isString, tryCatch } from "../utils";
 
 export interface MiddlewareOptions {
-  baseURL: string;
   getAuth: (ctx: unknown) => {
     handler: (request: Request) => Promise<Response>;
   };
 }
 
-function betterAuth({ baseURL, getAuth }: MiddlewareOptions): MiddlewareHandler {
+function httpMiddleware({ getAuth }: MiddlewareOptions): MiddlewareHandler {
   const corsHandler = cors({
     allowHeaders: ["Content-Type", "Authorization", "Better-Auth-Cookie"],
     credentials: true,
     exposeHeaders: ["Set-Better-Auth-Cookie"],
-    origin: baseURL,
+    origin: process.env.DASHBOARD_URL!,
   });
 
   return async (c: Context, next: Next) => {
@@ -77,4 +76,4 @@ function normalize(error: unknown): Response {
   return Response.json({ error: message }, { status: 500 });
 }
 
-export { betterAuth };
+export { httpMiddleware };

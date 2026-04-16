@@ -1,4 +1,4 @@
-import { ServerError, createBuilder } from "@repo/crpc/server";
+import { createBuilder, ServerError } from "@repo/crpc";
 import type { Auth } from "convex/server";
 
 import type { DataModel, Id } from "./_generated/dataModel";

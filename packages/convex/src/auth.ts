@@ -1,8 +1,7 @@
-import { convex } from "@repo/better-auth/plugins";
+import { convex } from "@repo/better-auth/plugin";
 import { emailOTP } from "better-auth/plugins";
 
 import { internal } from "./_generated/api";
-import betterAuth from "./auth.config";
 import { DAY } from "./constants";
 import { defineAuth } from "./crpc/auth";
 import { getEnv } from "./env";
@@ -27,11 +26,7 @@ export default defineAuth((ctx) => {
       autoSignInAfterVerification: true,
     },
     plugins: [
-      convex({
-        baseURL: env.DASHBOARD_URL,
-        jwks: env.JWKS,
-        provider: [betterAuth],
-      }),
+      convex(),
       emailOTP({
         overrideDefaultEmailVerification: true,
         async sendVerificationOTP({ email, otp, type }) {

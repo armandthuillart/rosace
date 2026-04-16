@@ -1,11 +1,6 @@
 import type { Jwk } from "better-auth/plugins";
 import type { AuthProvider } from "convex/server";
 
-interface ProviderOptions {
-  baseURL: string;
-  jwks?: string;
-}
-
 const toDataURI = (jwks: Jwk[]) =>
   `data:text/plain;charset=utf-8;base64,${btoa(JSON.stringify(mapJWKS(jwks)))}`;
 
@@ -17,7 +12,10 @@ const mapJWKS = (jwks: Jwk[]) => ({
   })),
 });
 
-function betterAuth({ baseURL, jwks }: ProviderOptions) {
+function betterAuth() {
+  const baseURL = process.env.DASHBOARD_URL!;
+  const jwks = process.env.JWKS!;
+
   let parsed = jwks ? JSON.parse(jwks) : undefined;
 
   if (parsed) {

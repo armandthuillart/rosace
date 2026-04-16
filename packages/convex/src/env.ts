@@ -1,4 +1,4 @@
-import { createEnv } from "@repo/crpc/server";
+import { createEnv } from "@repo/crpc";
 import { z } from "zod";
 
 const envSchema = z.object({

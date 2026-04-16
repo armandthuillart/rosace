@@ -1,9 +1,11 @@
-import { convexClient } from "@repo/better-auth/client/plugins";
+import { convexClient } from "@repo/better-auth/client/plugin";
 import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/svelte";
 
 export const authClient = createAuthClient({
   plugins: [convexClient(), emailOTPClient()],
 });
+
+export type AuthClient = typeof authClient;
 
 export const { signIn, signOut } = authClient;

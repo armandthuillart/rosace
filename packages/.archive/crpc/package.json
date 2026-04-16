@@ -1,28 +1,33 @@
 {
-  "name": "@repo/better-auth",
+  "name": "@repo/crpc",
   "version": "0.0.0",
   "private": true,
+  "bin": {
+    "crpc": "./src/cli/runner.ts"
+  },
   "type": "module",
   "exports": {
-    "./client/plugin": "./src/plugin/client.ts",
-    "./convex": "./src/convex/index.ts",
-    "./http": "./src/server/polyfills.ts",
-    "./plugin": "./src/plugin/index.ts",
+    "./auth/http": "./src/auth/http/polyfills.ts",
+    "./auth/provider": "./src/auth/provider.ts",
     "./server": "./src/server/index.ts",
     "./svelte": "./src/svelte/index.ts"
   },
   "dependencies": {
-    "convex-helpers": "catalog:"
+    "better-auth": "catalog:",
+    "convex-helpers": "catalog:",
+    "dotenv": "catalog:",
+    "hono": "catalog:",
+    "jose": "catalog:"
   },
   "devDependencies": {
-    "@sveltejs/kit": "catalog:",
     "@types/node": "catalog:",
-    "better-auth": "catalog:",
     "convex": "catalog:",
+    "svelte": "catalog:",
     "typescript": "catalog:",
     "zod": "catalog:"
   },
   "peerDependencies": {
+    "@repo/better-auth": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
     "zod": "catalog:"
