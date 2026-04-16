@@ -20,5 +20,5 @@
     "target": "ES2022"
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src/**/*", "vitest.config.ts"]
+  "include": ["old-src/**/*", "vitest.config.ts"]
 }

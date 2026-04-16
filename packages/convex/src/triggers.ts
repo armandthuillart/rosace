@@ -1,4 +1,4 @@
-import { defineTriggers } from "./crpc/auth";
+import { defineTriggers } from "./_crpc";
 import schema from "./schema";
 
 export default defineTriggers(schema, {

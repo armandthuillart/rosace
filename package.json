@@ -36,10 +36,10 @@
     "@types/react": "^19.2.14",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.6",
-    "astro": "^6.1.6",
+    "astro": "^6.1.7",
     "jose": "^6.2.2",
     "dexie": "^4.4.2",
-    "better-auth": "^1.6.3",
+    "better-auth": "^1.6.5",
     "convex": "^1.35.1",
     "convex-helpers": "^0.1.114",
     "dotenv": "^17.4.2",
@@ -58,7 +58,7 @@
     "tsx": "^4.20.5",
     "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.18",
     "vite-plus": "^0.1.18",
-    "wrangler": "^4.82.2",
+    "wrangler": "^4.83.0",
     "zod": "^4.3.6"
   }
 }

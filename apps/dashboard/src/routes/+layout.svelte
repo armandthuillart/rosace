@@ -4,15 +4,15 @@
   import regular from "@fontsource/inter/files/inter-latin-400-normal.woff2?url";
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
-  import { authClient } from "$lib/auth";
-  import { syncConvex } from "@repo/crpc/svelte";
+  import { authClient, type AuthClient } from "$lib/auth";
+  import { syncConvex } from "@repo/better-auth/convex";
   import type { LayoutProps } from "./$types";
 
   let { children, data }: LayoutProps = $props();
 
   syncConvex({
-    client: authClient,
-    server: () => data.auth,
+    authClient: authClient as AuthClient,
+    hasToken: async () => !!data.token,
   });
 </script>
 

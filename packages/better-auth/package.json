@@ -4,10 +4,12 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./plugins": "./src/convex/index.ts",
-    "./client/plugins": "./src/convex/client.ts",
-    "./svelte": "./src/svelte/index.ts",
-    "./server": "./src/server/index.ts"
+    "./client/plugin": "./src/plugin/client.ts",
+    "./convex": "./src/convex/index.ts",
+    "./http": "./src/server/polyfills.ts",
+    "./plugin": "./src/plugin/index.ts",
+    "./server": "./src/server/index.ts",
+    "./svelte": "./src/svelte/index.ts"
   },
   "dependencies": {
     "convex-helpers": "catalog:"

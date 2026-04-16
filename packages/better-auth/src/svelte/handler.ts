@@ -1,30 +1,23 @@
 import { env } from "$env/dynamic/public";
-import type { RequestHandler } from "@sveltejs/kit";
+import { RequestHandler } from "@sveltejs/kit";
 
-function proxy(req: Request, siteURL: string) {
-  const requestURL = new URL(req.url);
-  const nextURL = new URL(`${siteURL}${requestURL.pathname}${requestURL.search}`);
+const CONVEX_SITE_URL = env.PUBLIC_CONVEX_SITE_URL;
 
-  const request = new Request(nextURL, req);
-  request.headers.set("accept-encoding", "application/json");
+async function forward(request: Request) {
+  const source = new URL(request.url);
+  const target = new URL(source.pathname + source.search, CONVEX_SITE_URL);
 
-  const response = fetch(request, {
-    method: req.method,
+  return fetch(target, {
+    method: request.method,
+    headers: request.headers,
+    body: request.body,
     redirect: "manual",
   });
-
-  return response;
 }
 
 function handler() {
-  const requestHandler: RequestHandler = async ({ request }) => {
-    return proxy(request, env.PUBLIC_CONVEX_SITE_URL);
-  };
-
-  return {
-    GET: requestHandler,
-    POST: requestHandler,
-  };
+  const requestHandler: RequestHandler = async ({ request }) => forward(request);
+  return { GET: requestHandler, POST: requestHandler };
 }
 
 export { handler };
