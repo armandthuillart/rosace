@@ -43,8 +43,8 @@ function getAuthDefinition(ctx: ActionCtx<DataModel>) {
 
 type Auth = ReturnType<typeof getAuthDefinition>;
 
-function getAuth(ctx: ActionCtx<DataModel>) {
-  const auth = getAuthDefinition(ctx);
+function getAuth(ctx: unknown) {
+  const auth = getAuthDefinition(ctx as ActionCtx<DataModel>);
   return { handler: auth.handler.bind(auth) };
 }
 

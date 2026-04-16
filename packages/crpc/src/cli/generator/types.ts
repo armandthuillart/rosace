@@ -138,4 +138,11 @@ type GenericAuthDefinition<
   triggers?: GenericAuthTriggers<DataModel, Schema, MutationCtx>;
 };
 
-export { ActionCtx, MutationCtx, QueryCtx, DataModel, GenericAuthDefinition, GenericAuthTriggers };
+export type {
+  ActionCtx,
+  MutationCtx,
+  QueryCtx,
+  DataModel,
+  GenericAuthDefinition,
+  GenericAuthTriggers,
+};

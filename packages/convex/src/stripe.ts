@@ -4,4 +4,4 @@ import { getEnv } from "./env";
 
 const env = getEnv();
 
-const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+const _stripe = new Stripe(env.STRIPE_SECRET_KEY);

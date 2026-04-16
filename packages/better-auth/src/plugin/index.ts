@@ -55,6 +55,7 @@ export const convex = () => {
         jwt.endpoints.getToken({
           ...ctx,
           method: "GET",
+          headers: {},
           returnStatus: false,
           returnHeaders: false,
         }),
