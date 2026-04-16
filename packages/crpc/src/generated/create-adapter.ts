@@ -9,7 +9,8 @@ import { to } from "../require-ctx";
 import { v } from "convex/values";
 import { GenericActionCtx, GenericDataModel } from "convex/server";
 
-type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericActionCtx<DataModel>;
+type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> =
+  GenericActionCtx<DataModel>;
 
 const querySchema = v.object({
   limit: v.optional(v.number()),
@@ -38,7 +39,9 @@ const mutationSchema = v.object({
   select: v.optional(v.array(v.string())),
 });
 
-function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataModel>) {
+function createAdapter<DataModel extends GenericDataModel>(
+  ctx: ActionCtx<DataModel>,
+) {
   const { create, read, update, remove } = createCRUD();
 
   const adapter = createAdapterFactory({
@@ -119,18 +122,26 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
 
           return (items as unknown[]).length;
         },
-        create: async ({ select, ...input }) =>
-          await mutate(to("mutation", ctx), {
+        create: async <T extends Record<string, any>>({
+          select,
+          ...input
+        }: {
+          model: string;
+          data: T;
+          select?: string[];
+        }) =>
+          (await mutate(to("mutation", ctx), {
             input,
             op: "create",
             select,
-          }),
-        delete: async (input) =>
+          })) as unknown as Promise<T>,
+        delete: async (input: any): Promise<void> => {
           await mutate(to("mutation", ctx), {
             input,
             op: "deleteOne",
-          }),
-        deleteMany: async (input) => {
+          });
+        },
+        deleteMany: async (input: any): Promise<number> => {
           const deleted = (await mutate(to("mutation", ctx), {
             input,
             op: "deleteMany",
@@ -156,12 +167,21 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
 
           return result as T[];
         },
-        update: async (input) =>
-          await mutate(to("mutation", ctx), {
+        update: async <T>(input: {
+          model: string;
+          where: any;
+          update: any;
+          select?: string[];
+        }) =>
+          (await mutate(to("mutation", ctx), {
             input,
             op: "updateOne",
-          }),
-        updateMany: async (input) => {
+          })) as unknown as Promise<T | null>,
+        updateMany: async (input: {
+          model: string;
+          where: any;
+          update: any;
+        }) => {
           const updated = (await mutate(to("mutation", ctx), {
             input,
             op: "updateMany",

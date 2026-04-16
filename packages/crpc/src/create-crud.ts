@@ -16,7 +16,6 @@ type Ctx<DataModel extends GenericDataModel = GenericDataModel> =
   | GenericMutationCtx<DataModel>;
 
 type Mode = "one" | "many";
-type Batch = { count: number; ids: string[] };
 type Order = { direction: "asc" | "desc"; field: string };
 type Where = {
   connector?: "AND" | "OR";
