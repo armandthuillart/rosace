@@ -9,10 +9,17 @@ interface ConvexEnvOpts {
 }
 
 const getConvexCommand = () => (process.platform === "win32" ? "vp.cmd" : "vp");
+const normalizeEnvSubcommand = (subcommand: string) =>
+  subcommand === "remove" ? "rm" : subcommand;
 
 async function runConvexInherit(args: string[], cwd: string = process.cwd()): Promise<void> {
+  const normalizedArgs =
+    args[0] === "env" && args[1]
+      ? ["env", normalizeEnvSubcommand(args[1]), ...args.slice(2)]
+      : args;
+
   await new Promise<void>((resolve, reject) => {
-    const child = spawn(getConvexCommand(), ["exec", "convex", ...args], {
+    const child = spawn(getConvexCommand(), ["exec", "convex", ...normalizedArgs], {
       cwd,
       stdio: "inherit",
     });
@@ -24,7 +31,7 @@ async function runConvexInherit(args: string[], cwd: string = process.cwd()): Pr
         resolve();
         return;
       }
-      reject(new Error(`convex ${args.join(" ")} failed with exit code ${code ?? -1}`));
+      reject(new Error(`convex ${normalizedArgs.join(" ")} failed with exit code ${code ?? -1}`));
     });
   });
 }

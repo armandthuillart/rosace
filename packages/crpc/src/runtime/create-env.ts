@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ServerError } from "./server-error";
+import { ServerError } from "./errors";
 
 type EnvKey = string;
 type EnvObject = Record<EnvKey, EnvValue>;

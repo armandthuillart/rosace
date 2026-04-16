@@ -127,7 +127,8 @@ function applyWhere<DataModel extends GenericDataModel>(
     });
 
     return terms.slice(1).reduce((acc, term, index) => {
-      const connector = where[index + 1]?.connector ?? "AND";
+      const termIndex = index + 1;
+      const connector = where[termIndex]?.connector ?? where[termIndex - 1]?.connector ?? "AND";
       return connector === "OR" ? q.or(acc, term) : q.and(acc, term);
     }, terms[0]);
   });

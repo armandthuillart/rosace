@@ -1,12 +1,15 @@
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, watch as fsWatch } from "node:fs";
+import { existsSync, watch as fsWatch } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { templateManifest } from "../../generator/manifest";
+import { renderTemplate } from "../../generator/render";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const TEMPLATES = resolve(__dirname, "generator");
+const TEMPLATES = resolve(__dirname, "../../generator/templates");
 
 const REGEN_DEBOUNCE_MS = 100;
 const CRPC_CODEGEN_ENV = { CRPC_CODEGEN: "1" } as const;
@@ -18,10 +21,6 @@ const GENERATED_STEMS = new Set([
   "server.d.ts",
   "server.js",
 ]);
-
-function readTemplate(name: string): string {
-  return readFileSync(resolve(TEMPLATES, name), "utf-8");
-}
 
 function findWorkspaceRoot(cwd: string): string {
   let currentDir = resolve(cwd);
@@ -76,14 +75,10 @@ async function generateFiles(cwd: string): Promise<void> {
   const legacyOut = resolve(cwd, "src/crpc");
   await mkdir(out, { recursive: true });
 
-  const writes = [
-    ["adapter.ts", readTemplate("adapter.ts")],
-    ["auth.ts", readTemplate("auth.ts")],
-    ["triggers.ts", readTemplate("triggers.ts")],
-    ["http.ts", readTemplate("http.ts")],
-    ["types.ts", readTemplate("types.ts")],
-    ["index.ts", readTemplate("index.ts")],
-  ] as const;
+  const writes = templateManifest.map(
+    ({ outputName, templateName }) =>
+      [outputName, renderTemplate(TEMPLATES, templateName)] as const,
+  );
 
   await Promise.all(writes.map(([name, content]) => writeFile(resolve(out, name), content)));
   await Promise.all(

@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 
-import { syncEnv } from "./sync";
+import { syncEnv } from "./commands/sync";
 
 const HELP = `
 Usage:
@@ -36,10 +36,10 @@ const commandSchema = z.enum(["dev", "deploy", "env", "gen", "help"]).default("h
 
 const subcommandSchema = z.enum(["list", "set", "rm", "remove", "sync"]);
 
-let codegenPromise: Promise<typeof import("./codegen")> | undefined;
+let codegenPromise: Promise<typeof import("./commands/codegen")> | undefined;
 
-function loadCodegen(): Promise<typeof import("./codegen")> {
-  codegenPromise ??= import("./codegen");
+function loadCodegen(): Promise<typeof import("./commands/codegen")> {
+  codegenPromise ??= import("./commands/codegen");
   return codegenPromise;
 }
 
@@ -79,7 +79,8 @@ async function run(args: string[]): Promise<number> {
     }
 
     const { runConvex } = await loadCodegen();
-    await runConvex(["env", subcommand, ...rest]);
+    const normalizedSubcommand = subcommand === "remove" ? "rm" : subcommand;
+    await runConvex(["env", normalizedSubcommand, ...rest]);
     return 0;
   }
 

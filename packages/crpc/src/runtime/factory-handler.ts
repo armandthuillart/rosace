@@ -125,7 +125,8 @@ export class ConvexBuilderWithHandler<
     handler: (context: Context, args: any) => Promise<any>,
     args: any,
   ): Promise<THandlerReturn> {
-    let handlerResult: any;
+    const NO_HANDLER_RESULT = Symbol("no_handler_result");
+    let handlerResult: any = NO_HANDLER_RESULT;
 
     const createNext = (index: number) => {
       return async <U extends Context>(ctx: U): Promise<{ context: U }> => {
@@ -142,7 +143,11 @@ export class ConvexBuilderWithHandler<
 
     await createNext(0)(initialContext);
 
-    return handlerResult;
+    if (handlerResult === NO_HANDLER_RESULT) {
+      throw new Error("Middleware chain completed without calling the handler.");
+    }
+
+    return handlerResult as THandlerReturn;
   }
 
   use<UOutContext extends Context>(
@@ -156,7 +161,7 @@ export class ConvexBuilderWithHandler<
     TReturnsValidator
   > &
     CallableBuilder<TCurrentContext & UOutContext, TArgsValidator, THandlerReturn> {
-    return new ConvexBuilderWithHandler<
+    return ConvexBuilderWithHandler.create<
       THandlerReturn,
       TDataModel,
       TFunctionType,
@@ -166,15 +171,7 @@ export class ConvexBuilderWithHandler<
     >({
       ...this.def,
       middlewares: [...this.def.middlewares, middleware as AnyConvexMiddleware],
-    }) as ConvexBuilderWithHandler<
-      THandlerReturn,
-      TDataModel,
-      TFunctionType,
-      TArgsValidator,
-      TCurrentContext & UOutContext,
-      TReturnsValidator
-    > &
-      CallableBuilder<TCurrentContext & UOutContext, TArgsValidator, THandlerReturn>;
+    });
   }
 
   public(): TFunctionType extends "query"

@@ -40,6 +40,10 @@ function findWorkspaceRoot(cwd: string): string {
   }
 }
 
+function getConvexCwd(cwd = process.cwd()): string {
+  return resolve(findWorkspaceRoot(cwd), "packages", "convex");
+}
+
 function generateSecret(): string {
   return execSync("openssl rand -base64 32", { encoding: "utf8" }).trim();
 }
@@ -108,13 +112,14 @@ async function syncJwks(
 export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {
   const cwd = process.cwd();
   const workspaceRoot = findWorkspaceRoot(cwd);
+  const convexCwd = getConvexCwd(cwd);
   const envPath = join(workspaceRoot, options.prod ? ".env.production" : ".env.development");
 
   if (!existsSync(envPath)) {
     throw new Error(`Missing env file: ${envPath}`);
   }
   const envVars = parse(readFileSync(envPath, "utf8"));
-  const currentEnvVars = await listConvexEnvVars({ prod: options.prod }, cwd);
+  const currentEnvVars = await listConvexEnvVars({ prod: options.prod }, convexCwd);
   const deployEnv = options.prod ? "production" : "development";
   if (!envVars.DEPLOY_ENV) {
     envVars.DEPLOY_ENV = deployEnv;
@@ -136,11 +141,11 @@ export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {
       continue;
     }
 
-    await setConvexEnvVar(name, value, { prod: options.prod }, cwd);
+    await setConvexEnvVar(name, value, { prod: options.prod }, convexCwd);
   }
 
   const secretForJwks =
     envVars.BETTER_AUTH_SECRET != null ? String(envVars.BETTER_AUTH_SECRET) : undefined;
-  await syncJwks(options, secretForJwks, cwd);
+  await syncJwks(options, secretForJwks, convexCwd);
   return envPath;
 }

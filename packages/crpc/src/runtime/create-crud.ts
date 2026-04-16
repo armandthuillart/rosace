@@ -1,5 +1,6 @@
 import { GenericDataModel, GenericMutationCtx, GenericQueryCtx } from "convex/server";
 
+import { selectFields } from "../internal/select-fields";
 import type {
   CreateInput,
   DeleteManyInput,
@@ -10,7 +11,6 @@ import type {
   UpdateOneInput,
 } from "./operations";
 import { Repository } from "./repository";
-import { selectFields } from "./select-fields";
 
 type Row = Record<string, unknown>;
 type Ctx<DataModel extends GenericDataModel = GenericDataModel> =

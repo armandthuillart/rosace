@@ -7,4 +7,4 @@ function authDefinition(_ctx: GenericActionCtx<GenericDataModel>): BetterAuthOpt
   );
 }
 
-export default authDefinition;
+export { authDefinition };
