@@ -1,9 +1,9 @@
 import { convex } from "@repo/better-auth/plugin";
 import { emailOTP } from "better-auth/plugins";
 
+import { defineAuth } from "./_crpc";
 import { internal } from "./_generated/api";
 import { DAY } from "./constants";
-import { defineAuth } from "./crpc/auth";
 import { getEnv } from "./env";
 
 export default defineAuth((ctx) => {

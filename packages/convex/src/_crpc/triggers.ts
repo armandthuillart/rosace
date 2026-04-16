@@ -5,9 +5,9 @@ import { defineTriggers as baseDefineTriggers } from "@repo/better-auth/server";
 import { SchemaDefinition } from "convex/server";
 import { GenericSchema } from "convex/server";
 
-import { GenericAuthTriggers } from "./shared-types";
-import { DataModel } from "./shared-types";
-import { MutationCtx } from "./shared-types";
+import { GenericAuthTriggers } from "./types";
+import { DataModel } from "./types";
+import { MutationCtx } from "./types";
 
 function defineTriggers<Schema extends SchemaDefinition<GenericSchema, true>>(
   schema: Schema,

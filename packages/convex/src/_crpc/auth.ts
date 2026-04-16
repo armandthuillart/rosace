@@ -2,10 +2,12 @@
 // Do not edit manually. Managed internally by @repo/crpc.
 
 import { defineAuth as baseDefineAuth } from "@repo/better-auth/server";
-import { BetterAuthOptions } from "better-auth";
+import { betterAuth, BetterAuthOptions } from "better-auth";
 import type { GenericSchema, SchemaDefinition } from "convex/server";
 
-import type { ActionCtx, DataModel, GenericAuthDefinition, MutationCtx } from "./shared-types";
+import authDefinition from "../auth";
+import { createAdapter } from "./adapter";
+import type { ActionCtx, DataModel, GenericAuthDefinition, MutationCtx } from "./types";
 
 function defineAuth<AuthOptions extends BetterAuthOptions = BetterAuthOptions>(
   definition: GenericAuthDefinition<
@@ -31,4 +33,20 @@ function defineAuth<AuthOptions extends BetterAuthOptions = BetterAuthOptions>(
   >(definition);
 }
 
-export { defineAuth };
+function getAuthDefinition(ctx: ActionCtx<DataModel>) {
+  const authOptions = authDefinition(ctx);
+  return betterAuth({
+    ...authOptions,
+    database: createAdapter(ctx),
+  });
+}
+
+type Auth = ReturnType<typeof getAuthDefinition>;
+
+function getAuth(ctx: ActionCtx<DataModel>) {
+  const auth = getAuthDefinition(ctx);
+  return { handler: auth.handler.bind(auth) };
+}
+
+export { defineAuth, getAuthDefinition, getAuth };
+export type { Auth };

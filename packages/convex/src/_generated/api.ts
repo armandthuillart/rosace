@@ -40,40 +40,6 @@ export const api: {
  * ```
  */
 export const internal: {
-  crpc: {
-    auth: {
-      getJwks: FunctionReference<"action", "internal", {}, any>;
-      mutationAdapter: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          input: any;
-          op:
-            | "create"
-            | "updateOne"
-            | "updateMany"
-            | "deleteOne"
-            | "deleteMany";
-          select?: Array<string>;
-        },
-        any
-      >;
-      queryAdapter: FunctionReference<
-        "query",
-        "internal",
-        {
-          limit?: number;
-          model: string;
-          offset?: number;
-          op: "findOne" | "findMany";
-          select?: Array<string>;
-          sortBy?: { direction: "asc" | "desc"; field: string };
-          where?: Array<any>;
-        },
-        any
-      >;
-    };
-  };
   email: {
     changeEmail: FunctionReference<
       "action",

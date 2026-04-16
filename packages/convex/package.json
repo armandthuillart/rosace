@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/crpc/types.ts",
+    ".": "./src/_crpc/index.ts",
     "./api": {
       "import": "./src/_generated/api.js",
       "types": "./src/_generated/api.d.ts"
