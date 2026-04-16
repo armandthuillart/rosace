@@ -6,8 +6,10 @@ import {
   type MiddlewareOptions,
 } from "@repo/better-auth/http";
 
+import { getAuth } from "./auth";
+
 function httpMiddleware(opts: MiddlewareOptions) {
-  return baseHttpMiddleware(opts);
+  return baseHttpMiddleware({ ...opts, getAuth });
 }
 
 export { httpMiddleware };
