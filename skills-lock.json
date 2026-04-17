@@ -36,6 +36,11 @@
       "sourceType": "github",
       "computedHash": "92a5c170cf238f45f08439d9d5d7947af490b880ee8f15306183240483cbed02"
     },
+    "create-readme": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "d0ece1b2164ce1376e4ab6e98d6ac079df3a2a94f5f02224362b6a1ce2516ae9"
+    },
     "email-and-password-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
@@ -95,6 +100,11 @@
       "source": "resend/react-email",
       "sourceType": "github",
       "computedHash": "1d6aaf3440547d384a21f9a9466d89c8a0357d15e0f9b37d0d3c9452861e7a9b"
+    },
+    "refactor": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "87789a786b96f99ba0680e89345a975106e10e7db1071c7cdc2e76d507c449d6"
     },
     "stripe-best-practices": {
       "source": "stripe/ai",
