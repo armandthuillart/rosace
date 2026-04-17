@@ -54,7 +54,7 @@
     "svelte": "^5.55.4",
     "svelte-check": "^4.4.6",
     "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "tsx": "^4.20.5",
     "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.18",
     "vite-plus": "^0.1.18",
