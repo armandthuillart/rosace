@@ -6,6 +6,8 @@ import { createAdapterFactory } from "better-auth/adapters";
 import type { GenericActionCtx, GenericDataModel } from "convex/server";
 import { v } from "convex/values";
 
+import { internal } from "../_generated/api";
+
 type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericActionCtx<DataModel>;
 
 const whereClauseSchema = v.object({
@@ -129,17 +131,26 @@ function createMutationHandler<DataModel extends GenericDataModel = GenericDataM
   };
 }
 
+const crud = createCrud<any>();
+const convex = createBuilder<any>();
+
+export const crpcQuery = convex
+  .query()
+  .input(querySchema)
+  .handler(createQueryHandler(crud))
+  .internal();
+
+export const crpcMutation = convex
+  .mutation()
+  .input(mutationSchema)
+  .handler(createMutationHandler(crud))
+  .internal();
+
 function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataModel>) {
-  const crud = createCrud<DataModel>();
-  const convex = createBuilder<DataModel>();
-
-  const query = convex.query().input(querySchema).handler(createQueryHandler(crud));
-  const mutate = convex.mutation().input(mutationSchema).handler(createMutationHandler(crud));
-
   const adapter = createAdapterFactory({
     adapter: () => ({
       count: async (input) =>
-        (await query(to("query", ctx), {
+        (await ctx.runQuery(internal._crpc.adapter.crpcQuery, {
           ...input,
           op: "count",
         })) as number,
@@ -151,7 +162,7 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
         data: T;
         select?: string[];
       }) =>
-        (await mutate(to("mutation", ctx), {
+        (await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "insert",
           select,
@@ -164,37 +175,37 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
         data: T;
         select?: string[];
       }) =>
-        (await mutate(to("mutation", ctx), {
+        (await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "insert",
           select,
         })) as T,
       delete: async (input: any): Promise<void> => {
-        await mutate(to("mutation", ctx), {
+        await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "remove",
         });
       },
       remove: async (input: any): Promise<void> => {
-        await mutate(to("mutation", ctx), {
+        await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "remove",
         });
       },
       deleteMany: async (input: any): Promise<number> => {
-        const deleted = (await mutate(to("mutation", ctx), {
+        const deleted = (await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "removeMany",
         })) as { count: number };
         return deleted.count;
       },
       findMany: async <T>(input: any): Promise<T[]> =>
-        (await query(to("query", ctx), {
+        (await ctx.runQuery(internal._crpc.adapter.crpcQuery, {
           ...input,
           op: "findMany",
         })) as T[],
       findOne: async <T>(input: any): Promise<T | null> =>
-        (await query(to("query", ctx), {
+        (await ctx.runQuery(internal._crpc.adapter.crpcQuery, {
           ...input,
           op: "findOne",
         })) as T | null,
@@ -204,12 +215,12 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
         update: any;
         select?: string[];
       }): Promise<T | null> =>
-        (await mutate(to("mutation", ctx), {
+        (await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "updateOne",
         })) as T | null,
       updateMany: async (input: { model: string; where: any; update: any }): Promise<number> => {
-        const updated = (await mutate(to("mutation", ctx), {
+        const updated = (await ctx.runMutation(internal._crpc.adapter.crpcMutation, {
           input,
           op: "updateMany",
         })) as { count: number };

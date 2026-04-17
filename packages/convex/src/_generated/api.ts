@@ -40,6 +40,50 @@ export const api: {
  * ```
  */
 export const internal: {
+  _crpc: {
+    adapter: {
+      crpcMutation: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          input: any;
+          op: "insert" | "updateOne" | "updateMany" | "remove" | "removeMany";
+          select?: Array<string>;
+        },
+        any
+      >;
+      crpcQuery: FunctionReference<
+        "query",
+        "internal",
+        {
+          limit?: number;
+          model: string;
+          offset?: number;
+          op: "findOne" | "findMany" | "count";
+          select?: Array<string>;
+          sortBy?: { direction: "asc" | "desc"; field: string };
+          where?: Array<{
+            connector?: "AND" | "OR";
+            field: string;
+            operator?:
+              | "contains"
+              | "ends_with"
+              | "eq"
+              | "gt"
+              | "gte"
+              | "in"
+              | "lt"
+              | "lte"
+              | "ne"
+              | "not_in"
+              | "starts_with";
+            value: any;
+          }>;
+        },
+        any
+      >;
+    };
+  };
   email: {
     changeEmail: FunctionReference<
       "action",
