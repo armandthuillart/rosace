@@ -33,7 +33,15 @@ describe("handler", () => {
 
     expect(targetUrl.toString()).toBe("https://api.convex.cloud/api/auth/sign-in?foo=bar");
     expect(options.method).toBe("GET");
-    expect(options.headers).toBe(mockRequest.headers);
+    expect(options.headers).toBeInstanceOf(Headers);
+    expect((options.headers as Headers).get("cookie")).toBe("session=123");
+    expect((options.headers as Headers).get("content-type")).toBe("application/json");
+    expect((options.headers as Headers).get("accept-encoding")).toBe("application/json");
+    expect((options.headers as Headers).get("host")).toBe("api.convex.cloud");
+    expect((options.headers as Headers).get("x-forwarded-host")).toBe("localhost");
+    expect((options.headers as Headers).get("x-forwarded-proto")).toBe("http");
+    expect((options.headers as Headers).get("x-better-auth-forwarded-host")).toBe("localhost");
+    expect((options.headers as Headers).get("x-better-auth-forwarded-proto")).toBe("http");
     expect(options.redirect).toBe("manual");
   });
 

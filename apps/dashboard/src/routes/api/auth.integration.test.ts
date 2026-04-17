@@ -1,4 +1,3 @@
-import { handler } from "$lib/auth";
 import { httpMiddleware } from "@repo/better-auth/http";
 import { betterAuth } from "better-auth";
 import { createAdapterFactory } from "better-auth/adapters";
@@ -6,6 +5,7 @@ import { Hono } from "hono";
 import { describe, it, expect, beforeEach, vi, afterEach } from "vite-plus/test";
 
 import authDefinition from "../../../../../packages/convex/src/auth";
+import { handler } from "../../lib/auth";
 
 interface WhereClause {
   field: string;
