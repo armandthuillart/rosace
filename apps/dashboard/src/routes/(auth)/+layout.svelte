@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { signIn } from "$lib/auth";
+  import { signIn } from "$lib/auth-client";
   import { capitalize } from "$lib/utils";
   import type { LayoutProps } from "./$types";
 

@@ -1,11 +1,6 @@
-import { convexClient } from "@repo/better-auth/client/plugin";
-import { emailOTPClient } from "better-auth/client/plugins";
-import { createAuthClient } from "better-auth/svelte";
+import { env } from "$env/dynamic/public";
+import { setupServer } from "@repo/better-auth/svelte";
 
-export const authClient = createAuthClient({
-  plugins: [convexClient(), emailOTPClient()],
+export const { convexQuery, handler } = setupServer({
+  address: env.PUBLIC_CONVEX_SITE_URL!,
 });
-
-export type AuthClient = typeof authClient;
-
-export const { signIn, signOut } = authClient;

@@ -1,5 +1,5 @@
+import { handler } from "$lib/auth";
 import { httpMiddleware } from "@repo/better-auth/http";
-import { handler } from "@repo/better-auth/svelte";
 import { betterAuth } from "better-auth";
 import { createAdapterFactory } from "better-auth/adapters";
 import { Hono } from "hono";

@@ -1,2 +1,2 @@
-export { handler } from "./handler";
+export { setupServer } from "./setup";
 export { getToken } from "./token";

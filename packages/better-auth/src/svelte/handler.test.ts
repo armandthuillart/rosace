@@ -1,7 +1,7 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { describe, it, expect, vi, beforeEach } from "vite-plus/test";
 
-import { handler } from "./handler";
+import { requestHandler } from "./handler";
 
 // Mock the SvelteKit environment
 vi.mock("$env/dynamic/public", () => ({
@@ -18,7 +18,7 @@ describe("handler", () => {
 
   it("Forwards GET requests to the Convex site URL preserving headers.", async () => {
     // 1. Arrange
-    const { GET } = handler();
+    const { GET } = requestHandler("https://api.convex.cloud");
     const mockRequest = new Request("http://localhost/api/auth/sign-in?foo=bar", {
       method: "GET",
       headers: { cookie: "session=123", "content-type": "application/json" },
@@ -39,7 +39,7 @@ describe("handler", () => {
 
   it("Forwards POST requests preserving body and headers.", async () => {
     // 1. Arrange
-    const { POST } = handler();
+    const { POST } = requestHandler("https://api.convex.cloud");
     const mockRequest = new Request("http://localhost/api/auth/sign-in", {
       method: "POST",
       headers: { "content-type": "application/json" },

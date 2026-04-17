@@ -1,4 +1,4 @@
-import { convexQuery } from "@repo/better-auth/convex";
+import { convexQuery } from "$lib/auth";
 import { api } from "@repo/convex/api";
 
 import type { LayoutServerLoad } from "./$types";

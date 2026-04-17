@@ -1,3 +1,3 @@
-import { handler } from "@repo/better-auth/svelte";
+import { handler } from "$lib/auth";
 
 export const { GET, POST } = handler();
