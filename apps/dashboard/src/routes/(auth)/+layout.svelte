@@ -8,9 +8,9 @@
   let providers = ["google", "apple"] as const;
 </script>
 
-<div class="p-4 flex h-screen">
+<div class="flex h-screen p-4">
   <div class="m-auto max-w-xs space-y-5">
-    <h1 class="text-3xl text-center font-medium">Login or sign up</h1>
+    <h1 class="text-center text-3xl font-medium">Login or sign up</h1>
 
     <p class="mb-4 text-center">
       You’ll get smarter responses and can upload files, images, and more.
@@ -18,7 +18,7 @@
 
     {#each providers as provider}
       <button
-        class="mb-3 w-full inline-flex gap-2 items-center justify-center h-13 rounded-full font-medium border border-border hover:bg-muted"
+        class="border-border hover:bg-muted mb-3 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full border font-medium"
         onclick={() => signIn.social({ provider })}
       >
         <svg class={["size-5", provider === "apple" && "fill-foreground"]}>

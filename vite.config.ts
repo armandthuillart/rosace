@@ -2,9 +2,8 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   fmt: {
-    ignorePatterns: ["**/_generated/**"],
+    ignorePatterns: ["**/_*/**"],
     sortImports: true,
-    sortTailwindcss: true,
     sortPackageJson: { sortScripts: true },
   },
   lint: {
@@ -15,8 +14,5 @@ export default defineConfig({
   },
   staged: {
     "*": "vp check --fix",
-  },
-  test: {
-    include: ["apps/*/src/**/*.test.ts", "packages/*/src/**/*.test.ts"],
   },
 });
