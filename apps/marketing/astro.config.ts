@@ -1,6 +1,5 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import { getEnv } from "@repo/env";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
@@ -45,9 +44,9 @@ export default defineConfig({
     },
   ],
   integrations: [mdx(), sitemap()],
-  site: getEnv().MARKETING_URL,
+  site: "https://rosace.app",
   vite: {
-    // @ts-ignore
+    // @ts-ignore - aren't updated yet
     plugins: [tailwindcss()],
   },
 });

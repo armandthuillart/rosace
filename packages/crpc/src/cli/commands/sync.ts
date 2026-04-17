@@ -4,7 +4,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
 import { symmetricEncrypt } from "better-auth/crypto";
-import { parse } from "dotenv";
 import { exportJWK, generateKeyPair } from "jose";
 
 import {
@@ -13,6 +12,18 @@ import {
   setConvexEnvVar,
   setConvexEnvVarFromFile,
 } from "./convex-env";
+
+function parseEnv(content: string): Record<string, string> {
+  const env: Record<string, string> = {};
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const idx = trimmed.indexOf("=");
+    if (idx === -1) continue;
+    env[trimmed.slice(0, idx)] = trimmed.slice(idx + 1);
+  }
+  return env;
+}
 
 interface SyncEnvOptions {
   auth?: boolean;
@@ -65,7 +76,9 @@ function ensureAuthEnvVars(envVars: Record<string, string>, options: SyncEnvOpti
 }
 
 async function buildStaticJwksJson(secret: string): Promise<string> {
-  const { publicKey, privateKey } = await generateKeyPair("RS256", { extractable: true });
+  const { publicKey, privateKey } = await generateKeyPair("RS256", {
+    extractable: true,
+  });
   const publicWebKey = await exportJWK(publicKey);
   const privateWebKey = await exportJWK(privateKey);
   const stringifiedPrivate = JSON.stringify(privateWebKey);
@@ -118,7 +131,7 @@ export async function syncEnv(options: SyncEnvOptions = {}): Promise<string> {
   if (!existsSync(envPath)) {
     throw new Error(`Missing env file: ${envPath}`);
   }
-  const envVars = parse(readFileSync(envPath, "utf8"));
+  const envVars = parseEnv(readFileSync(envPath, "utf8"));
   const currentEnvVars = await listConvexEnvVars({ prod: options.prod }, convexCwd);
   const deployEnv = options.prod ? "production" : "development";
   if (!envVars.DEPLOY_ENV) {

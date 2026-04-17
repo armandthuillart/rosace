@@ -1,8 +1,20 @@
 #!/usr/bin/env bun
 
-import { z } from "zod";
-
 import { syncEnv } from "./commands/sync";
+
+const COMMANDS = new Set(["dev", "deploy", "env", "gen", "help"]);
+const SUBCOMMANDS = new Set(["list", "set", "rm", "remove", "sync"]);
+
+type Command = "dev" | "deploy" | "env" | "gen" | "help";
+type Subcommand = "list" | "set" | "rm" | "remove" | "sync";
+
+function parseCommand(input: string | undefined): Command {
+  return input && COMMANDS.has(input) ? (input as Command) : "help";
+}
+
+function parseSubcommand(input: string | undefined): Subcommand | null {
+  return input && SUBCOMMANDS.has(input) ? (input as Subcommand) : null;
+}
 
 const HELP = `
 Usage:
@@ -32,10 +44,6 @@ Usage:
 
 `;
 
-const commandSchema = z.enum(["dev", "deploy", "env", "gen", "help"]).default("help");
-
-const subcommandSchema = z.enum(["list", "set", "rm", "remove", "sync"]);
-
 let codegenPromise: Promise<typeof import("./commands/codegen")> | undefined;
 
 function loadCodegen(): Promise<typeof import("./commands/codegen")> {
@@ -46,7 +54,7 @@ function loadCodegen(): Promise<typeof import("./commands/codegen")> {
 async function run(args: string[]): Promise<number> {
   const [first, second, ...rest] = args;
 
-  const command = commandSchema.parse(first);
+  const command = parseCommand(first);
 
   if (command === "gen") {
     const { build } = await loadCodegen();
@@ -61,9 +69,9 @@ async function run(args: string[]): Promise<number> {
   }
 
   if (command === "env") {
-    const { data: subcommand, error } = subcommandSchema.safeParse(second);
+    const subcommand = parseSubcommand(second);
 
-    if (error) {
+    if (!subcommand) {
       console.info(HELP);
       return 1;
     }

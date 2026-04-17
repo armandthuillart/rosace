@@ -83,8 +83,6 @@ const operations = {
   updateOne: "mutation",
 } as const;
 
-type OperationName = keyof typeof operations;
-
 export {
   operations,
   type CountInput,
@@ -93,7 +91,6 @@ export {
   type DeleteOneInput,
   type FindManyInput,
   type FindOneInput,
-  type OperationName,
   type Operator,
   type Sort,
   type UpdateManyInput,

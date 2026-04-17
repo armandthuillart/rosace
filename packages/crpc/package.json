@@ -1,7 +1,5 @@
 {
   "name": "@repo/crpc",
-  "version": "0.0.0",
-  "private": true,
   "bin": {
     "crpc": "./src/cli/runner.ts"
   },
@@ -12,21 +10,18 @@
   "dependencies": {
     "better-auth": "catalog:",
     "convex-helpers": "catalog:",
-    "dotenv": "catalog:",
     "hono": "catalog:",
-    "jose": "catalog:"
+    "jose": "catalog:",
+    "valibot": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "convex": "catalog:",
-    "svelte": "catalog:",
-    "typescript": "catalog:",
-    "zod": "catalog:"
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "@repo/better-auth": "workspace:*",
     "better-auth": "catalog:",
-    "convex": "catalog:",
-    "zod": "catalog:"
+    "convex": "catalog:"
   }
 }

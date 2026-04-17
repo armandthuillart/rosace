@@ -1,7 +1,5 @@
 {
   "name": "@repo/better-auth",
-  "version": "0.0.0",
-  "private": true,
   "type": "module",
   "exports": {
     "./client/plugin": "./src/plugin/client.ts",
@@ -19,12 +17,13 @@
     "@types/node": "catalog:",
     "better-auth": "catalog:",
     "convex": "catalog:",
-    "typescript": "catalog:",
-    "zod": "catalog:"
+    "hono": "catalog:",
+    "svelte": "catalog:",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "better-auth": "catalog:",
     "convex": "catalog:",
-    "zod": "catalog:"
+    "svelte": "catalog:"
   }
 }

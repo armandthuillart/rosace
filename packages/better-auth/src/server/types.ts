@@ -53,14 +53,14 @@ type AuthTriggerChange<
   | { id: TId; newDoc: TDoc; oldDoc: TDoc; operation: "update" }
   | { id: TId; newDoc: null; oldDoc: TDoc; operation: "delete" };
 
-export type AuthBeforeResult<TData extends Record<string, unknown>> =
+type AuthBeforeResult<TData extends Record<string, unknown>> =
   | void
   | false
   | {
       data: Partial<TData>;
     };
 
-export interface AuthTriggerHandlers<
+interface AuthTriggerHandlers<
   DataModel extends GenericDataModel,
   TableName extends string,
   MutationCtx,
@@ -107,13 +107,4 @@ type AuthCtx<DataModel extends GenericDataModel = GenericDataModel> =
 
 type BetterAuthOptionsWithoutDatabase = Omit<BetterAuthOptions, "database">;
 
-export {
-  AuthSchema,
-  AuthCtx,
-  BetterAuthOptionsWithoutDatabase,
-  AuthTriggerDoc,
-  AuthTriggerInsertData,
-  AuthTriggerUpdateData,
-  AuthTriggerChange,
-  AuthTriggers,
-};
+export type { AuthCtx, AuthSchema, AuthTriggers, BetterAuthOptionsWithoutDatabase };

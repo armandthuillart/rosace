@@ -10,4 +10,4 @@ export const authClient = createAuthClient({
 
 export type AuthClient = typeof authClient;
 
-export const { signIn, signOut } = authClient;
+export const { signIn } = authClient;

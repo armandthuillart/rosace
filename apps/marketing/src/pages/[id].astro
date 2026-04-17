@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
-import BaseLayout from "@layouts/base-layout.astro";
+import BaseLayout from "@components/base-layout.astro";
 
 export async function getStaticPaths() {
   return await getCollection("policies").then((entries) =>

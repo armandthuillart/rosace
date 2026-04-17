@@ -1,7 +1,5 @@
 {
   "name": "marketing",
-  "version": "0.0.0",
-  "private": true,
   "type": "module",
   "scripts": {
     "build": "astro build",
@@ -11,7 +9,6 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@repo/env": "workspace:*",
     "astro": "catalog:",
     "gsap": "catalog:"
   },
@@ -22,7 +19,6 @@
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "tailwindcss": "catalog:",
-    "vite": "catalog:",
     "wrangler": "catalog:"
   }
 }

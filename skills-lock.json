@@ -121,6 +121,11 @@
       "sourceType": "github",
       "computedHash": "bec11e369679027edf9d4acbe6d9788f8da33dc14b48b874f231d3ba13705324"
     },
+    "valibot": {
+      "source": "open-circle/agent-skills",
+      "sourceType": "github",
+      "computedHash": "6798b923c1bbe9b07cb8c40470ada09c377d666045caefda90d95577e16e8744"
+    },
     "web-perf": {
       "source": "cloudflare/skills",
       "sourceType": "github",

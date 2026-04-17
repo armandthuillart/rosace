@@ -1,45 +1,65 @@
-import { z } from "zod";
+import * as v from "valibot";
 
 import { ServerError } from "./errors";
 
 type EnvKey = string;
 type EnvObject = Record<EnvKey, EnvValue>;
 type EnvValue = string | undefined;
-type EnvSchema = z.ZodObject<z.ZodRawShape>;
 
 type GlobalThis = Record<string, unknown> & { __CRPC_CODEGEN__?: boolean };
 
-interface CreateEnvOptions<TSchema extends EnvSchema> {
-  envSchema: TSchema;
+interface OptionalSchemaDef {
+  type: "optional";
+  wrapped: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
+  default: v.Default<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, undefined>;
 }
 
-function getFakeEnv(schema: EnvSchema): Record<string, unknown> {
+interface PicklistSchemaDef {
+  type: "picklist";
+  options: v.PicklistOptions;
+}
+
+interface SchemaWithEntries {
+  entries: Record<string, v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>;
+}
+
+function getFakeEnv(schema: SchemaWithEntries): Record<string, unknown> {
+  const entries = schema.entries;
+
   return Object.fromEntries(
-    Object.entries(schema.shape).map(([envKey, zodType]) => {
-      const parsed = (zodType as z.ZodType).safeParse(undefined);
+    Object.entries(entries).map(([envKey, fieldSchema]) => {
+      const def = (fieldSchema as unknown as { _def: { type: string } })._def;
 
-      if (parsed.success) {
-        const isString = typeof parsed.data === "string";
-        const envValue = isString ? parsed.data : undefined;
-        return [envKey, envValue];
+      if (def.type === "optional") {
+        const optDef = def as OptionalSchemaDef;
+        if (optDef.default !== undefined) {
+          const fallback = v.getDefaults(optDef.wrapped);
+          return [envKey, typeof fallback === "string" ? fallback : ""];
+        }
+        return [envKey, ""];
       }
 
-      const isEnum =
-        zodType instanceof z.ZodEnum &&
-        Array.isArray(zodType.options) &&
-        zodType.options.length > 0;
-
-      if (isEnum) {
-        return [envKey, zodType.options[0]];
+      if (def.type === "picklist") {
+        const pickDef = def as PicklistSchemaDef;
+        return [envKey, pickDef.options[0]];
       }
 
-      return [envKey, ""];
+      try {
+        const parsed = v.parse(fieldSchema, undefined);
+        return [envKey, typeof parsed === "string" ? parsed : ""];
+      } catch {
+        return [envKey, ""];
+      }
     }),
   );
 }
 
-export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOptions<TSchema>) {
-  type Env = z.infer<TSchema>;
+type InferEnvOutput<S extends SchemaWithEntries> = {
+  [K in keyof S["entries"]]: v.InferOutput<S["entries"][K]>;
+};
+
+export function createEnv<const TSchema extends SchemaWithEntries>(opts: { envSchema: TSchema }) {
+  type Env = InferEnvOutput<TSchema>;
 
   let cachedEnv: Env | undefined;
 
@@ -64,20 +84,25 @@ export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOpt
       return _globalThis.__CRPC_CODEGEN__ === true;
     }
 
+    const envSchema = opts.envSchema;
+    const entries = envSchema.entries;
     const envFromRuntime = Object.fromEntries(
-      Object.keys(envSchema.shape).map((key) => [key, getEnv(key)]),
+      Object.keys(entries).map((key) => [key, getEnv(key)]),
     );
 
     const envForParse = hasSentinel(_globalThis)
       ? { ...getFakeEnv(envSchema), ...envFromRuntime }
       : envFromRuntime;
 
-    const parsedEnv = envSchema.safeParse(envForParse);
+    const result = v.safeParse(
+      envSchema as unknown as v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+      envForParse,
+    );
 
-    if (!parsedEnv.success) {
-      const missingOrInvalid = parsedEnv.error.issues
+    if (result.issues) {
+      const missingOrInvalid = result.issues
         .map((issue) => {
-          const key = issue.path.join(".") || "env";
+          const key = issue.path?.map((p: v.IssuePathItem) => p.key).join(".") || "env";
           return `  - ${key}: ${issue.message}`;
         })
         .join("\n");
@@ -88,7 +113,7 @@ export function createEnv<TSchema extends EnvSchema>({ envSchema }: CreateEnvOpt
       });
     }
 
-    cachedEnv = parsedEnv.data;
+    cachedEnv = result.output as unknown as Env;
     return cachedEnv;
   };
 }

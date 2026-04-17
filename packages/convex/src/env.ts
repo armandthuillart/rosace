@@ -1,18 +1,18 @@
 import { createEnv } from "@repo/crpc";
-import { z } from "zod";
+import * as v from "valibot";
 
-const envSchema = z.object({
-  APPLE_CLIENT_ID: z.string(),
-  APPLE_CLIENT_SECRET: z.string(),
-  DASHBOARD_URL: z.string(),
-  DEPLOY_ENV: z.enum(["development", "production"]),
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
-  JWKS: z.string(),
-  MARKETING_URL: z.string(),
-  RESEND_API_KEY: z.string(),
-  STRIPE_SECRET_KEY: z.string(),
-  STRIPE_WEBHOOK_SECRET: z.string(),
+const envSchema = v.object({
+  APPLE_CLIENT_ID: v.string(),
+  APPLE_CLIENT_SECRET: v.string(),
+  DASHBOARD_URL: v.string(),
+  DEPLOY_ENV: v.union([v.literal("development"), v.literal("production")]),
+  GOOGLE_CLIENT_ID: v.string(),
+  GOOGLE_CLIENT_SECRET: v.string(),
+  JWKS: v.string(),
+  MARKETING_URL: v.string(),
+  RESEND_API_KEY: v.string(),
+  STRIPE_SECRET_KEY: v.string(),
+  STRIPE_WEBHOOK_SECRET: v.string(),
 });
 
 export const getEnv = createEnv({

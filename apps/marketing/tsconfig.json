@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
     "paths": {
-      "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
-      "@layouts/*": ["./src/layouts/*"],
+      "@assets/*": ["./src/assets/*"],
       "@public/*": ["./public/*"],
       "@styles/*": ["./src/styles/*"]
-    },
-    "verbatimModuleSyntax": true
+    }
   },
   "exclude": ["dist", "node_modules", "public"],
   "extends": "astro/tsconfigs/strict",
