@@ -4,27 +4,27 @@ import cursor from "@assets/images/cursor.svg?url";
 
 <div
   aria-hidden="true"
-  class="h-146 w-full flex items-center justify-center relative @container"
+  class="@container relative flex h-146 w-full items-center justify-center"
   id="root"
 >
   <img
     alt="Cursor"
-    class="absolute top-0 left-0 size-12 z-50 opacity-0"
+    class="absolute top-0 left-0 z-50 size-12 opacity-0"
     id="cursor"
     src={cursor}
   />
 
-  <div class="absolute w-full bottom-0 flex flex-col gap-2">
+  <div class="absolute bottom-0 flex w-full flex-col gap-2">
     <div
-      class="z-40 flex flex-col text-[.8125rem]/8 origin-bottom w-full max-w-md invisible mx-auto h-52 bg-white rounded-[.875rem] shadow-timeline dark:bg-gray-800"
+      class="shadow-timeline invisible z-40 mx-auto flex h-52 w-full max-w-md origin-bottom flex-col rounded-[.875rem] bg-white text-[.8125rem]/8 dark:bg-gray-800"
       id="popover-popup"
     >
       <div
-        class="bg-gray-100 m-2 text-gray-500 rounded-md grid grid-cols-[2rem_1fr] dark:bg-gray-700 dark:text-gray-400"
+        class="m-2 grid grid-cols-[2rem_1fr] rounded-md bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
       >
         <svg
           aria-hidden="true"
-          class="size-4 m-2"
+          class="m-2 size-4"
           fill="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -34,19 +34,19 @@ import cursor from "@assets/images/cursor.svg?url";
         Search...
       </div>
 
-      <div class="px-2 pt-1 flex-1 flex flex-col gap-3">
+      <div class="flex flex-1 flex-col gap-3 px-2 pt-1">
         <div class="flex flex-col gap-1">
           <div class="ml-1 text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
             Suggestions
           </div>
 
           <div
-            class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1"
+            class="inline-flex gap-1 rounded-md p-1 text-[.8125rem]/6"
             id="action"
           >
             <svg
               aria-hidden="true"
-              class="size-4 m-1"
+              class="m-1 size-4"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -56,10 +56,10 @@ import cursor from "@assets/images/cursor.svg?url";
             Repeat forever
           </div>
 
-          <div class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1">
+          <div class="inline-flex gap-1 rounded-md p-1 text-[.8125rem]/6">
             <svg
               aria-hidden="true"
-              class="size-4 m-1"
+              class="m-1 size-4"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -75,10 +75,10 @@ import cursor from "@assets/images/cursor.svg?url";
             Suggestions
           </div>
 
-          <div class="rounded-md p-1 text-[.8125rem]/6 inline-flex gap-1">
+          <div class="inline-flex gap-1 rounded-md p-1 text-[.8125rem]/6">
             <svg
               aria-hidden="true"
-              class="size-4 m-1"
+              class="m-1 size-4"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -92,10 +92,10 @@ import cursor from "@assets/images/cursor.svg?url";
     </div>
 
     <div
-      class="z-10 mx-auto p-2 inline-flex gap-2 rounded-xl bg-white dark:bg-gray-800 shadow-timeline"
+      class="shadow-timeline z-10 mx-auto inline-flex gap-2 rounded-xl bg-white p-2 dark:bg-gray-800"
     >
       <div
-        class="bg-blue-400 dark:bg-blue-500 text-white size-8 shrink-0 rounded-sm flex items-center justify-center"
+        class="flex size-8 shrink-0 items-center justify-center rounded-sm bg-blue-400 text-white dark:bg-blue-500"
       >
         <svg
           aria-hidden="true"
@@ -108,7 +108,7 @@ import cursor from "@assets/images/cursor.svg?url";
         </svg>
       </div>
 
-      <div class="size-8 shrink-0 rounded-md flex items-center justify-center">
+      <div class="flex size-8 shrink-0 items-center justify-center rounded-md">
         <svg
           aria-hidden="true"
           class="size-5"
@@ -123,7 +123,7 @@ import cursor from "@assets/images/cursor.svg?url";
       <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
 
       <div
-        class="size-8 shrink-0 rounded-md flex items-center justify-center transition-colors"
+        class="flex size-8 shrink-0 items-center justify-center rounded-md transition-colors"
         id="popover-trigger"
       >
         <svg
@@ -140,10 +140,10 @@ import cursor from "@assets/images/cursor.svg?url";
       <div class="-my-2 w-px bg-gray-200 dark:bg-gray-600"></div>
 
       <div
-        class="h-8 overflow-hidden p-0.5 gap-0.5 inline-flex rounded-md bg-gray-100 dark:bg-gray-600"
+        class="inline-flex h-8 gap-0.5 overflow-hidden rounded-md bg-gray-100 p-0.5 dark:bg-gray-600"
       >
         <div
-          class="size-7 flex items-center justify-center rounded-sm text-gray-500 dark:text-gray-400"
+          class="flex size-7 items-center justify-center rounded-sm text-gray-500 dark:text-gray-400"
         >
           <svg
             aria-hidden="true"
@@ -157,7 +157,7 @@ import cursor from "@assets/images/cursor.svg?url";
         </div>
 
         <div
-          class="shadow-panel size-7 flex items-center justify-center rounded-sm bg-white dark:bg-gray-800 text-blue-400 dark:text-blue-500"
+          class="shadow-panel flex size-7 items-center justify-center rounded-sm bg-white text-blue-400 dark:bg-gray-800 dark:text-blue-500"
         >
           <svg
             aria-hidden="true"
@@ -174,7 +174,7 @@ import cursor from "@assets/images/cursor.svg?url";
   </div>
 
   <div
-    class="flex flex-col items-center justify-center font-medium -tracking-[.03em] mb-12 text-[clamp(4rem,15cqw+1.5rem,12.5rem)]/none"
+    class="mb-12 flex flex-col items-center justify-center text-[clamp(4rem,15cqw+1.5rem,12.5rem)]/none font-medium -tracking-[.03em]"
   >
     <div class="inline-flex">
       <div class="perspective-[46.875rem]">
@@ -185,34 +185,34 @@ import cursor from "@assets/images/cursor.svg?url";
 
       <div class="relative">
         <div
-          class="absolute left-[clamp(.3125rem,.711974cqw+.145631rem,1rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)] outline-0 outline-blue-400 dark:outline-blue-500"
+          class="absolute top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)] left-[clamp(.3125rem,.711974cqw+.145631rem,1rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] outline-0 outline-blue-400 dark:outline-blue-500"
           id="target"
         >
           <div
-            class="z-10 invisible absolute -top-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            class="bg-gray-150 invisible absolute -top-1 -left-1.25 z-10 size-2 outline-2 outline-blue-400 dark:bg-gray-900 dark:outline-blue-500"
             data-handle
           >
           </div>
 
           <div
-            class="z-10 invisible absolute -top-1 -right-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            class="bg-gray-150 invisible absolute -top-1 -right-1.25 z-10 size-2 outline-2 outline-blue-400 dark:bg-gray-900 dark:outline-blue-500"
             data-handle
           >
           </div>
 
           <div
-            class="z-10 invisible absolute -bottom-1 -left-1.25 size-2 bg-gray-150 dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            class="bg-gray-150 invisible absolute -bottom-1 -left-1.25 z-10 size-2 outline-2 outline-blue-400 dark:bg-gray-900 dark:outline-blue-500"
             data-handle
           >
           </div>
 
           <div
-            class="z-10 invisible absolute -bottom-1 -right-1.25 size-2 bg-white dark:bg-gray-900 outline-2 outline-blue-400 dark:outline-blue-500"
+            class="invisible absolute -right-1.25 -bottom-1 z-10 size-2 bg-white outline-2 outline-blue-400 dark:bg-gray-900 dark:outline-blue-500"
             data-handle
           >
           </div>
 
-          <div class="absolute size-full invisible" id="n1-windmill">
+          <div class="invisible absolute size-full" id="n1-windmill">
             <svg
               aria-hidden="true"
               class="size-full text-red-400 dark:text-red-500"
@@ -228,7 +228,7 @@ import cursor from "@assets/images/cursor.svg?url";
         </div>
 
         <div
-          class="absolute invisible left-[clamp(.3125rem,.323625cqw+.23665rem,.625rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)]"
+          class="invisible absolute top-[clamp(-5.75rem,-4.78964cqw-.00242718rem,-1.125rem)] left-[clamp(.3125rem,.323625cqw+.23665rem,.625rem)] h-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)] w-[clamp(1.9375rem,6.86084cqw+.32949rem,8.5625rem)]"
           id="n1-circles-wrap"
         >
           <svg
@@ -251,7 +251,7 @@ import cursor from "@assets/images/cursor.svg?url";
             <div class="backface-hidden" id="n1-char-n">n</div>
 
             <div
-              class="absolute bottom-0 left-0 invisible flex backface-hidden"
+              class="invisible absolute bottom-0 left-0 flex backface-hidden"
               id="n1-char-a"
             >
               a
@@ -270,7 +270,7 @@ import cursor from "@assets/images/cursor.svg?url";
 
       <div class="relative overflow-hidden" id="a2-wrap">
         <div
-          class="absolute invisible bottom-[clamp(.5625rem,.970874cqw+.334951rem,1.5rem)] left-[clamp(.25rem,.582524cqw+.113471rem,.8125rem)] h-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)] w-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)]"
+          class="invisible absolute bottom-[clamp(.5625rem,.970874cqw+.334951rem,1.5rem)] left-[clamp(.25rem,.582524cqw+.113471rem,.8125rem)] h-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)] w-[clamp(2.5rem,7.11974cqw+.831311rem,9.375rem)]"
           id="a2-star-wrap"
         >
           <svg
@@ -294,11 +294,11 @@ import cursor from "@assets/images/cursor.svg?url";
       </div>
 
       <div>
-        <div class="relative overflow-hidden w-5/1">
+        <div class="relative w-5/1 overflow-hidden">
           <div class="backface-hidden" id="t-char">t</div>
 
           <div
-            class="absolute bottom-0 left-0 invisible flex backface-hidden"
+            class="invisible absolute bottom-0 left-0 flex backface-hidden"
             id="t-binaries-wrap"
           >
             <div data-binary>1</div>
@@ -330,7 +330,7 @@ import cursor from "@assets/images/cursor.svg?url";
 
       <div class="relative">
         <div
-          class="absolute invisible left-0 top-[clamp(.0625rem,.323625cqw-.0133495rem,.375rem)] h-[clamp(4.375rem,12.2977cqw+1.49272rem,16.25rem)] w-[clamp(2.1875rem,6.14887cqw+.746359rem,8.125rem)]"
+          class="invisible absolute top-[clamp(.0625rem,.323625cqw-.0133495rem,.375rem)] left-0 h-[clamp(4.375rem,12.2977cqw+1.49272rem,16.25rem)] w-[clamp(2.1875rem,6.14887cqw+.746359rem,8.125rem)]"
           id="t2-bolt-wrap"
         >
           <svg

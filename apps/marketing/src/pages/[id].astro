@@ -32,7 +32,7 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
     >
       <div class="flex flex-col items-center gap-6">
         <h1
-          class="max-w-5xl text-balance text-5xl -tracking-[.04em] md:text-[4rem]/none"
+          class="max-w-5xl text-5xl -tracking-[.04em] text-balance md:text-[4rem]/none"
         >
           {post.data.title}
         </h1>
@@ -43,7 +43,7 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
       </div>
 
       <div
-        class="mx-auto max-w-2xl text-sm/7 *:not-last:mb-4 [&>h2]:first:mt-8 [&>h2]:text-base/8 [&>h2]:font-medium [&>ul]:list-[square] [&>ul]:pl-6 [&>ul]:[&>li]:pl-2 [&>ul]:[&>li]:marker:text-black/50 dark:[&>ul]:[&>li]:marker:text-white/70 [&_a]:underline [&_a]:underline-offset-4 [&_a]:font-medium [&_thead]:border-b [&_thead]:border-[#D9D9D9] dark:[&_thead]:border-[#383838] [&_th]:pb-2 [&_th]:pr-3 [&_th]:text-start [&_th]:font-medium [&_]th]:align-bottom [&_th]:whitespace-nowrap [&_th]:leading-5 [&_tr]:not-last:border-b [&_tr]:border-[#E6E6E6] dark:[&_tr]:border-[#2C2C2C] [&_td]:py-2 [&_td]:pr-3 [&_td]:leading-5"
+        class="[&_]th]:align-bottom mx-auto max-w-2xl text-sm/7 *:not-last:mb-4 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_td]:py-2 [&_td]:pr-3 [&_td]:leading-5 [&_th]:pr-3 [&_th]:pb-2 [&_th]:text-start [&_th]:leading-5 [&_th]:font-medium [&_th]:whitespace-nowrap [&_thead]:border-b [&_thead]:border-[#D9D9D9] dark:[&_thead]:border-[#383838] [&_tr]:border-[#E6E6E6] [&_tr]:not-last:border-b dark:[&_tr]:border-[#2C2C2C] [&>h2]:text-base/8 [&>h2]:font-medium [&>h2]:first:mt-8 [&>ul]:list-[square] [&>ul]:pl-6 [&>ul]:[&>li]:pl-2 [&>ul]:[&>li]:marker:text-black/50 dark:[&>ul]:[&>li]:marker:text-white/70"
       >
         <Content />
       </div>

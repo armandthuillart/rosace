@@ -17,6 +17,7 @@
     "prettier": "catalog:",
     "prettier-plugin-astro": "catalog:",
     "prettier-plugin-svelte": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
     "tsx": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:"
@@ -49,6 +50,7 @@
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "react": "^19.2.5",
     "stripe": "^22.0.2",
     "svelte": "^5.55.4",

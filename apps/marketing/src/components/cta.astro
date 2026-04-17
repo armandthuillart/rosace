@@ -3,27 +3,27 @@ import { DASHBOARD_URL } from "astro:env/client";
 ---
 
 <section class="px-5">
-  <div class="max-w-4xl flex flex-col gap-6 items-center mt-5 mx-auto">
+  <div class="mx-auto mt-5 flex max-w-4xl flex-col items-center gap-6">
     <h2
-      class="-z-2 text-center -tracking-[.025em] text-[3.25rem]/[1.15] text-balance min-[26.25rem]:text-7xl/[1.1] min-[26.25rem]:-tracking-[.03em]"
+      class="-z-2 text-center text-[3.25rem]/[1.15] -tracking-[.025em] text-balance min-[26.25rem]:text-7xl/[1.1] min-[26.25rem]:-tracking-[.03em]"
     >
       Blow them away
     </h2>
 
     <a
       href={DASHBOARD_URL}
-      class="relative font-medium h-11 pr-[calc(--spacing(4)-1px)] pl-[calc(--spacing(5)-1px)] inline-flex gap-2 items-center justify-center rounded-full text-center bg-gray-800 text-gray-50 dark:bg-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 focus-visible:outline-2 before:absolute before:-inset-6"
+      class="relative inline-flex h-11 items-center justify-center gap-2 rounded-full bg-gray-800 pr-[calc(--spacing(4)-1px)] pl-[calc(--spacing(5)-1px)] text-center font-medium text-gray-50 before:absolute before:-inset-6 hover:bg-gray-600 focus-visible:outline-2 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300"
       data-button="arrow-down"
     >
       <span class="sr-only">Sign up for free</span>
 
       <div
-        class="left-4/10 pointer-events-none top-1/2 origin-top-left translate-y-2.5 absolute"
+        class="pointer-events-none absolute top-1/2 left-4/10 origin-top-left translate-y-2.5"
         data-icon="lockup"
       >
         <svg
           aria-hidden="true"
-          class="-translate-1/2 size-6 fill-teal-400 dark:fill-teal-500"
+          class="size-6 -translate-1/2 fill-teal-400 dark:fill-teal-500"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -32,12 +32,12 @@ import { DASHBOARD_URL } from "astro:env/client";
       </div>
 
       <div
-        class="left-4/10 pointer-events-none top-1/2 origin-top-left translate-y-2.5 absolute"
+        class="pointer-events-none absolute top-1/2 left-4/10 origin-top-left translate-y-2.5"
         data-icon="lockup"
       >
         <svg
           aria-hidden="true"
-          class="-translate-1/2 size-15 fill-blue-400 dark:fill-blue-500"
+          class="size-15 -translate-1/2 fill-blue-400 dark:fill-blue-500"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -46,12 +46,12 @@ import { DASHBOARD_URL } from "astro:env/client";
       </div>
 
       <div
-        class="left-4/10 pointer-events-none top-1/2 origin-top-left translate-y-2.5 absolute"
+        class="pointer-events-none absolute top-1/2 left-4/10 origin-top-left translate-y-2.5"
         data-icon="lockup"
       >
         <svg
           aria-hidden="true"
-          class="-translate-1/2 size-4.75 fill-violet-400 dark:fill-violet-500"
+          class="size-4.75 -translate-1/2 fill-violet-400 dark:fill-violet-500"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -60,12 +60,12 @@ import { DASHBOARD_URL } from "astro:env/client";
       </div>
 
       <div
-        class="left-4/10 pointer-events-none top-1/2 origin-top-left translate-y-2.5 absolute"
+        class="pointer-events-none absolute top-1/2 left-4/10 origin-top-left translate-y-2.5"
         data-icon="lockup"
       >
         <svg
           aria-hidden="true"
-          class="-translate-1/2 size-4.5 fill-red-400 dark:fill-red-500"
+          class="size-4.5 -translate-1/2 fill-red-400 dark:fill-red-500"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -81,11 +81,11 @@ import { DASHBOARD_URL } from "astro:env/client";
       </div>
 
       <div
-        class="text-gray-800 bg-gray-50 dark:bg-gray-950 dark:text-gray-200 rounded-full size-5 relative flex items-center justify-center overflow-hidden"
+        class="relative flex size-5 items-center justify-center overflow-hidden rounded-full bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-200"
       >
         <svg
           aria-hidden="true"
-          class="size-4 absolute inset-0 m-auto"
+          class="absolute inset-0 m-auto size-4"
           data-icon="arrow-down"
           fill="currentColor"
           viewBox="0 0 24 24"
@@ -96,7 +96,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 
         <svg
           aria-hidden="true"
-          class="size-4 absolute inset-0 m-auto"
+          class="absolute inset-0 m-auto size-4"
           data-icon="arrow-down"
           fill="currentColor"
           viewBox="0 0 24 24"

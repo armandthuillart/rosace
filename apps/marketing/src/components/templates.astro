@@ -4,36 +4,36 @@ import cursor from "@assets/images/cursor.svg?url";
 
 <div
   aria-hidden="true"
-  class="h-146 relative @container flex items-center justify-center"
+  class="@container relative flex h-146 items-center justify-center"
   id="container"
 >
   <img
     alt="Cursor"
-    class="absolute top-0 left-0 size-12 z-50 invisible"
+    class="invisible absolute top-0 left-0 z-50 size-12"
     id="cursor"
     src={cursor}
   />
 
   <div
-    class="invisible h-1/2 w-3/4 rounded-[1.125rem] bg-white dark:bg-gray-800 border-dashed border-2 border-gray-200 dark:border-gray-600"
+    class="invisible h-1/2 w-3/4 rounded-[1.125rem] border-2 border-dashed border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800"
     id="empty"
   >
     <div
-      class="flex size-full flex-col gap-6 items-center justify-center"
+      class="flex size-full flex-col items-center justify-center gap-6"
       id="prompt"
     >
-      <div class="shrink-0 relative size-32 rounded-b-full overflow-hidden">
+      <div class="relative size-32 shrink-0 overflow-hidden rounded-b-full">
         <div
-          class="absolute bottom-0 inset-0 rounded-full bg-gray-150 dark:bg-gray-900"
+          class="bg-gray-150 absolute inset-0 bottom-0 rounded-full dark:bg-gray-900"
         >
         </div>
 
         <div
-          class="flex items-center justify-center absolute bottom-0 w-20 left-1/2 -translate-x-1/2 h-24 bg-white dark:bg-gray-700 rounded-t-[.625rem] shadow-4xl"
+          class="shadow-4xl absolute bottom-0 left-1/2 flex h-24 w-20 -translate-x-1/2 items-center justify-center rounded-t-[.625rem] bg-white dark:bg-gray-700"
           id="icon"
         >
           <div
-            class="size-9 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-gray-400 dark:text-gray-500"
+            class="flex size-9 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-600 dark:text-gray-500"
           >
             <svg
               aria-hidden="true"
@@ -49,14 +49,14 @@ import cursor from "@assets/images/cursor.svg?url";
       </div>
 
       <div
-        class="max-w-60 gap-4 w-full flex flex-col md:grid md:grid-cols-2 md:max-w-md"
+        class="flex w-full max-w-60 flex-col gap-4 md:grid md:max-w-md md:grid-cols-2"
         id="triggers"
       >
         <div
-          class="rounded-md h-14 px-4 inline-flex items-center gap-3 border border-dashed border-gray-200 dark:border-gray-600"
+          class="inline-flex h-14 items-center gap-3 rounded-md border border-dashed border-gray-200 px-4 dark:border-gray-600"
         >
           <div
-            class="size-6 bg-gray-150 dark:bg-gray-600 rounded-full text-gray-500 dark:text-gray-400 flex items-center justify-center"
+            class="bg-gray-150 flex size-6 items-center justify-center rounded-full text-gray-500 dark:bg-gray-600 dark:text-gray-400"
           >
             <svg
               aria-hidden="true"
@@ -70,7 +70,7 @@ import cursor from "@assets/images/cursor.svg?url";
           </div>
 
           <div class="flex flex-col">
-            <div class="font-medium text-[.6875rem]/4">Start from scratch</div>
+            <div class="text-[.6875rem]/4 font-medium">Start from scratch</div>
             <div class="text-[.6875rem]/4 text-gray-500 dark:text-gray-400">
               Blank project
             </div>
@@ -78,10 +78,10 @@ import cursor from "@assets/images/cursor.svg?url";
         </div>
 
         <div
-          class="rounded-md h-14 px-4 inline-flex items-center gap-3 border border-dashed border-gray-200 dark:border-gray-600 transition-colors text-gray-500 dark:text-gray-400"
+          class="inline-flex h-14 items-center gap-3 rounded-md border border-dashed border-gray-200 px-4 text-gray-500 transition-colors dark:border-gray-600 dark:text-gray-400"
           id="trigger"
         >
-          <div class="size-6 flex items-center justify-center">
+          <div class="flex size-6 items-center justify-center">
             <svg
               aria-hidden="true"
               class="size-5"
@@ -95,7 +95,7 @@ import cursor from "@assets/images/cursor.svg?url";
 
           <div class="flex flex-col">
             <div
-              class="font-medium text-[.6875rem]/4 text-gray-800 dark:text-gray-200"
+              class="text-[.6875rem]/4 font-medium text-gray-800 dark:text-gray-200"
             >
               Start with a template
             </div>
@@ -109,18 +109,18 @@ import cursor from "@assets/images/cursor.svg?url";
     </div>
 
     <div
-      class="invisible flex flex-col size-full absolute inset-0"
+      class="invisible absolute inset-0 flex size-full flex-col"
       id="templates"
     >
       <div
-        class="border-b h-14 p-4 inline-flex items-center border-gray-200 dark:border-gray-600"
+        class="inline-flex h-14 items-center border-b border-gray-200 p-4 dark:border-gray-600"
       >
         <div
-          class="h-8 rounded-md items-center grid grid-cols-[2rem_1fr] w-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-[.6875rem]/4"
+          class="grid h-8 w-full grid-cols-[2rem_1fr] items-center rounded-md bg-gray-100 text-[.6875rem]/4 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
         >
           <svg
             aria-hidden="true"
-            class="size-4 m-2"
+            class="m-2 size-4"
             fill="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -132,17 +132,17 @@ import cursor from "@assets/images/cursor.svg?url";
         </div>
       </div>
 
-      <div class="p-4 pb-0 flex-1 gap-4">
-        <div class="overflow-y-auto flex flex-col size-full">
+      <div class="flex-1 gap-4 p-4 pb-0">
+        <div class="flex size-full flex-col overflow-y-auto">
           <div class="flex flex-col gap-4">
             <div class="text-[.8125rem]/4 font-semibold">Code</div>
 
             <div
-              class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+              class="xs:grid-cols-2 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4"
             >
               <div class="flex flex-col gap-2">
                 <div
-                  class="aspect-video border rounded-md border-gray-200 dark:border-gray-600"
+                  class="aspect-video rounded-md border border-gray-200 dark:border-gray-600"
                 >
                 </div>
 
