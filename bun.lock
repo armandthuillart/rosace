@@ -63,11 +63,13 @@
         "better-auth": "catalog:",
         "convex": "catalog:",
         "hono": "catalog:",
+        "svelte": "catalog:",
         "typescript": "catalog:",
       },
       "peerDependencies": {
         "better-auth": "catalog:",
         "convex": "catalog:",
+        "svelte": "catalog:",
       },
     },
     "packages/convex": {
@@ -79,6 +81,8 @@
         "@react-email/render": "catalog:",
         "@repo/better-auth": "workspace:*",
         "@repo/crpc": "workspace:*",
+        "better-auth": "catalog:",
+        "convex": "catalog:",
         "convex-helpers": "catalog:",
         "hono": "catalog:",
         "react": "catalog:",
@@ -88,13 +92,7 @@
       "devDependencies": {
         "@types/node": "catalog:",
         "@types/react": "catalog:",
-        "better-auth": "catalog:",
-        "convex": "catalog:",
         "typescript": "catalog:",
-      },
-      "peerDependencies": {
-        "better-auth": "catalog:",
-        "convex": "catalog:",
       },
     },
     "packages/crpc": {
@@ -115,8 +113,6 @@
         "typescript": "catalog:",
       },
       "peerDependencies": {
-        "@repo/better-auth": "workspace:*",
-        "better-auth": "catalog:",
         "convex": "catalog:",
       },
     },

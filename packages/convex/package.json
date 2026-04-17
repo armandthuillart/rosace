@@ -5,10 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/_crpc/index.ts",
-    "./api": {
-      "import": "./src/_generated/api.js",
-      "types": "./src/_generated/api.d.ts"
-    }
+    "./api": "./src/_generated/api.ts"
   },
   "dependencies": {
     "@convex-dev/resend": "catalog:",
@@ -16,6 +13,8 @@
     "@react-email/render": "catalog:",
     "@repo/better-auth": "workspace:*",
     "@repo/crpc": "workspace:*",
+    "better-auth": "catalog:",
+    "convex": "catalog:",
     "convex-helpers": "catalog:",
     "hono": "catalog:",
     "react": "catalog:",
@@ -25,12 +24,6 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "better-auth": "catalog:",
-    "convex": "catalog:",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "better-auth": "catalog:",
-    "convex": "catalog:"
   }
 }

@@ -9,7 +9,7 @@ const knipConfig: KnipConfig = {
       entry: ["src/**/*.test.ts"],
     },
     "packages/better-auth": {
-      entry: ["vite.config.ts", "src/**/*.test.ts"],
+      entry: ["src/**/*.test.ts"],
     },
     "packages/convex": {
       entry: ["src/**"],
@@ -18,8 +18,6 @@ const knipConfig: KnipConfig = {
       ignore: ["src/**/*.template.ts"],
     },
   },
-  ignore: ["packages/convex/src/_generated/**"],
-  ignoreDependencies: ["tailwindcss"],
   ignoreUnresolved: ["\\$env/dynamic/public"],
 };
 
