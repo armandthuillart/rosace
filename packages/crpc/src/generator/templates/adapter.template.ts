@@ -47,11 +47,11 @@ const querySchema = v.object({
 const mutationSchema = v.object({
   input: v.any(),
   op: v.union(
-    v.literal("create"),
+    v.literal("insert"),
     v.literal("updateOne"),
     v.literal("updateMany"),
-    v.literal("deleteOne"),
-    v.literal("deleteMany"),
+    v.literal("remove"),
+    v.literal("removeMany"),
   ),
   select: v.optional(v.array(v.string())),
 });
@@ -90,7 +90,7 @@ function createMutationHandler<DataModel extends GenericDataModel = GenericDataM
   crud: ReturnType<typeof createCrud<DataModel>>,
 ) {
   return async (ctx: any, args: any) => {
-    if (args.op === "create") {
+    if (args.op === "insert") {
       return crud.create(ctx, {
         data: args.input.data,
         select: args.select,
@@ -115,7 +115,7 @@ function createMutationHandler<DataModel extends GenericDataModel = GenericDataM
       });
     }
 
-    if (args.op === "deleteOne") {
+    if (args.op === "remove") {
       return crud.deleteOne(ctx, {
         table: args.input.model,
         where: args.input.where,
@@ -153,19 +153,38 @@ function createAdapter<DataModel extends GenericDataModel>(ctx: ActionCtx<DataMo
       }) =>
         (await mutate(to("mutation", ctx), {
           input,
-          op: "create",
+          op: "insert",
+          select,
+        })) as T,
+      insert: async <T extends Record<string, any>>({
+        select,
+        ...input
+      }: {
+        model: string;
+        data: T;
+        select?: string[];
+      }) =>
+        (await mutate(to("mutation", ctx), {
+          input,
+          op: "insert",
           select,
         })) as T,
       delete: async (input: any): Promise<void> => {
         await mutate(to("mutation", ctx), {
           input,
-          op: "deleteOne",
+          op: "remove",
+        });
+      },
+      remove: async (input: any): Promise<void> => {
+        await mutate(to("mutation", ctx), {
+          input,
+          op: "remove",
         });
       },
       deleteMany: async (input: any): Promise<number> => {
         const deleted = (await mutate(to("mutation", ctx), {
           input,
-          op: "deleteMany",
+          op: "removeMany",
         })) as { count: number };
         return deleted.count;
       },

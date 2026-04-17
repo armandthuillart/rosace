@@ -12,6 +12,8 @@ async function forward(request: Request) {
     headers: request.headers,
     body: request.body,
     redirect: "manual",
+    // @ts-ignore - weird?
+    duplex: "half",
   });
 }
 
