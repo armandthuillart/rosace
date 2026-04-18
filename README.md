@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="./.github/image.png" alt="Rosace" width="128" />
-
 # Rosace
 
 [![Astro](https://img.shields.io/badge/Astro-^6.1-FF5D01?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
