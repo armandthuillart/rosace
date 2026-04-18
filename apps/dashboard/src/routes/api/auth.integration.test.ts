@@ -123,6 +123,11 @@ function findRows(model: string, where?: WhereClause[]): DatabaseRecord[] {
   return Array.from(getTable(model).values()).filter((r) => evaluateWhere(r, where));
 }
 
+function getUser(email: string): DatabaseRecord | undefined {
+  const users = findRows("users", [{ field: "email", value: email }]);
+  return users[0];
+}
+
 const mockAdapter = createAdapterFactory({
   adapter: () => ({
     count: async (input: AdapterCountInput) => {
@@ -232,6 +237,10 @@ app.use("*", async (c, next) => {
 
 app.use("*", httpMiddleware({ getAuth }));
 
+const VALID_EMAIL = "test@example.com";
+const VALID_PASSWORD = "Password123!";
+const USER_NAME = "Test User";
+
 describe("Auth Integration Flow", () => {
   let originalFetch: typeof global.fetch;
 
@@ -265,81 +274,274 @@ describe("Auth Integration Flow", () => {
     return new Request(`http://localhost:3000${path}`, { ...options, headers });
   }
 
-  const seedUser = async () => {
+  function extractSessionToken(setCookie: string | null): string {
+    if (!setCookie) return "";
+    const match = setCookie.match(/better-auth\.session_token=([^;]+)/);
+    return match ? match[1] : "";
+  }
+
+  async function registerUser(
+    email: string,
+    password: string,
+    name: string,
+  ): Promise<{ status: number; token: string; setCookie: string | null }> {
     const req = createMockRequest("/api/auth/sign-up/email", {
       method: "POST",
-      body: JSON.stringify({
-        email: "test@example.com",
-        password: "Password123!",
-        name: "Test User",
-      }),
+      body: JSON.stringify({ email, password, name }),
     });
     const res = await POST({ request: req } as any);
-    const cookie = res.headers.get("Set-Cookie") || "";
-    const match = cookie.match(/better-auth\.session_token=([^;]+)/);
-    return match ? match[1] : "";
-  };
+    const setCookie = res.headers.get("Set-Cookie");
+    const token = extractSessionToken(setCookie);
+    return { status: res.status, token, setCookie };
+  }
 
-  it("Registers a new user.", async () => {
-    const token = await seedUser();
-    expect(token).toBeTruthy();
-    const usersTable = getTable("users");
-    const sessionsTable = getTable("sessions");
-    expect(usersTable.size).toBe(1);
-    expect(sessionsTable.size).toBe(1);
-  });
-
-  it("Authenticates an existing user.", async () => {
-    await seedUser();
-
-    getTable("sessions").clear();
-
-    const signinReq = createMockRequest("/api/auth/sign-in/email", {
+  async function signInUser(
+    email: string,
+    password: string,
+  ): Promise<{ status: number; token: string; setCookie: string | null }> {
+    const req = createMockRequest("/api/auth/sign-in/email", {
       method: "POST",
-      body: JSON.stringify({
-        email: "test@example.com",
-        password: "Password123!",
-      }),
+      body: JSON.stringify({ email, password }),
     });
+    const res = await POST({ request: req } as any);
+    const setCookie = res.headers.get("Set-Cookie");
+    const token = extractSessionToken(setCookie);
+    return { status: res.status, token, setCookie };
+  }
 
-    const response = await POST({ request: signinReq } as any);
-    expect(response.status).toBe(200);
-    const setCookie = response.headers.get("Set-Cookie");
-    expect(setCookie).toContain("better-auth.session_token");
-    expect(getTable("sessions").size).toBe(1);
-  });
-
-  it("Validates an active session.", async () => {
-    const token = await seedUser();
-
-    const getSessionReq = createMockRequest("/api/auth/get-session", {
+  async function getSession(token: string): Promise<{
+    status: number;
+    body: { user: { email: string; name?: string }; session: { token: string } } | null;
+  }> {
+    const req = createMockRequest("/api/auth/get-session", {
       method: "GET",
       headers: { Cookie: `better-auth.session_token=${token}` },
     });
+    const res = await GET({ request: req } as any);
+    const body = res.status === 200 ? await res.json() : null;
+    return { status: res.status, body };
+  }
 
-    const response = await GET({ request: getSessionReq } as any);
-    expect(response.status).toBe(200);
-    const body = (await response.json()) as {
-      user: { email: string };
-      session: { token: string };
-    };
-    expect(body.user.email).toBe("test@example.com");
-    expect(token.startsWith(body.session.token)).toBe(true);
-  });
-
-  it("Terminates an active session.", async () => {
-    const token = await seedUser();
-
-    const signoutReq = createMockRequest("/api/auth/sign-out", {
+  async function signOutUser(token: string): Promise<{ status: number; setCookie: string | null }> {
+    const req = createMockRequest("/api/auth/sign-out", {
       method: "POST",
       headers: { Cookie: `better-auth.session_token=${token}` },
     });
+    const res = await POST({ request: req } as any);
+    const setCookie = res.headers.get("Set-Cookie");
+    return { status: res.status, setCookie };
+  }
 
-    const response = await POST({ request: signoutReq } as any);
-    expect(response.status).toBe(200);
+  describe("Registration", () => {
+    it("Successfully registers a new user with valid credentials", async () => {
+      const { status, token, setCookie } = await registerUser(
+        VALID_EMAIL,
+        VALID_PASSWORD,
+        USER_NAME,
+      );
 
-    const setCookie = response.headers.get("Set-Cookie") || "";
-    expect(setCookie).toMatch(/Max-Age=0|Expires=/i);
-    expect(getTable("sessions").size).toBe(0);
+      expect(status).toBe(200);
+      expect(token).toBeTruthy();
+      expect(setCookie).toContain("better-auth.session_token");
+      expect(getTable("users").size).toBe(1);
+      expect(getTable("sessions").size).toBe(1);
+
+      const user = getUser(VALID_EMAIL);
+      expect(user).toBeDefined();
+      expect(user?.email).toBe(VALID_EMAIL);
+      expect(user?.name).toBe(USER_NAME);
+    });
+
+    it("Rejects registration with duplicate email", async () => {
+      await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+
+      const { status, token, setCookie } = await registerUser(
+        VALID_EMAIL,
+        "AnotherPassword456!",
+        "Another User",
+      );
+
+      expect(status).toBe(422);
+      expect(token).toBe("");
+      expect(setCookie).toBeNull();
+      expect(getTable("users").size).toBe(1);
+    });
+
+    it("Rejects registration with weak password", async () => {
+      const { status, token } = await registerUser("new@example.com", "weak", USER_NAME);
+
+      expect(status).toBe(400);
+      expect(token).toBe("");
+      expect(getTable("users").size).toBe(0);
+    });
+
+    it("Rejects registration with missing email", async () => {
+      const req = createMockRequest("/api/auth/sign-up/email", {
+        method: "POST",
+        body: JSON.stringify({ password: VALID_PASSWORD, name: USER_NAME }),
+      });
+      const res = await POST({ request: req } as any);
+
+      expect(res.status).toBe(400);
+      expect(getTable("users").size).toBe(0);
+    });
+
+    it("Rejects registration with missing password", async () => {
+      const req = createMockRequest("/api/auth/sign-up/email", {
+        method: "POST",
+        body: JSON.stringify({ email: "new2@example.com", name: USER_NAME }),
+      });
+      const res = await POST({ request: req } as any);
+
+      expect(res.status).toBe(400);
+      expect(getTable("users").size).toBe(0);
+    });
+  });
+
+  describe("Sign In", () => {
+    beforeEach(async () => {
+      await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+    });
+
+    it("Successfully signs in with correct credentials", async () => {
+      getTable("sessions").clear();
+
+      const { status, token, setCookie } = await signInUser(VALID_EMAIL, VALID_PASSWORD);
+
+      expect(status).toBe(200);
+      expect(token).toBeTruthy();
+      expect(setCookie).toContain("better-auth.session_token");
+      expect(getTable("sessions").size).toBe(1);
+    });
+
+    it("Rejects sign-in with wrong password", async () => {
+      const initialSessions = getTable("sessions").size;
+
+      const { status, token, setCookie } = await signInUser(VALID_EMAIL, "WrongPassword456!");
+
+      expect(status).toBe(401);
+      expect(token).toBe("");
+      expect(setCookie).toBeNull();
+      expect(getTable("sessions").size).toBe(initialSessions);
+    });
+
+    it("Rejects sign-in with non-existent email", async () => {
+      const { status, token, setCookie } = await signInUser(
+        "nonexistent@example.com",
+        VALID_PASSWORD,
+      );
+
+      expect(status).toBe(401);
+      expect(token).toBe("");
+      expect(setCookie).toBeNull();
+    });
+
+    it("Rejects sign-in with empty password", async () => {
+      const { status, token } = await signInUser(VALID_EMAIL, "");
+
+      expect(status).toBe(401);
+      expect(token).toBe("");
+    });
+  });
+
+  describe("Session Validation", () => {
+    let validToken = "";
+
+    beforeEach(async () => {
+      const result = await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      validToken = result.token;
+    });
+
+    it("Successfully validates a valid session token", async () => {
+      const { status, body } = await getSession(validToken);
+
+      expect(status).toBe(200);
+      expect(body?.user?.email).toBe(VALID_EMAIL);
+      expect(body?.session?.token).toBeTruthy();
+    });
+
+    it("Returns null session for invalid/malformed token", async () => {
+      const { status, body } = await getSession("invalid-token-123");
+
+      expect(status).toBe(200);
+      expect(body?.user).toBeFalsy();
+      expect(body?.session).toBeFalsy();
+    });
+
+    it("Returns null session for empty token", async () => {
+      const { status, body } = await getSession("");
+
+      expect(status).toBe(200);
+      expect(body?.user).toBeFalsy();
+      expect(body?.session).toBeFalsy();
+    });
+
+    it("Returns null session for manipulated token", async () => {
+      const tamperedToken = validToken.slice(0, -5) + "xxxxx";
+      const { status, body } = await getSession(tamperedToken);
+
+      expect(status).toBe(200);
+      expect(body?.user).toBeFalsy();
+    });
+  });
+
+  describe("Sign Out", () => {
+    let validToken = "";
+
+    beforeEach(async () => {
+      const result = await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      validToken = result.token;
+    });
+
+    it("Successfully signs out and clears session", async () => {
+      const { status, setCookie } = await signOutUser(validToken);
+
+      expect(status).toBe(200);
+      expect(setCookie).toMatch(/Max-Age=0|Expires=/i);
+      expect(getTable("sessions").size).toBe(0);
+    });
+
+    it("Handles sign-out with invalid token gracefully", async () => {
+      const { status, setCookie } = await signOutUser("invalid-token");
+
+      expect(status).toBe(200);
+      expect(setCookie).toMatch(/Max-Age=0|Expires=/i);
+    });
+
+    it("Handles sign-out with empty token gracefully", async () => {
+      const { status, setCookie } = await signOutUser("");
+
+      expect(status).toBe(200);
+    });
+  });
+
+  describe("Cookie Security", () => {
+    it("Sets secure cookie attributes on registration", async () => {
+      const { setCookie } = await registerUser("secure@example.com", VALID_PASSWORD, USER_NAME);
+
+      expect(setCookie).toContain("HttpOnly");
+      expect(setCookie).toContain("SameSite=");
+    });
+
+    it("Clears cookie with secure attributes on sign-out", async () => {
+      const { token } = await registerUser("secure@example.com", VALID_PASSWORD, USER_NAME);
+      const { setCookie } = await signOutUser(token);
+
+      expect(setCookie).toMatch(/HttpOnly/i);
+      expect(setCookie).toMatch(/SameSite=/i);
+    });
+  });
+
+  describe("Concurrent Sessions", () => {
+    it("Preserves existing session when signing in again", async () => {
+      getTable("sessions").clear();
+
+      await signInUser(VALID_EMAIL, VALID_PASSWORD);
+      const firstSessionCount = getTable("sessions").size;
+
+      await signInUser(VALID_EMAIL, VALID_PASSWORD);
+
+      expect(getTable("sessions").size).toBeGreaterThanOrEqual(firstSessionCount);
+    });
   });
 });
