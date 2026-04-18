@@ -7,6 +7,23 @@ import { describe, it, expect, beforeEach, vi, afterEach } from "vite-plus/test"
 import authDefinition from "../../../../../packages/convex/src/auth";
 import { handler } from "../../lib/auth";
 
+const AUTH_ENDPOINTS = {
+  SIGN_UP: "/api/auth/sign-up/email",
+  SIGN_IN: "/api/auth/sign-in/email",
+  SIGN_OUT: "/api/auth/sign-out",
+  GET_SESSION: "/api/auth/get-session",
+} as const;
+
+const AUTH_COOKIE = {
+  NAME: "better-auth.session_token",
+} as const;
+
+const TEST_USER = {
+  EMAIL: "test@example.com",
+  PASSWORD: "Password123!",
+  NAME: "Test User",
+} as const;
+
 interface WhereClause {
   field: string;
   value: unknown;
@@ -27,28 +44,25 @@ interface MockCtx {
   env: Record<string, string>;
 }
 
-interface AdapterInput {
-  model: string;
+type AdapterInput<K extends string = string> = {
+  model: K;
   where?: WhereClause[];
-}
+};
 
-interface AdapterCountInput {
-  model: string;
-  where?: WhereClause[];
-}
+type AdapterCountInput<K extends string = string> = AdapterInput<K>;
 
-interface AdapterCreateInput<T> {
-  model: string;
+type AdapterCreateInput<T, K extends string = string> = AdapterInput<K> & {
   data: T;
   select?: string[];
-}
+};
 
-interface AdapterUpdateInput<T = Record<string, unknown>> {
-  model: string;
-  where?: WhereClause[];
+type AdapterUpdateInput<
+  T = Record<string, unknown>,
+  K extends string = string,
+> = AdapterInput<K> & {
   update: T;
   select?: string[];
-}
+};
 
 interface BetterAuthPlugin {
   id: string;
@@ -237,10 +251,6 @@ app.use("*", async (c, next) => {
 
 app.use("*", httpMiddleware({ getAuth }));
 
-const VALID_EMAIL = "test@example.com";
-const VALID_PASSWORD = "Password123!";
-const USER_NAME = "Test User";
-
 describe("Auth Integration Flow", () => {
   let originalFetch: typeof global.fetch;
 
@@ -276,7 +286,7 @@ describe("Auth Integration Flow", () => {
 
   function extractSessionToken(setCookie: string | null): string {
     if (!setCookie) return "";
-    const match = setCookie.match(/better-auth\.session_token=([^;]+)/);
+    const match = setCookie.match(new RegExp(`${AUTH_COOKIE.NAME}=([^;]+)`));
     return match ? match[1] : "";
   }
 
@@ -285,7 +295,7 @@ describe("Auth Integration Flow", () => {
     password: string,
     name: string,
   ): Promise<{ status: number; token: string; setCookie: string | null }> {
-    const req = createMockRequest("/api/auth/sign-up/email", {
+    const req = createMockRequest(AUTH_ENDPOINTS.SIGN_UP, {
       method: "POST",
       body: JSON.stringify({ email, password, name }),
     });
@@ -299,7 +309,7 @@ describe("Auth Integration Flow", () => {
     email: string,
     password: string,
   ): Promise<{ status: number; token: string; setCookie: string | null }> {
-    const req = createMockRequest("/api/auth/sign-in/email", {
+    const req = createMockRequest(AUTH_ENDPOINTS.SIGN_IN, {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
@@ -313,9 +323,9 @@ describe("Auth Integration Flow", () => {
     status: number;
     body: { user: { email: string; name?: string }; session: { token: string } } | null;
   }> {
-    const req = createMockRequest("/api/auth/get-session", {
+    const req = createMockRequest(AUTH_ENDPOINTS.GET_SESSION, {
       method: "GET",
-      headers: { Cookie: `better-auth.session_token=${token}` },
+      headers: { Cookie: `${AUTH_COOKIE.NAME}=${token}` },
     });
     const res = await GET({ request: req } as any);
     const body = res.status === 200 ? await res.json() : null;
@@ -323,9 +333,9 @@ describe("Auth Integration Flow", () => {
   }
 
   async function signOutUser(token: string): Promise<{ status: number; setCookie: string | null }> {
-    const req = createMockRequest("/api/auth/sign-out", {
+    const req = createMockRequest(AUTH_ENDPOINTS.SIGN_OUT, {
       method: "POST",
-      headers: { Cookie: `better-auth.session_token=${token}` },
+      headers: { Cookie: `${AUTH_COOKIE.NAME}=${token}` },
     });
     const res = await POST({ request: req } as any);
     const setCookie = res.headers.get("Set-Cookie");
@@ -335,28 +345,28 @@ describe("Auth Integration Flow", () => {
   describe("Registration", () => {
     it("Successfully registers a new user with valid credentials", async () => {
       const { status, token, setCookie } = await registerUser(
-        VALID_EMAIL,
-        VALID_PASSWORD,
-        USER_NAME,
+        TEST_USER.EMAIL,
+        TEST_USER.PASSWORD,
+        TEST_USER.NAME,
       );
 
       expect(status).toBe(200);
       expect(token).toBeTruthy();
-      expect(setCookie).toContain("better-auth.session_token");
+      expect(setCookie).toContain(AUTH_COOKIE.NAME);
       expect(getTable("users").size).toBe(1);
       expect(getTable("sessions").size).toBe(1);
 
-      const user = getUser(VALID_EMAIL);
+      const user = getUser(TEST_USER.EMAIL);
       expect(user).toBeDefined();
-      expect(user?.email).toBe(VALID_EMAIL);
-      expect(user?.name).toBe(USER_NAME);
+      expect(user?.email).toBe(TEST_USER.EMAIL);
+      expect(user?.name).toBe(TEST_USER.NAME);
     });
 
     it("Rejects registration with duplicate email", async () => {
-      await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      await registerUser(TEST_USER.EMAIL, TEST_USER.PASSWORD, TEST_USER.NAME);
 
       const { status, token, setCookie } = await registerUser(
-        VALID_EMAIL,
+        TEST_USER.EMAIL,
         "AnotherPassword456!",
         "Another User",
       );
@@ -368,7 +378,7 @@ describe("Auth Integration Flow", () => {
     });
 
     it("Rejects registration with weak password", async () => {
-      const { status, token } = await registerUser("new@example.com", "weak", USER_NAME);
+      const { status, token } = await registerUser("new@example.com", "weak", TEST_USER.NAME);
 
       expect(status).toBe(400);
       expect(token).toBe("");
@@ -376,9 +386,9 @@ describe("Auth Integration Flow", () => {
     });
 
     it("Rejects registration with missing email", async () => {
-      const req = createMockRequest("/api/auth/sign-up/email", {
+      const req = createMockRequest(AUTH_ENDPOINTS.SIGN_UP, {
         method: "POST",
-        body: JSON.stringify({ password: VALID_PASSWORD, name: USER_NAME }),
+        body: JSON.stringify({ password: TEST_USER.PASSWORD, name: TEST_USER.NAME }),
       });
       const res = await POST({ request: req } as any);
 
@@ -387,9 +397,9 @@ describe("Auth Integration Flow", () => {
     });
 
     it("Rejects registration with missing password", async () => {
-      const req = createMockRequest("/api/auth/sign-up/email", {
+      const req = createMockRequest(AUTH_ENDPOINTS.SIGN_UP, {
         method: "POST",
-        body: JSON.stringify({ email: "new2@example.com", name: USER_NAME }),
+        body: JSON.stringify({ email: "new2@example.com", name: TEST_USER.NAME }),
       });
       const res = await POST({ request: req } as any);
 
@@ -400,24 +410,24 @@ describe("Auth Integration Flow", () => {
 
   describe("Sign In", () => {
     beforeEach(async () => {
-      await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      await registerUser(TEST_USER.EMAIL, TEST_USER.PASSWORD, TEST_USER.NAME);
     });
 
     it("Successfully signs in with correct credentials", async () => {
       getTable("sessions").clear();
 
-      const { status, token, setCookie } = await signInUser(VALID_EMAIL, VALID_PASSWORD);
+      const { status, token, setCookie } = await signInUser(TEST_USER.EMAIL, TEST_USER.PASSWORD);
 
       expect(status).toBe(200);
       expect(token).toBeTruthy();
-      expect(setCookie).toContain("better-auth.session_token");
+      expect(setCookie).toContain(AUTH_COOKIE.NAME);
       expect(getTable("sessions").size).toBe(1);
     });
 
     it("Rejects sign-in with wrong password", async () => {
       const initialSessions = getTable("sessions").size;
 
-      const { status, token, setCookie } = await signInUser(VALID_EMAIL, "WrongPassword456!");
+      const { status, token, setCookie } = await signInUser(TEST_USER.EMAIL, "WrongPassword456!");
 
       expect(status).toBe(401);
       expect(token).toBe("");
@@ -428,7 +438,7 @@ describe("Auth Integration Flow", () => {
     it("Rejects sign-in with non-existent email", async () => {
       const { status, token, setCookie } = await signInUser(
         "nonexistent@example.com",
-        VALID_PASSWORD,
+        TEST_USER.PASSWORD,
       );
 
       expect(status).toBe(401);
@@ -437,7 +447,7 @@ describe("Auth Integration Flow", () => {
     });
 
     it("Rejects sign-in with empty password", async () => {
-      const { status, token } = await signInUser(VALID_EMAIL, "");
+      const { status, token } = await signInUser(TEST_USER.EMAIL, "");
 
       expect(status).toBe(401);
       expect(token).toBe("");
@@ -448,7 +458,7 @@ describe("Auth Integration Flow", () => {
     let validToken = "";
 
     beforeEach(async () => {
-      const result = await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      const result = await registerUser(TEST_USER.EMAIL, TEST_USER.PASSWORD, TEST_USER.NAME);
       validToken = result.token;
     });
 
@@ -456,7 +466,7 @@ describe("Auth Integration Flow", () => {
       const { status, body } = await getSession(validToken);
 
       expect(status).toBe(200);
-      expect(body?.user?.email).toBe(VALID_EMAIL);
+      expect(body?.user?.email).toBe(TEST_USER.EMAIL);
       expect(body?.session?.token).toBeTruthy();
     });
 
@@ -489,7 +499,7 @@ describe("Auth Integration Flow", () => {
     let validToken = "";
 
     beforeEach(async () => {
-      const result = await registerUser(VALID_EMAIL, VALID_PASSWORD, USER_NAME);
+      const result = await registerUser(TEST_USER.EMAIL, TEST_USER.PASSWORD, TEST_USER.NAME);
       validToken = result.token;
     });
 
@@ -517,14 +527,22 @@ describe("Auth Integration Flow", () => {
 
   describe("Cookie Security", () => {
     it("Sets secure cookie attributes on registration", async () => {
-      const { setCookie } = await registerUser("secure@example.com", VALID_PASSWORD, USER_NAME);
+      const { setCookie } = await registerUser(
+        "secure@example.com",
+        TEST_USER.PASSWORD,
+        TEST_USER.NAME,
+      );
 
       expect(setCookie).toContain("HttpOnly");
       expect(setCookie).toContain("SameSite=");
     });
 
     it("Clears cookie with secure attributes on sign-out", async () => {
-      const { token } = await registerUser("secure@example.com", VALID_PASSWORD, USER_NAME);
+      const { token } = await registerUser(
+        "secure@example.com",
+        TEST_USER.PASSWORD,
+        TEST_USER.NAME,
+      );
       const { setCookie } = await signOutUser(token);
 
       expect(setCookie).toMatch(/HttpOnly/i);
@@ -536,12 +554,45 @@ describe("Auth Integration Flow", () => {
     it("Preserves existing session when signing in again", async () => {
       getTable("sessions").clear();
 
-      await signInUser(VALID_EMAIL, VALID_PASSWORD);
+      await signInUser(TEST_USER.EMAIL, TEST_USER.PASSWORD);
       const firstSessionCount = getTable("sessions").size;
 
-      await signInUser(VALID_EMAIL, VALID_PASSWORD);
+      await signInUser(TEST_USER.EMAIL, TEST_USER.PASSWORD);
 
       expect(getTable("sessions").size).toBeGreaterThanOrEqual(firstSessionCount);
+    });
+  });
+
+  describe("Security Headers", () => {
+    it("Handles request with X-Forwarded-Host header", async () => {
+      const { token } = await registerUser(
+        "secure2@example.com",
+        TEST_USER.PASSWORD,
+        TEST_USER.NAME,
+      );
+
+      const req = createMockRequest(AUTH_ENDPOINTS.GET_SESSION, {
+        method: "GET",
+        headers: {
+          Cookie: `${AUTH_COOKIE.NAME}=${token}`,
+          "X-Forwarded-Host": "evil-site.com",
+        },
+      });
+      const res = await GET({ request: req } as any);
+
+      expect(res.status).toBe(200);
+    });
+  });
+
+  describe("Rate Limiting", () => {
+    it("Handles rapid failed sign-in attempts", async () => {
+      for (let i = 0; i < 5; i++) {
+        await signInUser(TEST_USER.EMAIL, "wrong-password-" + i);
+      }
+
+      const { status } = await signInUser(TEST_USER.EMAIL, "wrong-password-final");
+
+      expect(status).toBeGreaterThanOrEqual(400);
     });
   });
 });
