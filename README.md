@@ -7,9 +7,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.2-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite+](https://img.shields.io/badge/Vite+-0.1.18-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-Rosace is a new type of animation tool built with Astro, Svelte, and Convex.
-
 </div>
+
+A new type of animation tool. Built with Astro, Svelte, and Convex.
 
 > [!NOTE]
 > Use `vp` commands instead of `npm`, `pnpm`, or `bun`.
