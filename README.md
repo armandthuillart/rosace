@@ -9,7 +9,7 @@
 
 </div>
 
-Private monorepo for the Rosace apps and shared packages.
+Rosace is a new type of animation tool.
 
 > [!NOTE]
 > Use `vp` commands instead of `npm`, `pnpm`, or `bun`.
