@@ -5,17 +5,17 @@ export default defineTriggers(schema, {
   users: {
     create: {
       after: async () => {
-        // Create a new customer in Stripe.
+        // TODO: Create a new customer in Stripe.
       },
     },
     delete: {
       after: async () => {
-        // Delete the customer from Stripe.
+        // TODO: Delete the customer from Stripe.
       },
     },
     update: {
       after: async () => {
-        // Update the customer email in Stripe.
+        // TODO: Update the customer email in Stripe.
       },
     },
   },

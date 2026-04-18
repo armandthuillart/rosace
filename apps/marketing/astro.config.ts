@@ -46,7 +46,6 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   site: "https://rosace.app",
   vite: {
-    // @ts-ignore - aren't updated yet
     plugins: [tailwindcss()],
   },
 });

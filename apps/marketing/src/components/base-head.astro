@@ -1,60 +1,47 @@
 ---
 import { Font } from "astro:assets";
-import ogImage from "@public/og-image.png";
+import originalImage from "@assets/images/opengraph-image.png";
+import { getImage } from "astro:assets";
 
-const title = "Rosace";
-const description =
-  "A new kind of motion design tool. Create videos so good people watch them twice.";
+let title = "Rosace";
+let description = "A new type of animation tool.";
 
-const ogImageUrl = new URL(ogImage.src, Astro.url);
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const optimizedImage = await getImage({
+  format: "png",
+  height: 630,
+  src: originalImage,
+  width: 1200,
+});
+
+const ogImageUrl = new URL(optimizedImage.src, Astro.url);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/manifest.json" />
 
-<link
-  rel="apple-touch-icon"
-  href="/apple-touch-icon-light.png"
-  media="(prefers-color-scheme: light)"
-/>
-<link
-  rel="apple-touch-icon"
-  href="/apple-touch-icon-dark.png"
-  media="(prefers-color-scheme: dark)"
-/>
-
-<link rel="canonical" href={canonicalUrl} />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
 
 <title>{title}</title>
+<meta name="title" content={title} />
 <meta name="description" content={description} />
 
 <meta property="og:url" content={Astro.url} />
 <meta property="og:type" content="website" />
 <meta property="og:title" content={title} />
-<meta property="og:image" content={ogImageUrl} />
 <meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="Rosace" />
 
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:image" content={ogImageUrl} />
-<meta property="twitter:description" content={description} />
-
-<meta name="color-scheme" content="light dark" />
-<meta
-  name="theme-color"
-  media="(prefers-color-scheme: light)"
-  content="#FFFFFF"
-/>
-<meta
-  name="theme-color"
-  media="(prefers-color-scheme: dark)"
-  content="#0D0D0D"
-/>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@rosaceapp" />
+<meta name="twitter:creator" content="@rosaceapp" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
 
 <Font cssVariable="--font-inter" preload />

@@ -1,6 +1,6 @@
 import type { KnipConfig } from "knip";
 
-const knipConfig: KnipConfig = {
+export default {
   workspaces: {
     ".": {
       entry: ["vite.config.ts"],
@@ -19,6 +19,4 @@ const knipConfig: KnipConfig = {
     },
   },
   ignoreUnresolved: ["\\$env/dynamic/public"],
-};
-
-export default knipConfig;
+} satisfies KnipConfig;
