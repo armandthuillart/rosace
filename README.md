@@ -1,82 +1,59 @@
 <div align="center">
 
-<img src=".github/image.png" alt="Rosace" height="80" />
-
 # Rosace
 
-A full-stack TypeScript monorepo with two web apps and shared backend/auth packages.
+[![Astro](https://img.shields.io/badge/Astro-^6.1-FF5D01?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
+[![Svelte](https://img.shields.io/badge/Svelte-^5.55-FF3E00?style=flat-square&logo=svelte&logoColor=white)](https://svelte.dev/)
+[![GSAP](https://img.shields.io/badge/GSAP-^3.15-88CE02?style=flat-square&logo=greensock&logoColor=white)](https://gsap.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.2-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Convex](https://img.shields.io/badge/Convex-^1.35-FF7357?style=flat-square)](https://convex.dev/)
+[![Vite+](https://img.shields.io/badge/Vite+-0.1.18-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 
 </div>
 
-## Quick Start
+A new type of animation tool. Built with an Astro marketing site, a SvelteKit dashboard, and a serverless backend powered by Convex.
+
+> [!NOTE]
+> Use `vp` commands instead of `npm`, `pnpm`, or `bun`. Vite+ handles all dependencies, formatting, and tasks.
+
+## Setup
 
 ```bash
-# Install
-vp install
-
-# Create env files
 cp .env.template .env.development
-cp .env.template .env.production
-```
+# Add your Convex and local URLs to .env.development
 
-Edit both `.env.*` files with required values:
-
-- `CONVEX_SITE_URL`
-- `CONVEX_URL`
-- `DASHBOARD_URL`
-- `MARKETING_URL`
-
-```bash
-# Prepare app envs and start dev
+vp install
 vp run prepare
 vp dev
 ```
 
-## Apps
-
-| App              | Framework | URL              |
-| ---------------- | --------- | ---------------- |
-| `apps/marketing` | Astro     | `rosace.app`     |
-| `apps/dashboard` | SvelteKit | `app.rosace.app` |
-
-## Packages
-
-| Package             | Description                        |
-| ------------------- | ---------------------------------- |
-| `@repo/crpc`        | Typed RPC runtime + CLI            |
-| `@repo/convex`      | Backend functions + cRPC adapter   |
-| `@repo/better-auth` | Auth helpers for Convex and Svelte |
+The marketing site runs at `http://localhost:4321`. The dashboard runs at `http://localhost:5173`.
 
 ## Commands
 
+| Command         | Action              |
+| --------------- | ------------------- |
+| `vp dev`        | Start dev servers   |
+| `vp check`      | Check types         |
+| `vp lint`       | Lint code           |
+| `vp fmt`        | Format code         |
+| `vp build`      | Build applications  |
+| `vp preview`    | Test build          |
+| `vp run deploy` | Deploy via Wrangler |
+
+## Architecture
+
+Apps live in `apps/`. Shared packages live in `packages/`.
+
+- `apps/marketing` (Astro site)
+- `apps/dashboard` (SvelteKit app)
+- `packages/convex` (Database schema and API)
+- `packages/better-auth` (Authentication logic)
+- `packages/crpc` (Type-safe RPC wrapper)
+
+## Deploy
+
 ```bash
-# Workspace
-vp check          # Format, lint, type-check
-vp test           # Run tests
-
-# Dashboard
-vp run dashboard#dev
-vp run dashboard#build
-vp run dashboard#deploy
-
-# Marketing
-vp run marketing#dev
-vp run marketing#build
-vp run marketing#deploy
+vp build
+vp run deploy
 ```
-
-## Tech Stack
-
-- **Frontend:** Astro, SvelteKit, Tailwind CSS, GSAP
-- **Backend:** Convex, Hono
-- **Auth:** Better Auth
-- **Infra:** Cloudflare Workers + Wrangler
-- **Tooling:** Bun + Vite+ (`vp`)
-
-## Troubleshooting
-
-> [!TIP]
-> If app env files are stale, run `vp run prepare` to regenerate them.
-
-> [!TIP]
-> After dependency changes, run `vp install` then `vp check` + `vp test`.
