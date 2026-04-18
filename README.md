@@ -1,59 +1,96 @@
 <div align="center">
 
+<img src="./.github/icon.png" alt="Rosace" width="128" />
+
 # Rosace
 
-[![Astro](https://img.shields.io/badge/Astro-^6.1-FF5D01?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
-[![Svelte](https://img.shields.io/badge/Svelte-^5.55-FF3E00?style=flat-square&logo=svelte&logoColor=white)](https://svelte.dev/)
-[![GSAP](https://img.shields.io/badge/GSAP-^3.15-88CE02?style=flat-square&logo=greensock&logoColor=white)](https://gsap.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.2-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Convex](https://img.shields.io/badge/Convex-^1.35-FF7357?style=flat-square)](https://convex.dev/)
-[![Vite+](https://img.shields.io/badge/Vite+-0.1.18-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+An animation-focused web platform built as a monorepo with an Astro marketing site, a SvelteKit dashboard, and a Convex-backed serverless app layer.
 
 </div>
 
-A new type of animation tool. Built with an Astro marketing site, a SvelteKit dashboard, and a serverless backend powered by Convex.
-
 > [!NOTE]
-> Use `vp` commands instead of `npm`, `pnpm`, or `bun`. Vite+ handles all dependencies, formatting, and tasks.
+> Use `vp` commands for installs, checks, builds, and local development. Do not use `npm`, `pnpm`, or `bun` directly.
 
-## Setup
+## Overview
 
-```bash
-cp .env.template .env.development
-# Add your Convex and local URLs to .env.development
+Rosace is organized into a small set of focused apps and shared packages:
 
-vp install
-vp run prepare
-vp dev
-```
+| Path                   | Purpose                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `apps/marketing`       | Public Astro site for the product and content           |
+| `apps/dashboard`       | SvelteKit dashboard and authenticated app UI            |
+| `packages/convex`      | Convex schema, functions, emails, and app backend logic |
+| `packages/better-auth` | Shared Better Auth integration helpers                  |
+| `packages/crpc`        | Type-safe RPC and code generation utilities             |
 
-The marketing site runs at `http://localhost:4321`. The dashboard runs at `http://localhost:5173`.
+## Getting Started
 
-## Commands
+1. Create your local environment file.
 
-| Command         | Action              |
-| --------------- | ------------------- |
-| `vp dev`        | Start dev servers   |
-| `vp check`      | Check types         |
-| `vp lint`       | Lint code           |
-| `vp fmt`        | Format code         |
-| `vp build`      | Build applications  |
-| `vp preview`    | Test build          |
-| `vp run deploy` | Deploy via Wrangler |
+   ```bash
+   cp .env.template .env.development
+   ```
 
-## Architecture
+2. Install dependencies.
 
-Apps live in `apps/`. Shared packages live in `packages/`.
+   ```bash
+   vp install
+   ```
 
-- `apps/marketing` (Astro site)
-- `apps/dashboard` (SvelteKit app)
-- `packages/convex` (Database schema and API)
-- `packages/better-auth` (Authentication logic)
-- `packages/crpc` (Type-safe RPC wrapper)
+3. Prepare local env files.
 
-## Deploy
+   ```bash
+   vp run prepare
+   ```
+
+4. Start the apps.
+
+   ```bash
+   vp dev
+   ```
+
+The marketing site runs on `http://localhost:4321` and the dashboard runs on `http://localhost:5173`.
+
+## Environment Variables
+
+The root `.env.template` expects these values:
+
+- `CONVEX_SITE_URL`
+- `CONVEX_URL`
+- `DASHBOARD_URL`
+- `MARKETING_URL`
+
+> [!TIP]
+> The dashboard also reads public runtime values through `wrangler.json`, including `PUBLIC_CONVEX_SITE_URL`, `PUBLIC_CONVEX_URL`, `PUBLIC_DASHBOARD_URL`, and `PUBLIC_MARKETING_URL`.
+
+## Common Commands
+
+| Command         | Action                                   |
+| --------------- | ---------------------------------------- |
+| `vp dev`        | Run local development servers            |
+| `vp check`      | Run formatting, linting, and type checks |
+| `vp lint`       | Lint the workspace                       |
+| `vp fmt`        | Format the workspace                     |
+| `vp build`      | Build all apps and packages              |
+| `vp preview`    | Preview production builds                |
+| `vp run deploy` | Deploy via Cloudflare Wrangler           |
+
+## Deployment
+
+Each app has its own Cloudflare config:
+
+- `apps/marketing/wrangler.json`
+- `apps/dashboard/wrangler.json`
+
+Build first, then deploy the app you want to publish.
 
 ```bash
 vp build
 vp run deploy
 ```
+
+## Notes
+
+- The repository uses Vite+ as the workspace toolchain.
+- Shared packages are referenced through workspace imports like `@repo/convex` and `@repo/better-auth`.
+- Cloudflare Workers is the target runtime for the deployed apps.
