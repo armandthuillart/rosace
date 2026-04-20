@@ -1,12 +1,9 @@
-import { HttpRouter } from "@repo/better-auth/http";
-import { Hono } from "hono";
+import { HttpRouter } from "convex/server";
 
-import { httpMiddleware } from "./_crpc";
+import { registerRoutes } from "./auth";
 
-const app = new Hono();
+const http = new HttpRouter();
 
-app.use(httpMiddleware());
+registerRoutes(http);
 
-const router = new HttpRouter(app);
-
-export default router;
+export default http;

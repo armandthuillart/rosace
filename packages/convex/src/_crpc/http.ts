@@ -1,8 +1,7 @@
 // Template source owned by @repo/crpc.
 // Edit this file to change generated output.
 
-import { httpMiddleware as baseHttpMiddleware } from "@repo/better-auth/http";
-
+import { httpMiddleware as baseHttpMiddleware } from "../../../better-auth/src/server/polyfills";
 import { getAuth } from "./auth";
 
 function httpMiddleware() {

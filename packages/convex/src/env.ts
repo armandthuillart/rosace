@@ -1,5 +1,6 @@
-import { createEnv } from "@repo/crpc";
 import * as v from "valibot";
+
+import { createEnv } from "../../crpc/src";
 
 const envSchema = v.object({
   APPLE_CLIENT_ID: v.string(),

@@ -9,6 +9,7 @@
     "@convex-dev/resend": "catalog:",
     "@react-email/components": "catalog:",
     "@react-email/render": "catalog:",
+    "@repo/auth": "workspace:*",
     "@repo/better-auth": "workspace:*",
     "@repo/crpc": "workspace:*",
     "better-auth": "catalog:",

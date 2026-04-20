@@ -1,6 +1,14 @@
-import { betterAuth } from "@repo/better-auth/server";
-import type { AuthConfig } from "convex/server";
+import { AuthConfig } from "convex/server";
+
+import { getEnv } from "./env";
+
+const env = getEnv();
 
 export default {
-  providers: [betterAuth()],
+  providers: [
+    {
+      domain: env.DASHBOARD_URL,
+      applicationID: "convex",
+    },
+  ],
 } satisfies AuthConfig;

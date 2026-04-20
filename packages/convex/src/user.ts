@@ -1,6 +1,6 @@
-import { ServerError } from "@repo/crpc";
 import { v } from "convex/values";
 
+import { ServerError } from "../../crpc/src";
 import { authQuery } from "./crpc";
 
 export const getUser = authQuery

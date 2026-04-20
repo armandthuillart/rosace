@@ -1,0 +1,20 @@
+{
+  "name": "@repo/auth",
+  "type": "module",
+  "exports": {
+    "./server": "./src/server/index.ts",
+    "./sveltekit": "./src/sveltekit/index.ts"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "catalog:",
+    "@types/node": "catalog:",
+    "convex": "catalog:",
+    "svelte": "catalog:",
+    "cookie": "catalog:"
+  },
+  "peerDependencies": {
+    "convex": "catalog:",
+    "svelte": "catalog:",
+    "cookie": "catalog:"
+  }
+}

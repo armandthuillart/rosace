@@ -1,10 +1,10 @@
 // Template source owned by @repo/crpc.
 // Edit this file to change generated output.
 
-import { defineAuth as baseDefineAuth } from "@repo/better-auth/server";
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import type { GenericSchema, SchemaDefinition } from "convex/server";
 
+import { defineAuth as baseDefineAuth } from "../../../better-auth/src/server";
 import authDefinition from "../auth";
 import { createAdapter } from "./adapter";
 import type { ActionCtx, DataModel, GenericAuthDefinition, MutationCtx } from "./types";

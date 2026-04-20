@@ -1,6 +1,3 @@
-import { env } from "$env/dynamic/public";
-import { setupServer } from "@repo/better-auth/svelte";
+import { useAuth } from "@repo/auth/sveltekit";
 
-export const { convexQuery, handler } = setupServer({
-  address: env.PUBLIC_CONVEX_SITE_URL!,
-});
+export const { handle, signIn, signOut } = useAuth();

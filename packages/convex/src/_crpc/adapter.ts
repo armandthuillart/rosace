@@ -1,11 +1,11 @@
 // Template source owned by @repo/crpc.
 // Edit this file to change generated output.
 
-import { createBuilder, createCrud, operations } from "@repo/crpc";
 import { createAdapterFactory } from "better-auth/adapters";
 import type { GenericActionCtx, GenericDataModel } from "convex/server";
 import { v } from "convex/values";
 
+import { createBuilder, createCrud, operations } from "../../../crpc/src";
 // @ts-ignore - generated at runtime
 import { internal } from "../_generated/api";
 
