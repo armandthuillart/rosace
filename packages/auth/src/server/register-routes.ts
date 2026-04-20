@@ -14,7 +14,6 @@ const registerRoutes = (http: HttpRouter) => {
   /**
    * OpenID Connect discovery document.
    * Required by Convex to locate the JWKS endpoint for JWT verification.
-   * @see https://openid.net/specs/openid-connect-discovery-1_0.html
    */
   http.route({
     path: "/.well-known/openid-configuration",
@@ -24,20 +23,16 @@ const registerRoutes = (http: HttpRouter) => {
 
       return new Response(
         JSON.stringify({
-          issuer,
-          jwks_uri: issuer + "/.well-known/jwks.json",
           authorization_endpoint: issuer + "/oauth/authorize",
+          jwks_uri: issuer + "/.well-known/jwks.json",
+          issuer,
         }),
-        {
-          status: 200,
-          headers: headers(),
-        },
+        { headers: headers(), status: 200 },
       );
     }),
   });
 
   /**
-   * JSON Web Key Set endpoint.
    * Serves the public keys used to verify issued JWTs.
    * Consumed by Convex on every authenticated request.
    */
@@ -46,14 +41,13 @@ const registerRoutes = (http: HttpRouter) => {
     method: "GET",
     handler: httpActionGeneric(async () => {
       return new Response(requireEnv("JWKS"), {
-        status: 200,
         headers: headers(),
+        status: 200,
       });
     }),
   });
 
   /**
-   * OAuth sign-in initiation.
    * Builds the authorization URL for the given provider (Google, Apple)
    * and redirects the user to their consent screen.
    */
@@ -65,30 +59,24 @@ const registerRoutes = (http: HttpRouter) => {
       const provider = url.pathname.replace(/\/+$/, "").split("/").at(-1);
 
       if (!provider) {
-        return new Response("Pick a sign-in provider.", {
-          status: 400,
-        });
+        return new Response("Pick a sign-in provider.", { status: 400 });
       }
 
       if (provider !== "google" && provider !== "apple") {
-        return new Response(`${capitalize(provider)} is not supported.`, {
-          status: 400,
-        });
+        return new Response(`${capitalize(provider)} is not supported.`, { status: 400 });
       }
 
       const verifier = url.searchParams.get("code");
 
       if (!verifier) {
-        return new Response("Request is malformed.", {
-          status: 400,
-        });
+        return new Response("Request verifier is missing.", { status: 400 });
       }
 
       const redirectTo = url.searchParams.get("redirectTo");
 
       const cookies = getCookies(request);
 
-      return new Response("OK", { status: 200 });
+      return new Response(null, { status: 200 });
     }),
   });
 

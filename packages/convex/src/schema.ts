@@ -13,7 +13,7 @@ export default defineSchema({
 
   accounts: defineTable({
     userId: v.id("users"),
-    provider: v.union(v.literal("google"), v.literal("apple"), v.literal("email-password")),
+    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
     subject: v.optional(v.string()),
     passwordHash: v.optional(v.string()),
   })

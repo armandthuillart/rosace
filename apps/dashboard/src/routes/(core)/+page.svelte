@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { signOut } from "$lib/auth";
   import { db } from "$lib/db";
   import { liveQuery } from "dexie";
 
@@ -12,3 +13,5 @@
     (p) => p.length,
   )} projects
 </div>
+
+<button onclick={() => signOut()}>Sign out</button>

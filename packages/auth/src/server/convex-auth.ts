@@ -1,9 +1,7 @@
 import { registerRoutes } from "./register-routes";
 
 function convexAuth() {
-  return {
-    registerRoutes,
-  };
+  return { registerRoutes };
 }
 
 export { convexAuth };
