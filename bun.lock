@@ -24,6 +24,7 @@
         "better-auth": "catalog:",
         "convex": "catalog:",
         "dexie": "catalog:",
+        "valibot": "catalog:",
       },
       "devDependencies": {
         "@sveltejs/adapter-cloudflare": "catalog:",
@@ -61,6 +62,7 @@
         "convex": "catalog:",
         "cookie": "catalog:",
         "svelte": "catalog:",
+        "valibot": "catalog:",
       },
       "peerDependencies": {
         "convex": "catalog:",

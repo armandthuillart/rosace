@@ -7,8 +7,7 @@ export default defineSchema({
     firstName: v.string(),
     lastName: v.string(),
     plan: v.union(v.literal("free"), v.literal("pro")),
-    emailVerified: v.boolean(),
-    avatarUrl: v.optional(v.string()),
+    verified: v.boolean(),
   }).index("by_email", ["email"]),
 
   accounts: defineTable({

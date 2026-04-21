@@ -4,14 +4,13 @@
   import { liveQuery } from "dexie";
 
   let { data } = $props();
-
   let projects = $derived(liveQuery(() => db.projects.toArray()));
 </script>
 
 <div>
-  you're logged in as {data.user.email} and you have {projects.subscribe(
-    (p) => p.length,
-  )} projects
+  Logged in as {data.user.email}. You have {projects.subscribe((p) => p.length)} projects.
 </div>
 
-<button onclick={() => signOut()}>Sign out</button>
+<form method="POST">
+  <button type="submit">Sign out</button>
+</form>

@@ -8,6 +8,7 @@
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
     "@types/node": "catalog:",
+    "valibot": "catalog:",
     "convex": "catalog:",
     "svelte": "catalog:",
     "cookie": "catalog:"

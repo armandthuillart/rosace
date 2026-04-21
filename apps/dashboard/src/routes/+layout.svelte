@@ -10,7 +10,7 @@
   let { children, data }: LayoutProps = $props();
 
   handleAuth({
-    fetch: async () => !!data.token,
+    fetch: async () => !!data.user,
   });
 </script>
 

@@ -1,9 +1,1 @@
-declare global {
-  namespace App {
-    interface Locals {
-      token: string | undefined;
-    }
-  }
-}
-
-export {};
+/// <reference types="@repo/auth/sveltekit" />

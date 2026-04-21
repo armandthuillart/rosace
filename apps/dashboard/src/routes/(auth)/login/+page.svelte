@@ -3,16 +3,9 @@
 </script>
 
 <form method="POST">
-  <label>
-    Email
-    <input name="email" type="email" />
-  </label>
-
-  <label>
-    Password
-    <input name="password" type="password" />
-  </label>
-
+  <input type="hidden" name="provider" value="credentials" />
+  <label>Email <input name="email" type="email" /></label>
+  <label>Password <input name="password" type="password" /></label>
   <button type="submit">Log in</button>
 </form>
 

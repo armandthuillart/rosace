@@ -1,5 +1,6 @@
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-  return { auth: await locals.auth() };
+  const auth = await locals.auth();
+  return { user: auth ? auth.user : null };
 };
