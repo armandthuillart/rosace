@@ -25,9 +25,7 @@ function handleAuth({ fetch }: { fetch: () => Promise<boolean> }) {
   }
 
   fetch().then((ok) => {
-    if (ok) {
-      convex.setAuth(fetchToken);
-    }
+    if (ok) convex.setAuth(fetchToken);
   });
 }
 
