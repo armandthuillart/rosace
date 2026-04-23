@@ -1,13 +1,18 @@
 <script>
   import { resolve } from "$app/paths";
+  import { login } from "$lib/auth";
+
+  let email = $state("");
+  let password = $state("");
 </script>
 
-<form method="POST">
-  <input type="hidden" name="provider" value="credentials" />
-  <label>Email <input name="email" type="email" /></label>
-  <label>Password <input name="password" type="password" /></label>
-  <button type="submit">Log in</button>
-</form>
+<div>
+  <input type="email" bind:value={email} />
+  <input type="password" bind:value={password} />
+  <button onclick={() => login("credentials", { email, password })}
+    >Log in</button
+  >
+</div>
 
 <p>
   No account?

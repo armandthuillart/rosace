@@ -1,18 +1,24 @@
 <script>
   import { resolve } from "$app/paths";
+  import { login } from "$lib/auth";
+
+  let firstName = $state("");
+  let lastName = $state("");
+  let email = $state("");
+  let password = $state("");
 </script>
 
-<form method="POST">
-  <label>
-    Email
-    <input name="email" type="email" />
-  </label>
-  <label>
-    Password
-    <input name="password" type="password" />
-  </label>
-  <button type="submit">Register</button>
-</form>
+<div>
+  <input type="text" bind:value={firstName} />
+  <input type="text" bind:value={lastName} />
+  <input type="email" bind:value={email} />
+  <input type="password" bind:value={password} />
+  <button
+    onclick={() =>
+      login("credentials", { email, firstName, lastName, password })}
+    >Register</button
+  >
+</div>
 
 <p>
   Already have an account?

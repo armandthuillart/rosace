@@ -4,17 +4,13 @@ import { httpActionGeneric, HttpRouter } from "convex/server";
 
 import { requireEnv, getCookies, capitalize } from "../utils";
 
-const headers = () =>
+const getHeaders = () =>
   new Headers({
     "Content-Type": "application/json",
     "Cache-Control": "public, max-age=3600, stale-while-revalidate=60, stale-if-error=86400",
   });
 
 const registerRoutes = (http: HttpRouter) => {
-  /**
-   * OpenID Connect discovery document.
-   * Required by Convex to locate the JWKS endpoint for JWT verification.
-   */
   http.route({
     path: "/.well-known/openid-configuration",
     method: "GET",
@@ -27,39 +23,31 @@ const registerRoutes = (http: HttpRouter) => {
           jwks_uri: issuer + "/.well-known/jwks.json",
           issuer,
         }),
-        { headers: headers(), status: 200 },
+        { headers: getHeaders(), status: 200 },
       );
     }),
   });
 
-  /**
-   * Serves the public keys used to verify issued JWTs.
-   * Consumed by Convex on every authenticated request.
-   */
   http.route({
     path: "/.well-known/jwks.json",
     method: "GET",
     handler: httpActionGeneric(async () => {
       return new Response(requireEnv("JWKS"), {
-        headers: headers(),
+        headers: getHeaders(),
         status: 200,
       });
     }),
   });
 
-  /**
-   * Builds the authorization URL for the given provider (Google, Apple)
-   * and redirects the user to their consent screen.
-   */
   http.route({
-    pathPrefix: "/auth/sign-in/",
+    pathPrefix: "/auth/login/",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
       const url = new URL(request.url);
       const provider = url.pathname.replace(/\/+$/, "").split("/").at(-1);
 
       if (!provider) {
-        return new Response("Pick a sign-in provider.", { status: 400 });
+        return new Response("Pick a provider.", { status: 400 });
       }
 
       if (provider !== "google" && provider !== "apple") {
@@ -69,7 +57,7 @@ const registerRoutes = (http: HttpRouter) => {
       const verifier = url.searchParams.get("code");
 
       if (!verifier) {
-        return new Response("Request verifier is missing.", { status: 400 });
+        return new Response("Malformed request.", { status: 400 });
       }
 
       const redirectTo = url.searchParams.get("redirectTo");
@@ -80,15 +68,45 @@ const registerRoutes = (http: HttpRouter) => {
     }),
   });
 
-  /**
-   * OAuth callback handler action.
-   * Exchanges the authorization code for tokens, verifies the id_token,
-   * upserts the user in Convex, mints a JWT, and sets session cookies.
-   *
-   * Registered for both GET and POST:
-   * - Google returns via GET with query params
-   * - Apple returns via POST with application/x-www-form-urlencoded body
-   */
+  http.route({
+    pathPrefix: "/auth/logout/",
+    method: "POST",
+    handler: httpActionGeneric(async (ctx, request) => {
+      const origin = request.headers.get("origin");
+      const trustedOrigin = requireEnv("DASHBOARD_URL");
+
+      if (!origin || origin !== trustedOrigin) {
+        return new Response(null, { status: 403 });
+      }
+
+      const cookies = getCookies(request);
+      const sessionToken = cookies["auth:session"];
+
+      if (sessionToken) {
+        await ctx
+          .runMutation("auth:store" as any, {
+            args: { type: "logout", sessionToken },
+          })
+          .catch((error) => {
+            console.error("auth/logout: failed to invalidate session", error);
+          });
+      }
+
+      const headers = new Headers();
+
+      headers.append(
+        "Set-Cookie",
+        "auth:session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+      );
+      headers.append(
+        "Set-Cookie",
+        "auth:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+      );
+
+      return new Response(null, { headers, status: 204 });
+    }),
+  });
+
   const callbackAction = httpActionGeneric(async (ctx, request) => {
     const url = new URL(request.url);
     const provider = url.pathname.replace(/\/+$/, "").split("/").at(-1);

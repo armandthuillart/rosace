@@ -3,7 +3,7 @@ type Options =
   | { provider: "google" }
   | { provider: "apple" };
 
-function signIn(options: Options) {
+function login(options: Options) {
   const { provider } = options;
 
   if (provider === "credentials") {
@@ -20,4 +20,4 @@ function signIn(options: Options) {
   }
 }
 
-export { signIn };
+export { login };

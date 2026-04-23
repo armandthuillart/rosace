@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { signIn } from "$lib/auth";
+  import { login } from "$lib/auth";
   import { capitalize } from "$lib/utils";
   import type { LayoutProps } from "./$types";
 
@@ -19,7 +19,7 @@
     {#each providers as provider}
       <button
         class="border-border hover:bg-muted mb-3 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full border font-medium"
-        onclick={() => signIn({ provider })}
+        onclick={() => login(provider)}
       >
         <svg class={["size-5", provider === "apple" && "fill-foreground"]}>
           <use href="/sprites.svg#{provider}"></use>

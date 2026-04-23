@@ -1,3 +1,3 @@
-import { useAuth } from "@repo/auth/sveltekit";
+import { svelteAuth } from "@repo/auth/sveltekit";
 
-export const { handle, signIn, signUp, signOut } = useAuth();
+export const { handle, login, logout } = svelteAuth();

@@ -1,21 +1,26 @@
 {
   "name": "@repo/auth",
+  "bin": {
+    "auth": "./src/cli/index.ts"
+  },
   "type": "module",
   "exports": {
     "./server": "./src/server/index.ts",
-    "./sveltekit": "./src/sveltekit/index.ts"
+    "./sveltekit": "./src/sveltekit/index.ts",
+    "./providers": "./src/providers/index.ts"
   },
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
     "@types/node": "catalog:",
-    "valibot": "catalog:",
     "convex": "catalog:",
+    "cookie": "catalog:",
+    "jose": "catalog:",
     "svelte": "catalog:",
-    "cookie": "catalog:"
+    "valibot": "catalog:"
   },
   "peerDependencies": {
     "convex": "catalog:",
-    "svelte": "catalog:",
-    "cookie": "catalog:"
+    "cookie": "catalog:",
+    "svelte": "catalog:"
   }
 }

@@ -1,2 +1,1 @@
-export { handleAuth } from "./handle-auth";
-export { useAuth } from "./use-auth";
+export { svelteAuth } from "./svelte-auth";

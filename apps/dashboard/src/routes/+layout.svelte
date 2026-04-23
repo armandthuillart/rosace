@@ -5,13 +5,8 @@
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
   import type { LayoutProps } from "./$types";
-  import { handleAuth } from "@repo/auth/sveltekit";
 
-  let { children, data }: LayoutProps = $props();
-
-  handleAuth({
-    fetch: async () => !!data.user,
-  });
+  let { children }: LayoutProps = $props();
 </script>
 
 <svelte:head>

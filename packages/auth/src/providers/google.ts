@@ -1,0 +1,3 @@
+function Google() {}
+
+export { Google };
