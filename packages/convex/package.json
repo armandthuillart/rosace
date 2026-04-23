@@ -2,7 +2,6 @@
   "name": "@repo/convex",
   "type": "module",
   "exports": {
-    ".": "./src/_crpc/index.ts",
     "./api": "./src/_generated/api.ts"
   },
   "dependencies": {
@@ -10,12 +9,8 @@
     "@react-email/components": "catalog:",
     "@react-email/render": "catalog:",
     "@repo/auth": "workspace:*",
-    "@repo/better-auth": "workspace:*",
-    "@repo/crpc": "workspace:*",
-    "better-auth": "catalog:",
     "convex": "catalog:",
     "convex-helpers": "catalog:",
-    "hono": "catalog:",
     "react": "catalog:",
     "stripe": "catalog:",
     "valibot": "catalog:"

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
-import { ServerError } from "../../crpc/src";
-import { authQuery } from "./crpc";
+import { authQuery } from "../rpc";
+import { ServerError } from "../rpc/server-error";
 
 export const getUser = authQuery
   .returns(

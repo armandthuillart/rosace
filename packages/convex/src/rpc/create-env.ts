@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { ServerError } from "./errors";
+import { ServerError } from "./server-error";
 
 type EnvKey = string;
 type EnvObject = Record<EnvKey, EnvValue>;

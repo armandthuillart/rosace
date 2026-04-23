@@ -10,10 +10,8 @@
   },
   "dependencies": {
     "@fontsource/inter": "catalog:",
-    "@repo/better-auth": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/convex": "workspace:*",
-    "better-auth": "catalog:",
     "valibot": "catalog:",
     "convex": "catalog:",
     "dexie": "catalog:"
@@ -22,7 +20,6 @@
     "@sveltejs/adapter-cloudflare": "catalog:",
     "@sveltejs/kit": "catalog:",
     "@tailwindcss/vite": "catalog:",
-    "hono": "catalog:",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
     "tailwindcss": "catalog:",
