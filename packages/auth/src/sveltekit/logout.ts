@@ -1,8 +1,17 @@
-import { redirect, RequestEvent } from "@sveltejs/kit";
+import { redirect, type RequestEvent } from "@sveltejs/kit";
 
 const logout = async (event: RequestEvent) => {
-  await event.fetch("/auth/logout", { method: "POST" });
-  throw redirect(303, "/login");
+  const headers = new Headers();
+  const origin = event.request.headers.get("origin");
+
+  if (origin) headers.set("origin", origin);
+
+  await event.fetch("/auth/logout", {
+    headers,
+    method: "POST",
+  });
+
+  redirect(303, "/login");
 };
 
 export { logout };

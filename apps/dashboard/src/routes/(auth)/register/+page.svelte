@@ -1,24 +1,36 @@
-<script>
+<script lang="ts">
   import { resolve } from "$app/paths";
-  import { login } from "$lib/auth";
+  import type { ActionData } from "./$types";
 
-  let firstName = $state("");
-  let lastName = $state("");
-  let email = $state("");
-  let password = $state("");
+  let { form }: { form: ActionData } = $props();
 </script>
 
-<div>
-  <input type="text" bind:value={firstName} />
-  <input type="text" bind:value={lastName} />
-  <input type="email" bind:value={email} />
-  <input type="password" bind:value={password} />
-  <button
-    onclick={() =>
-      login("credentials", { email, firstName, lastName, password })}
-    >Register</button
-  >
-</div>
+<form method="POST">
+  {#if form?.missing}<p class="error">All fields are required</p>{/if}
+  {#if form?.incorrect}<p class="error">Could not create account</p>{/if}
+
+  <label>
+    First name
+    <input name="firstName" type="text" value={form?.firstName ?? ""} />
+  </label>
+
+  <label>
+    Last name
+    <input name="lastName" type="text" value={form?.lastName ?? ""} />
+  </label>
+
+  <label>
+    Email
+    <input name="email" type="email" value={form?.email ?? ""} />
+  </label>
+
+  <label>
+    Password
+    <input name="password" type="password" />
+  </label>
+
+  <button type="submit">Register</button>
+</form>
 
 <p>
   Already have an account?

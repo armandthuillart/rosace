@@ -11,4 +11,6 @@
   Logged in as {data.user.email}. You have {projects.subscribe((p) => p.length)} projects.
 </div>
 
-<button onclick={() => logout()}>Sign out</button>
+<form method="POST">
+  <button type="submit">Sign out</button>
+</form>

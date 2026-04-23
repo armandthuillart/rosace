@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { login } from "$lib/auth";
   import { capitalize } from "$lib/utils";
   import type { LayoutProps } from "./$types";
 
@@ -17,15 +16,15 @@
     </p>
 
     {#each providers as provider}
-      <button
+      <a
         class="border-border hover:bg-muted mb-3 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full border font-medium"
-        onclick={() => login(provider)}
+        href={`/auth/login/${provider}`}
       >
         <svg class={["size-5", provider === "apple" && "fill-foreground"]}>
           <use href="/sprites.svg#{provider}"></use>
         </svg>
         Continue with {capitalize(provider)}
-      </button>
+      </a>
     {/each}
 
     {@render children()}
