@@ -3,6 +3,9 @@ import { URLSearchParams } from "url";
 import { httpActionGeneric, HttpRouter } from "convex/server";
 import * as v from "valibot";
 
+import { authorize } from "../providers/authorization-url";
+import { pkce } from "../providers/pkce";
+import { SocialProvider } from "../types";
 import { requireEnv, getCookies, guard, csrf } from "../utils";
 
 const LoginSchema = v.pipe(
@@ -50,8 +53,8 @@ const registerRoutes = (http: HttpRouter) => {
     handler: httpActionGeneric(async () => {
       return new Response(requireEnv("JWKS"), {
         headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=3600, stale-while-revalidate=60, stale-if-error=86400",
+          "content-type": "application/json",
+          "cache-control": "public, max-age=3600, stale-while-revalidate=60, stale-if-error=86400",
         },
         status: 200,
       });
@@ -61,14 +64,41 @@ const registerRoutes = (http: HttpRouter) => {
   http.route({
     path: "/auth/session",
     method: "GET",
-    handler: httpActionGeneric(async (_, request) => {
+    handler: httpActionGeneric(async (ctx, request) => {
       const cookies = getCookies(request);
-      const session = cookies["auth:session"];
+      const session = { token: cookies["auth:session"] };
 
-      if (!session) {
+      if (!session.token) {
         return new Response("null", {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           status: 200,
+        });
+      }
+
+      const auth = await ctx.runQuery("auth:store" as any, {
+        type: "session:get",
+        session,
+      });
+
+      if (!auth) {
+        const headers = new Headers({
+          "Content-Type": "application/json",
+        });
+
+        headers.append(
+          "Set-Cookie",
+          "auth:session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+        );
+        headers.append(
+          "Set-Cookie",
+          "auth:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+        );
+
+        return new Response(null, {
+          status: 200,
+          headers,
         });
       }
 
@@ -80,7 +110,7 @@ const registerRoutes = (http: HttpRouter) => {
       // 5) return auth payload shape expected by sveltekit/types.ts
 
       return new Response("null", {
-        headers: { "Content-Type": "application/json" },
+        headers: { "content-type": "application/json" },
         status: 200,
       });
     }),
@@ -89,27 +119,57 @@ const registerRoutes = (http: HttpRouter) => {
   http.route({
     pathPrefix: "/auth/login/",
     method: "GET",
-    handler: httpActionGeneric(async (_, request) => {
+    handler: httpActionGeneric(async (ctx, request) => {
       const checked = guard(request, ["google", "apple"]);
       if (checked.blocked) return checked.blocked;
-      const provider = checked.provider;
 
-      const url = new URL(request.url);
+      const provider = checked.provider as SocialProvider;
+      const { url } = authorize({ provider });
 
-      const code = url.searchParams.get("code");
+      const state = crypto.randomUUID().replace(/-/g, "");
+      const nonce = crypto.randomUUID().replace(/-/g, "");
+      const { verifier, challenge, method } = pkce();
 
-      if (!code) {
-        return new Response("Missing login verifier.", { status: 400 });
+      url.searchParams.set("state", state);
+      url.searchParams.set("nonce", nonce);
+
+      if (provider === "google") {
+        url.searchParams.set("code_challenge", challenge);
+        url.searchParams.set("code_challenge_method", method);
       }
 
-      // TODO:
-      // 1) build provider authorization URL
-      // 2) create state/pkce/nonce cookies
-      // 3) persist verifier signature in store
-      // 4) store optional redirectTo
-      // 5) return 302 to provider auth URL
+      const headers = new Headers();
+      headers.set("Location", url.toString());
 
-      return new Response(JSON.stringify({ code, provider }), { status: 501 });
+      headers.append(
+        "Set-Cookie",
+        `auth:state=${state}; Path=/auth/callback/${provider}; HttpOnly; Secure; SameSite=Lax; Max-Age=900`,
+      );
+      headers.append(
+        "Set-Cookie",
+        `auth:nonce=${nonce}; Path=/auth/callback/${provider}; HttpOnly; Secure; SameSite=Lax; Max-Age=900`,
+      );
+
+      if (provider === "google") {
+        headers.append(
+          "Set-Cookie",
+          `auth:pkce=${verifier}; Path=/auth/callback/${provider}; HttpOnly; Secure; SameSite=Lax; Max-Age=900`,
+        );
+      }
+
+      await ctx.runMutation("auth:store" as any, {
+        type: "oauth:start",
+        state,
+        nonce,
+        verifier: provider === "google" ? verifier : undefined,
+        provider,
+        expiresAt: Date.now() + 15 * 60_000,
+      });
+
+      return new Response(null, {
+        headers,
+        status: 302,
+      });
     }),
   });
 
@@ -131,10 +191,6 @@ const registerRoutes = (http: HttpRouter) => {
         return new Response(null, { status: 400 });
       }
 
-      // TODO:
-      // call internal store for credentials login/register flow
-      // e.g. args: { type: "credentials", flow, email, password, firstName, lastName }
-
       const result = await ctx.runMutation("auth:store" as any, {
         type: "credentials",
         flow: payload.flow,
@@ -153,15 +209,11 @@ const registerRoutes = (http: HttpRouter) => {
   });
 
   http.route({
-    pathPrefix: "/auth/logout/",
+    path: "/auth/logout",
     method: "POST",
     handler: httpActionGeneric(async (ctx, request) => {
-      const origin = request.headers.get("origin");
-      const trustedOrigin = requireEnv("DASHBOARD_URL");
-
-      if (!origin || origin !== trustedOrigin) {
-        return new Response(null, { status: 403 });
-      }
+      const blocked = csrf(request);
+      if (blocked) return blocked;
 
       const cookies = getCookies(request);
       const sessionToken = cookies["auth:session"];
@@ -169,7 +221,10 @@ const registerRoutes = (http: HttpRouter) => {
       if (sessionToken) {
         await ctx
           .runMutation("auth:store" as any, {
-            args: { type: "logout", sessionToken },
+            args: {
+              type: "logout",
+              sessionToken,
+            },
           })
           .catch((error) => {
             console.error("auth/logout: failed to invalidate session", error);
@@ -187,7 +242,10 @@ const registerRoutes = (http: HttpRouter) => {
         "auth:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
       );
 
-      return new Response(null, { headers, status: 204 });
+      return new Response(null, {
+        status: 204,
+        headers,
+      });
     }),
   });
 

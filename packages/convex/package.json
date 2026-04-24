@@ -10,7 +10,6 @@
     "@react-email/render": "catalog:",
     "@repo/auth": "workspace:*",
     "convex": "catalog:",
-    "convex-helpers": "catalog:",
     "react": "catalog:",
     "stripe": "catalog:",
     "valibot": "catalog:"
