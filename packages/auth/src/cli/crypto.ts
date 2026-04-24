@@ -35,7 +35,9 @@ function toSigningJwk(key: JsonWebKey, kid: string): SigningJwk {
 async function generateAuthJwks(): Promise<GeneratedAuthJwks> {
   const kid = randomUUID();
 
-  const { publicKey, privateKey } = await generateKeyPair("RS256");
+  const { publicKey, privateKey } = await generateKeyPair("RS256", {
+    extractable: true,
+  });
   const publicJwk = await exportJWK(publicKey);
   const privateJwk = await exportJWK(privateKey);
 

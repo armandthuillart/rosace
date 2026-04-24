@@ -1,22 +1,18 @@
-import { createHash, randomBytes } from "node:crypto";
+import { toBase64Url } from "../utils/base64";
 
-function base64url(input: Buffer) {
-  return input.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-function pkce(): {
+async function pkce(): Promise<{
+  challenge: string;
   method: "S256";
   verifier: string;
-  challenge: string;
-} {
-  const verifier = base64url(randomBytes(32));
-  const challenge = base64url(createHash("sha256").update(verifier).digest());
+}> {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
 
-  return {
-    method: "S256",
-    verifier,
-    challenge,
-  };
+  const verifier = toBase64Url(bytes);
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+  const challenge = toBase64Url(new Uint8Array(digest));
+
+  return { challenge, method: "S256", verifier };
 }
 
 export { pkce };

@@ -4,16 +4,18 @@ import { v } from "convex/values";
 import { hash } from "../utils/hash";
 
 const internalQuery = internalQueryGeneric({
-  args: v.union(
-    v.object({
-      type: v.literal("session:get"),
-      token: v.string(),
-    }),
-  ),
-  handler: async (ctx, args) => {
-    switch (args.type) {
-      case "session:get":
-        const refreshTokenHash = await hash("session", args.token);
+  args: {
+    payload: v.union(
+      v.object({
+        type: v.literal("session:get"),
+        token: v.string(),
+      }),
+    ),
+  },
+  handler: async (ctx, { payload }) => {
+    switch (payload.type) {
+      case "session:get": {
+        const refreshTokenHash = await hash("session", payload.token);
 
         const session = await ctx.db
           .query("sessions")
@@ -36,9 +38,12 @@ const internalQuery = internalQueryGeneric({
             verified: user.verified,
           },
         };
+      }
 
-        default:
-          throw new Error("Unsupported auth query op");
+      default: {
+        const _never: never = payload.type;
+        throw new Error(`Unsupported auth query op: ${String(_never)}`);
+      }
     }
   },
 });

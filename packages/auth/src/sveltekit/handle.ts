@@ -1,45 +1,46 @@
-import { Handle } from "@sveltejs/kit";
+import "./ambient";
+import type { Handle } from "@sveltejs/kit";
 
-import { requireEnv } from "../utils";
-import { Auth } from "./types";
+import type { Auth } from "./types";
 
-const handle: Handle = async ({ event, resolve }) => {
-  const target = requireEnv("CONVEX_SITE_URL");
-  const source = new URL(event.request.url);
+function createHandle(convexSiteUrl: string): Handle {
+  return async ({ event, resolve }) => {
+    const source = new URL(event.request.url);
 
-  if (source.pathname.startsWith("/auth/")) {
-    const body =
-      event.request.method === "GET" || event.request.method === "HEAD"
-        ? undefined
-        : await event.request.text();
+    if (source.pathname.startsWith("/auth/")) {
+      const body =
+        event.request.method === "GET" || event.request.method === "HEAD"
+          ? undefined
+          : await event.request.text();
 
-    const upstream = await fetch(`${target}${source.pathname}${source.search}`, {
-      redirect: "manual",
-      headers: event.request.headers,
-      method: event.request.method,
-      body,
-    });
+      const upstream = await fetch(`${convexSiteUrl}${source.pathname}${source.search}`, {
+        redirect: "manual",
+        headers: event.request.headers,
+        method: event.request.method,
+        body,
+      });
 
-    return new Response(upstream.body, {
-      headers: upstream.headers,
-      status: upstream.status,
-    });
-  }
+      return new Response(upstream.body, {
+        headers: upstream.headers,
+        status: upstream.status,
+      });
+    }
 
-  event.locals.auth = async (): Promise<Auth> => {
-    const cookie = event.request.headers.get("cookie") ?? "";
-    if (!cookie) return null;
+    event.locals.auth = async (): Promise<Auth> => {
+      const cookie = event.request.headers.get("cookie") ?? "";
+      if (!cookie) return null;
 
-    const response = await fetch(`${target}/auth/session`, {
-      headers: { cookie },
-      method: "GET",
-    });
+      const response = await fetch(`${convexSiteUrl}/auth/session`, {
+        headers: { cookie },
+        method: "GET",
+      });
 
-    if (!response.ok) return null;
-    return (await response.json()) as Auth;
+      if (!response.ok) return null;
+      return (await response.json()) as Auth;
+    };
+
+    return resolve(event);
   };
+}
 
-  return resolve(event);
-};
-
-export { handle };
+export { createHandle };

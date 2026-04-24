@@ -6,12 +6,15 @@ const ENDPOINTS: Record<SocialProvider, string> = {
   apple: "https://appleid.apple.com/auth/authorize",
 };
 
+function callbackUrl(provider: SocialProvider) {
+  return `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
+}
+
 function authorize({ provider }: { provider: SocialProvider }) {
-  const callback = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
   const url = new URL(ENDPOINTS[provider]);
 
   url.searchParams.set("response_type", "code");
-  url.searchParams.set("redirect_uri", callback);
+  url.searchParams.set("redirect_uri", callbackUrl(provider));
 
   if (provider === "google") {
     url.searchParams.set("client_id", requireEnv("GOOGLE_CLIENT_ID"));
@@ -25,4 +28,4 @@ function authorize({ provider }: { provider: SocialProvider }) {
   return { url };
 }
 
-export { authorize };
+export { authorize, callbackUrl };

@@ -28,18 +28,20 @@ export default defineSchema({
     .index("by_user", ["userId"]),
 
   verifications: defineTable({
-    email: v.string(),
     type: v.union(
       v.literal("email_verification"),
       v.literal("password_reset"),
       v.literal("email_change"),
       v.literal("account_deletion"),
+      v.literal("oauth_state"),
+      v.literal("oauth_handoff"),
     ),
-    tokenHash: v.string(),
+    identifier: v.string(),
+    value: v.string(),
     expiresAt: v.number(),
   })
-    .index("by_email", ["email"])
-    .index("by_token_hash", ["tokenHash"]),
+    .index("by_identifier", ["identifier"])
+    .index("by_expires_at", ["expiresAt"]),
 
   customers: defineTable({
     userId: v.id("users"),
