@@ -1,10 +1,11 @@
+// @ts-ignore
+import { env } from "$env/dynamic/private";
 import { fail, redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
 
-import { requireEnv } from "../env";
-import { type Auth } from "./types";
+import { Auth } from "./types";
 
 const handle: Handle = async ({ event, resolve }) => {
-  const target = requireEnv("CONVEX_SITE_URL");
+  const target = env.CONVEX_SITE_URL;
   const source = new URL(event.request.url);
 
   if (source.pathname.startsWith("/auth/")) {
