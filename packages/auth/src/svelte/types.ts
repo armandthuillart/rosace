@@ -26,8 +26,6 @@ type User = {
   verified: boolean;
 };
 
-type Auth = {
+export type Auth = {
   user: User;
 } | null;
-
-export type { Auth, User };

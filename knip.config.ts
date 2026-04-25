@@ -1,16 +1,16 @@
 import type { KnipConfig } from "knip";
 
 export default {
+  ignoreUnresolved: ["\\$env/dynamic/private", "\\$env/dynamic/public"],
+  svelte: {
+    config: ["svelte.config.ts"],
+  },
+  sveltekit: {
+    config: ["svelte.config.ts"],
+  },
   workspaces: {
-    ".": {
-      entry: ["vite.config.ts"],
-    },
-    "apps/dashboard": {
-      entry: ["src/**/*.test.ts"],
-    },
     "packages/convex": {
       entry: ["src/**"],
     },
   },
-  ignoreUnresolved: ["\\$env/dynamic/public"],
 } satisfies KnipConfig;

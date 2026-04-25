@@ -108,7 +108,6 @@ type RegisteredReturnType<
 export type {
   ConvexBuilderDef,
   Context,
-  ExpectedReturnType,
   InferredArgs,
   InferredHandlerReturn,
   ConvexArgsValidator,

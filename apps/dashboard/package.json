@@ -12,7 +12,6 @@
     "@fontsource/inter": "catalog:",
     "@repo/auth": "workspace:*",
     "@repo/convex": "workspace:*",
-    "valibot": "catalog:",
     "convex": "catalog:",
     "dexie": "catalog:"
   },

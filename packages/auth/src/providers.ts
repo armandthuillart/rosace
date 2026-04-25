@@ -228,4 +228,3 @@ async function createPkce(): Promise<{
 }
 
 export { createPkce, exchangeCode, getAuthorizationUrl };
-export type { OAuthProfile, SocialProvider };
