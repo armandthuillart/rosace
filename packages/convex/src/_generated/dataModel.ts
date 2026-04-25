@@ -29,40 +29,24 @@ import type { GenericId } from "convex/values";
 export type DataModel = {
   accounts: {
     document: {
-      accessToken?: null | string;
-      accessTokenExpiresAt?: null | number;
-      accountId: string;
-      idToken?: null | string;
-      password?: null | string;
-      providerId: string;
-      refreshToken?: null | string;
-      refreshTokenExpiresAt?: null | number;
-      scope?: null | string;
-      updatedAt: number;
-      userId: string;
+      passwordHash?: string;
+      provider: "apple" | "credentials" | "google";
+      subject?: string;
+      userId: Id<"users">;
       _id: Id<"accounts">;
       _creationTime: number;
     };
     fieldPaths:
       | "_creationTime"
       | "_id"
-      | "accessToken"
-      | "accessTokenExpiresAt"
-      | "accountId"
-      | "idToken"
-      | "password"
-      | "providerId"
-      | "refreshToken"
-      | "refreshTokenExpiresAt"
-      | "scope"
-      | "updatedAt"
+      | "passwordHash"
+      | "provider"
+      | "subject"
       | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_account: ["accountId", "_creationTime"];
-      by_account_provider: ["accountId", "providerId", "_creationTime"];
-      by_provider_user: ["providerId", "userId", "_creationTime"];
+      by_provider_subject: ["provider", "subject", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -72,20 +56,11 @@ export type DataModel = {
     document: {
       customerId: string;
       email: string;
-      metadata?: any;
-      name?: string;
-      userId: string;
+      userId: Id<"users">;
       _id: Id<"customers">;
       _creationTime: number;
     };
-    fieldPaths:
-      | "_creationTime"
-      | "_id"
-      | "customerId"
-      | "email"
-      | "metadata"
-      | "name"
-      | "userId";
+    fieldPaths: "_creationTime" | "_id" | "customerId" | "email" | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -100,12 +75,12 @@ export type DataModel = {
     document: {
       amountDue: number;
       amountPaid: number;
-      createdAt: number;
       customerId: string;
       invoiceId: string;
-      status: string;
+      issuedAt: number;
+      status: "draft" | "open" | "paid" | "uncollectible" | "void";
       subscriptionId: string;
-      userId: string;
+      userId: Id<"users">;
       _id: Id<"invoices">;
       _creationTime: number;
     };
@@ -114,18 +89,16 @@ export type DataModel = {
       | "_id"
       | "amountDue"
       | "amountPaid"
-      | "createdAt"
       | "customerId"
       | "invoiceId"
+      | "issuedAt"
       | "status"
       | "subscriptionId"
       | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_customer: ["customerId", "_creationTime"];
       by_invoice: ["invoiceId", "_creationTime"];
-      by_subscription: ["subscriptionId", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -134,13 +107,18 @@ export type DataModel = {
   payments: {
     document: {
       amount: number;
-      createdAt: number;
       currency: string;
       customerId: string;
-      metadata?: any;
       paymentId: string;
-      status: string;
-      userId: string;
+      processedAt: number;
+      status:
+        | "requires_payment_method"
+        | "requires_confirmation"
+        | "requires_action"
+        | "processing"
+        | "succeeded"
+        | "canceled";
+      userId: Id<"users">;
       _id: Id<"payments">;
       _creationTime: number;
     };
@@ -148,17 +126,15 @@ export type DataModel = {
       | "_creationTime"
       | "_id"
       | "amount"
-      | "createdAt"
       | "currency"
       | "customerId"
-      | "metadata"
       | "paymentId"
+      | "processedAt"
       | "status"
       | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_customer: ["customerId", "_creationTime"];
       by_payment: ["paymentId", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
@@ -168,9 +144,8 @@ export type DataModel = {
   sessions: {
     document: {
       expiresAt: number;
-      token: string;
-      updatedAt: number;
-      userId: string;
+      refreshTokenHash: string;
+      userId: Id<"users">;
       _id: Id<"sessions">;
       _creationTime: number;
     };
@@ -178,15 +153,12 @@ export type DataModel = {
       | "_creationTime"
       | "_id"
       | "expiresAt"
-      | "token"
-      | "updatedAt"
+      | "refreshTokenHash"
       | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_expires_at: ["expiresAt", "_creationTime"];
-      by_expires_at_user: ["expiresAt", "userId", "_creationTime"];
-      by_token: ["token", "_creationTime"];
+      by_refresh_token_hash: ["refreshTokenHash", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -199,9 +171,18 @@ export type DataModel = {
       currentPeriodEnd: number;
       customerId: string;
       priceId: string;
-      status: string;
+      productId: string;
+      status:
+        | "active"
+        | "canceled"
+        | "incomplete"
+        | "incomplete_expired"
+        | "past_due"
+        | "trialing"
+        | "unpaid"
+        | "paused";
       subscriptionId: string;
-      userId: string;
+      userId: Id<"users">;
       _id: Id<"subscriptions">;
       _creationTime: number;
     };
@@ -213,6 +194,7 @@ export type DataModel = {
       | "currentPeriodEnd"
       | "customerId"
       | "priceId"
+      | "productId"
       | "status"
       | "subscriptionId"
       | "userId";
@@ -229,9 +211,10 @@ export type DataModel = {
   users: {
     document: {
       email: string;
-      emailVerified: boolean;
-      name: string;
-      updatedAt: number;
+      firstName: string;
+      lastName: string;
+      plan: "free" | "pro";
+      verified: boolean;
       _id: Id<"users">;
       _creationTime: number;
     };
@@ -239,14 +222,14 @@ export type DataModel = {
       | "_creationTime"
       | "_id"
       | "email"
-      | "emailVerified"
-      | "name"
-      | "updatedAt";
+      | "firstName"
+      | "lastName"
+      | "plan"
+      | "verified";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_email_name: ["email", "name", "_creationTime"];
-      by_name: ["name", "_creationTime"];
+      by_email: ["email", "_creationTime"];
     };
     searchIndexes: {};
     vectorIndexes: {};
@@ -255,7 +238,13 @@ export type DataModel = {
     document: {
       expiresAt: number;
       identifier: string;
-      updatedAt: number;
+      type:
+        | "email_verification"
+        | "password_reset"
+        | "email_change"
+        | "account_deletion"
+        | "oauth_state"
+        | "oauth_handoff";
       value: string;
       _id: Id<"verifications">;
       _creationTime: number;
@@ -265,7 +254,7 @@ export type DataModel = {
       | "_id"
       | "expiresAt"
       | "identifier"
-      | "updatedAt"
+      | "type"
       | "value";
     indexes: {
       by_id: ["_id"];

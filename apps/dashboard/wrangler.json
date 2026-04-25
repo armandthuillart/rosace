@@ -5,11 +5,5 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "./.cloudflare/worker.js",
   "name": "rosace-dashboard",
-  "observability": { "enabled": true },
-  "vars": {
-    "PUBLIC_CONVEX_SITE_URL": "https://knowing-buzzard-594.convex.site",
-    "PUBLIC_CONVEX_URL": "https://knowing-buzzard-594.convex.cloud",
-    "PUBLIC_DASHBOARD_URL": "https://app.rosace.app",
-    "PUBLIC_MARKETING_URL": "https://rosace.app"
-  }
+  "observability": { "enabled": true }
 }

@@ -1,25 +1,27 @@
-import { ServerError } from "@repo/crpc";
 import { v } from "convex/values";
 
-import { authQuery } from "./crpc";
+import { ConvexError } from "../procedures/errors";
+import { authQuery } from "./rpc";
 
 export const getUser = authQuery
   .returns(
     v.object({
       email: v.string(),
-      name: v.string(),
+      lastName: v.string(),
+      firstName: v.string(),
     }),
   )
   .handler(async (ctx) => {
     const user = await ctx.db.get(ctx.userId);
 
     if (!user) {
-      throw new ServerError({ code: "INTERNAL_SERVER_ERROR" });
+      throw new ConvexError({ code: "INTERNAL_SERVER_ERROR" });
     }
 
     return {
       email: user.email,
-      name: user.name,
+      lastName: user.lastName,
+      firstName: user.firstName,
     };
   })
   .public();

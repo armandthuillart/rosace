@@ -2,97 +2,115 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  users: defineTable({
+    email: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
+    plan: v.union(v.literal("free"), v.literal("pro")),
+    verified: v.boolean(),
+  }).index("by_email", ["email"]),
+
   accounts: defineTable({
-    accessToken: v.optional(v.union(v.null(), v.string())),
-    accessTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
-    accountId: v.string(),
-    idToken: v.optional(v.union(v.null(), v.string())),
-    password: v.optional(v.union(v.null(), v.string())),
-    providerId: v.string(),
-    refreshToken: v.optional(v.union(v.null(), v.string())),
-    refreshTokenExpiresAt: v.optional(v.union(v.null(), v.number())),
-    scope: v.optional(v.union(v.null(), v.string())),
-    updatedAt: v.number(),
-    userId: v.string(),
+    userId: v.id("users"),
+    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
+    subject: v.optional(v.string()),
+    passwordHash: v.optional(v.string()),
   })
-    .index("by_account", ["accountId"])
-    .index("by_account_provider", ["accountId", "providerId"])
-    .index("by_provider_user", ["providerId", "userId"])
+    .index("by_provider_subject", ["provider", "subject"])
     .index("by_user", ["userId"]),
+
+  sessions: defineTable({
+    userId: v.id("users"),
+    refreshTokenHash: v.string(),
+    expiresAt: v.number(),
+  })
+    .index("by_refresh_token_hash", ["refreshTokenHash"])
+    .index("by_user", ["userId"]),
+
+  verifications: defineTable({
+    type: v.union(
+      v.literal("email_verification"),
+      v.literal("password_reset"),
+      v.literal("email_change"),
+      v.literal("account_deletion"),
+      v.literal("oauth_state"),
+      v.literal("oauth_handoff"),
+    ),
+    identifier: v.string(),
+    value: v.string(),
+    expiresAt: v.number(),
+  })
+    .index("by_identifier", ["identifier"])
+    .index("by_expires_at", ["expiresAt"]),
+
   customers: defineTable({
+    userId: v.id("users"),
     customerId: v.string(),
     email: v.string(),
-    metadata: v.optional(v.any()),
-    name: v.optional(v.string()),
-    userId: v.string(),
   })
     .index("by_customer", ["customerId"])
     .index("by_email", ["email"])
     .index("by_user", ["userId"]),
+
+  subscriptions: defineTable({
+    userId: v.id("users"),
+    customerId: v.string(),
+    subscriptionId: v.string(),
+    productId: v.string(),
+    priceId: v.string(),
+    status: v.union(
+      v.literal("active"),
+      v.literal("canceled"),
+      v.literal("incomplete"),
+      v.literal("incomplete_expired"),
+      v.literal("past_due"),
+      v.literal("trialing"),
+      v.literal("unpaid"),
+      v.literal("paused"),
+    ),
+    currentPeriodEnd: v.number(),
+    cancelAtPeriodEnd: v.boolean(),
+    cancelAt: v.optional(v.number()),
+  })
+    .index("by_subscription", ["subscriptionId"])
+    .index("by_customer", ["customerId"])
+    .index("by_user", ["userId"]),
+
   invoices: defineTable({
+    userId: v.id("users"),
+    customerId: v.string(),
+    subscriptionId: v.string(),
+    invoiceId: v.string(),
     amountDue: v.number(),
     amountPaid: v.number(),
-    createdAt: v.number(),
-    customerId: v.string(),
-    invoiceId: v.string(),
-    status: v.string(),
-    subscriptionId: v.string(),
-    userId: v.string(),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("open"),
+      v.literal("paid"),
+      v.literal("uncollectible"),
+      v.literal("void"),
+    ),
+    issuedAt: v.number(),
   })
     .index("by_invoice", ["invoiceId"])
-    .index("by_customer", ["customerId"])
-    .index("by_subscription", ["subscriptionId"])
     .index("by_user", ["userId"]),
+
   payments: defineTable({
-    amount: v.number(),
-    createdAt: v.number(),
-    currency: v.string(),
+    userId: v.id("users"),
     customerId: v.string(),
-    metadata: v.optional(v.any()),
     paymentId: v.string(),
-    status: v.string(),
-    userId: v.string(),
+    amount: v.number(),
+    currency: v.string(),
+    status: v.union(
+      v.literal("requires_payment_method"),
+      v.literal("requires_confirmation"),
+      v.literal("requires_action"),
+      v.literal("processing"),
+      v.literal("succeeded"),
+      v.literal("canceled"),
+    ),
+    processedAt: v.number(),
   })
     .index("by_payment", ["paymentId"])
-    .index("by_customer", ["customerId"])
     .index("by_user", ["userId"]),
-  sessions: defineTable({
-    expiresAt: v.number(),
-    token: v.string(),
-    updatedAt: v.number(),
-    userId: v.string(),
-  })
-    .index("by_expires_at", ["expiresAt"])
-    .index("by_expires_at_user", ["expiresAt", "userId"])
-    .index("by_token", ["token"])
-    .index("by_user", ["userId"]),
-  subscriptions: defineTable({
-    cancelAt: v.optional(v.number()),
-    cancelAtPeriodEnd: v.boolean(),
-    currentPeriodEnd: v.number(),
-    customerId: v.string(),
-    priceId: v.string(),
-    status: v.string(),
-    subscriptionId: v.string(),
-    userId: v.string(),
-  })
-    .index("by_subscription", ["subscriptionId"])
-    .index("by_user", ["userId"])
-    .index("by_customer", ["customerId"]),
-  users: defineTable({
-    email: v.string(),
-    emailVerified: v.boolean(),
-    name: v.string(),
-    updatedAt: v.number(),
-  })
-    .index("by_email_name", ["email", "name"])
-    .index("by_name", ["name"]),
-  verifications: defineTable({
-    expiresAt: v.number(),
-    identifier: v.string(),
-    updatedAt: v.number(),
-    value: v.string(),
-  })
-    .index("by_expires_at", ["expiresAt"])
-    .index("by_identifier", ["identifier"]),
 });

@@ -1,0 +1,24 @@
+{
+  "name": "@repo/auth",
+  "bin": {
+    "auth": "./src/cli.ts"
+  },
+  "type": "module",
+  "exports": {
+    "./convex": "./src/convex/index.ts",
+    "./svelte": "./src/svelte/index.ts"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "catalog:",
+    "@types/node": "catalog:",
+    "commander": "catalog:",
+    "convex": "catalog:",
+    "jose": "catalog:",
+    "svelte": "catalog:",
+    "valibot": "catalog:"
+  },
+  "peerDependencies": {
+    "convex": "catalog:",
+    "svelte": "catalog:"
+  }
+}
