@@ -107,9 +107,5 @@ const login = async (event: RequestEvent) => {
 };
 
 export function svelteAuth() {
-  return {
-    handle,
-    login,
-    logout,
-  };
+  return { handle, login, logout };
 }
