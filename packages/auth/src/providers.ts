@@ -1,6 +1,6 @@
 import { requireEnv } from "./env";
 
-type SocialProvider = "apple" | "google";
+export type SocialProvider = "apple" | "google";
 
 type OAuthProfile = {
   email: string;
