@@ -22,7 +22,7 @@ const envs = {
 };
 
 const KEYS = {
-  dashboard: ["CONVEX_URL", "CONVEX_SITE_URL", "DASHBOARD_URL", "MARKETING_URL"],
+  dashboard: ["CONVEX_SITE_URL", "MARKETING_URL"],
   marketing: ["DASHBOARD_URL", "MARKETING_URL"],
 } as const;
 
@@ -31,24 +31,33 @@ const targets = [
     file: "apps/dashboard/.env.development",
     from: "dev",
     keys: KEYS.dashboard,
-    prefix: "PUBLIC_",
+    prefix: { MARKETING_URL: "PUBLIC_" },
+  },
+  {
+    file: "apps/dashboard/.env.production",
+    from: "prod",
+    keys: KEYS.dashboard,
+    prefix: { MARKETING_URL: "PUBLIC_" },
   },
   {
     file: "apps/marketing/.env.development",
     from: "dev",
     keys: KEYS.marketing,
-    prefix: "",
+    prefix: {},
   },
   {
     file: "apps/marketing/.env.production",
     from: "prod",
     keys: KEYS.marketing,
-    prefix: "",
+    prefix: {},
   },
 ] as const;
 
+
 for (const { file, from, keys, prefix } of targets) {
-  const content = `${keys.map((k) => `${prefix}${k}=${envs[from][k]}`).join("\n")}\n`;
+  const content = `${keys
+    .map((key) => `${(prefix[key as keyof typeof prefix] ?? "") + key}=${envs[from][key] ?? ""}`)
+    .join("\n")}\n`;
   writeFileSync(join(root, file), content, "utf8");
 }
 

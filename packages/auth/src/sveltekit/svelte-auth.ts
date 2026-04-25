@@ -1,14 +1,9 @@
-import { createHandle } from "./handle";
 import { login } from "./login";
 import { logout } from "./logout";
+import { handle } from "./handle";
 
-type SvelteAuthConfig = {
-  convexSiteUrl: string;
-};
-
-function svelteAuth({ convexSiteUrl }: SvelteAuthConfig) {
-  return { handle: createHandle(convexSiteUrl), login, logout };
+function svelteAuth() {
+  return { handle, login, logout };
 }
 
 export { svelteAuth };
-export type { SvelteAuthConfig };

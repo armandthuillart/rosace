@@ -1,6 +1,7 @@
 <script lang="ts">
   import { capitalize } from "$lib/utils";
   import type { LayoutProps } from "./$types";
+  import { PUBLIC_MARKETING_URL } from "$env/static/public";
 
   let { children }: LayoutProps = $props();
 
@@ -9,6 +10,12 @@
 
 <div class="flex h-screen p-4">
   <div class="m-auto max-w-xs space-y-5">
+    <a aria-label="Go back home" href={PUBLIC_MARKETING_URL}>
+      <svg class="size-16">
+        <use href="/sprites.svg#rosace"></use>
+      </svg>
+    </a>
+
     <h1 class="text-center text-3xl font-medium">Login or sign up</h1>
 
     <p class="mb-4 text-center">
