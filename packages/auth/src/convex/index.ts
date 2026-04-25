@@ -1,17 +1,27 @@
-import { httpActionGeneric, HttpRouter } from "convex/server";
+import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
 
-import { authorize } from "../providers/authorization-url";
-import { exchangeProviderCode } from "../providers/exchange";
-import { pkce } from "../providers/pkce";
-import { SocialProvider } from "../types";
-import { csrf, getCookies, getPublicJwks, guard, requireEnv } from "../utils";
+import { requireEnv } from "../env";
+import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } from "../providers";
+import { getPublicJwks, internalStore } from "./store";
 
 const STORE_QUERY = "auth:storeQuery" as const;
 const STORE_MUTATION = "auth:storeMutation" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
 const ACCESS_TOKEN_TTL_S = 15 * 60;
+
+type Provider = "credentials" | SocialProvider;
+
+type SessionPayload = {
+  accessToken: string;
+  expiresAt: number;
+  sessionToken: string;
+};
+
+type ProviderCheck =
+  | { blocked: Response; provider: null }
+  | { blocked: null; provider: Provider };
 
 const LoginSchema = v.pipe(
   v.object({
@@ -27,11 +37,67 @@ const LoginSchema = v.pipe(
   })),
 );
 
-type SessionPayload = {
-  accessToken: string;
-  expiresAt: number;
-  sessionToken: string;
-};
+function readCookies(request: Request): Record<string, string> {
+  const header = request.headers.get("cookie") ?? "";
+  const cookies: Record<string, string> = {};
+
+  for (const part of header.split(";")) {
+    const i = part.indexOf("=");
+    if (i === -1) continue;
+
+    const key = part.slice(0, i).trim();
+    if (!key) continue;
+
+    const value = part.slice(i + 1).trim();
+    try {
+      cookies[key] = decodeURIComponent(value);
+    } catch {
+      continue;
+    }
+  }
+
+  return cookies;
+}
+
+function verifyCsrf(request: Request): Response | null {
+  if (request.method !== "POST") return null;
+
+  const origin = request.headers.get("origin");
+  if (!origin) return new Response(null, { status: 403 });
+
+  const trustedOrigin = new URL(requireEnv("DASHBOARD_URL")).origin;
+  const requestOrigin = new URL(origin).origin;
+
+  if (requestOrigin !== trustedOrigin) {
+    return new Response(null, { status: 403 });
+  }
+
+  return null;
+}
+
+function requireAllowedProvider(request: Request, allowed: readonly Provider[]): ProviderCheck {
+  const provider = new URL(request.url).pathname.replace(/\/+$/, "").split("/").at(-1);
+
+  if (!provider) {
+    return {
+      provider: null,
+      blocked: new Response("Pick a provider.", { status: 400 }),
+    };
+  }
+
+  if (!allowed.includes(provider as Provider)) {
+    const label = provider.charAt(0).toUpperCase() + provider.slice(1);
+    return {
+      provider: null,
+      blocked: new Response(`${label} is not supported.`, { status: 400 }),
+    };
+  }
+
+  return {
+    provider: provider as Provider,
+    blocked: null,
+  };
+}
 
 function sessionCookies(payload: SessionPayload) {
   const maxAgeSession = Math.max(1, Math.floor((payload.expiresAt - Date.now()) / 1000));
@@ -49,7 +115,7 @@ function clearedAuthCookies() {
   ];
 }
 
-const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []) => {
+const registerRoutes = (http: HttpRouter) => {
   http.route({
     path: "/.well-known/openid-configuration",
     method: "GET",
@@ -92,8 +158,7 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     path: "/auth/session",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const cookies = getCookies(request);
-      const token = cookies["auth:session"];
+      const token = readCookies(request)["auth:session"];
 
       if (!token) {
         return new Response("null", {
@@ -105,7 +170,7 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
       const auth = await ctx.runQuery(
         STORE_QUERY as unknown as never,
         {
-          payload: { token, type: "session:get" },
+          payload: { type: "session:get", token },
         } as never,
       );
 
@@ -127,18 +192,17 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     path: "/auth/logout",
     method: "POST",
     handler: httpActionGeneric(async (ctx, request) => {
-      const blocked = csrf(request);
+      const blocked = verifyCsrf(request);
       if (blocked) return blocked;
 
-      const cookies = getCookies(request);
-      const token = cookies["auth:session"];
+      const token = readCookies(request)["auth:session"];
 
       if (token) {
         await ctx
           .runMutation(
             STORE_MUTATION as unknown as never,
             {
-              payload: { token, type: "session:delete" },
+              payload: { type: "session:delete", token },
             } as never,
           )
           .catch((error) => {
@@ -157,15 +221,15 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     pathPrefix: "/auth/login/",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const checked = guard(request, socialProviders);
+      const checked = requireAllowedProvider(request, ["apple", "google"]);
       if (checked.blocked) return checked.blocked;
 
       const provider = checked.provider as SocialProvider;
-      const { url } = authorize({ provider });
+      const url = getAuthorizationUrl(provider);
 
       const state = crypto.randomUUID().replace(/-/g, "");
       const nonce = crypto.randomUUID().replace(/-/g, "");
-      const { verifier, challenge, method } = await pkce();
+      const { verifier, challenge, method } = await createPkce();
 
       url.searchParams.set("state", state);
       url.searchParams.set("nonce", nonce);
@@ -175,23 +239,24 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
         url.searchParams.set("code_challenge_method", method);
       }
 
-      const headers = new Headers({ Location: url.toString() });
-
       await ctx.runMutation(
         STORE_MUTATION as unknown as never,
         {
           payload: {
-            expiresAt: Date.now() + OAUTH_STATE_TTL_MS,
-            nonce,
+            type: "oauth:start",
             provider,
             state,
-            type: "oauth:start",
+            nonce,
+            expiresAt: Date.now() + OAUTH_STATE_TTL_MS,
             verifier: provider === "google" ? verifier : undefined,
           },
         } as never,
       );
 
-      return new Response(null, { headers, status: 302 });
+      return new Response(null, {
+        headers: { Location: url.toString() },
+        status: 302,
+      });
     }),
   });
 
@@ -199,10 +264,10 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     pathPrefix: "/auth/login/",
     method: "POST",
     handler: httpActionGeneric(async (ctx, request) => {
-      const checked = guard(request, ["credentials"]);
+      const checked = requireAllowedProvider(request, ["credentials"]);
       if (checked.blocked) return checked.blocked;
 
-      const blocked = csrf(request);
+      const blocked = verifyCsrf(request);
       if (blocked) return blocked;
 
       let payload: v.InferOutput<typeof LoginSchema>;
@@ -218,12 +283,12 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
           STORE_MUTATION as unknown as never,
           {
             payload: {
-              email: payload.email,
-              firstName: payload.firstName,
-              flow: payload.flow,
-              lastName: payload.lastName,
-              password: payload.password,
               type: "credentials",
+              email: payload.email,
+              password: payload.password,
+              flow: payload.flow,
+              firstName: payload.firstName,
+              lastName: payload.lastName,
             },
           } as never,
         )) as SessionPayload;
@@ -239,7 +304,7 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
   });
 
   const callbackAction = httpActionGeneric(async (ctx, request) => {
-    const checked = guard(request, socialProviders);
+    const checked = requireAllowedProvider(request, ["apple", "google"]);
     if (checked.blocked) return checked.blocked;
 
     const provider = checked.provider as SocialProvider;
@@ -248,13 +313,14 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     const params = new URLSearchParams(url.search);
     const contentType = request.headers.get("content-type") ?? "";
 
-    let userFormField: string | null = null;
+    let userForm: string | null = null;
+
     if (contentType.startsWith("application/x-www-form-urlencoded")) {
       const formData = await request.formData();
       for (const [key, value] of formData.entries()) {
         if (typeof value === "string") params.set(key, value);
       }
-      userFormField = params.get("user");
+      userForm = params.get("user");
     }
 
     const code = params.get("code");
@@ -267,7 +333,7 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     const consumed = (await ctx.runMutation(
       STORE_MUTATION as unknown as never,
       {
-        payload: { provider, state, type: "oauth:consume" },
+        payload: { type: "oauth:consume", provider, state },
       } as never,
     )) as { nonce: string; verifier?: string } | null;
 
@@ -277,8 +343,9 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
 
     let profile;
     try {
-      profile = await exchangeProviderCode(provider, code, {
-        userForm: userFormField,
+      profile = await exchangeCode(provider, {
+        code,
+        userForm,
         verifier: consumed.verifier,
       });
     } catch (error) {
@@ -294,12 +361,12 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
       STORE_MUTATION as unknown as never,
       {
         payload: {
+          type: "oauth:complete",
+          provider,
+          subject: profile.subject,
           email: profile.email,
           firstName: profile.firstName,
           lastName: profile.lastName,
-          provider,
-          subject: profile.subject,
-          type: "oauth:complete",
           verified: profile.verified,
         },
       } as never,
@@ -318,6 +385,7 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
     )) as { code: string };
 
     const dashboard = requireEnv("DASHBOARD_URL");
+
     return new Response(null, {
       headers: { Location: `${dashboard}/auth/session/claim?code=${handoff}` },
       status: 302,
@@ -360,4 +428,8 @@ const registerRoutes = (http: HttpRouter, socialProviders: SocialProvider[] = []
   });
 };
 
-export { registerRoutes };
+function convexAuth() {
+  return { internalStore, registerRoutes };
+}
+
+export { convexAuth };

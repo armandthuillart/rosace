@@ -1,3 +1,14 @@
+declare global {
+  namespace App {
+    interface Locals {
+      auth: () => Promise<Auth>;
+    }
+    interface PageData {
+      user: User | null;
+    }
+  }
+}
+
 type User = {
   id: string;
   email: string;

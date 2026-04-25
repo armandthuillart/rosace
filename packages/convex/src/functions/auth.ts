@@ -1,9 +1,6 @@
-import { Apple, Google } from "@repo/auth/providers";
-import { convexAuth } from "@repo/auth/server";
+import { convexAuth } from "@repo/auth/convex";
 
-const { internalStore, registerRoutes } = convexAuth({
-  socialProviders: [Apple, Google],
-});
+const { internalStore, registerRoutes } = convexAuth();
 
 export const storeQuery = internalStore.query;
 export const storeMutation = internalStore.mutation;

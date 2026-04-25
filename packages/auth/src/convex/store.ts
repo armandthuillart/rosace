@@ -1,20 +1,130 @@
-import { internalMutationGeneric } from "convex/server";
+import { internalMutationGeneric, internalQueryGeneric } from "convex/server";
 import { v } from "convex/values";
+import { SignJWT, importJWK } from "jose";
 
-import { hash, hashPassword, randomToken, signAuthToken, verifyPassword } from "../utils";
+import { requireEnv } from "../env";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30;
+const SWEEP_BATCH_SIZE = 64;
+const PASSWORD_ITERATIONS = 210_000;
+const PASSWORD_KEY_LENGTH_BITS = 256;
 
-// The Convex generic data model doesn't know about our schema, so we lean on
-// `any` for the db/query builders here and rely on the `args` validator to keep
-// runtime values honest.
 type AnyCtx = { db: any };
 
-// Mirrors better-auth's `findVerificationValue`: looks up by identifier and
-// opportunistically sweeps expired rows in the same transaction. Bounded by
-// `.take()` to stay within Convex transaction limits — under steady traffic
-// this keeps the table self-healing without any cron.
-const SWEEP_BATCH_SIZE = 64;
+type AuthJwks = {
+  kid: string;
+  privateJwk: JsonWebKey;
+  publicJwks: { keys: JsonWebKey[] };
+};
+
+function toBase64Url(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function fromBase64Url(value: string): Uint8Array {
+  const padded =
+    value.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat((4 - (value.length % 4)) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+async function derivePassword(password: string, salt: Uint8Array, iterations: number) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits"],
+  );
+
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", hash: "SHA-256", salt: salt as BufferSource, iterations },
+    key,
+    PASSWORD_KEY_LENGTH_BITS,
+  );
+
+  return new Uint8Array(bits);
+}
+
+async function hashPassword(password: string): Promise<string> {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+
+  const derived = await derivePassword(password, salt, PASSWORD_ITERATIONS);
+
+  return `pbkdf2-sha256$${PASSWORD_ITERATIONS}$${toBase64Url(salt)}$${toBase64Url(derived)}`;
+}
+
+async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const parts = stored.split("$");
+  if (parts.length !== 4 || parts[0] !== "pbkdf2-sha256") return false;
+
+  const iterations = Number(parts[1]);
+  if (!Number.isFinite(iterations) || iterations <= 0) return false;
+
+  const salt = fromBase64Url(parts[2]);
+  const expected = fromBase64Url(parts[3]);
+  const derived = await derivePassword(password, salt, iterations);
+
+  if (derived.length !== expected.length) return false;
+
+  let diff = 0;
+  for (let i = 0; i < derived.length; i++) {
+    diff |= derived[i] ^ expected[i];
+  }
+
+  return diff === 0;
+}
+
+async function hashSessionToken(token: string): Promise<string> {
+  const secret = requireEnv("AUTH_SECRET");
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`${token}:${secret}`),
+  );
+
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function randomToken(byteLength = 32): string {
+  const buffer = new Uint8Array(byteLength);
+  crypto.getRandomValues(buffer);
+  return Array.from(buffer, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function loadAuthJwks(): AuthJwks {
+  return JSON.parse(requireEnv("AUTH_JWKS")) as AuthJwks;
+}
+
+function getPublicJwks(): string {
+  return JSON.stringify(loadAuthJwks().publicJwks);
+}
+
+async function signAuthToken(userId: string): Promise<string> {
+  const jwks = loadAuthJwks();
+  const privateKey = await importJWK(jwks.privateJwk, "RS256");
+
+  return new SignJWT({})
+    .setProtectedHeader({ alg: "RS256", kid: jwks.kid })
+    .setSubject(userId)
+    .setAudience("convex")
+    .setIssuer(requireEnv("CONVEX_SITE_URL"))
+    .setIssuedAt()
+    .setExpirationTime("15m")
+    .sign(privateKey);
+}
 
 async function findAndSweepVerification(db: any, identifier: string) {
   const entry = await db
@@ -31,7 +141,6 @@ async function findAndSweepVerification(db: any, identifier: string) {
     await db.delete(row._id);
   }
 
-  // The lookup row may have been swept already; in that case treat it as gone.
   if (entry && expired.some((row: any) => row._id === entry._id)) return null;
 
   return entry;
@@ -39,7 +148,7 @@ async function findAndSweepVerification(db: any, identifier: string) {
 
 async function createSession(ctx: AnyCtx, userId: unknown) {
   const token = randomToken();
-  const refreshTokenHash = await hash("session", token);
+  const refreshTokenHash = await hashSessionToken(token);
   const expiresAt = Date.now() + SESSION_DURATION_MS;
 
   await ctx.db.insert("sessions", {
@@ -54,6 +163,40 @@ async function createSession(ctx: AnyCtx, userId: unknown) {
     sessionToken: token,
   };
 }
+
+const internalQuery = internalQueryGeneric({
+  args: {
+    payload: v.object({
+      type: v.literal("session:get"),
+      token: v.string(),
+    }),
+  },
+  handler: async (ctx, { payload }) => {
+    const refreshTokenHash = await hashSessionToken(payload.token);
+
+    const session = await ctx.db
+      .query("sessions")
+      .withIndex("by_refresh_token_hash", (q) => q.eq("refreshTokenHash", refreshTokenHash))
+      .first();
+
+    if (!session) return null;
+    if (session.expiresAt <= Date.now()) return null;
+
+    const user = await ctx.db.get(session.userId);
+    if (!user) return null;
+
+    return {
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        plan: user.plan,
+        verified: user.verified,
+      },
+    };
+  },
+});
 
 const internalMutation = internalMutationGeneric({
   args: {
@@ -154,13 +297,11 @@ const internalMutation = internalMutationGeneric({
       }
 
       case "session:delete": {
-        const refreshTokenHash = await hash("session", payload.token);
+        const refreshTokenHash = await hashSessionToken(payload.token);
 
         const session = await db
           .query("sessions")
-          .withIndex("by_refresh_token_hash", (q: any) =>
-            q.eq("refreshTokenHash", refreshTokenHash),
-          )
+          .withIndex("by_refresh_token_hash", (q: any) => q.eq("refreshTokenHash", refreshTokenHash))
           .first();
 
         if (session) await db.delete(session._id);
@@ -283,4 +424,9 @@ const internalMutation = internalMutationGeneric({
   },
 });
 
-export { internalMutation };
+const internalStore = {
+  mutation: internalMutation,
+  query: internalQuery,
+};
+
+export { getPublicJwks, internalStore };
