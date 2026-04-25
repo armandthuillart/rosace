@@ -98,6 +98,13 @@ type InferredHandlerReturn<
   ? ExpectedReturnType<TReturnsValidator>
   : TReturn;
 
+type RegisteredReturnType<
+  TReturnsValidator extends ConvexReturnsValidator | undefined,
+  THandlerReturn,
+> = [TReturnsValidator] extends [ConvexReturnsValidator]
+  ? Promise<ExpectedReturnType<TReturnsValidator>>
+  : Promise<THandlerReturn>;
+
 export type {
   ConvexBuilderDef,
   Context,
@@ -114,5 +121,6 @@ export type {
   MutationCtx,
   ActionCtx,
   FunctionType,
+  RegisteredReturnType,
   FunctionVisibility,
 };

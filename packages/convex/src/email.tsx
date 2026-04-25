@@ -3,11 +3,9 @@ import { render } from "@react-email/render";
 import { v } from "convex/values";
 
 import { components } from "./_generated/api";
-import { convex } from "./crpc";
-import { OTP } from "./emails/otp";
-import { getEnv } from "./env";
-
-const env = getEnv();
+import { OTP } from "./email.code";
+import { env } from "./env";
+import { convex } from "./rpc";
 
 const resend = new Resend(components.resend, {
   testMode: env.DEPLOY_ENV !== "production",

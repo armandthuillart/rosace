@@ -26,7 +26,7 @@ export const api: {
       "query",
       "public",
       {},
-      { email: string; name: string }
+      { email: string; firstName: string; lastName: string }
     >;
   };
 } = anyApi as any;
@@ -40,49 +40,59 @@ export const api: {
  * ```
  */
 export const internal: {
-  _crpc: {
-    adapter: {
-      crpcMutation: FunctionReference<
-        "mutation",
-        "internal",
-        {
-          input: any;
-          op: "insert" | "updateOne" | "updateMany" | "remove" | "removeMany";
-          select?: Array<string>;
-        },
-        any
-      >;
-      crpcQuery: FunctionReference<
-        "query",
-        "internal",
-        {
-          limit?: number;
-          model: string;
-          offset?: number;
-          op: "findOne" | "findMany" | "count";
-          select?: Array<string>;
-          sortBy?: { direction: "asc" | "desc"; field: string };
-          where?: Array<{
-            connector?: "AND" | "OR";
-            field: string;
-            operator?:
-              | "contains"
-              | "ends_with"
-              | "eq"
-              | "gt"
-              | "gte"
-              | "in"
-              | "lt"
-              | "lte"
-              | "ne"
-              | "not_in"
-              | "starts_with";
-            value: any;
-          }>;
-        },
-        any
-      >;
-    };
+  auth: {
+    storeMutation: FunctionReference<
+      "mutation",
+      "internal",
+      {
+        payload:
+          | {
+              email: string;
+              firstName?: string;
+              flow: "register" | "login";
+              lastName?: string;
+              password: string;
+              type: "credentials";
+            }
+          | { token: string; type: "session:delete" }
+          | {
+              expiresAt: number;
+              nonce: string;
+              provider: "apple" | "google";
+              state: string;
+              type: "oauth:start";
+              verifier?: string;
+            }
+          | {
+              provider: "apple" | "google";
+              state: string;
+              type: "oauth:consume";
+            }
+          | {
+              email: string;
+              firstName: string;
+              lastName: string;
+              provider: "apple" | "google";
+              subject: string;
+              type: "oauth:complete";
+              verified: boolean;
+            }
+          | {
+              accessToken: string;
+              expiresAt: number;
+              sessionToken: string;
+              type: "oauth:handoff:issue";
+            }
+          | { code: string; type: "oauth:handoff:claim" };
+      },
+      any
+    >;
+    storeQuery: FunctionReference<
+      "query",
+      "internal",
+      { payload: { token: string; type: "session:get" } },
+      any
+    >;
   };
   email: {
     changeEmail: FunctionReference<

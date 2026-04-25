@@ -5,8 +5,13 @@
   import medium from "@fontsource/inter/files/inter-latin-500-normal.woff2?url";
   import semibold from "@fontsource/inter/files/inter-latin-600-normal.woff2?url";
   import type { LayoutProps } from "./$types";
+  import { useConvex } from "$lib/convex";
 
-  let { children }: LayoutProps = $props();
+  let { children, data }: LayoutProps = $props();
+
+  useConvex({
+    shouldFetch: () => !!data.user,
+  });
 </script>
 
 <svelte:head>

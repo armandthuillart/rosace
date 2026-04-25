@@ -2,7 +2,8 @@
   "name": "@repo/convex",
   "type": "module",
   "exports": {
-    "./api": "./src/_generated/api.ts"
+    "./api": "./src/_generated/api.ts",
+    "./svelte": "./remote/svelte.ts"
   },
   "dependencies": {
     "@convex-dev/resend": "catalog:",

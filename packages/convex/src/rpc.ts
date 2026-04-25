@@ -1,8 +1,8 @@
 import type { Auth } from "convex/server";
 import { ConvexError } from "convex/values";
 
-import type { DataModel, Id } from "../_generated/dataModel";
-import { createBuilder } from "./create-builder";
+import { createBuilder } from "../procedures";
+import type { DataModel, Id } from "./_generated/dataModel";
 
 export const convex = createBuilder<DataModel>();
 

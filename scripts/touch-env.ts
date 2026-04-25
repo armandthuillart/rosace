@@ -22,7 +22,7 @@ const envs = {
 };
 
 const KEYS = {
-  dashboard: ["CONVEX_SITE_URL", "MARKETING_URL"],
+  dashboard: ["CONVEX_SITE_URL", "CONVEX_URL", "MARKETING_URL"],
   marketing: ["DASHBOARD_URL", "MARKETING_URL"],
 } as const;
 
@@ -31,13 +31,13 @@ const targets = [
     file: "apps/dashboard/.env.development",
     from: "dev",
     keys: KEYS.dashboard,
-    prefix: { MARKETING_URL: "PUBLIC_" },
+    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_" },
   },
   {
     file: "apps/dashboard/.env.production",
     from: "prod",
     keys: KEYS.dashboard,
-    prefix: { MARKETING_URL: "PUBLIC_" },
+    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_" },
   },
   {
     file: "apps/marketing/.env.development",
@@ -52,7 +52,6 @@ const targets = [
     prefix: {},
   },
 ] as const;
-
 
 for (const { file, from, keys, prefix } of targets) {
   const content = `${keys

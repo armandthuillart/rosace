@@ -8,5 +8,5 @@
     "staticApi": true,
     "staticDataModel": true
   },
-  "functions": "src/functions"
+  "functions": "src"
 }

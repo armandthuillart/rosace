@@ -1,4 +1,4 @@
-import { ConvexError } from "convex/values";
+import { ConvexError as BaseConvexError } from "convex/values";
 
 const ERROR_CODES = [
   "PARSE_ERROR",
@@ -37,7 +37,7 @@ interface ErrorOptions {
   message?: string;
 }
 
-class ServerError extends ConvexError<ErrorData> {
+class ConvexError extends BaseConvexError<ErrorData> {
   readonly code: ErrorCode;
 
   constructor(opts: ErrorOptions) {
@@ -48,9 +48,9 @@ class ServerError extends ConvexError<ErrorData> {
       message,
     });
 
-    this.name = "ServerError";
+    this.name = "ConvexError";
     this.code = code;
   }
 }
 
-export { ServerError };
+export { ConvexError };

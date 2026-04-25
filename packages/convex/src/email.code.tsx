@@ -11,9 +11,7 @@ import {
   Text,
 } from "@react-email/components";
 
-import { getEnv } from "../env";
-
-const env = getEnv();
+import { env } from "./env";
 
 type OTPType = "sign-in" | "reset-password" | "change-email";
 

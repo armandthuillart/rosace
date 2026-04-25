@@ -9,7 +9,6 @@ const STORE_QUERY = "auth:storeQuery" as const;
 const STORE_MUTATION = "auth:storeMutation" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
-const ACCESS_TOKEN_TTL_S = 15 * 60;
 
 type Provider = "credentials" | SocialProvider;
 
@@ -19,9 +18,7 @@ type SessionPayload = {
   sessionToken: string;
 };
 
-type ProviderCheck =
-  | { blocked: Response; provider: null }
-  | { blocked: null; provider: Provider };
+type ProviderCheck = { blocked: Response; provider: null } | { blocked: null; provider: Provider };
 
 const LoginSchema = v.pipe(
   v.object({
@@ -101,18 +98,13 @@ function requireAllowedProvider(request: Request, allowed: readonly Provider[]):
 
 function sessionCookies(payload: SessionPayload) {
   const maxAgeSession = Math.max(1, Math.floor((payload.expiresAt - Date.now()) / 1000));
-
   return [
     `auth:session=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
-    `auth:token=${payload.accessToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${ACCESS_TOKEN_TTL_S}`,
   ];
 }
 
 function clearedAuthCookies() {
-  return [
-    "auth:session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
-    "auth:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
-  ];
+  return ["auth:session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
 }
 
 const registerRoutes = (http: HttpRouter) => {
@@ -317,7 +309,7 @@ const registerRoutes = (http: HttpRouter) => {
 
     if (contentType.startsWith("application/x-www-form-urlencoded")) {
       const formData = await request.formData();
-      for (const [key, value] of formData.entries()) {
+      for (const [key, value] of Object.entries(formData)) {
         if (typeof value === "string") params.set(key, value);
       }
       userForm = params.get("user");
