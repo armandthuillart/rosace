@@ -2,19 +2,12 @@ declare global {
   namespace App {
     interface Locals {
       // @ts-ignore
-      auth: () => Promise<Auth>;
+      auth: () => Promise<Session>;
     }
     interface PageData {
       user: User | null;
     }
   }
-}
-
-// @ts-ignore
-declare module "$env/dynamic/private" {
-  export const env: {
-    CONVEX_SITE_URL: string;
-  };
 }
 
 type User = {

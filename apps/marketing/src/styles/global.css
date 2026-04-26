@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --animate-nod: nod 0.5s ease;
   --breakpoint-xs: 29.6875rem;
   --color-blue-100: oklch(95.1% 0.0227 242);
   --color-blue-400: oklch(67% 0.183 249);
@@ -29,7 +30,6 @@
   --color-red-500: oklch(64.8% 0.208 35.7);
   --color-teal-400: oklch(65.8% 0.118 219);
   --color-teal-500: oklch(57.5% 0.101 217);
-  --font-sans: var(--font-inter);
   --shadow-4xl: 0 28px 72px oklch(0 0 0 / 15%), 0 16px 32px oklch(0 0 0 / 10%);
   --shadow-panel: var(--shadow-panel);
   --shadow-popover: var(--shadow-popover);
@@ -57,5 +57,21 @@
     --shadow-timeline:
       0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
       inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+  }
+}
+
+@keyframes nod {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(0deg);
   }
 }

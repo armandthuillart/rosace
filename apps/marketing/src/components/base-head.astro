@@ -1,29 +1,27 @@
 ---
-import { Font } from "astro:assets";
-import originalImage from "@assets/images/og-image.png";
-import { getImage } from "astro:assets";
+import "@styles/global.css";
+import ogImage from "@public/og-image.png";
 
-let title = "Rosace";
-let description = "A new type of animation tool.";
+interface Props {
+  title: string;
+}
 
-const optimizedImage = await getImage({
-  format: "png",
-  height: 630,
-  src: originalImage,
-  width: 1200,
-});
+let { title } = Astro.props;
 
-const ogImageUrl = new URL(optimizedImage.src, Astro.url);
+if (Astro.url.pathname !== "/") {
+  title = "Rosace · " + title;
+}
+
+const description =
+  "The animation tool for the next generation of motion designers.";
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/manifest.json" />
-
 <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 <title>{title}</title>
 <meta name="title" content={title} />
@@ -32,16 +30,14 @@ const ogImageUrl = new URL(optimizedImage.src, Astro.url);
 <meta property="og:url" content={Astro.url} />
 <meta property="og:type" content="website" />
 <meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image" content={new URL(ogImage.src, Astro.site)} />
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="Rosace" />
+<meta property="og:description" content={description} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@rosaceapp" />
 <meta name="twitter:creator" content="@rosaceapp" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImageUrl} />
-
-<Font cssVariable="--font-inter" preload />
+<meta name="twitter:image" content={new URL(ogImage.src, Astro.site)} />

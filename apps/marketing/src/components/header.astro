@@ -2,36 +2,106 @@
 import { DASHBOARD_URL } from "astro:env/client";
 ---
 
-<header class="dark:bg-gray-1000 fixed top-0 z-50 w-full bg-gray-50 px-5">
-  <nav class="mx-auto flex h-13 w-full max-w-7xl items-center justify-between">
-    <a
-      href="/"
-      class="relative inline-flex h-7 items-center before:absolute before:-inset-1 hover:opacity-80 focus-visible:outline-2"
-    >
-      <span class="sr-only">Go to homepage</span>
-
-      <svg
-        aria-hidden="true"
-        class="h-6 w-24"
-        fill="currentColor"
-        viewBox="0 0 96 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use href="/sprites.svg#logotype"></use>
-      </svg>
-    </a>
-
-    <div class="flex gap-2">
+<header
+  class="dark:bg-gray-1000/80 fixed top-0 z-50 w-full bg-gray-50/80 px-8 py-5 sm:py-7 sm:backdrop-blur-xl"
+>
+  <nav class="mx-auto flex w-full max-w-384 justify-between">
+    <div class="flex gap-2 delay-75">
       <a
-        class="relative inline-flex h-7 items-center justify-center rounded-full px-[calc(--spacing(2.5)-1px)] text-center text-sm font-medium before:absolute before:-inset-1 hover:opacity-80 focus-visible:outline-2"
-        href={DASHBOARD_URL}>Sign in</a
+        aria-label="Go to homepage"
+        class="group flex items-start gap-2 self-center focus-visible:outline-2"
+        href="/"
       >
+        <div class="relative size-10 overflow-hidden">
+          <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
+            <svg
+              class="transition delay-50 duration-300 ease-out will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:scale-y-75 group-hover:opacity-25 group-hover:delay-0"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprites.svg#logotype"></use>
+            </svg>
+          </div>
+
+          <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
+            <svg
+              class="ease origin-right translate-x-0.5 scale-50 opacity-0 blur-xs transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-hover:delay-50"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <use href="/sprites.svg#arrow-left"></use>
+            </svg>
+          </div>
+        </div>
+
+        <span class="text-2xl/10 font-bold">Rosace</span>
+      </a>
+
+      <div
+        class="bg-gray-150 mt-2.5 self-start rounded-lg border-[1.5px] border-gray-200 px-1 py-px text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+      >
+        beta
+      </div>
+    </div>
+
+    <div class="flex gap-5">
+      <a
+        aria-label="Frequently asked questions"
+        class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl px-5 py-4 text-center text-lg font-bold transition duration-300 before:absolute hover:bg-gray-200 focus-visible:outline-2 dark:hover:bg-gray-800"
+        href={`${DASHBOARD_URL}/login`}
+      >
+        <svg
+          fill="currentColor"
+          class="size-6"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 3.20455C7.14241 3.20455 3.20455 7.1424 3.20455 12C3.20455 16.8576 7.14241 20.7955 12 20.7955C16.8576 20.7955 20.7954 16.8576 20.7954 12C20.7954 7.1424 16.8576 3.20455 12 3.20455ZM1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.937 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.937 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12Z"
+          ></path>
+
+          <path
+            class="group-hover:animate-nod origin-center"
+            d="M8.5 9.5C8.5 7.567 10.067 6 12 6C13.933 6 15.5 7.567 15.5 9.5C15.5 11.433 13.933 13 12 13C10.067 13 8.5 11.433 8.5 9.5Z"
+          ></path>
+
+          <path
+            d="M5.40952 17.6472C6.43326 15.8556 8.33849 14.75 10.4019 14.75H13.5987C15.6621 14.75 17.5673 15.8556 18.591 17.6472L19.6178 19.6074L19.1845 19.9969C17.2811 21.7079 14.7615 22.7499 12.0003 22.7499C9.23914 22.7499 6.71951 21.7079 4.81607 19.9968L4.38281 19.6073L5.40952 17.6472Z"
+          ></path>
+        </svg>
+
+        Login
+      </a>
 
       <a
-        class="relative inline-flex h-7 items-center justify-center rounded-full bg-gray-800 px-[calc(--spacing(2.5)-1px)] text-center text-sm font-medium text-gray-200 before:absolute before:-inset-1 hover:bg-gray-600 focus-visible:outline-2 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300"
-        href={DASHBOARD_URL}
+        aria-label="Sign up for free"
+        class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-200 py-4 pr-5 pl-13 text-center text-lg font-bold transition duration-300 before:absolute focus-visible:outline-2 max-sm:hidden dark:bg-gray-800"
+        href={`${DASHBOARD_URL}/register`}
       >
-        Sign up for free
+        <svg
+          class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprites.svg#arrow-right"></use>
+        </svg>
+
+        <span
+          class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
+          >Sign up for free</span
+        >
+
+        <svg
+          class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <use href="/sprites.svg#arrow-right"></use>
+        </svg>
       </a>
     </div>
   </nav>

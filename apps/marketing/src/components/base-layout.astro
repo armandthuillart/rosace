@@ -7,13 +7,33 @@ import Header from "@components/header.astro";
 
 <html lang="en" class="antialiased scheme-light-dark">
   <head>
-    <BaseHead />
+    <BaseHead title="Rosace" />
+
+    <script>
+      const noTransition = document.createElement("style");
+      noTransition.textContent = "* { transition: none !important; }";
+
+      const disableTransitions = () => {
+        document.head.appendChild(noTransition);
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => noTransition.remove()),
+        );
+      };
+
+      disableTransitions();
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", disableTransitions);
+    </script>
   </head>
+
   <body class="dark:bg-gray-1000 bg-gray-50 text-gray-800 dark:text-gray-200">
     <Header />
+
     <main class="isolate flex flex-col gap-24 overflow-clip pt-28 pb-32">
       <slot />
     </main>
+
     <Footer />
   </body>
 </html>
