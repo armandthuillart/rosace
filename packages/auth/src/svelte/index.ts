@@ -1,8 +1,16 @@
 // @ts-ignore
 import { env } from "$env/dynamic/private";
 import { fail, redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
+import * as v from "valibot";
 
 import type { Session } from "./types";
+
+const LoginFormSchema = v.object({
+  email: v.pipe(v.string(), v.trim(), v.email()),
+  password: v.pipe(v.string(), v.minLength(8), v.maxLength(128)),
+  lastName: v.optional(v.string()),
+  firstName: v.optional(v.string()),
+});
 
 const handle: Handle = async ({ event, resolve }) => {
   const target = env.CONVEX_SITE_URL;
@@ -58,14 +66,16 @@ const logout = async (event: RequestEvent) => {
 };
 
 const login = async (event: RequestEvent) => {
-  const data = await event.request.formData();
+  const formData = await event.request.formData();
 
-  const email = String(data.get("email") ?? "")
-    .trim()
-    .toLowerCase();
-  const password = String(data.get("password") ?? "");
-  const lastName = String(data.get("lastName") ?? "").trim();
-  const firstName = String(data.get("firstName") ?? "").trim();
+  const rawData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+    lastName: formData.get("lastName"),
+    firstName: formData.get("firstName"),
+  };
+
+  const { email, password, lastName, firstName } = v.parse(LoginFormSchema, rawData);
 
   const register = Boolean(firstName || lastName);
   const missing = !email || !password || (register && (!firstName || !lastName));

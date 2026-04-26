@@ -1,6 +1,6 @@
 import { internalMutationGeneric, internalQueryGeneric } from "convex/server";
 import { v } from "convex/values";
-import { SignJWT, importJWK } from "jose";
+import { SignJWT, importJWK, type JWK } from "jose";
 
 import { requireEnv } from "../env";
 
@@ -10,11 +10,12 @@ const PASSWORD_ITERATIONS = 210_000;
 const PASSWORD_KEY_LENGTH_BITS = 256;
 
 type AnyCtx = { db: any };
+type BufferSource = NodeJS.BufferSource;
 
 type AuthJwks = {
   kid: string;
-  privateJwk: JsonWebKey;
-  publicJwks: { keys: JsonWebKey[] };
+  privateJwk: JWK;
+  publicJwks: { keys: JWK[] };
 };
 
 function toBase64Url(bytes: Uint8Array): string {
