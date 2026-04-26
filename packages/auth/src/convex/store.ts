@@ -194,6 +194,8 @@ const internalQuery = internalQueryGeneric({
         plan: user.plan,
         verified: user.verified,
       },
+      token: await signAuthToken(String(user._id)),
+      expires: session.expiresAt,
     };
   },
 });
@@ -301,7 +303,9 @@ const internalMutation = internalMutationGeneric({
 
         const session = await db
           .query("sessions")
-          .withIndex("by_refresh_token_hash", (q: any) => q.eq("refreshTokenHash", refreshTokenHash))
+          .withIndex("by_refresh_token_hash", (q: any) =>
+            q.eq("refreshTokenHash", refreshTokenHash),
+          )
           .first();
 
         if (session) await db.delete(session._id);

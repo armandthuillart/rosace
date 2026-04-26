@@ -99,12 +99,12 @@ function requireAllowedProvider(request: Request, allowed: readonly Provider[]):
 function sessionCookies(payload: SessionPayload) {
   const maxAgeSession = Math.max(1, Math.floor((payload.expiresAt - Date.now()) / 1000));
   return [
-    `auth:session=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
+    `session:refresh=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
   ];
 }
 
 function clearedAuthCookies() {
-  return ["auth:session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
+  return ["session:refresh=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
 }
 
 const registerRoutes = (http: HttpRouter) => {
@@ -147,10 +147,27 @@ const registerRoutes = (http: HttpRouter) => {
   });
 
   http.route({
+    /**
+     * Session endpoint - returns authenticated user profile and Convex auth token.
+     *
+     * Response shape (NextAuth-compatible):
+     * - Unauthenticated: `null`
+     * - Authenticated: `{ user: {...}, token: string, expires: number }`
+     *
+     * Dual-purpose contract:
+     * - `user` - Server-side session truth (identity, plan, verification status)
+     * - `token` - Client-side Convex auth token (for convex.setAuth(token))
+     * - `expires` - Token expiration timestamp (epoch ms)
+     *
+     * Security:
+     * - Requires HttpOnly, Secure, SameSite=Lax session cookie
+     * - Token is short-lived (15m) and never persisted client-side
+     * - Cache-Control: no-store prevents intermediary caching
+     */
     path: "/auth/session",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const token = readCookies(request)["auth:session"];
+      const token = readCookies(request)["session:refresh"];
 
       if (!token) {
         return new Response("null", {
@@ -174,7 +191,10 @@ const registerRoutes = (http: HttpRouter) => {
       }
 
       return new Response(JSON.stringify(auth), {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+        },
         status: 200,
       });
     }),
@@ -187,7 +207,7 @@ const registerRoutes = (http: HttpRouter) => {
       const blocked = verifyCsrf(request);
       if (blocked) return blocked;
 
-      const token = readCookies(request)["auth:session"];
+      const token = readCookies(request)["session:refresh"];
 
       if (token) {
         await ctx

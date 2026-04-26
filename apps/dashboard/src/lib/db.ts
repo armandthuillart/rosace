@@ -12,4 +12,4 @@ db.version(1).stores({
   projects: "++id",
 });
 
-export { db }; 
+export { db };

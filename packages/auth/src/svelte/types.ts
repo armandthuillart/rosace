@@ -26,6 +26,8 @@ type User = {
   verified: boolean;
 };
 
-export type Auth = {
+export type Session = {
   user: User;
+  token: string;
+  expires: number;
 } | null;

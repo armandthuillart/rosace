@@ -2,9 +2,18 @@
 import { env } from "$env/dynamic/public";
 import { ConvexHttpClient } from "convex/browser";
 
-type Result = {
-  accessToken?: string;
-};
+type Session = {
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    plan: "free" | "pro";
+    verified: boolean;
+  };
+  token: string;
+  expires: number;
+} | null;
 
 const CONVEX_URL = env.PUBLIC_CONVEX_URL!;
 
@@ -41,10 +50,10 @@ export function convexClient() {
           return;
         }
 
-        const data = (await res.json()) as Result;
+        const session = (await res.json()) as Session;
 
-        if (data.accessToken) {
-          convex.setAuth(data.accessToken);
+        if (session && session.token) {
+          convex.setAuth(session.token);
         } else {
           convex.clearAuth();
         }

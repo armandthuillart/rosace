@@ -2,7 +2,7 @@
 import { env } from "$env/dynamic/private";
 import { fail, redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
 
-import { Auth } from "./types";
+import type { Session } from "./types";
 
 const handle: Handle = async ({ event, resolve }) => {
   const target = env.CONVEX_SITE_URL;
@@ -27,7 +27,7 @@ const handle: Handle = async ({ event, resolve }) => {
     });
   }
 
-  event.locals.auth = async (): Promise<Auth> => {
+  event.locals.auth = async (): Promise<Session> => {
     const cookie = event.request.headers.get("cookie") ?? "";
     if (!cookie) return null;
 
@@ -37,7 +37,7 @@ const handle: Handle = async ({ event, resolve }) => {
     });
 
     if (!response.ok) return null;
-    return (await response.json()) as Auth;
+    return (await response.json()) as Session;
   };
 
   return resolve(event);
