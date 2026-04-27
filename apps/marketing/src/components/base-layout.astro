@@ -10,28 +10,29 @@ import Header from "@components/header.astro";
     <BaseHead title="Rosace" />
 
     <script>
-      const noTransition = document.createElement("style");
-      noTransition.textContent = "* { transition: none !important; }";
+      let style = document.createElement("style");
+      style.textContent = "* { transition: none !important; }";
 
-      const disableTransitions = () => {
-        document.head.appendChild(noTransition);
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => noTransition.remove()),
-        );
-      };
+      let mm = matchMedia("(prefers-color-scheme: dark)");
 
-      disableTransitions();
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", disableTransitions);
+      mm.addEventListener("change", () => {
+        if (!style.isConnected) document.head.append(style);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => style.remove());
+        });
+      });
     </script>
   </head>
 
-  <body class="dark:bg-gray-1000 bg-gray-50 text-gray-800 dark:text-gray-200">
+  <body class="dark:bg-gray-1000 bg-white text-gray-800 dark:text-gray-200">
     <Header />
 
-    <main class="isolate flex flex-col gap-24 overflow-clip pt-28 pb-32">
-      <slot />
+    <main
+      class="isolate min-h-screen overflow-clip px-8 pt-32 pb-16 sm:pt-48 sm:pb-28 xl:px-36"
+    >
+      <div class="mx-auto flex max-w-7xl flex-col">
+        <slot />
+      </div>
     </main>
 
     <Footer />

@@ -1,63 +1,64 @@
 ---
 import { DASHBOARD_URL } from "astro:env/client";
-import Demo from "@components/demo.astro";
 ---
 
-<section class="px-5">
-  <div class="mx-auto flex max-w-7xl flex-col gap-14">
-    <div class="flex max-w-160 flex-col items-start gap-6">
-      <h1
-        class="text-[1.625rem]/tight font-medium -tracking-[.0125em] text-balance"
-      >
-        Create motion designs so good people watch them on-repeat
-      </h1>
+<section
+  class="mx-auto mb-14 flex w-full flex-col items-center justify-center sm:mb-20 xl:w-4/5 xl:max-w-5xl"
+  id="hero"
+>
+  <h1
+    class="relative mb-14 text-center text-5xl leading-[1.05] font-bold tracking-tight delay-50 sm:mb-12 sm:text-8xl sm:leading-none"
+  >
+    A new way to<br />create animations.
+  </h1>
 
-      <a
-        class="relative inline-flex h-10.5 items-center justify-center gap-2 rounded-full bg-gray-800 pr-[calc(--spacing(6)-1px)] pl-[calc(--spacing(5)-1px)] text-center font-medium text-gray-200 before:absolute before:-inset-6 hover:bg-gray-600 focus-visible:outline-2 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300"
-        data-button
-        href={DASHBOARD_URL}
+  <a
+    aria-label="Start animating"
+    class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-900 py-4 pr-5 pl-13 text-center text-lg font-bold text-gray-200 shadow-gray-200 transition duration-300 not-dark:shadow-2xl before:absolute focus-visible:outline-2 dark:bg-gray-200 dark:text-gray-800"
+    href={DASHBOARD_URL}
+  >
+    <svg
+      class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use href="/sprites.svg#arrow-right"></use>
+    </svg>
+
+    <span
+      class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
+      >Start animating</span
+    >
+
+    <svg
+      class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use href="/sprites.svg#arrow-right"></use>
+    </svg>
+  </a>
+
+  <div
+    class="mt-6 flex flex-col items-center justify-center gap-0.5 text-center"
+  >
+    <p class="text-sm font-bold text-gray-400 dark:text-gray-500">
+      No credit card required
+    </p>
+
+    <div class="flex items-center justify-center gap-1">
+      <svg
+        class="size-5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          aria-hidden="true"
-          class="size-4"
-          data-icon
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <use href="/sprites.svg#lockup"></use>
-        </svg>
-        Sign up for free
-      </a>
+        <use href="/sprites.svg#gift"></use>
+      </svg>
+
+      <p class="text-lg/tight font-bold">For free, forever</p>
     </div>
-
-    <Demo />
   </div>
 </section>
-
-<script>
-  import gsap from "gsap";
-
-  const button = document.querySelector("[data-button]");
-
-  if (button) {
-    const icon = button.querySelector("[data-icon]");
-
-    button.addEventListener("mouseenter", () => {
-      gsap
-        .timeline({
-          overwrite: true,
-        })
-        .to(icon, {
-          duration: 1,
-          ease: "power3.out",
-          rotation: "+=360",
-        })
-        .to(icon, {
-          duration: 1,
-          ease: "power4.out",
-          rotation: 0,
-        });
-    });
-  }
-</script>

@@ -3,9 +3,9 @@ import { DASHBOARD_URL } from "astro:env/client";
 ---
 
 <header
-  class="dark:bg-gray-1000/80 fixed top-0 z-50 w-full bg-gray-50/80 px-8 py-5 sm:py-7 sm:backdrop-blur-xl"
+  class="dark:bg-gray-1000 dark:sm:bg-gray-1000/80 fixed top-0 z-50 w-full bg-white px-8 py-5 shadow-gray-100 transition-shadow duration-300 sm:bg-white/80 sm:py-7 sm:backdrop-blur-xl"
 >
-  <nav class="mx-auto flex w-full max-w-384 justify-between">
+  <nav class="mx-auto flex w-full max-w-432 justify-between">
     <div class="flex gap-2 delay-75">
       <a
         aria-label="Go to homepage"
@@ -40,45 +40,41 @@ import { DASHBOARD_URL } from "astro:env/client";
       </a>
 
       <div
-        class="bg-gray-150 mt-2.5 self-start rounded-lg border-[1.5px] border-gray-200 px-1 py-px text-xs font-bold text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+        class="mt-2.5 self-start rounded-lg border-[1.5px] border-gray-200 bg-gray-100 px-1 py-px text-xs font-bold tracking-tight text-gray-500 uppercase dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
       >
-        beta
+        Beta
       </div>
     </div>
 
     <div class="flex gap-5">
       <a
         aria-label="Frequently asked questions"
-        class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl px-5 py-4 text-center text-lg font-bold transition duration-300 before:absolute hover:bg-gray-200 focus-visible:outline-2 dark:hover:bg-gray-800"
-        href={`${DASHBOARD_URL}/login`}
+        class="group relative inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-4 text-center text-lg font-bold transition duration-300 before:absolute hover:bg-gray-100 focus-visible:outline-2 max-sm:bg-gray-100 dark:hover:bg-gray-800 dark:max-sm:bg-gray-800"
+        href="/faqs"
       >
         <svg
           fill="currentColor"
-          class="size-6"
+          class="size-6 origin-bottom transition duration-300 will-change-transform group-hover:-rotate-12"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M12 3.20455C7.14241 3.20455 3.20455 7.1424 3.20455 12C3.20455 16.8576 7.14241 20.7955 12 20.7955C16.8576 20.7955 20.7954 16.8576 20.7954 12C20.7954 7.1424 16.8576 3.20455 12 3.20455ZM1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.937 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.937 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12Z"
+            d="M11.9063 23.1261C12.3583 23.1261 12.7802 22.9352 13.1819 22.2422L15.0402 19.1384H18.3951C21.3884 19.1384 22.9955 17.481 22.9955 14.5379V6.84373C22.9955 3.90065 21.3884 2.24329 18.3951 2.24329H5.45763C2.46432 2.24329 0.857178 3.8906 0.857178 6.84373V14.5379C0.857178 17.491 2.46432 19.1384 5.45763 19.1384H8.77238L10.6306 22.2422C11.0324 22.9352 11.4543 23.1261 11.9063 23.1261Z"
           ></path>
 
           <path
-            class="group-hover:animate-nod origin-center"
-            d="M8.5 9.5C8.5 7.567 10.067 6 12 6C13.933 6 15.5 7.567 15.5 9.5C15.5 11.433 13.933 13 12 13C10.067 13 8.5 11.433 8.5 9.5Z"
-          ></path>
-
-          <path
-            d="M5.40952 17.6472C6.43326 15.8556 8.33849 14.75 10.4019 14.75H13.5987C15.6621 14.75 17.5673 15.8556 18.591 17.6472L19.6178 19.6074L19.1845 19.9969C17.2811 21.7079 14.7615 22.7499 12.0003 22.7499C9.23914 22.7499 6.71951 21.7079 4.81607 19.9968L4.38281 19.6073L5.40952 17.6472Z"
+            class="dark:fill-gray-1000 origin-top-left fill-white transition duration-250 group-hover:-rotate-3 group-hover:delay-50"
+            d="M13.7146 11.0001C14.2668 11.0003 14.7146 11.4479 14.7146 12.0001C14.7145 12.5522 14.2667 13 13.7146 13.0001H6.85718C6.30494 13.0001 5.85725 12.5523 5.85718 12.0001C5.85718 11.4478 6.30489 11.0001 6.85718 11.0001H13.7146ZM17.3572 7.57141C17.9095 7.57141 18.3572 8.01913 18.3572 8.57141C18.3572 9.1237 17.9095 9.57141 17.3572 9.57141H6.85718C6.30489 9.57141 5.85718 9.1237 5.85718 8.57141C5.85718 8.01913 6.30489 7.57141 6.85718 7.57141H17.3572Z"
           ></path>
         </svg>
 
-        Login
+        <span class="max-sm:hidden">FAQs</span>
       </a>
 
       <a
         aria-label="Sign up for free"
         class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-200 py-4 pr-5 pl-13 text-center text-lg font-bold transition duration-300 before:absolute focus-visible:outline-2 max-sm:hidden dark:bg-gray-800"
-        href={`${DASHBOARD_URL}/register`}
+        href={DASHBOARD_URL}
       >
         <svg
           class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
@@ -91,7 +87,7 @@ import { DASHBOARD_URL } from "astro:env/client";
 
         <span
           class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
-          >Sign up for free</span
+          >Go to app</span
         >
 
         <svg
@@ -106,3 +102,14 @@ import { DASHBOARD_URL } from "astro:env/client";
     </div>
   </nav>
 </header>
+
+<script>
+  const header = document.querySelector("header");
+
+  const toggleShadow = () => {
+    header!.classList.toggle("not-dark:shadow-2xl", window.scrollY > 0);
+  };
+
+  toggleShadow();
+  window.addEventListener("scroll", toggleShadow, { passive: true });
+</script>
