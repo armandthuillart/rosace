@@ -1,12 +1,14 @@
 ---
 import { DASHBOARD_URL } from "astro:env/client";
+
+const animate = Astro.url.pathname !== "/";
 ---
 
 <header
   class="dark:bg-gray-1000 dark:sm:bg-gray-1000/80 fixed top-0 z-50 w-full bg-white px-8 py-5 shadow-gray-100 transition-shadow duration-300 sm:bg-white/80 sm:py-7 sm:backdrop-blur-xl"
 >
   <nav class="mx-auto flex w-full max-w-432 justify-between">
-    <div class="flex gap-2 delay-75">
+    <div class:list={["flex gap-2", animate && "delay-75"]}>
       <a
         aria-label="Go to homepage"
         class="group flex items-start gap-2 self-center focus-visible:outline-2"
@@ -15,7 +17,11 @@ import { DASHBOARD_URL } from "astro:env/client";
         <div class="relative size-10 overflow-hidden">
           <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
             <svg
-              class="transition delay-50 duration-300 ease-out will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:scale-y-75 group-hover:opacity-25 group-hover:delay-0"
+              class:list={[
+                animate
+                  ? "transition delay-50 duration-300 ease-out will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:scale-y-75 group-hover:opacity-25 group-hover:delay-0"
+                  : "group-hover:animate-[spin_1s_ease-in-out]",
+              ]}
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -24,16 +30,20 @@ import { DASHBOARD_URL } from "astro:env/client";
             </svg>
           </div>
 
-          <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
-            <svg
-              class="ease origin-right translate-x-0.5 scale-50 opacity-0 blur-xs transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-hover:delay-50"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <use href="/sprites.svg#arrow-left"></use>
-            </svg>
-          </div>
+          {
+            animate && (
+              <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
+                <svg
+                  class="ease origin-right translate-x-0.5 scale-50 opacity-0 blur-xs transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-hover:delay-50"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <use href="/sprites.svg#arrow-left" />
+                </svg>
+              </div>
+            )
+          }
         </div>
 
         <span class="text-2xl/10 font-bold">Rosace</span>

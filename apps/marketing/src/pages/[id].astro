@@ -1,9 +1,12 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@components/base-layout.astro";
+import Accordion from "@components/mdx/accordion.astro";
+import Paragraph from "@components/mdx/paragraph.astro";
+import Anchor from "@components/mdx/anchor.astro";
 
 export async function getStaticPaths() {
-  return await getCollection("policies").then((entries) =>
+  return await getCollection("docs").then((entries) =>
     entries.map((entry) => ({
       params: {
         id: entry.id,
@@ -25,28 +28,55 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 }).format(post.data.date);
 ---
 
-<BaseLayout>
-  <article class="py-16">
+<BaseLayout title={post.data.title}>
+  <article class="mx-auto mb-6 w-full max-w-3xl">
+    <h1 class="mb-3 text-6xl font-bold sm:text-8xl">
+      {post.data.title}
+    </h1>
+
     <div
-      class="mx-auto flex w-full max-w-2xl flex-col gap-10 px-6 sm:gap-16 md:max-w-3xl lg:max-w-7xl lg:px-10"
+      class="group mb-12 inline-flex items-center gap-2 text-gray-400 dark:text-gray-500"
     >
-      <div class="flex flex-col items-center gap-6">
-        <h1
-          class="max-w-5xl text-5xl -tracking-[.04em] text-balance md:text-[4rem]/none"
-        >
-          {post.data.title}
-        </h1>
-
-        <p class="text-lg/8 text-black/50 dark:text-white/70">
-          Last updated on {formattedDate}.
-        </p>
-      </div>
-
-      <div
-        class="[&_]th]:align-bottom mx-auto max-w-2xl text-sm/7 *:not-last:mb-4 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_td]:py-2 [&_td]:pr-3 [&_td]:leading-5 [&_th]:pr-3 [&_th]:pb-2 [&_th]:text-start [&_th]:leading-5 [&_th]:font-medium [&_th]:whitespace-nowrap [&_thead]:border-b [&_thead]:border-[#D9D9D9] dark:[&_thead]:border-[#383838] [&_tr]:border-[#E6E6E6] [&_tr]:not-last:border-b dark:[&_tr]:border-[#2C2C2C] [&>h2]:text-base/8 [&>h2]:font-medium [&>h2]:first:mt-8 [&>ul]:list-[square] [&>ul]:pl-6 [&>ul]:[&>li]:pl-2 [&>ul]:[&>li]:marker:text-black/50 dark:[&>ul]:[&>li]:marker:text-white/70"
+      <svg
+        class="size-6"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <Content />
-      </div>
+        <path
+          d="M6.5423 22.3929H17.2097C19.289 22.3929 20.3235 21.3382 20.3235 19.2489V10.1284H13.0513C11.7656 10.1284 11.1528 9.51569 11.1528 8.22994V0.857178H6.5423C4.47311 0.857178 3.42847 1.92191 3.42847 4.0112V19.2489C3.42847 21.3482 4.46306 22.3929 6.5423 22.3929ZM13.0814 8.75224H20.203C20.1428 8.34044 19.8515 7.93865 19.3694 7.44646L13.8347 1.81142C13.3626 1.32927 12.9508 1.03798 12.5289 0.967672V8.20985C12.5289 8.57146 12.7097 8.75224 13.0814 8.75224Z"
+        ></path>
+
+        <path
+          class="dark:stroke-gray-1000 stroke-white group-hover:translate-y-[-4.45px] group-hover:opacity-0 group-hover:transition group-hover:duration-300"
+          d="M15.8572 13.3429C16.1333 13.343 16.3572 13.5668 16.3572 13.8429C16.3572 14.119 16.1333 14.3428 15.8572 14.3429H7.92847C7.65232 14.3429 7.42847 14.119 7.42847 13.8429C7.42847 13.5668 7.65232 13.3429 7.92847 13.3429H15.8572Z"
+          stroke-linecap="round"
+          stroke-width="1"></path>
+
+        <path
+          class="dark:stroke-gray-1000 stroke-white group-hover:translate-y-[-4.45px] group-hover:transition group-hover:duration-300"
+          d="M15.8572 17.1571C16.1333 17.1572 16.3572 17.381 16.3572 17.6571C16.3572 17.9332 16.1333 18.157 15.8572 18.1571H7.92847C7.65232 18.1571 7.42847 17.9332 7.42847 17.6571C7.42847 17.381 7.65232 17.1571 7.92847 17.1571H15.8572Z"
+          stroke-linecap="round"
+          stroke-width="1"></path>
+
+        <path
+          class="dark:stroke-gray-1000 stroke-white opacity-0 group-hover:opacity-100 group-hover:transition-all group-hover:delay-75 group-hover:duration-500 group-hover:[stroke-dashoffset:0]"
+          d="M15.8572 17.1571C16.1333 17.1572 16.3572 17.381 16.3572 17.6571C16.3572 17.9332 16.1333 18.157 15.8572 18.1571H7.92847C7.65232 18.1571 7.42847 17.9332 7.42847 17.6571C7.42847 17.381 7.65232 17.1571 7.92847 17.1571H15.8572Z"
+          stroke-dasharray="10"
+          stroke-dashoffset="10"
+          stroke-linecap="round"
+          stroke-width="1"></path>
+      </svg>
+
+      <p class="text-xl">Last updated on {formattedDate}.</p>
     </div>
+
+    <Content
+      components={{
+        a: Anchor,
+        Accordion,
+        p: Paragraph,
+      }}
+    />
   </article>
 </BaseLayout>

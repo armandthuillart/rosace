@@ -9,8 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "catalog:",
-    "gsap": "catalog:"
+    "astro": "catalog:"
   },
   "devDependencies": {
     "@astrojs/check": "catalog:",
