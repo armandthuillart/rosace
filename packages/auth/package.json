@@ -8,14 +8,14 @@
     "./convex": "./src/convex/index.ts",
     "./svelte": "./src/svelte/index.ts"
   },
+  "dependencies": {
+    "commander": "catalog:",
+    "jose": "catalog:",
+    "valibot": "catalog:"
+  },
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
-    "@types/node": "catalog:",
-    "commander": "catalog:",
-    "convex": "catalog:",
-    "jose": "catalog:",
-    "svelte": "catalog:",
-    "valibot": "catalog:"
+    "@types/node": "catalog:"
   },
   "peerDependencies": {
     "convex": "catalog:",

@@ -13,7 +13,8 @@
     "@repo/auth": "workspace:*",
     "@repo/convex": "workspace:*",
     "convex": "catalog:",
-    "dexie": "catalog:"
+    "dexie": "catalog:",
+    "gsap": "catalog:"
   },
   "devDependencies": {
     "@sveltejs/adapter-cloudflare": "catalog:",
