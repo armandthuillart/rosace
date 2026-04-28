@@ -18,7 +18,7 @@ Before looking at endpoints, lock in this model:
 
 Why this split is useful:
 
-- The refresh token stays in a cookie that JS cannot read (good for XSS hardening).
+- The refresh token stays in a cookie that JS cannot read (for XSS hardening).
 - The Convex JWT can stay short-lived and in-memory only (no localStorage persistence).
 - If a JWT leaks, its lifetime is low (`15m`); if a cookie leaks, it is still tied to server-side lookup + secret-based hashing.
 
@@ -135,15 +135,15 @@ Request body:
 {
   email: string;
   password: string;
-  firstName?: string;
   lastName?: string;
+  firstName?: string;
 }
 ```
 
 Validation behavior:
 
 - `email` must be valid and is normalized to lowercase.
-- `password` minimum length is 8.
+- `password` minimum length is 8 and max length is 128.
 - If both `firstName` and `lastName` are present, the flow is treated as **register**.
 - Otherwise, it is treated as **login**.
 
@@ -220,7 +220,7 @@ Behavior:
 
 Important correction:
 
-- Logout does **not** redirect by itself. Your app can decide where to navigate after receiving `204`.
+- Logout does **not** redirect by itself. The app decide where to navigate after receiving `204`.
 
 ### OAuth start flow (`GET /auth/login/{provider}`)
 

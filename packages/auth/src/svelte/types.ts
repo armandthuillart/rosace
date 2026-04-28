@@ -1,7 +1,6 @@
 declare global {
   namespace App {
     interface Locals {
-      // @ts-ignore
       auth: () => Promise<Session>;
     }
     interface PageData {

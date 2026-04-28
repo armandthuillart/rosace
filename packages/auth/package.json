@@ -9,6 +9,7 @@
     "./svelte": "./src/svelte/index.ts"
   },
   "dependencies": {
+    "@repo/helpers": "workspace:*",
     "commander": "catalog:",
     "jose": "catalog:",
     "valibot": "catalog:"

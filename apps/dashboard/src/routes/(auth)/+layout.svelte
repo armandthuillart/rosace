@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { capitalize } from "$lib/utils";
+  import { capitalize } from "@repo/helpers";
   import type { LayoutProps } from "./$types";
   import { PUBLIC_MARKETING_URL } from "$env/static/public";
 

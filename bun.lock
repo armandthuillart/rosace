@@ -20,6 +20,7 @@
         "@fontsource/inter": "catalog:",
         "@repo/auth": "workspace:*",
         "@repo/convex": "workspace:*",
+        "@repo/helpers": "workspace:*",
         "convex": "catalog:",
         "dexie": "catalog:",
         "gsap": "catalog:",
@@ -56,6 +57,7 @@
         "auth": "./src/cli.ts",
       },
       "dependencies": {
+        "@repo/helpers": "workspace:*",
         "commander": "catalog:",
         "jose": "catalog:",
         "valibot": "catalog:",
@@ -85,6 +87,12 @@
         "@types/node": "catalog:",
         "@types/react": "catalog:",
         "typescript": "catalog:",
+      },
+    },
+    "packages/helpers": {
+      "name": "@repo/helpers",
+      "devDependencies": {
+        "@types/node": "catalog:",
       },
     },
   },
@@ -549,6 +557,8 @@
     "@repo/auth": ["@repo/auth@workspace:packages/auth"],
 
     "@repo/convex": ["@repo/convex@workspace:packages/convex"],
+
+    "@repo/helpers": ["@repo/helpers@workspace:packages/helpers"],
 
     "@rollup/pluginutils": ["@rollup/pluginutils@5.3.0", "", { "dependencies": { "@types/estree": "^1.0.0", "estree-walker": "^2.0.2", "picomatch": "^4.0.2" }, "peerDependencies": { "rollup": "^1.20.0||^2.0.0||^3.0.0||^4.0.0" }, "optionalPeers": ["rollup"] }, "sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q=="],
 

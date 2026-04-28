@@ -1,4 +1,4 @@
-import { requireEnv } from "./env";
+import { requireEnv } from "@repo/helpers";
 
 export type SocialProvider = "apple" | "google";
 

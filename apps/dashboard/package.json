@@ -12,6 +12,7 @@
     "@fontsource/inter": "catalog:",
     "@repo/auth": "workspace:*",
     "@repo/convex": "workspace:*",
+    "@repo/helpers": "workspace:*",
     "convex": "catalog:",
     "dexie": "catalog:",
     "gsap": "catalog:"

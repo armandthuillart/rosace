@@ -1,7 +1,8 @@
+// TODO: a working vibe-coded mess to rewrite
+import { requireEnv } from "@repo/helpers";
 import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
 
-import { requireEnv } from "../env";
 import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } from "../providers";
 import { getPublicJwks, internalStore } from "./store";
 

@@ -1,0 +1,13 @@
+{
+  "name": "@repo/helpers",
+  "type": "module",
+  "types": [
+    "node"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

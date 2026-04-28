@@ -1,8 +1,7 @@
+import { requireEnv } from "@repo/helpers";
 import { internalMutationGeneric, internalQueryGeneric } from "convex/server";
 import { v } from "convex/values";
 import { SignJWT, importJWK, type JWK } from "jose";
-
-import { requireEnv } from "../env";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30;
 const SWEEP_BATCH_SIZE = 64;
