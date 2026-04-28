@@ -134,18 +134,18 @@ const internalMutation = internalMutationGeneric({
   args: {
     payload: v.union(
       v.object({
-        type: v.literal("credentials:sign-up"),
+        type: v.literal("credentials:register"),
         email: v.string(),
         passwordHash: v.string(),
         firstName: v.string(),
         lastName: v.string(),
       }),
       v.object({
-        type: v.literal("credentials:authenticate"),
+        type: v.literal("credentials:login"),
         email: v.string(),
       }),
       v.object({
-        type: v.literal("credentials:authenticate"),
+        type: v.literal("credentials:login"),
         email: v.string(),
         passwordHash: v.string(),
       }),
@@ -191,7 +191,7 @@ const internalMutation = internalMutationGeneric({
     const db = ctx.db as any;
 
     switch (payload.type) {
-      case "credentials:sign-up": {
+      case "credentials:register": {
         const existing = await db
           .query("users")
           .withIndex("by_email", (q: any) => q.eq("email", payload.email))
@@ -216,7 +216,7 @@ const internalMutation = internalMutationGeneric({
         return createSession({ db }, userId);
       }
 
-      case "credentials:authenticate": {
+      case "credentials:login": {
         const existing = await db
           .query("users")
           .withIndex("by_email", (q: any) => q.eq("email", payload.email))

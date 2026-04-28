@@ -61,14 +61,10 @@ export const internal: {
               firstName: string;
               lastName: string;
               passwordHash: string;
-              type: "credentials:sign-up";
+              type: "credentials:register";
             }
-          | { email: string; type: "credentials:authenticate" }
-          | {
-              email: string;
-              passwordHash: string;
-              type: "credentials:authenticate";
-            }
+          | { email: string; type: "credentials:login" }
+          | { email: string; passwordHash: string; type: "credentials:login" }
           | { token: string; type: "session:revoke" }
           | {
               expiresAt: number;

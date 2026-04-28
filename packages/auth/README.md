@@ -63,21 +63,21 @@ Only starts authenticated Convex fetches when `data.user` exists. Prevents unaut
 
   Returns public keys used to verify RS256-signed JWT access tokens. Convex uses these keys to validate JWT signature, `iss`, and `aud` claims.
 
-- `GET /auth/session` -> `null` or `{ user, token, expires }`:
+- `GET /auth/session`:
 
   Returns current auth state.
   - Returns `null` when no valid session exists.
   - Returns `{ user, token, expires }` when a valid session exists.
 
-- `POST /auth/logout` -> `204`, clears cookie:
+- `POST /auth/logout`:
 
   Revokes the current refresh session when present. Clears `session:refresh`. Returns `204`.
 
-- `POST /auth/login/credentials` -> sign-up/authenticate:
+- `POST /auth/login/credentials`:
 
   Handles email/password auth.
-  - Sign-up path hashes password, creates account, then creates session.
-  - Authenticate path verifies password, then creates session.
+  - Register path hashes password, creates account, then creates session.
+  - Login path verifies password, then creates session.
 
 - `GET /auth/login/apple`, `GET /auth/login/google`:
 
@@ -117,11 +117,11 @@ Operation keys:
 
   Deletes a session by refresh token hash.
 
-- `credentials:sign-up`:
+- `credentials:register`:
 
   Creates a credentials user and account with the provided password hash. Then creates a session.
 
-- `credentials:authenticate`:
+- `credentials:login`:
 
   Handles two paths.
   - With `{ email }`, it returns the credentials account password hash lookup payload.

@@ -32,7 +32,7 @@ const LoginSchema = v.pipe(
   v.transform((input) => ({
     ...input,
     email: input.email.toLowerCase(),
-    flow: input.firstName && input.lastName ? ("sign-up" as const) : ("authenticate" as const),
+    flow: input.firstName && input.lastName ? ("register" as const) : ("login" as const),
   })),
 );
 
@@ -293,7 +293,7 @@ const registerRoutes = (http: HttpRouter) => {
 
       let session: SessionPayload;
       try {
-        if (payload.flow === "sign-up") {
+        if (payload.flow === "register") {
           const firstName = payload.firstName;
           const lastName = payload.lastName;
           if (!firstName || !lastName) return new Response(null, { status: 400 });
@@ -312,7 +312,7 @@ const registerRoutes = (http: HttpRouter) => {
             STORE_MUTATION as unknown as never,
             {
               payload: {
-                type: "credentials:sign-up",
+                type: "credentials:register",
                 email: payload.email,
                 passwordHash: hash,
                 firstName,
@@ -325,7 +325,7 @@ const registerRoutes = (http: HttpRouter) => {
             STORE_MUTATION as unknown as never,
             {
               payload: {
-                type: "credentials:authenticate",
+                type: "credentials:login",
                 email: payload.email,
               },
             } as never,
@@ -350,7 +350,7 @@ const registerRoutes = (http: HttpRouter) => {
             STORE_MUTATION as unknown as never,
             {
               payload: {
-                type: "credentials:authenticate",
+                type: "credentials:login",
                 email: payload.email,
                 passwordHash: account.passwordHash,
               },
