@@ -122,13 +122,13 @@ The monorepo has two public web surfaces with different responsibilities:
 flowchart TB
   subgraph edge[Apps]
     direction TB
-    dashboard["Product (SvelteKit)"]
+    dashboard["Dashboard (SvelteKit)"]
     marketing["Marketing (Astro)"]
   end
 
   subgraph backend[Backend]
     direction TB
-    convex["BaaS (@repo/convex)"]
+    convex["Database (@repo/convex)"]
     auth["Auth (@repo/auth)"]
   end
 
