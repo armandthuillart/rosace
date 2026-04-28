@@ -36,6 +36,12 @@
       "sourceType": "github",
       "computedHash": "92a5c170cf238f45f08439d9d5d7947af490b880ee8f15306183240483cbed02"
     },
+    "crafting-effective-readmes": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/crafting-effective-readmes/SKILL.md",
+      "computedHash": "c931a8c22160e8925400778fcb2266b5d1df762f3052edba65f72479f79f2d6c"
+    },
     "create-readme": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
@@ -96,6 +102,18 @@
       "sourceType": "github",
       "computedHash": "220e5e1b12bbaeec49ec362b6e2262d77632d0536e9758bba9acbbc323fef990"
     },
+    "mermaid-diagrams": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/mermaid-diagrams/SKILL.md",
+      "computedHash": "6d36e69adad781f106a2fb4b19ebc22bf0c211babdc0d1ae5822fa65abb48bd8"
+    },
+    "pretty-mermaid": {
+      "source": "imxv/pretty-mermaid-skills",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "7c490ca8cac54a6038dcf31cb5f5472ff1c982e7352763ebb54e5387349529a6"
+    },
     "react-email": {
       "source": "resend/react-email",
       "sourceType": "github",
@@ -105,6 +123,12 @@
       "source": "github/awesome-copilot",
       "sourceType": "github",
       "computedHash": "87789a786b96f99ba0680e89345a975106e10e7db1071c7cdc2e76d507c449d6"
+    },
+    "simple": {
+      "source": "roin-orca/skills",
+      "sourceType": "github",
+      "skillPath": "skills/simple/SKILL.md",
+      "computedHash": "cfde9dde00c9b1f8934e0312440a5ae2ed76dbd81e49ba7433e0e63ea6551d13"
     },
     "stripe-best-practices": {
       "source": "stripe/ai",
