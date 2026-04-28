@@ -58,6 +58,7 @@
       },
       "dependencies": {
         "@noble/hashes": "catalog:",
+        "@repo/convex": "workspace:*",
         "@repo/helpers": "workspace:*",
         "commander": "catalog:",
         "jose": "catalog:",
@@ -75,6 +76,7 @@
     "packages/convex": {
       "name": "@repo/convex",
       "dependencies": {
+        "@convex-dev/rate-limiter": "catalog:",
         "@convex-dev/resend": "catalog:",
         "@react-email/components": "catalog:",
         "@react-email/render": "catalog:",
@@ -101,6 +103,7 @@
     "@astrojs/check": "^0.9.9",
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/sitemap": "^3.7.2",
+    "@convex-dev/rate-limiter": "^0.3.2",
     "@convex-dev/resend": "^0.2.3",
     "@fontsource/inter": "^5.2.8",
     "@noble/hashes": "^2.2.0",

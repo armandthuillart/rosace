@@ -1,4 +1,6 @@
 // TODO: a working vibe-coded mess to rewrite
+
+import { rateLimiter } from "@repo/convex/rate-limiter";
 import { requireEnv } from "@repo/helpers";
 import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
@@ -7,8 +9,8 @@ import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } fr
 import { getPublicJwks, authStore } from "./store";
 
 const STORE_QUERY = "store:query" as const;
-const STORE_MUTATION = "store:mutation" as const;
 const STORE_ACTION = "store:action" as const;
+const STORE_MUTATION = "store:mutation" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
 
@@ -72,6 +74,14 @@ function verifyCsrf(request: Request): Response | null {
   }
 
   return null;
+}
+
+function getClientIp(request: Request): string {
+  return (
+    request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown"
+  );
 }
 
 function requireAllowedProvider(request: Request, allowed: readonly Provider[]): ProviderCheck {
@@ -209,6 +219,15 @@ const registerRoutes = (http: HttpRouter) => {
       const blocked = verifyCsrf(request);
       if (blocked) return blocked;
 
+      const ipAddress = getClientIp(request);
+      const { ok, retryAfter } = await rateLimiter.limit(ctx, "logout", { key: ipAddress });
+      if (!ok) {
+        return new Response(null, {
+          status: 429,
+          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+        });
+      }
+
       const token = readCookies(request)["session:refresh"];
 
       if (token) {
@@ -237,6 +256,19 @@ const registerRoutes = (http: HttpRouter) => {
     handler: httpActionGeneric(async (ctx, request) => {
       const checked = requireAllowedProvider(request, ["apple", "google"]);
       if (checked.blocked) return checked.blocked;
+
+      const ipAddress = getClientIp(request);
+
+      const { ok, retryAfter } = await rateLimiter.limit(ctx, "oauth", {
+        key: ipAddress,
+      });
+
+      if (!ok) {
+        return new Response(null, {
+          status: 429,
+          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+        });
+      }
 
       const provider = checked.provider as SocialProvider;
       const url = getAuthorizationUrl(provider);
@@ -283,6 +315,19 @@ const registerRoutes = (http: HttpRouter) => {
 
       const blocked = verifyCsrf(request);
       if (blocked) return blocked;
+
+      const ipAddress = getClientIp(request);
+
+      const { ok, retryAfter } = await rateLimiter.limit(ctx, "login", {
+        key: ipAddress,
+      });
+
+      if (!ok) {
+        return new Response(null, {
+          status: 429,
+          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+        });
+      }
 
       let payload: v.InferOutput<typeof LoginSchema>;
       try {

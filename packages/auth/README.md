@@ -72,16 +72,19 @@ Only starts authenticated Convex fetches when `data.user` exists. Prevents unaut
 - `POST /auth/logout`:
 
   Revokes the current refresh session when present. Clears `session:refresh`. Returns `204`.
+  Rate limit: 100 requests / 60 seconds per IP.
 
 - `POST /auth/login/credentials`:
 
   Handles email/password auth.
   - Register path hashes password, creates account, then creates session.
   - Login path verifies password, then creates session.
+  - Rate limit: 3 requests / 10 seconds per IP.
 
 - `GET /auth/login/apple`, `GET /auth/login/google`:
 
   Starts OAuth login. Creates state and nonce. Also creates PKCE values for Google. Stores values, then redirects to provider.
+  Rate limit: 20 requests / 60 seconds per IP.
 
 - `GET|POST /auth/callback/{provider}`:
 
@@ -170,5 +173,7 @@ OAuth provider credentials (if enabled):
 ## Operational notes
 
 - Cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax`.
+- Rate limiting uses `cf-connecting-ip` first, then `x-forwarded-for`.
+- Rate-limited responses return `429` with `X-Retry-After`.
 - Credential/logout POST routes enforce `Origin === DASHBOARD_URL origin`.
 - Authenticated `/auth/session` responses are `Cache-Control: no-store`.

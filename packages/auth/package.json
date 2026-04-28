@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@noble/hashes": "catalog:",
+    "@repo/convex": "workspace:*",
     "@repo/helpers": "workspace:*",
     "commander": "catalog:",
     "jose": "catalog:",
