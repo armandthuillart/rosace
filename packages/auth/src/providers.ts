@@ -1,4 +1,5 @@
 import { requireEnv } from "@repo/helpers";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 
 export type SocialProvider = "apple" | "google";
 
@@ -12,21 +13,28 @@ type OAuthProfile = {
 
 type ExchangeOptions = {
   code: string;
+  nonce: string;
   verifier?: string;
   userForm?: string | null;
 };
 
 type GoogleIdToken = {
   email: string;
+  exp: number;
   email_verified?: boolean;
   family_name?: string;
   given_name?: string;
+  iss: string;
+  nonce?: string;
   sub: string;
 };
 
 type AppleIdToken = {
   email: string;
+  exp: number;
   email_verified?: boolean | "true" | "false";
+  iss: string;
+  nonce?: string;
   sub: string;
 };
 
@@ -68,34 +76,8 @@ function getAuthorizationUrl(provider: SocialProvider): URL {
   return url;
 }
 
-/**
- * Decodes and parses the payload segment from a JWT id_token.
- *
- * This helper intentionally does not verify signatures. Tokens are fetched from
- * provider token endpoints, and this code only needs claim extraction.
- *
- * @typeParam T - Expected payload shape.
- * @param idToken - Raw JWT id_token value returned by the provider.
- * @returns Parsed payload claims.
- * @throws {Error} If the token format is invalid or payload JSON cannot be parsed.
- */
-function decodeJwtPayload<T>(idToken: string): T {
-  const [, payloadPart] = idToken.split(".");
-  if (!payloadPart) throw new Error("Malformed ID token.");
-
-  const padded =
-    payloadPart.replace(/-/g, "+").replace(/_/g, "/") +
-    "=".repeat((4 - (payloadPart.length % 4)) % 4);
-
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-
-  return JSON.parse(new TextDecoder().decode(bytes)) as T;
-}
+const GOOGLE_JWKS = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
+const APPLE_JWKS = createRemoteJWKSet(new URL("https://appleid.apple.com/auth/keys"));
 
 /**
  * Exchanges an OAuth authorization code and normalizes identity claims into
@@ -145,14 +127,21 @@ async function exchangeCode(
       throw new Error("Missing Google id_token.");
     }
 
-    const payload = decodeJwtPayload<GoogleIdToken>(tokens.id_token);
+    const { payload } = await jwtVerify(tokens.id_token, GOOGLE_JWKS, {
+      audience: requireEnv("GOOGLE_CLIENT_ID"),
+      issuer: ["https://accounts.google.com", "accounts.google.com"],
+    });
+    const googlePayload = payload as unknown as GoogleIdToken;
+    if (!googlePayload.nonce || googlePayload.nonce !== options.nonce) {
+      throw new Error("Invalid Google nonce.");
+    }
 
     return {
-      email: payload.email?.toLowerCase() ?? "",
-      firstName: payload.given_name ?? "",
-      lastName: payload.family_name ?? "",
-      subject: payload.sub,
-      verified: payload.email_verified ?? false,
+      email: googlePayload.email?.toLowerCase() ?? "",
+      firstName: googlePayload.given_name ?? "",
+      lastName: googlePayload.family_name ?? "",
+      subject: googlePayload.sub,
+      verified: googlePayload.email_verified ?? false,
     };
   }
 
@@ -177,7 +166,14 @@ async function exchangeCode(
     throw new Error("Missing Apple id_token.");
   }
 
-  const payload = decodeJwtPayload<AppleIdToken>(tokens.id_token);
+  const { payload } = await jwtVerify(tokens.id_token, APPLE_JWKS, {
+    audience: requireEnv("APPLE_CLIENT_ID"),
+    issuer: "https://appleid.apple.com",
+  });
+  const applePayload = payload as unknown as AppleIdToken;
+  if (!applePayload.nonce || applePayload.nonce !== options.nonce) {
+    throw new Error("Invalid Apple nonce.");
+  }
 
   let firstName = "";
   let lastName = "";
@@ -193,11 +189,11 @@ async function exchangeCode(
   }
 
   return {
-    email: payload.email?.toLowerCase() ?? "",
+    email: applePayload.email?.toLowerCase() ?? "",
     firstName,
     lastName,
-    subject: payload.sub,
-    verified: payload.email_verified === true || payload.email_verified === "true",
+    subject: applePayload.sub,
+    verified: applePayload.email_verified === true || applePayload.email_verified === "true",
   };
 }
 

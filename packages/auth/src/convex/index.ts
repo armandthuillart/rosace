@@ -66,8 +66,14 @@ function verifyCsrf(request: Request): Response | null {
   const origin = request.headers.get("origin");
   if (!origin) return new Response(null, { status: 403 });
 
-  const trustedOrigin = new URL(requireEnv("DASHBOARD_URL")).origin;
-  const requestOrigin = new URL(origin).origin;
+  let requestOrigin: string;
+  let trustedOrigin: string;
+  try {
+    trustedOrigin = new URL(requireEnv("DASHBOARD_URL")).origin;
+    requestOrigin = new URL(origin).origin;
+  } catch {
+    return new Response(null, { status: 403 });
+  }
 
   if (requestOrigin !== trustedOrigin) {
     return new Response(null, { status: 403 });
@@ -117,6 +123,14 @@ function sessionCookies(payload: SessionPayload) {
 
 function clearedAuthCookies() {
   return ["session:refresh=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
+}
+
+function handoffCookie(code: string) {
+  return `session:handoff=${code}; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=60`;
+}
+
+function clearedHandoffCookie() {
+  return "session:handoff=; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
 }
 
 const registerRoutes = (http: HttpRouter) => {
@@ -455,6 +469,7 @@ const registerRoutes = (http: HttpRouter) => {
     try {
       profile = await exchangeCode(provider, {
         code,
+        nonce: consumed.nonce,
         userForm,
         verifier: consumed.verifier,
       });
@@ -496,10 +511,9 @@ const registerRoutes = (http: HttpRouter) => {
 
     const dashboard = requireEnv("DASHBOARD_URL");
 
-    return new Response(null, {
-      headers: { Location: `${dashboard}/auth/session/claim?code=${handoff}` },
-      status: 302,
-    });
+    const headers = new Headers({ Location: `${dashboard}/auth/session/claim` });
+    headers.append("Set-Cookie", handoffCookie(handoff));
+    return new Response(null, { headers, status: 302 });
   });
 
   http.route({
@@ -518,8 +532,12 @@ const registerRoutes = (http: HttpRouter) => {
     path: "/auth/session/claim",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const handoff = new URL(request.url).searchParams.get("code");
-      if (!handoff) return new Response("Missing code.", { status: 400 });
+      const handoff = readCookies(request)["session:handoff"];
+      if (!handoff) {
+        const headers = new Headers();
+        headers.append("Set-Cookie", clearedHandoffCookie());
+        return new Response("Missing code.", { headers, status: 400 });
+      }
 
       const claimed = (await ctx.runMutation(
         STORE_MUTATION as unknown as never,
@@ -528,9 +546,14 @@ const registerRoutes = (http: HttpRouter) => {
         } as never,
       )) as SessionPayload | null;
 
-      if (!claimed) return new Response("Invalid or expired handoff.", { status: 400 });
+      if (!claimed) {
+        const headers = new Headers();
+        headers.append("Set-Cookie", clearedHandoffCookie());
+        return new Response("Invalid or expired handoff.", { headers, status: 400 });
+      }
 
       const headers = new Headers({ Location: "/" });
+      headers.append("Set-Cookie", clearedHandoffCookie());
       for (const cookie of sessionCookies(claimed)) headers.append("Set-Cookie", cookie);
 
       return new Response(null, { headers, status: 302 });
