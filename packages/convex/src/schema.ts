@@ -29,12 +29,12 @@ export default defineSchema({
 
   verifications: defineTable({
     type: v.union(
-      v.literal("email_verification"),
-      v.literal("password_reset"),
-      v.literal("email_change"),
-      v.literal("account_deletion"),
-      v.literal("oauth_state"),
-      v.literal("oauth_handoff"),
+      v.literal("email:verify"),
+      v.literal("email:change"),
+      v.literal("password:reset"),
+      v.literal("account:delete"),
+      v.literal("oauth:state"),
+      v.literal("oauth:handoff"),
     ),
     identifier: v.string(),
     value: v.string(),

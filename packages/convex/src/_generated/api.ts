@@ -41,32 +41,47 @@ export const api: {
  */
 export const internal: {
   auth: {
-    storeMutation: FunctionReference<
+    action: FunctionReference<
+      "action",
+      "internal",
+      {
+        payload:
+          | { password: string; type: "password:hash" }
+          | { hash: string; password: string; type: "password:verify" };
+      },
+      any
+    >;
+    mutation: FunctionReference<
       "mutation",
       "internal",
       {
         payload:
           | {
               email: string;
-              firstName?: string;
-              flow: "register" | "login";
-              lastName?: string;
-              password: string;
-              type: "credentials";
+              firstName: string;
+              lastName: string;
+              passwordHash: string;
+              type: "credentials:sign-up";
             }
-          | { token: string; type: "session:delete" }
+          | { email: string; type: "credentials:authenticate" }
+          | {
+              email: string;
+              passwordHash: string;
+              type: "credentials:authenticate";
+            }
+          | { token: string; type: "session:revoke" }
           | {
               expiresAt: number;
               nonce: string;
               provider: "apple" | "google";
               state: string;
-              type: "oauth:start";
+              type: "oauth:authorize:start";
               verifier?: string;
             }
           | {
               provider: "apple" | "google";
               state: string;
-              type: "oauth:consume";
+              type: "oauth:authorize:consume-state";
             }
           | {
               email: string;
@@ -74,7 +89,7 @@ export const internal: {
               lastName: string;
               provider: "apple" | "google";
               subject: string;
-              type: "oauth:complete";
+              type: "oauth:authenticate:finalize";
               verified: boolean;
             }
           | {
@@ -87,7 +102,7 @@ export const internal: {
       },
       any
     >;
-    storeQuery: FunctionReference<
+    query: FunctionReference<
       "query",
       "internal",
       { payload: { token: string; type: "session:get" } },

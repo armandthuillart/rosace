@@ -3,88 +3,18 @@ import { internalMutationGeneric, internalQueryGeneric } from "convex/server";
 import { v } from "convex/values";
 import { SignJWT, importJWK, type JWK } from "jose";
 
+import { internalAction } from "./crypto";
+
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30;
 const SWEEP_BATCH_SIZE = 64;
-const PASSWORD_ITERATIONS = 210_000;
-const PASSWORD_KEY_LENGTH_BITS = 256;
 
 type AnyCtx = { db: any };
-type BufferSource = NodeJS.BufferSource;
 
 type AuthJwks = {
   kid: string;
   privateJwk: JWK;
   publicJwks: { keys: JWK[] };
 };
-
-function toBase64Url(bytes: Uint8Array): string {
-  let binary = "";
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
-  }
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-function fromBase64Url(value: string): Uint8Array {
-  const padded =
-    value.replace(/-/g, "+").replace(/_/g, "/") + "=".repeat((4 - (value.length % 4)) % 4);
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-
-  return bytes;
-}
-
-async function derivePassword(password: string, salt: Uint8Array, iterations: number) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"],
-  );
-
-  const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt: salt as BufferSource, iterations },
-    key,
-    PASSWORD_KEY_LENGTH_BITS,
-  );
-
-  return new Uint8Array(bits);
-}
-
-async function hashPassword(password: string): Promise<string> {
-  const salt = new Uint8Array(16);
-  crypto.getRandomValues(salt);
-
-  const derived = await derivePassword(password, salt, PASSWORD_ITERATIONS);
-
-  return `pbkdf2-sha256$${PASSWORD_ITERATIONS}$${toBase64Url(salt)}$${toBase64Url(derived)}`;
-}
-
-async function verifyPassword(password: string, stored: string): Promise<boolean> {
-  const parts = stored.split("$");
-  if (parts.length !== 4 || parts[0] !== "pbkdf2-sha256") return false;
-
-  const iterations = Number(parts[1]);
-  if (!Number.isFinite(iterations) || iterations <= 0) return false;
-
-  const salt = fromBase64Url(parts[2]);
-  const expected = fromBase64Url(parts[3]);
-  const derived = await derivePassword(password, salt, iterations);
-
-  if (derived.length !== expected.length) return false;
-
-  let diff = 0;
-  for (let i = 0; i < derived.length; i++) {
-    diff |= derived[i] ^ expected[i];
-  }
-
-  return diff === 0;
-}
 
 async function hashSessionToken(token: string): Promise<string> {
   const secret = requireEnv("AUTH_SECRET");
@@ -204,19 +134,27 @@ const internalMutation = internalMutationGeneric({
   args: {
     payload: v.union(
       v.object({
-        type: v.literal("credentials"),
+        type: v.literal("credentials:sign-up"),
         email: v.string(),
-        password: v.string(),
-        flow: v.union(v.literal("register"), v.literal("login")),
-        firstName: v.optional(v.string()),
-        lastName: v.optional(v.string()),
+        passwordHash: v.string(),
+        firstName: v.string(),
+        lastName: v.string(),
       }),
       v.object({
-        type: v.literal("session:delete"),
+        type: v.literal("credentials:authenticate"),
+        email: v.string(),
+      }),
+      v.object({
+        type: v.literal("credentials:authenticate"),
+        email: v.string(),
+        passwordHash: v.string(),
+      }),
+      v.object({
+        type: v.literal("session:revoke"),
         token: v.string(),
       }),
       v.object({
-        type: v.literal("oauth:start"),
+        type: v.literal("oauth:authorize:start"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         state: v.string(),
         nonce: v.string(),
@@ -224,12 +162,12 @@ const internalMutation = internalMutationGeneric({
         expiresAt: v.number(),
       }),
       v.object({
-        type: v.literal("oauth:consume"),
+        type: v.literal("oauth:authorize:consume-state"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         state: v.string(),
       }),
       v.object({
-        type: v.literal("oauth:complete"),
+        type: v.literal("oauth:authenticate:finalize"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         subject: v.string(),
         email: v.string(),
@@ -253,36 +191,38 @@ const internalMutation = internalMutationGeneric({
     const db = ctx.db as any;
 
     switch (payload.type) {
-      case "credentials": {
+      case "credentials:sign-up": {
         const existing = await db
           .query("users")
           .withIndex("by_email", (q: any) => q.eq("email", payload.email))
           .first();
 
-        if (payload.flow === "register") {
-          if (existing) throw new Error("Account already exists.");
-          if (!payload.firstName || !payload.lastName) {
-            throw new Error("First and last name required to register.");
-          }
+        if (existing) throw new Error("Account already exists.");
 
-          const userId = await db.insert("users", {
-            email: payload.email,
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-            plan: "free",
-            verified: false,
-          });
+        const userId = await db.insert("users", {
+          email: payload.email,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          plan: "free",
+          verified: false,
+        });
 
-          await db.insert("accounts", {
-            userId,
-            provider: "credentials",
-            passwordHash: await hashPassword(payload.password),
-          });
+        await db.insert("accounts", {
+          userId,
+          provider: "credentials",
+          passwordHash: payload.passwordHash,
+        });
 
-          return createSession({ db }, userId);
-        }
+        return createSession({ db }, userId);
+      }
 
-        if (!existing) throw new Error("Invalid credentials.");
+      case "credentials:authenticate": {
+        const existing = await db
+          .query("users")
+          .withIndex("by_email", (q: any) => q.eq("email", payload.email))
+          .first();
+
+        if (!existing) return null;
 
         const account = await db
           .query("accounts")
@@ -290,15 +230,21 @@ const internalMutation = internalMutationGeneric({
           .filter((q: any) => q.eq(q.field("provider"), "credentials"))
           .first();
 
-        if (!account?.passwordHash) throw new Error("Invalid credentials.");
+        if (!account?.passwordHash) return null;
 
-        const ok = await verifyPassword(payload.password, account.passwordHash);
-        if (!ok) throw new Error("Invalid credentials.");
+        if (!("passwordHash" in payload)) {
+          return {
+            userId: existing._id,
+            passwordHash: account.passwordHash,
+          };
+        }
+
+        if (account.passwordHash !== payload.passwordHash) throw new Error("Invalid credentials.");
 
         return createSession({ db }, existing._id);
       }
 
-      case "session:delete": {
+      case "session:revoke": {
         const refreshTokenHash = await hashSessionToken(payload.token);
 
         const session = await db
@@ -313,9 +259,9 @@ const internalMutation = internalMutationGeneric({
         return { ok: true };
       }
 
-      case "oauth:start": {
+      case "oauth:authorize:start": {
         await db.insert("verifications", {
-          type: "oauth_state",
+          type: "oauth:state",
           identifier: payload.state,
           value: JSON.stringify({
             provider: payload.provider,
@@ -328,10 +274,10 @@ const internalMutation = internalMutationGeneric({
         return { ok: true };
       }
 
-      case "oauth:consume": {
+      case "oauth:authorize:consume-state": {
         const entry = await findAndSweepVerification(db, payload.state);
 
-        if (!entry || entry.type !== "oauth_state") return null;
+        if (!entry || entry.type !== "oauth:state") return null;
 
         await db.delete(entry._id);
         if (entry.expiresAt <= Date.now()) return null;
@@ -348,7 +294,7 @@ const internalMutation = internalMutationGeneric({
         return { nonce: parsed.nonce, verifier: parsed.verifier };
       }
 
-      case "oauth:complete": {
+      case "oauth:authenticate:finalize": {
         const existingAccount = await db
           .query("accounts")
           .withIndex("by_provider_subject", (q: any) =>
@@ -388,7 +334,7 @@ const internalMutation = internalMutationGeneric({
         const code = randomToken();
 
         await db.insert("verifications", {
-          type: "oauth_handoff",
+          type: "oauth:handoff",
           identifier: code,
           value: JSON.stringify({
             sessionToken: payload.sessionToken,
@@ -404,7 +350,7 @@ const internalMutation = internalMutationGeneric({
       case "oauth:handoff:claim": {
         const entry = await findAndSweepVerification(db, payload.code);
 
-        if (!entry || entry.type !== "oauth_handoff") return null;
+        if (!entry || entry.type !== "oauth:handoff") return null;
 
         await db.delete(entry._id);
         if (entry.expiresAt <= Date.now()) return null;
@@ -428,9 +374,10 @@ const internalMutation = internalMutationGeneric({
   },
 });
 
-const internalStore = {
+const authStore = {
   mutation: internalMutation,
+  action: internalAction,
   query: internalQuery,
 };
 
-export { getPublicJwks, internalStore };
+export { getPublicJwks, authStore };

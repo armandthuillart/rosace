@@ -239,12 +239,12 @@ export type DataModel = {
       expiresAt: number;
       identifier: string;
       type:
-        | "email_verification"
-        | "password_reset"
-        | "email_change"
-        | "account_deletion"
-        | "oauth_state"
-        | "oauth_handoff";
+        | "email:verify"
+        | "email:change"
+        | "password:reset"
+        | "account:delete"
+        | "oauth:state"
+        | "oauth:handoff";
       value: string;
       _id: Id<"verifications">;
       _creationTime: number;

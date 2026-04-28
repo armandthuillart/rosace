@@ -4,10 +4,11 @@ import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
 
 import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } from "../providers";
-import { getPublicJwks, internalStore } from "./store";
+import { getPublicJwks, authStore } from "./store";
 
-const STORE_QUERY = "auth:storeQuery" as const;
-const STORE_MUTATION = "auth:storeMutation" as const;
+const STORE_QUERY = "store:query" as const;
+const STORE_MUTATION = "store:mutation" as const;
+const STORE_ACTION = "store:action" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
 
@@ -31,7 +32,7 @@ const LoginSchema = v.pipe(
   v.transform((input) => ({
     ...input,
     email: input.email.toLowerCase(),
-    flow: input.firstName && input.lastName ? ("register" as const) : ("login" as const),
+    flow: input.firstName && input.lastName ? ("sign-up" as const) : ("authenticate" as const),
   })),
 );
 
@@ -215,7 +216,7 @@ const registerRoutes = (http: HttpRouter) => {
           .runMutation(
             STORE_MUTATION as unknown as never,
             {
-              payload: { type: "session:delete", token },
+              payload: { type: "session:revoke", token },
             } as never,
           )
           .catch((error) => {
@@ -256,7 +257,7 @@ const registerRoutes = (http: HttpRouter) => {
         STORE_MUTATION as unknown as never,
         {
           payload: {
-            type: "oauth:start",
+            type: "oauth:authorize:start",
             provider,
             state,
             nonce,
@@ -292,19 +293,70 @@ const registerRoutes = (http: HttpRouter) => {
 
       let session: SessionPayload;
       try {
-        session = (await ctx.runMutation(
-          STORE_MUTATION as unknown as never,
-          {
-            payload: {
-              type: "credentials",
-              email: payload.email,
-              password: payload.password,
-              flow: payload.flow,
-              firstName: payload.firstName,
-              lastName: payload.lastName,
-            },
-          } as never,
-        )) as SessionPayload;
+        if (payload.flow === "sign-up") {
+          const firstName = payload.firstName;
+          const lastName = payload.lastName;
+          if (!firstName || !lastName) return new Response(null, { status: 400 });
+
+          const { hash } = (await ctx.runAction(
+            STORE_ACTION as unknown as never,
+            {
+              payload: {
+                type: "password:hash",
+                password: payload.password,
+              },
+            } as never,
+          )) as { hash: string };
+
+          session = (await ctx.runMutation(
+            STORE_MUTATION as unknown as never,
+            {
+              payload: {
+                type: "credentials:sign-up",
+                email: payload.email,
+                passwordHash: hash,
+                firstName,
+                lastName,
+              },
+            } as never,
+          )) as SessionPayload;
+        } else {
+          const account = (await ctx.runMutation(
+            STORE_MUTATION as unknown as never,
+            {
+              payload: {
+                type: "credentials:authenticate",
+                email: payload.email,
+              },
+            } as never,
+          )) as { userId: string; passwordHash: string } | null;
+
+          if (!account) return new Response(null, { status: 401 });
+
+          const { ok } = (await ctx.runAction(
+            STORE_ACTION as unknown as never,
+            {
+              payload: {
+                type: "password:verify",
+                password: payload.password,
+                hash: account.passwordHash,
+              },
+            } as never,
+          )) as { ok: boolean };
+
+          if (!ok) return new Response(null, { status: 401 });
+
+          session = (await ctx.runMutation(
+            STORE_MUTATION as unknown as never,
+            {
+              payload: {
+                type: "credentials:authenticate",
+                email: payload.email,
+                passwordHash: account.passwordHash,
+              },
+            } as never,
+          )) as SessionPayload;
+        }
       } catch {
         return new Response(null, { status: 401 });
       }
@@ -346,7 +398,7 @@ const registerRoutes = (http: HttpRouter) => {
     const consumed = (await ctx.runMutation(
       STORE_MUTATION as unknown as never,
       {
-        payload: { type: "oauth:consume", provider, state },
+        payload: { type: "oauth:authorize:consume-state", provider, state },
       } as never,
     )) as { nonce: string; verifier?: string } | null;
 
@@ -374,7 +426,7 @@ const registerRoutes = (http: HttpRouter) => {
       STORE_MUTATION as unknown as never,
       {
         payload: {
-          type: "oauth:complete",
+          type: "oauth:authenticate:finalize",
           provider,
           subject: profile.subject,
           email: profile.email,
@@ -442,7 +494,7 @@ const registerRoutes = (http: HttpRouter) => {
 };
 
 function convexAuth() {
-  return { internalStore, registerRoutes };
+  return { authStore, registerRoutes };
 }
 
 export { convexAuth };
