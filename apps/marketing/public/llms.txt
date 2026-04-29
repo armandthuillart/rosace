@@ -1,0 +1,40 @@
+# Rosace
+
+Rosace (rosace.app) is a browser-based motion graphics tool. It runs entirely in the browser. No software to install. No design experience required. It is free to use.
+
+## Problem it solves
+
+Creating animated videos usually requires expensive tools like After Effects or Jitter, or complex free tools like Cavalry. Most people who need animated content — founders, marketers, developers, solo creators — are not motion designers. They don't have the time or skills to learn complex software. Rosace is built for them. It makes animation simple and accessible.
+
+## What users can do
+
+- Upload an audio track and sync animations to the beat automatically
+- Animate text, shapes, and device mockups
+- Export finished videos to MP4 or WEBM
+- Resize any animation to 16:9, 9:16, or 1:1 in one click
+- Reuse animations across multiple projects
+- Download exports without any watermark, on any plan
+
+## How it compares to competitors
+
+- After Effects: industry standard, very complex, expensive subscription
+- Cavalry: free, but as complex as After Effects
+- Jitter: cleaner UI than After Effects, but still complex and expensive
+- Rosace: free, simple, no design skills needed
+
+## Business model
+
+The core product is free forever. No credit card required to start. A paid tier exists and unlocks AI-powered features. No watermarks on any plan, including free.
+
+## Status
+
+Rosace is currently in beta. The app is live at app.rosace.app.
+
+## Links
+
+- App: https://app.rosace.app
+- FAQs: https://rosace.app/faqs
+- Privacy policy: https://rosace.app/privacy-policy
+- Terms of service: https://rosace.app/terms-of-service
+- Discord: https://discord.com/invite/rosace
+- Email: team@rosace.app
