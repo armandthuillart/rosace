@@ -38,7 +38,7 @@ const appLines = new Map<ServiceName, string[]>(APP_SERVICE_ORDER.map((service) 
 const MAX_LOGS_PER_BUCKET = 10;
 
 const SERVICE_COLORS: Record<ServiceName, string> = {
-  astro: "#6B7280",
+  astro: "#3D4FF5",
   svelte: "#FE3F01",
   convex: "#8D2676",
 };
