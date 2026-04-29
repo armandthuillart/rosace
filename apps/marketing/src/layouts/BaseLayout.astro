@@ -1,0 +1,77 @@
+---
+import "@styles/global.css";
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import ogImage from "@public/og-image.png";
+
+interface Props {
+  title: string;
+}
+
+let { title } = Astro.props;
+
+if (Astro.url.pathname !== "/") {
+  title = "Rosace · " + title;
+}
+
+const description =
+  "The animation tool for the next generation of motion designers.";
+---
+
+<html lang="en" class="scheme-light-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:image" content={new URL(ogImage.src, Astro.site)} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Rosace" />
+    <meta property="og:description" content={description} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@rosaceapp" />
+    <meta name="twitter:creator" content="@rosaceapp" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage.src, Astro.site)} />
+
+    <script>
+      let style = document.createElement("style");
+      style.textContent = "* { transition: none !important; }";
+
+      let mm = matchMedia("(prefers-color-scheme: dark)");
+
+      mm.addEventListener("change", () => {
+        if (!style.isConnected) document.head.append(style);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => style.remove());
+        });
+      });
+    </script>
+  </head>
+
+  <body class="dark:bg-gray-1000 bg-white text-gray-800 dark:text-gray-200">
+    <Header />
+
+    <main
+      class="isolate overflow-clip px-8 pt-32 pb-16 sm:pt-48 sm:pb-28 xl:px-36"
+    >
+      <div class="mx-auto flex max-w-7xl flex-col">
+        <slot />
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>

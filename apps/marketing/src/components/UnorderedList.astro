@@ -1,0 +1,7 @@
+---
+const { ...props } = Astro.props;
+---
+
+<ul {...props} class="my-3 space-y-1.5 pl-[2.5ch] [&>li]:list-disc">
+  <slot />
+</ul>

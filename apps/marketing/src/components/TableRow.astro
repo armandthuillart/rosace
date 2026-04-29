@@ -1,0 +1,10 @@
+---
+const { ...props } = Astro.props;
+---
+
+<tr
+  class="border-b border-gray-200 last:border-b-0 dark:border-gray-800"
+  {...props}
+>
+  <slot />
+</tr>

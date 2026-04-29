@@ -1,9 +1,17 @@
 ---
 import { getCollection, render } from "astro:content";
-import BaseLayout from "@components/base-layout.astro";
-import Accordion from "@components/mdx/accordion.astro";
-import Paragraph from "@components/mdx/paragraph.astro";
-import Anchor from "@components/mdx/anchor.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import TableData from "@components/TableData.astro";
+import Accordion from "@components/Accordion.astro";
+import Heading2 from "@components/Heading2.astro";
+import Paragraph from "@components/Paragraph.astro";
+import Table from "@components/Table.astro";
+import Anchor from "@components/Anchor.astro";
+import UnorderedList from "@components/UnorderedList.astro";
+import List from "@components/List.astro";
+import TableHead from "@components/TableHead.astro";
+import TableHeader from "@components/TableHeader.astro";
+import TableRow from "@components/TableRow.astro";
 
 export async function getStaticPaths() {
   return await getCollection("docs").then((entries) =>
@@ -73,9 +81,17 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 
     <Content
       components={{
-        a: Anchor,
         Accordion,
+        a: Anchor,
+        h2: Heading2,
+        li: List,
         p: Paragraph,
+        td: TableData,
+        table: Table,
+        th: TableHeader,
+        thead: TableHead,
+        tr: TableRow,
+        ul: UnorderedList,
       }}
     />
   </article>
