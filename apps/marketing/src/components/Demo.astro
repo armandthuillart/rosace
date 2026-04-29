@@ -17,7 +17,7 @@ import Icon from "@components/Icon.astro";
       <div class="flex flex-col gap-3 max-sm:w-full max-sm:max-w-3xs">
         <div class="flex h-7 justify-between">
           <div
-            class="flex items-center rounded-lg bg-gray-200 px-2.5 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+            class="flex items-center rounded-lg bg-gray-100 px-2.5 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
           >
             <Icon
               aria-hidden="true"
@@ -29,7 +29,7 @@ import Icon from "@components/Icon.astro";
 
           <div class="flex gap-2">
             <div
-              class="flex items-center gap-1.5 rounded-lg bg-gray-200 px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+              class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
             >
               <Icon
                 aria-hidden="true"
@@ -54,9 +54,9 @@ import Icon from "@components/Icon.astro";
             </div>
 
             <div
-              class="flex h-7 rounded-lg bg-gray-200 px-2 text-[.8125rem]/7 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+              class="relative flex h-7 min-w-10.5 rounded-lg bg-gray-100 px-2 text-center text-[.8125rem]/7 text-gray-500 before:absolute before:inset-0 before:block before:content-[attr(data-content)] dark:bg-gray-800 dark:text-gray-400"
+              data-content="9:16"
             >
-              9:16
             </div>
           </div>
         </div>
@@ -112,6 +112,8 @@ import Icon from "@components/Icon.astro";
       name="cursor"
     />
 
-    Psst... it’s interactive!
+    <span
+      class="relative h-5 min-w-37.75 whitespace-nowrap before:absolute before:inset-0 before:content-[attr(data-content)]"
+      data-content="Psst... it’s interactive!"></span>
   </div>
 </section>
