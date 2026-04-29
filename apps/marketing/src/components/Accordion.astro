@@ -30,10 +30,12 @@ let { title } = Astro.props;
       <use href="/sprites.svg#minus-sign"></use>
     </svg>
 
-    <h2 class="text-2xl font-bold">{title}</h2>
+    <h2 class="m-0! text-2xl font-bold">{title}</h2>
   </summary>
 
-  <div class="mr-4 ml-10 space-y-3 pr-6 pb-7 text-xl">
+  <div
+    class="mr-4 ml-10 pr-6 pb-7 text-xl **:not-first:not-last:my-3! **:first:mt-0! **:last:mb-0!"
+  >
     <slot />
   </div>
 </details>
