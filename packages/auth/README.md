@@ -8,7 +8,7 @@ Rosace runs a custom auth layer by design.
 
 As of April 2026:
 
-- [`get-convex/convex-svelte`](https://github.com/get-convex/convex-svelte): clearly not maintained.
+- [`get-convex/convex-svelte`](https://github.com/get-convex/convex-svelte): not maintained.
 - [`get-convex/better-auth`](https://github.com/get-convex/better-auth): slow and ineffective.
 
 This package gives that control by keeping auth-critical behavior in-house:

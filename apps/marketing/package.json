@@ -5,7 +5,7 @@
     "build": "astro build",
     "check": "astro check",
     "deploy": "wrangler deploy --keep-vars",
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "preview": "astro preview"
   },
   "dependencies": {
