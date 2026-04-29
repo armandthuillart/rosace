@@ -9,7 +9,6 @@
     "prepare": "bun ./scripts/touch-env.ts"
   },
   "devDependencies": {
-    "@inquirer/prompts": "^8.4.2",
     "@types/node": "catalog:",
     "commander": "^14.0.3",
     "knip": "catalog:",
@@ -27,7 +26,6 @@
     "@convex-dev/rate-limiter": "^0.3.2",
     "@convex-dev/resend": "^0.2.3",
     "@fontsource/inter": "^5.2.8",
-    "@inquirer/prompts": "^8.4.2",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.8",
     "@sveltejs/adapter-cloudflare": "^7.2.8",
