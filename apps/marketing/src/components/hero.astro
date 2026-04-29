@@ -1,5 +1,6 @@
 ---
 import { DASHBOARD_URL } from "astro:env/client";
+import Icon from "@components/Icon.astro";
 ---
 
 <section
@@ -17,28 +18,22 @@ import { DASHBOARD_URL } from "astro:env/client";
     class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-900 py-4 pr-5 pl-13 text-center text-lg font-bold text-gray-200 shadow-gray-200 transition duration-300 not-dark:shadow-2xl before:absolute focus-visible:outline-2 dark:bg-gray-200 dark:text-gray-800"
     href={DASHBOARD_URL}
   >
-    <svg
+    <Icon
       class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
       fill="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <use href="/sprites.svg#arrow-right"></use>
-    </svg>
+      name="arrow-right"
+    />
 
     <span
       class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
       >Start animating</span
     >
 
-    <svg
+    <Icon
       class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
       fill="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <use href="/sprites.svg#arrow-right"></use>
-    </svg>
+      name="arrow-right"
+    />
   </a>
 
   <div
@@ -49,14 +44,7 @@ import { DASHBOARD_URL } from "astro:env/client";
     </p>
 
     <div class="flex items-center justify-center gap-1">
-      <svg
-        class="size-5"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use href="/sprites.svg#gift-card"></use>
-      </svg>
+      <Icon class="size-5" fill="currentColor" name="gift-card" />
 
       <p class="text-lg/tight font-bold">For free, forever</p>
     </div>

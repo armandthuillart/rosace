@@ -1,3 +1,7 @@
+---
+import Icon from "@components/Icon.astro";
+---
+
 <section
   class="mx-auto mt-16 grid w-full max-w-5xl gap-x-3 gap-y-10 tracking-tight sm:mt-12 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-4"
   id="features"
@@ -16,13 +20,11 @@
         </div>
       </div>
 
-      <svg
+      <Icon
         class="absolute top-0 left-0 size-20 text-gray-400 group-hover:animate-[play-1_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_0.2s_forwards,play-2_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_1.74s_forwards] dark:text-gray-500"
         fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <use href="/sprites.svg#play"></use>
-      </svg>
+        name="play"
+      />
     </div>
 
     <h2 class="text-3xl font-bold">Animate<br />effortlessly</h2>
@@ -180,21 +182,17 @@
         >
         </div>
 
-        <svg
+        <Icon
           class="size-18 text-gray-500 group-hover:animate-[smile-1_1s_ease-in-out_1.3s_both,smile-2_1s_ease-in-out_3.6s_forwards,smile-3_1s_ease-in-out_4.3s_forwards] dark:text-gray-400"
           fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <use href="/sprites.svg#smile"></use>
-        </svg>
+          name="smile"
+        />
 
-        <svg
+        <Icon
           class="absolute top-0 left-0 size-18 origin-bottom text-gray-500 opacity-0 group-hover:animate-[shocked-1_0.7s_ease-in-out_0s_both,shocked-2_0.6s_ease-in_1.1s_forwards] dark:text-gray-400"
           fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <use href="/sprites.svg#shocked"></use>
-        </svg>
+          name="shocked"
+        />
       </div>
     </div>
 
@@ -203,21 +201,17 @@
 
   <div class="group flex flex-col items-center gap-5 text-center">
     <div class="relative size-18">
-      <svg
-        fill="currentColor"
+      <Icon
         class="relative z-2 size-18 origin-center text-gray-500 transition duration-300 group-hover:translate-x-1 group-hover:delay-100 dark:text-gray-400"
-        viewBox="0 0 24 24"
-      >
-        <use href="/sprites.svg#zap"></use>
-      </svg>
-
-      <svg
         fill="currentColor"
+        name="zap"
+      />
+
+      <Icon
         class="absolute top-1/2 left-1/2 z-1 size-18 origin-center -translate-1/2 scale-25 text-gray-400 opacity-0 blur-sm transition duration-300 group-hover:-translate-x-16 group-hover:-translate-y-16 group-hover:scale-50 group-hover:opacity-100 group-hover:blur-none dark:text-gray-500"
-        viewBox="0 0 24 24"
-      >
-        <use href="/sprites.svg#zap"></use>
-      </svg>
+        fill="currentColor"
+        name="zap"
+      />
     </div>
 
     <h2 class="text-3xl font-bold">Blazing fast<br />performance</h2>

@@ -1,0 +1,45 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+const spriteNames = [
+  "rosace",
+  "faqs",
+  "arrow-left",
+  "arrow-right",
+  "x",
+  "discord",
+  "tiktok",
+  "cursor",
+  "gift-card",
+  "plus-sign",
+  "minus-sign",
+  "play",
+  "smile",
+  "shocked",
+  "zap",
+  "rectangle",
+  "checkerboard",
+  "two-columns",
+  "pause",
+] as const;
+
+type IconName = (typeof spriteNames)[number];
+
+interface Props extends HTMLAttributes<"svg"> {
+  name: IconName;
+  title?: string;
+}
+
+const { name, title, ...props } = Astro.props;
+---
+
+<svg
+  aria-hidden={title ? undefined : "true"}
+  role={title ? "img" : undefined}
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+  {...props}
+>
+  {title && <title>{title}</title>}
+  <use href={`/sprites.svg#${name}`}></use>
+</svg>

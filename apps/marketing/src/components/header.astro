@@ -1,5 +1,6 @@
 ---
 import { DASHBOARD_URL } from "astro:env/client";
+import Icon from "@components/Icon.astro";
 
 const animate = Astro.url.pathname !== "/";
 ---
@@ -16,31 +17,25 @@ const animate = Astro.url.pathname !== "/";
       >
         <div class="relative size-10 overflow-hidden">
           <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
-            <svg
+            <Icon
               class:list={[
                 animate
                   ? "transition delay-50 duration-300 ease-out will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:scale-y-75 group-hover:opacity-25 group-hover:delay-0"
                   : "group-hover:animate-[spin_1s_ease-in-out]",
               ]}
               fill="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <use href="/sprites.svg#rosace"></use>
-            </svg>
+              name="rosace"
+            />
           </div>
 
           {
             animate && (
               <div class="absolute top-1/2 left-1/2 size-9 -translate-1/2">
-                <svg
+                <Icon
                   class="ease origin-right translate-x-0.5 scale-50 opacity-0 blur-xs transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-hover:delay-50"
                   fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <use href="/sprites.svg#arrow-left" />
-                </svg>
+                  name="arrow-left"
+                />
               </div>
             )
           }
@@ -86,28 +81,22 @@ const animate = Astro.url.pathname !== "/";
         class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-200 py-4 pr-5 pl-13 text-center text-lg font-bold transition duration-300 before:absolute focus-visible:outline-2 max-sm:hidden dark:bg-gray-800"
         href={DASHBOARD_URL}
       >
-        <svg
+        <Icon
           class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
           fill="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <use href="/sprites.svg#arrow-right"></use>
-        </svg>
+          name="arrow-right"
+        />
 
         <span
           class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
           >Go to app</span
         >
 
-        <svg
+        <Icon
           class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
           fill="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <use href="/sprites.svg#arrow-right"></use>
-        </svg>
+          name="arrow-right"
+        />
       </a>
     </div>
   </nav>

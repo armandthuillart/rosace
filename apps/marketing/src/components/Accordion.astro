@@ -1,4 +1,6 @@
 ---
+import Icon from "@components/Icon.astro";
+
 interface Props {
   title: string;
 }
@@ -12,23 +14,17 @@ let { title } = Astro.props;
   <summary
     class="flex cursor-pointer items-start gap-4 pt-6 pb-3 select-none not-group-open:pb-7"
   >
-    <svg
-      aria-hidden="true"
+    <Icon
       class="my-auto size-6 text-gray-400 group-open:hidden dark:text-gray-500"
       fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <use href="/sprites.svg#plus-sign"></use>
-    </svg>
+      name="plus-sign"
+    />
 
-    <svg
-      aria-hidden="true"
+    <Icon
       class="my-auto size-6 text-gray-400 not-group-open:hidden dark:text-gray-500"
       fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <use href="/sprites.svg#minus-sign"></use>
-    </svg>
+      name="minus-sign"
+    />
 
     <h2 class="m-0! text-2xl font-bold">{title}</h2>
   </summary>
