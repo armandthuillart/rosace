@@ -4,6 +4,10 @@
   "types": [
     "node"
   ],
+  "imports": {
+    "#env": "./src/env.ts",
+    "#string": "./src/string.ts"
+  },
   "exports": {
     ".": "./src/index.ts"
   },

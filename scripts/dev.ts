@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { networkInterfaces } from "node:os";
 import { createInterface } from "node:readline";
 
@@ -10,6 +11,14 @@ type Service = {
   name: ServiceName;
   command: readonly [string, ...string[]];
   cwd?: string;
+};
+type ErrorIncidentState = {
+  lines: string[];
+  timer: ReturnType<typeof setTimeout> | null;
+};
+type LastErrorSignature = {
+  signature: string;
+  atMs: number;
 };
 
 type BunColorApi = { color: (input: string, outputFormat?: "ansi") => string | null };
@@ -33,6 +42,12 @@ const SERVICE_COLORS: Record<ServiceName, string> = {
   svelte: "#FE3F01",
   convex: "#8D2676",
 };
+const ERROR_INCIDENT_DEBOUNCE_MS = 250;
+const ERROR_DUPLICATE_WINDOW_MS = 2000;
+const WORKSPACE_ROOT = process.cwd();
+const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
+const errorStates = new Map<ServiceName, ErrorIncidentState>();
+const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
 
 const SERVICES: readonly Service[] = [
   { name: "svelte", command: ["vp", "run", "dashboard#dev"] },
@@ -101,14 +116,19 @@ function logGlobalSuccess(message: string) {
   pushLine("scripts", paint(SUCCESS_GREEN, `✓ ${timestamp()} ${message}`));
 }
 
-function logLine(kind: "info" | "success", service: ServiceName, message: string) {
+function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
   const section: Section = service === "convex" ? "convex" : "apps";
-  const symbol = kind === "success" ? "✓" : "•";
+  const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
   const serviceTag =
-    kind === "success" ? `[${service}]` : paint(SERVICE_COLORS[service], `[${service}]`);
+    kind === "info" ? paint(SERVICE_COLORS[service], `[${service}]`) : `[${service}]`;
   const line = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
 
-  const outputLine = kind === "success" ? paint(SUCCESS_GREEN, line) : line;
+  const outputLine =
+    kind === "success"
+      ? paint(SUCCESS_GREEN, line)
+      : kind === "error"
+        ? `\x1b[1;31m${line}${RESET}`
+        : line;
 
   if (section === "apps") {
     pushAppLine(service, outputLine);
@@ -146,6 +166,13 @@ function formatDuration(ms: number) {
   return `${ms}ms`;
 }
 
+function formatPathForDisplay(path: string) {
+  if (path.startsWith(`${WORKSPACE_ROOT}/`)) {
+    return path.slice(WORKSPACE_ROOT.length + 1);
+  }
+  return path;
+}
+
 function stripAnsi(input: string) {
   let out = "";
   let i = 0;
@@ -168,7 +195,7 @@ function stripAnsi(input: string) {
   return out;
 }
 
-function toFriendlyMessage(service: ServiceName, rawLine: string) {
+function toFriendlyMessage(service: ServiceName, rawLine: string, stream: "stdout" | "stderr") {
   const text = stripAnsi(rawLine).trim();
   if (!text) return null;
 
@@ -223,7 +250,149 @@ function toFriendlyMessage(service: ServiceName, rawLine: string) {
     /^\$\s/.test(text);
 
   if (isNoise) return null;
+  if (stream === "stderr") return { kind: "error" as const, message: text };
   return null;
+}
+
+function isOverlayNoiseLine(line: string) {
+  return (
+    /^Click outside, press Esc key, or fix the code to dismiss\.?$/i.test(line) ||
+    /^You can also disable this overlay by setting .*vite\.config\./i.test(line)
+  );
+}
+
+function normalizeCause(lines: string[]) {
+  const enrichWorkspaceSpecifiers = (input: string) =>
+    input.replace(/\/[A-Za-z0-9._\-+/()]+/g, (specifier) => {
+      // Only enrich workspace-relative absolute paths (e.g. /packages/helpers/src/env).
+      if (!specifier.startsWith("/")) return specifier;
+      if (/\.[a-z0-9]+$/i.test(specifier)) return specifier;
+
+      const candidateBase = `${WORKSPACE_ROOT}${specifier}`;
+      if (existsSync(candidateBase)) return specifier;
+
+      for (const extension of RESOLVABLE_EXTENSIONS) {
+        if (existsSync(`${candidateBase}${extension}`)) {
+          return `${specifier}${extension}`;
+        }
+      }
+
+      for (const extension of RESOLVABLE_EXTENSIONS) {
+        if (existsSync(`${candidateBase}/index${extension}`)) {
+          return `${specifier}/index${extension}`;
+        }
+      }
+
+      return specifier;
+    });
+
+  const candidates = lines
+    .map((line) => line.trim())
+    .filter(
+      (line) =>
+        line.length > 0 &&
+        !line.startsWith("at ") &&
+        !isOverlayNoiseLine(line) &&
+        !/^Error\s*\[[A-Z0-9_]+\]:\s*/.test(line),
+    );
+
+  const preferred =
+    candidates.find((line) => /Cannot find module|Module not found/i.test(line)) ??
+    candidates.find((line) =>
+      /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(line),
+    ) ??
+    candidates[0];
+
+  if (preferred) {
+    const noPrefix = preferred.replace(
+      /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
+      "",
+    );
+    return enrichWorkspaceSpecifiers(noPrefix.replaceAll(WORKSPACE_ROOT, ""));
+  }
+
+  const fallback = lines.find((line) => !line.trim().startsWith("at "));
+  if (fallback) {
+    const noPrefix = fallback
+      .trim()
+      .replace(/^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i, "");
+    return enrichWorkspaceSpecifiers(noPrefix.replaceAll(WORKSPACE_ROOT, ""));
+  }
+
+  return "Unknown runtime error";
+}
+
+function getOriginFromLines(lines: string[]) {
+  for (const line of lines) {
+    const match = line.match(/\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/);
+    if (!match) continue;
+    const file = match[1];
+    if (file.startsWith("node:")) continue;
+    if (/\/node_modules\//.test(file)) continue;
+    return `${formatPathForDisplay(file)}:${match[2]}:${match[3]}`;
+  }
+
+  for (const line of lines) {
+    const importedFromMatch = line.match(/\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i);
+    if (importedFromMatch) {
+      return formatPathForDisplay(importedFromMatch[1].replace(/[)\],.;]+$/, ""));
+    }
+  }
+
+  for (const line of lines) {
+    const ssrModuleMatch = line.match(/\bSSR module (\S+)/i);
+    if (ssrModuleMatch) {
+      const rawPath = ssrModuleMatch[1].replace(/[)\],.;]+$/, "");
+      const normalizedPath = rawPath.startsWith("/")
+        ? rawPath.startsWith(`${WORKSPACE_ROOT}/`)
+          ? rawPath
+          : `${WORKSPACE_ROOT}${rawPath}`
+        : rawPath;
+      return formatPathForDisplay(normalizedPath);
+    }
+  }
+
+  return null;
+}
+
+function flushErrorIncident(service: ServiceName) {
+  const state = errorStates.get(service);
+  if (!state || state.lines.length === 0) return;
+
+  const lines = state.lines.splice(0, state.lines.length);
+  state.timer = null;
+
+  const cause = normalizeCause(lines);
+  const origin = getOriginFromLines(lines) ?? "unknown";
+  const signature = `${cause}::${origin}`;
+  const now = Date.now();
+
+  const last = lastErrorSignatures.get(service);
+  if (last && last.signature === signature && now - last.atMs < ERROR_DUPLICATE_WINDOW_MS) {
+    return;
+  }
+  lastErrorSignatures.set(service, { signature, atMs: now });
+
+  logLine("error", service, `- ${cause}`);
+}
+
+function queueErrorLine(service: ServiceName, line: string) {
+  const text = line.trim();
+  if (!text || isOverlayNoiseLine(text)) return;
+
+  const current =
+    errorStates.get(service) ??
+    (() => {
+      const initial: ErrorIncidentState = { lines: [], timer: null };
+      errorStates.set(service, initial);
+      return initial;
+    })();
+
+  current.lines.push(text);
+  if (current.timer) clearTimeout(current.timer);
+  current.timer = setTimeout(() => {
+    flushErrorIncident(service);
+  }, ERROR_INCIDENT_DEBOUNCE_MS);
 }
 
 function startService(service: Service, children: Set<ReturnType<typeof spawn>>) {
@@ -246,7 +415,7 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
 
   children.add(child);
 
-  const onLine = (line: string) => {
+  const onLine = (line: string, stream: "stdout" | "stderr") => {
     const cleanedLine = stripAnsi(line).trim();
 
     if (service.name === "convex") {
@@ -277,8 +446,12 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
       serviceReadyMs = Number(readyMatch[1]);
     }
 
-    const event = toFriendlyMessage(service.name, line);
+    const event = toFriendlyMessage(service.name, line, stream);
     if (!event) return;
+    if (event.kind === "error") {
+      queueErrorLine(service.name, event.message);
+      return;
+    }
 
     if (service.name !== "convex" && event.message.startsWith("- Local:")) sawLocal = true;
     if (service.name !== "convex" && event.message.startsWith("- Network:")) {
@@ -309,15 +482,19 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
 
   if (child.stdout) {
     const stdout = createInterface({ input: child.stdout });
-    stdout.on("line", onLine);
+    stdout.on("line", (line) => onLine(line, "stdout"));
   }
 
   if (child.stderr) {
     const stderr = createInterface({ input: child.stderr });
-    stderr.on("line", onLine);
+    stderr.on("line", (line) => onLine(line, "stderr"));
   }
 
-  child.once("exit", () => {
+  child.once("exit", (code) => {
+    flushErrorIncident(service.name);
+    if ((code ?? 0) !== 0) {
+      logLine("error", service.name, `Process exited with code ${code ?? 0}.`);
+    }
     children.delete(child);
   });
 }

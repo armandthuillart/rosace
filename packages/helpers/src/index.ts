@@ -1,2 +1,2 @@
-export { requireEnv } from "./env";
-export { capitalize } from "./string";
+export { requireEnv } from "#env";
+export { capitalize } from "#string";
