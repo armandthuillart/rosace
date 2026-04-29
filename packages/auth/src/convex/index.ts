@@ -8,9 +8,9 @@ import * as v from "valibot";
 import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } from "../providers";
 import { getPublicJwks, authStore } from "./store";
 
-const STORE_QUERY = "store:query" as const;
-const STORE_ACTION = "store:action" as const;
-const STORE_MUTATION = "store:mutation" as const;
+const STORE_QUERY = "auth:query" as const;
+const STORE_ACTION = "auth:action" as const;
+const STORE_MUTATION = "auth:mutation" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
 

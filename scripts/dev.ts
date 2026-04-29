@@ -48,6 +48,7 @@ const WORKSPACE_ROOT = process.cwd();
 const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
 const errorStates = new Map<ServiceName, ErrorIncidentState>();
 const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
+const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
 
 const SERVICES: readonly Service[] = [
   { name: "svelte", command: ["vp", "run", "dashboard#dev"] },
@@ -135,6 +136,13 @@ function logLine(kind: "info" | "success" | "error", service: ServiceName, messa
     return;
   }
   pushLine(section, outputLine);
+}
+
+function logConvexHttpError(method: string, path: string, cause: string) {
+  const line1 = `• [convex] ${timestamp()} ${method.toUpperCase()} / 500`;
+  const line2 = `• [convex] ${timestamp()} ↳ route ${path} (${cause})`;
+  pushLine("convex", `\x1b[1;31m${line1}${RESET}`);
+  pushLine("convex", `\x1b[1;31m${line2}${RESET}`);
 }
 
 function serviceByName(name: ServiceName) {
@@ -377,6 +385,9 @@ function flushErrorIncident(service: ServiceName) {
 }
 
 function queueErrorLine(service: ServiceName, line: string) {
+  const suppressedUntil = suppressErrorIncidentsUntilMs.get(service) ?? 0;
+  if (Date.now() < suppressedUntil) return;
+
   const text = line.trim();
   if (!text || isOverlayNoiseLine(text)) return;
 
@@ -419,6 +430,22 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
     const cleanedLine = stripAnsi(line).trim();
 
     if (service.name === "convex") {
+      const convexHttpError = cleanedLine.match(
+        /\[CONVEX H\((GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+([^)]+)\)\]\s+Uncaught Error:\s+(.+)$/i,
+      );
+      if (convexHttpError) {
+        const [, method, path, cause] = convexHttpError;
+        const current = errorStates.get(service.name);
+        if (current?.timer) clearTimeout(current.timer);
+        if (current) {
+          current.lines.length = 0;
+          current.timer = null;
+        }
+        suppressErrorIncidentsUntilMs.set(service.name, Date.now() + 750);
+        logConvexHttpError(method, path, cause);
+        return;
+      }
+
       if (/Preparing Convex functions/i.test(cleanedLine)) {
         if (!convexBootstrapped) {
           logLine("info", service.name, "Preparing functions...");
