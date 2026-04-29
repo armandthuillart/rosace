@@ -3,7 +3,9 @@ import { DASHBOARD_URL } from "astro:env/client";
 import Icon from "@components/Icon.astro";
 ---
 
-<section class="mt-24 flex items-center justify-center" id="cta">
+<section class="mt-24 flex items-center justify-center" id="cta" aria-labelledby="cta-heading">
+  <h2 id="cta-heading" class="sr-only">Start animating</h2>
+
   <a
     aria-label="Go to app"
     class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-900 py-4 pr-5 pl-13 text-center text-lg font-bold text-gray-200 shadow-gray-200 transition duration-300 not-dark:shadow-2xl before:absolute focus-visible:outline-2 max-sm:hidden dark:bg-gray-200 dark:text-gray-800"

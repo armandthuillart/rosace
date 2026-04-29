@@ -3,217 +3,220 @@ import Icon from "@components/Icon.astro";
 ---
 
 <section
-  class="mx-auto mt-16 grid w-full max-w-5xl gap-x-3 gap-y-10 tracking-tight sm:mt-12 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-4"
+  class="mx-auto mt-16 w-full max-w-5xl tracking-tight sm:mt-12"
   id="features"
+  aria-labelledby="features-heading"
 >
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div class="relative size-18 overflow-hidden">
-      <div class="absolute top-1/2 left-1/2 size-12 -translate-1/2">
-        <div
-          class="absolute top-1/2 left-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.64s] dark:bg-gray-400"
-        >
+  <h2 id="features-heading" class="sr-only">Features</h2>
+
+  <ul class="grid gap-x-3 gap-y-10 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-4">
+    <li class="group flex flex-col items-center gap-5 text-center">
+      <div class="relative size-18 overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 size-12 -translate-1/2">
+          <div
+            class="absolute top-1/2 left-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.64s] dark:bg-gray-400"
+          >
+          </div>
+
+          <div
+            class="absolute top-1/2 right-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.74s] dark:bg-gray-400"
+          >
+          </div>
         </div>
 
+        <Icon
+          class="absolute top-0 left-0 size-20 text-gray-400 group-hover:animate-[play-1_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_0.2s_forwards,play-2_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_1.74s_forwards] dark:text-gray-500"
+          fill="currentColor"
+          name="play"
+        />
+      </div>
+
+      <h3 class="text-3xl font-bold">Animate<br />effortlessly</h3>
+    </li>
+
+    <li class="group flex flex-col items-center justify-center gap-5 text-center">
+      <div class="flex h-18">
         <div
-          class="absolute top-1/2 right-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.74s] dark:bg-gray-400"
+          class="size-18 origin-bottom group-hover:animate-[music-headset-2_0.5s_ease-in-out_0.1s_both,music-headset-3_0.5s_ease-in-out_0.9s_forwards]"
         >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-18 origin-bottom text-gray-500 group-hover:animate-[music-headset-1_0.7s_ease-in-out_0s_both,music-headset-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-400"
+          >
+            <path
+              d="M12 2C6.5 2 2 6.47761 2 11.9502V15.6318V16.8259V18.0199C2 20.209 3.7 21.9005 5.9 21.9005C8.1 21.9005 9.8 20.209 9.8 18.0199V15.5323C9.8 13.4428 8.1 11.6517 5.9 11.6517C5.2 11.7512 4.6 11.9502 4 12.2488V11.9502C4 7.57214 7.6 3.99005 12 3.99005C16.4 3.99005 20 7.57214 20 11.9502V12.2488C19.4 11.9502 18.8 11.7512 18.1 11.7512C16 11.7512 14.2 13.4428 14.2 15.6318V18.1194C14.2 20.209 15.9 22 18.1 22C20.2 22 22 20.3085 22 18.1194V16.9254V15.7313V11.9502C22 6.47761 17.5 2 12 2Z"
+            >
+            </path>
+          </svg>
+        </div>
+
+        <style></style>
+
+        <div
+          class="size-18 origin-bottom group-hover:animate-[music-note-2_0.5s_ease-in-out_0.1s_both,music-note-3_0.5s_ease-in-out_0.9s_forwards]"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-18 origin-bottom text-gray-400 group-hover:animate-[music-note-1_0.7s_ease-in-out_0s_both,music-note-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-500"
+          >
+            <path
+              d="M20.9 1.47373C20.2 0.968418 19.3 0.867356 18.5 1.17054L10.3 4.00029C8.9 4.5056 8 5.81941 8 7.33534V10.7715V15.5214C7.4 15.2182 6.7 14.915 6 14.915C3.8 14.915 2 16.7341 2 18.9575C2 21.1809 3.8 23 6 23C8.2 23 10 21.1809 10 18.9575C10 18.8564 10 18.7554 10 18.6543V18.5533V11.4789L20 7.94172V12.9948C19.4 12.6916 18.7 12.3885 18 12.3885C15.8 12.3885 14 14.2076 14 16.431C14 18.6543 15.8 20.4734 18 20.4734C20.2 20.4734 22 18.6543 22 16.431C22 16.3299 22 16.2288 22 16.1278V16.0267V6.52684V3.59604C22 2.78754 21.6 1.97904 20.9 1.47373Z"
+            >
+            </path>
+          </svg>
         </div>
       </div>
 
-      <Icon
-        class="absolute top-0 left-0 size-20 text-gray-400 group-hover:animate-[play-1_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_0.2s_forwards,play-2_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_1.74s_forwards] dark:text-gray-500"
-        fill="currentColor"
-        name="play"
-      />
-    </div>
+      <h3 class="text-3xl font-bold">Beat-synced<br />animations</h3>
+    </li>
 
-    <h2 class="text-3xl font-bold">Animate<br />effortlessly</h2>
-  </div>
+    <li class="group flex flex-col items-center gap-5 text-center">
+      <div class="relative flex h-18 w-full items-center justify-center">
+        <div class="relative aspect-5/4 h-full">
+          <div
+            class="absolute top-0 left-0 size-9/10 rounded-xl border-5 border-gray-400 p-0.75 dark:border-gray-500"
+          >
+          </div>
 
-  <div
-    class="group flex flex-col items-center justify-center gap-5 text-center"
-  >
-    <div class="flex h-18">
+          <div
+            class="before:dark:bg-gray-1000 absolute right-0 bottom-0 h-78/100 w-44/100 group-hover:animate-[resize-1_0.8s_ease-in-out_0.2s_both,resize-2_0.3s_ease-in-out_1.5s_forwards] before:absolute before:-top-0.75 before:-left-0.75 before:h-[calc(100%+.375rem)] before:w-[calc(100%+.375rem)] before:rounded-xl before:bg-white after:absolute after:inset-0 after:rounded-[.625rem] after:border-5 after:border-gray-500 after:dark:border-gray-400"
+          >
+            <div class="absolute inset-0.75 bg-gray-400 dark:bg-gray-500"></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-3xl font-bold">Resize to<br />any format</h3>
+    </li>
+
+    <li class="group flex flex-col items-center gap-5 text-center">
       <div
-        class="size-18 origin-bottom group-hover:animate-[music-headset-2_0.5s_ease-in-out_0.1s_both,music-headset-3_0.5s_ease-in-out_0.9s_forwards]"
+        class="relative flex h-18 w-full items-center justify-center overflow-hidden"
       >
+        <div
+          class="dark:before:bg-gray-1000 dark:after:bg-gray-1000 absolute top-1/2 left-1/2 size-16 -translate-1/2 before:absolute before:top-0 before:left-0 before:z-1 before:h-1/2 before:w-full before:-translate-y-full before:bg-white after:absolute after:bottom-0 after:left-0 after:h-1/2 after:w-full after:translate-y-full after:bg-white"
+        >
+          <div
+            class="absolute top-0 left-1/2 h-10 w-2 -translate-x-1/2 rounded-2xl bg-gray-500 group-hover:animate-[download-arrow_1s_ease-in-out_0s_both] before:absolute before:bottom-0 before:left-0 before:h-6 before:w-full before:origin-bottom before:translate-x-3/10 before:-rotate-45 before:rounded-2xl before:bg-gray-500 after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:origin-bottom after:-translate-x-3/10 after:rotate-45 after:rounded-2xl after:bg-gray-500 dark:bg-gray-400 dark:before:bg-gray-400 dark:after:bg-gray-400"
+          >
+          </div>
+
+          <div
+            class="absolute bottom-0 left-1/2 h-2 w-full -translate-x-1/2 rounded-2xl bg-gray-400 group-hover:animate-[download-base_1s_ease-in-out_0s_both] before:absolute before:bottom-0 before:left-0 before:h-5 before:w-2 before:rounded-2xl before:bg-gray-400 after:absolute after:right-0 after:bottom-0 after:h-5 after:w-2 after:rounded-2xl after:bg-gray-400 dark:bg-gray-500 dark:before:bg-gray-500 dark:after:bg-gray-500"
+          >
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-3xl font-bold">Export<br />in one click</h3>
+    </li>
+
+    <li class="group flex flex-col items-center gap-5 text-center">
+      <div class="relative size-18 rounded-[20%] bg-gray-200 dark:bg-gray-800">
+        <div
+          class="absolute top-1/2 left-1/2 aspect-[1.4] w-6/10 -translate-1/2 before:absolute before:top-0 before:left-0 before:-z-1 before:block before:h-2 before:w-full before:rounded-full before:bg-gray-500 after:absolute after:bottom-0 after:left-0 after:-z-1 after:block after:h-2 after:w-full after:rounded-full after:bg-gray-500 dark:before:bg-gray-400 dark:after:bg-gray-400"
+        >
+          <div
+            class="absolute top-0 left-22/100 h-6/10 w-2 -translate-y-3/10 rounded-full bg-gray-500 outline-3 outline-gray-200 group-hover:animate-[slider-1_0.3s_ease-in-out_0.2s_both,slider-2_0.6s_ease-in-out_0.6s_forwards] dark:bg-gray-400 dark:outline-gray-800"
+          >
+          </div>
+
+          <div
+            class="absolute right-22/100 bottom-0 h-6/10 w-2 translate-y-3/10 rounded-full bg-gray-500 outline-3 outline-gray-200 group-hover:animate-[slider-3_0.3s_ease-in-out_0.2s_both,slider-4_0.6s_ease-in-out_0.6s_forwards] dark:bg-gray-400 dark:outline-gray-800"
+          >
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-3xl font-bold">Reusable<br />animations</h3>
+    </li>
+
+    <li class="group flex flex-col items-center gap-5 text-center">
+      <div class="relative flex h-18 w-full items-center justify-center">
         <svg
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="size-18 origin-bottom text-gray-500 group-hover:animate-[music-headset-1_0.7s_ease-in-out_0s_both,music-headset-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-400"
+          class="absolute top-1/2 left-1/2 w-36/100 -translate-1/2"
+          viewBox="0 0 48.87 48.78"
+        >
+          <polyline
+            class="stroke-gray-400 opacity-0 group-hover:animate-[scribble-1_0.8s_ease-in-out_2.5s_both,scribble-2_0.8s_ease-in-out_3.3s_forwards] dark:stroke-gray-500"
+            points="6.01 15.13 24.92 5.5 5.5 29.59 42.73 10.02 7.42 41.24 43.37 23.89 22.39 43.28 42.99 37.97"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+          </polyline>
+        </svg>
+
+        <svg
+          class="absolute top-1/2 left-1/2 w-42/100 -translate-1/2 overflow-visible"
+          viewBox="0 0 62.94 38.58"
         >
           <path
-            d="M12 2C6.5 2 2 6.47761 2 11.9502V15.6318V16.8259V18.0199C2 20.209 3.7 21.9005 5.9 21.9005C8.1 21.9005 9.8 20.209 9.8 18.0199V15.5323C9.8 13.4428 8.1 11.6517 5.9 11.6517C5.2 11.7512 4.6 11.9502 4 12.2488V11.9502C4 7.57214 7.6 3.99005 12 3.99005C16.4 3.99005 20 7.57214 20 11.9502V12.2488C19.4 11.9502 18.8 11.7512 18.1 11.7512C16 11.7512 14.2 13.4428 14.2 15.6318V18.1194C14.2 20.209 15.9 22 18.1 22C20.2 22 22 20.3085 22 18.1194V16.9254V15.7313V11.9502C22 6.47761 17.5 2 12 2Z"
+            class="stroke-gray-500 group-hover:animate-[signature-1_1.2s_ease-in-out_0s_both,signature-2_1.2s_ease-in-out_1.3s_forwards,signature-3_0.001s_linear_4.1s_forwards,signature-1_1.2s_ease-in-out_4.101s_forwards] dark:stroke-gray-400"
+            d="M3.5,34.99c10.83.9,33.91-4.91,34.28-19.06.2-7.61-3.88-12.42-8.6-12.42s-8.48,5.69-7.59,13.03c1.59,13.19,22.59,18.5,37.85,18.5"
+            fill="none"
+            stroke-width="8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
           </path>
         </svg>
       </div>
 
-      <style></style>
+      <h3 class="text-3xl font-bold">Export without<br />watermark</h3>
+    </li>
 
+    <li class="group flex flex-col items-center gap-5 text-center">
       <div
-        class="size-18 origin-bottom group-hover:animate-[music-note-2_0.5s_ease-in-out_0.1s_both,music-note-3_0.5s_ease-in-out_0.9s_forwards]"
+        class="dark:before:from-gray-1000 dark:after:from-gray-1000 relative flex h-18 w-32 items-center justify-center overflow-hidden"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="size-18 origin-bottom text-gray-400 group-hover:animate-[music-note-1_0.7s_ease-in-out_0s_both,music-note-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-500"
-        >
-          <path
-            d="M20.9 1.47373C20.2 0.968418 19.3 0.867356 18.5 1.17054L10.3 4.00029C8.9 4.5056 8 5.81941 8 7.33534V10.7715V15.5214C7.4 15.2182 6.7 14.915 6 14.915C3.8 14.915 2 16.7341 2 18.9575C2 21.1809 3.8 23 6 23C8.2 23 10 21.1809 10 18.9575C10 18.8564 10 18.7554 10 18.6543V18.5533V11.4789L20 7.94172V12.9948C19.4 12.6916 18.7 12.3885 18 12.3885C15.8 12.3885 14 14.2076 14 16.431C14 18.6543 15.8 20.4734 18 20.4734C20.2 20.4734 22 18.6543 22 16.431C22 16.3299 22 16.2288 22 16.1278V16.0267V6.52684V3.59604C22 2.78754 21.6 1.97904 20.9 1.47373Z"
+        <div class="relative size-18 overflow-visible">
+          <div
+            class="absolute right-1/2 bottom-6/100 h-1.5 w-6 -translate-x-120/100 rotate-30 overflow-hidden rounded-full before:block before:size-full before:rounded-full before:bg-gray-400 before:opacity-0 group-hover:before:animate-[shock-1_0.2s_ease-in-out_0.35s_both,shock-2_0.35s_ease-in-out_0.6s_forwards] dark:before:bg-gray-500"
           >
-          </path>
-        </svg>
-      </div>
-    </div>
+          </div>
 
-    <h2 class="text-3xl font-bold">Beat-synced<br />animations</h2>
-  </div>
+          <div
+            class="absolute bottom-6/100 left-1/2 h-1.5 w-6 translate-x-120/100 -rotate-30 overflow-hidden rounded-full before:block before:size-full before:rounded-full before:bg-gray-400 before:opacity-0 group-hover:before:animate-[shock-3_0.2s_ease-in-out_0.35s_both,shock-4_0.35s_ease-in-out_0.6s_forwards] dark:before:bg-gray-500"
+          >
+          </div>
 
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div class="relative flex h-18 w-full items-center justify-center">
-      <div class="relative aspect-5/4 h-full">
-        <div
-          class="absolute top-0 left-0 size-9/10 rounded-xl border-5 border-gray-400 p-0.75 dark:border-gray-500"
-        >
-        </div>
+          <Icon
+            class="size-18 text-gray-500 group-hover:animate-[smile-1_1s_ease-in-out_1.3s_both,smile-2_1s_ease-in-out_3.6s_forwards,smile-3_1s_ease-in-out_4.3s_forwards] dark:text-gray-400"
+            fill="currentColor"
+            name="smile"
+          />
 
-        <div
-          class="before:dark:bg-gray-1000 absolute right-0 bottom-0 h-78/100 w-44/100 group-hover:animate-[resize-1_0.8s_ease-in-out_0.2s_both,resize-2_0.3s_ease-in-out_1.5s_forwards] before:absolute before:-top-0.75 before:-left-0.75 before:h-[calc(100%+.375rem)] before:w-[calc(100%+.375rem)] before:rounded-xl before:bg-white after:absolute after:inset-0 after:rounded-[.625rem] after:border-5 after:border-gray-500 after:dark:border-gray-400"
-        >
-          <div class="absolute inset-0.75 bg-gray-400 dark:bg-gray-500"></div>
+          <Icon
+            class="absolute top-0 left-0 size-18 origin-bottom text-gray-500 opacity-0 group-hover:animate-[shocked-1_0.7s_ease-in-out_0s_both,shocked-2_0.6s_ease-in_1.1s_forwards] dark:text-gray-400"
+            fill="currentColor"
+            name="shocked"
+          />
         </div>
       </div>
-    </div>
 
-    <h2 class="text-3xl font-bold">Resize to<br />any format</h2>
-  </div>
+      <h3 class="text-3xl font-bold">Free plan<br />forever free</h3>
+    </li>
 
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div
-      class="relative flex h-18 w-full items-center justify-center overflow-hidden"
-    >
-      <div
-        class="dark:before:bg-gray-1000 dark:after:bg-gray-1000 absolute top-1/2 left-1/2 size-16 -translate-1/2 before:absolute before:top-0 before:left-0 before:z-1 before:h-1/2 before:w-full before:-translate-y-full before:bg-white after:absolute after:bottom-0 after:left-0 after:h-1/2 after:w-full after:translate-y-full after:bg-white"
-      >
-        <div
-          class="absolute top-0 left-1/2 h-10 w-2 -translate-x-1/2 rounded-2xl bg-gray-500 group-hover:animate-[download-arrow_1s_ease-in-out_0s_both] before:absolute before:bottom-0 before:left-0 before:h-6 before:w-full before:origin-bottom before:translate-x-3/10 before:-rotate-45 before:rounded-2xl before:bg-gray-500 after:absolute after:bottom-0 after:left-0 after:h-6 after:w-full after:origin-bottom after:-translate-x-3/10 after:rotate-45 after:rounded-2xl after:bg-gray-500 dark:bg-gray-400 dark:before:bg-gray-400 dark:after:bg-gray-400"
-        >
-        </div>
-
-        <div
-          class="absolute bottom-0 left-1/2 h-2 w-full -translate-x-1/2 rounded-2xl bg-gray-400 group-hover:animate-[download-base_1s_ease-in-out_0s_both] before:absolute before:bottom-0 before:left-0 before:h-5 before:w-2 before:rounded-2xl before:bg-gray-400 after:absolute after:right-0 after:bottom-0 after:h-5 after:w-2 after:rounded-2xl after:bg-gray-400 dark:bg-gray-500 dark:before:bg-gray-500 dark:after:bg-gray-500"
-        >
-        </div>
-      </div>
-    </div>
-
-    <h2 class="text-3xl font-bold">Export<br />in one click</h2>
-  </div>
-
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div class="relative size-18 rounded-[20%] bg-gray-200 dark:bg-gray-800">
-      <div
-        class="absolute top-1/2 left-1/2 aspect-[1.4] w-6/10 -translate-1/2 before:absolute before:top-0 before:left-0 before:-z-1 before:block before:h-2 before:w-full before:rounded-full before:bg-gray-500 after:absolute after:bottom-0 after:left-0 after:-z-1 after:block after:h-2 after:w-full after:rounded-full after:bg-gray-500 dark:before:bg-gray-400 dark:after:bg-gray-400"
-      >
-        <div
-          class="absolute top-0 left-22/100 h-6/10 w-2 -translate-y-3/10 rounded-full bg-gray-500 outline-3 outline-gray-200 group-hover:animate-[slider-1_0.3s_ease-in-out_0.2s_both,slider-2_0.6s_ease-in-out_0.6s_forwards] dark:bg-gray-400 dark:outline-gray-800"
-        >
-        </div>
-
-        <div
-          class="absolute right-22/100 bottom-0 h-6/10 w-2 translate-y-3/10 rounded-full bg-gray-500 outline-3 outline-gray-200 group-hover:animate-[slider-3_0.3s_ease-in-out_0.2s_both,slider-4_0.6s_ease-in-out_0.6s_forwards] dark:bg-gray-400 dark:outline-gray-800"
-        >
-        </div>
-      </div>
-    </div>
-
-    <h2 class="text-3xl font-bold">Reusable<br />animations</h2>
-  </div>
-
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div class="relative flex h-18 w-full items-center justify-center">
-      <svg
-        class="absolute top-1/2 left-1/2 w-36/100 -translate-1/2"
-        viewBox="0 0 48.87 48.78"
-      >
-        <polyline
-          class="stroke-gray-400 opacity-0 group-hover:animate-[scribble-1_0.8s_ease-in-out_2.5s_both,scribble-2_0.8s_ease-in-out_3.3s_forwards] dark:stroke-gray-500"
-          points="6.01 15.13 24.92 5.5 5.5 29.59 42.73 10.02 7.42 41.24 43.37 23.89 22.39 43.28 42.99 37.97"
-          fill="none"
-          stroke-width="11"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-        </polyline>
-      </svg>
-
-      <svg
-        class="absolute top-1/2 left-1/2 w-42/100 -translate-1/2 overflow-visible"
-        viewBox="0 0 62.94 38.58"
-      >
-        <path
-          class="stroke-gray-500 group-hover:animate-[signature-1_1.2s_ease-in-out_0s_both,signature-2_1.2s_ease-in-out_1.3s_forwards,signature-3_0.001s_linear_4.1s_forwards,signature-1_1.2s_ease-in-out_4.101s_forwards] dark:stroke-gray-400"
-          d="M3.5,34.99c10.83.9,33.91-4.91,34.28-19.06.2-7.61-3.88-12.42-8.6-12.42s-8.48,5.69-7.59,13.03c1.59,13.19,22.59,18.5,37.85,18.5"
-          fill="none"
-          stroke-width="8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-        </path>
-      </svg>
-    </div>
-
-    <h2 class="text-3xl font-bold">Export without<br />watermark</h2>
-  </div>
-
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div
-      class="dark:before:from-gray-1000 dark:after:from-gray-1000 relative flex h-18 w-32 items-center justify-center overflow-hidden"
-    >
-      <div class="relative size-18 overflow-visible">
-        <div
-          class="absolute right-1/2 bottom-6/100 h-1.5 w-6 -translate-x-120/100 rotate-30 overflow-hidden rounded-full before:block before:size-full before:rounded-full before:bg-gray-400 before:opacity-0 group-hover:before:animate-[shock-1_0.2s_ease-in-out_0.35s_both,shock-2_0.35s_ease-in-out_0.6s_forwards] dark:before:bg-gray-500"
-        >
-        </div>
-
-        <div
-          class="absolute bottom-6/100 left-1/2 h-1.5 w-6 translate-x-120/100 -rotate-30 overflow-hidden rounded-full before:block before:size-full before:rounded-full before:bg-gray-400 before:opacity-0 group-hover:before:animate-[shock-3_0.2s_ease-in-out_0.35s_both,shock-4_0.35s_ease-in-out_0.6s_forwards] dark:before:bg-gray-500"
-        >
-        </div>
-
+    <li class="group flex flex-col items-center gap-5 text-center">
+      <div class="relative size-18">
         <Icon
-          class="size-18 text-gray-500 group-hover:animate-[smile-1_1s_ease-in-out_1.3s_both,smile-2_1s_ease-in-out_3.6s_forwards,smile-3_1s_ease-in-out_4.3s_forwards] dark:text-gray-400"
+          class="relative z-2 size-18 origin-center text-gray-500 transition duration-300 group-hover:translate-x-1 group-hover:delay-100 dark:text-gray-400"
           fill="currentColor"
-          name="smile"
+          name="zap"
         />
 
         <Icon
-          class="absolute top-0 left-0 size-18 origin-bottom text-gray-500 opacity-0 group-hover:animate-[shocked-1_0.7s_ease-in-out_0s_both,shocked-2_0.6s_ease-in_1.1s_forwards] dark:text-gray-400"
+          class="absolute top-1/2 left-1/2 z-1 size-18 origin-center -translate-1/2 scale-25 text-gray-400 opacity-0 blur-sm transition duration-300 group-hover:-translate-x-16 group-hover:-translate-y-16 group-hover:scale-50 group-hover:opacity-100 group-hover:blur-none dark:text-gray-500"
           fill="currentColor"
-          name="shocked"
+          name="zap"
         />
       </div>
-    </div>
 
-    <h2 class="text-3xl font-bold">Free plan<br />forever free</h2>
-  </div>
-
-  <div class="group flex flex-col items-center gap-5 text-center">
-    <div class="relative size-18">
-      <Icon
-        class="relative z-2 size-18 origin-center text-gray-500 transition duration-300 group-hover:translate-x-1 group-hover:delay-100 dark:text-gray-400"
-        fill="currentColor"
-        name="zap"
-      />
-
-      <Icon
-        class="absolute top-1/2 left-1/2 z-1 size-18 origin-center -translate-1/2 scale-25 text-gray-400 opacity-0 blur-sm transition duration-300 group-hover:-translate-x-16 group-hover:-translate-y-16 group-hover:scale-50 group-hover:opacity-100 group-hover:blur-none dark:text-gray-500"
-        fill="currentColor"
-        name="zap"
-      />
-    </div>
-
-    <h2 class="text-3xl font-bold">Blazing fast<br />performance</h2>
-  </div>
+      <h3 class="text-3xl font-bold">Blazing fast<br />performance</h3>
+    </li>
+  </ul>
 </section>

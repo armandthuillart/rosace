@@ -8,7 +8,7 @@ const animate = Astro.url.pathname !== "/";
 <header
   class="dark:bg-gray-1000 dark:sm:bg-gray-1000/80 fixed top-0 z-50 w-full bg-white px-8 py-5 shadow-gray-100 transition-shadow duration-300 sm:bg-white/80 sm:py-7 sm:backdrop-blur-xl"
 >
-  <nav class="mx-auto flex w-full max-w-432 justify-between">
+  <nav class="mx-auto flex w-full max-w-432 justify-between" aria-label="Primary">
     <div class:list={["flex gap-2", animate && "delay-75"]}>
       <a
         aria-label="Go to homepage"
