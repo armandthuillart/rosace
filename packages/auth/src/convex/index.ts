@@ -5,7 +5,12 @@ import { requireEnv } from "@repo/helpers";
 import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
 
-import { createPkce, exchangeCode, getAuthorizationUrl, type SocialProvider } from "../providers";
+import {
+  createPkce,
+  exchangeCode,
+  getAuthorizationUrl,
+  type SocialProvider,
+} from "../oauth/providers";
 import { getPublicJwks, authStore } from "./store";
 
 const STORE_QUERY = "auth:query" as const;
