@@ -12,6 +12,10 @@ vi.mock("$env/dynamic/private", () => ({
   env: { CONVEX_SITE_URL: "https://convex.example" },
 }));
 
+vi.mock("$env/dynamic/public", () => ({
+  env: { PUBLIC_CONVEX_URL: "https://convex.example" },
+}));
+
 vi.mock("@sveltejs/kit", async () => {
   const actual = await vi.importActual("@sveltejs/kit");
   return { ...actual, fail, redirect };

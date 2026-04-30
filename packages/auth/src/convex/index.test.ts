@@ -50,7 +50,7 @@ vi.mock("convex/server", async () => {
 });
 
 vi.mock("@repo/helpers", () => ({ requireEnv: requireEnvMock }));
-vi.mock("@repo/convex/rate-limiter", () => ({ rateLimiter: { limit: limitMock } }));
+vi.mock("@repo/convex/throttler", () => ({ throttler: { limit: limitMock } }));
 vi.mock("../providers", () => ({
   createPkce: createPkceMock,
   exchangeCode: exchangeCodeMock,

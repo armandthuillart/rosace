@@ -17,6 +17,7 @@ import type {
   Context,
   ConvexBuilderDef,
   ConvexMiddleware,
+  FunctionVisibility,
   EmptyObject,
   MutationCtx,
   QueryCtx,
@@ -28,7 +29,6 @@ import type {
   InferredArgs,
   RegisteredReturnType,
   InferredHandlerReturn,
-  FunctionVisibility,
 } from "./builder.types";
 
 class ConvexBuilderWithFunction<
@@ -49,9 +49,9 @@ class ConvexBuilderWithFunction<
   }
 
   $context<U extends Context>(): {
-    createMiddleware: <UOutContext extends Context>(
+    createMiddleware<UOutContext extends Context>(
       middleware: ConvexMiddleware<U, UOutContext>,
-    ) => ConvexMiddleware<U, UOutContext>;
+    ): ConvexMiddleware<U, UOutContext>;
   } {
     return {
       createMiddleware<UOutContext extends Context>(
@@ -65,11 +65,9 @@ class ConvexBuilderWithFunction<
   createMiddleware<UOutContext extends Context>(
     middleware: ConvexMiddleware<TCurrentContext, UOutContext>,
   ): ConvexMiddleware<TCurrentContext, UOutContext>;
-
   createMiddleware<UInContext extends Context, UOutContext extends Context>(
     middleware: ConvexMiddleware<UInContext, UOutContext>,
   ): ConvexMiddleware<UInContext, UOutContext>;
-
   createMiddleware<UInContext extends Context, UOutContext extends Context>(
     middleware: ConvexMiddleware<UInContext, UOutContext>,
   ): ConvexMiddleware<UInContext, UOutContext> {
@@ -126,16 +124,25 @@ class ConvexBuilderWithFunction<
       TReturnsValidator,
       any
     >,
+    THandlerFn extends (
+      context: TCurrentContext,
+      input: InferredArgs<TArgsValidator>,
+    ) => Promise<TReturn> = (
+      context: TCurrentContext,
+      input: InferredArgs<TArgsValidator>,
+    ) => Promise<TReturn>,
   >(
-    handlerFn: (context: TCurrentContext, input: InferredArgs<TArgsValidator>) => Promise<TReturn>,
+    handlerFn: THandlerFn &
+      ((context: TCurrentContext, input: InferredArgs<TArgsValidator>) => Promise<TReturn>),
   ): ConvexBuilderWithHandler<
-    InferredHandlerReturn<TReturnsValidator, TReturn>,
     TDataModel,
     TFunctionType,
-    TArgsValidator,
     TCurrentContext,
-    TReturnsValidator
+    TArgsValidator,
+    TReturnsValidator,
+    InferredHandlerReturn<TReturnsValidator, TReturn>
   > &
+    THandlerFn &
     CallableBuilder<
       TCurrentContext,
       TArgsValidator,
@@ -145,68 +152,51 @@ class ConvexBuilderWithFunction<
       throw new Error("Handler already defined. Only one handler can be set per function chain.");
     }
 
-    const rawHandler = async (transformedCtx: Context, baseArgs: InferredArgs<TArgsValidator>) =>
-      handlerFn(transformedCtx as TCurrentContext, baseArgs);
+    const rawHandler = async (transformedCtx: Context, baseArgs: InferredArgs<TArgsValidator>) => {
+      return handlerFn(transformedCtx as TCurrentContext, baseArgs);
+    };
 
     type InferredReturn = InferredHandlerReturn<TReturnsValidator, TReturn>;
 
-    return ConvexBuilderWithHandler.create<
-      InferredReturn,
+    return new ConvexBuilderWithHandler<
       TDataModel,
       TFunctionType,
-      TArgsValidator,
       TCurrentContext,
-      TReturnsValidator
+      TArgsValidator,
+      TReturnsValidator,
+      InferredReturn
     >({
       ...this.def,
       handler: rawHandler as any,
-    });
+    }) as ConvexBuilderWithHandler<
+      TDataModel,
+      TFunctionType,
+      TCurrentContext,
+      TArgsValidator,
+      TReturnsValidator,
+      InferredReturn
+    > &
+      THandlerFn &
+      CallableBuilder<TCurrentContext, TArgsValidator, InferredReturn>;
   }
 }
 
 class ConvexBuilderWithHandler<
-  THandlerReturn = any,
   TDataModel extends GenericDataModel = GenericDataModel,
   TFunctionType extends FunctionType = FunctionType,
-  TArgsValidator extends ConvexArgsValidator | undefined = undefined,
   TCurrentContext extends Context = EmptyObject,
+  TArgsValidator extends ConvexArgsValidator | undefined = undefined,
   TReturnsValidator extends ConvexReturnsValidator | undefined = undefined,
+  THandlerReturn = any,
 > {
   protected def: ConvexBuilderDef<TFunctionType, TArgsValidator, TReturnsValidator>;
 
   constructor(def: ConvexBuilderDef<TFunctionType, TArgsValidator, TReturnsValidator>) {
     this.def = def;
-  }
 
-  static create<
-    THandlerReturn = any,
-    TDataModel extends GenericDataModel = GenericDataModel,
-    TFunctionType extends FunctionType = FunctionType,
-    TArgsValidator extends ConvexArgsValidator | undefined = undefined,
-    TCurrentContext extends Context = EmptyObject,
-    TReturnsValidator extends ConvexReturnsValidator | undefined = undefined,
-  >(
-    def: ConvexBuilderDef<TFunctionType, TArgsValidator, TReturnsValidator>,
-  ): ConvexBuilderWithHandler<
-    THandlerReturn,
-    TDataModel,
-    TFunctionType,
-    TArgsValidator,
-    TCurrentContext,
-    TReturnsValidator
-  > &
-    CallableBuilder<TCurrentContext, TArgsValidator, THandlerReturn> {
-    const instance = new ConvexBuilderWithHandler<
-      THandlerReturn,
-      TDataModel,
-      TFunctionType,
-      TArgsValidator,
-      TCurrentContext,
-      TReturnsValidator
-    >(def);
-
-    const callable = ((context: TCurrentContext, args: InferredArgs<TArgsValidator>) =>
-      instance._call(context, args)) as any;
+    const callable = ((context: TCurrentContext, args: InferredArgs<TArgsValidator>) => {
+      return this._call(context, args);
+    }) as any;
 
     const proto = ConvexBuilderWithHandler.prototype;
     const props = Object.getOwnPropertyNames(proto);
@@ -214,24 +204,15 @@ class ConvexBuilderWithHandler<
     for (const prop of props) {
       if (prop !== "constructor") {
         const value = (proto as any)[prop];
-
         if (typeof value === "function") {
-          callable[prop] = value.bind(instance);
+          callable[prop] = value.bind(this);
         }
       }
     }
 
-    callable.def = instance.def;
+    callable.def = this.def;
 
-    return callable as ConvexBuilderWithHandler<
-      THandlerReturn,
-      TDataModel,
-      TFunctionType,
-      TArgsValidator,
-      TCurrentContext,
-      TReturnsValidator
-    > &
-      CallableBuilder<TCurrentContext, TArgsValidator, THandlerReturn>;
+    return callable;
   }
 
   private async _call(
@@ -253,53 +234,70 @@ class ConvexBuilderWithHandler<
     handler: (context: Context, args: any) => Promise<any>,
     args: any,
   ): Promise<THandlerReturn> {
-    const NO_HANDLER_RESULT = Symbol("no_handler_result");
-    let handlerResult: any = NO_HANDLER_RESULT;
+    const { argsTransform, returnsTransform } = this.def;
+    if (argsTransform) {
+      args = argsTransform(args);
+    }
+
+    let handlerResult: any;
+    let handlerCalled = false;
 
     const createNext = (index: number) => {
       return async <U extends Context>(ctx: U): Promise<{ context: U }> => {
         if (index >= middlewares.length) {
+          handlerCalled = true;
           handlerResult = await handler(ctx as any, args);
           return { context: ctx };
         }
 
         const result = await middlewares[index](ctx, createNext(index + 1));
-
         return result as { context: U };
       };
     };
 
     await createNext(0)(initialContext);
 
-    if (handlerResult === NO_HANDLER_RESULT) {
+    if (!handlerCalled) {
       throw new Error("Middleware chain completed without calling the handler.");
     }
 
-    return handlerResult as THandlerReturn;
+    if (returnsTransform) {
+      handlerResult = returnsTransform(handlerResult);
+    }
+
+    return handlerResult;
   }
 
   use<UOutContext extends Context>(
     middleware: ConvexMiddleware<TCurrentContext, UOutContext>,
   ): ConvexBuilderWithHandler<
-    THandlerReturn,
     TDataModel,
     TFunctionType,
-    TArgsValidator,
     TCurrentContext & UOutContext,
-    TReturnsValidator
+    TArgsValidator,
+    TReturnsValidator,
+    THandlerReturn
   > &
     CallableBuilder<TCurrentContext & UOutContext, TArgsValidator, THandlerReturn> {
-    return ConvexBuilderWithHandler.create<
-      THandlerReturn,
+    return new ConvexBuilderWithHandler<
       TDataModel,
       TFunctionType,
-      TArgsValidator,
       TCurrentContext & UOutContext,
-      TReturnsValidator
+      TArgsValidator,
+      TReturnsValidator,
+      THandlerReturn
     >({
       ...this.def,
       middlewares: [...this.def.middlewares, middleware as AnyConvexMiddleware],
-    });
+    }) as ConvexBuilderWithHandler<
+      TDataModel,
+      TFunctionType,
+      TCurrentContext & UOutContext,
+      TArgsValidator,
+      TReturnsValidator,
+      THandlerReturn
+    > &
+      CallableBuilder<TCurrentContext & UOutContext, TArgsValidator, THandlerReturn>;
   }
 
   public(): TFunctionType extends "query"
@@ -346,7 +344,7 @@ class ConvexBuilderWithHandler<
     return this._register("internal") as any;
   }
 
-  private _register(functionVisibility: FunctionVisibility): any {
+  private _register(visibility: FunctionVisibility): any {
     const { functionType, argsValidator, returnsValidator, handler, middlewares } = this.def;
 
     if (!functionType) {
@@ -360,7 +358,9 @@ class ConvexBuilderWithHandler<
     const composedHandler = async (
       baseCtx: QueryCtx<TDataModel> | MutationCtx<TDataModel> | ActionCtx<TDataModel>,
       baseArgs: any,
-    ) => this._executeWithMiddleware(middlewares, baseCtx as Context, handler, baseArgs);
+    ) => {
+      return this._executeWithMiddleware(middlewares, baseCtx as Context, handler, baseArgs);
+    };
 
     const config = {
       args: argsValidator || {},
@@ -368,12 +368,11 @@ class ConvexBuilderWithHandler<
       handler: composedHandler,
     } as any;
 
-    const isPublic = functionVisibility === "public";
-
+    const isPublic = visibility === "public";
     const registrationFn = {
-      action: isPublic ? actionGeneric : internalActionGeneric,
-      mutation: isPublic ? mutationGeneric : internalMutationGeneric,
       query: isPublic ? queryGeneric : internalQueryGeneric,
+      mutation: isPublic ? mutationGeneric : internalMutationGeneric,
+      action: isPublic ? actionGeneric : internalActionGeneric,
     }[functionType];
 
     return registrationFn(config);
@@ -425,11 +424,9 @@ class ConvexBuilder<TDataModel extends GenericDataModel = GenericDataModel> {
   createMiddleware<UOutContext extends Context>(
     middleware: ConvexMiddleware<EmptyObject, UOutContext>,
   ): ConvexMiddleware<EmptyObject, UOutContext>;
-
   createMiddleware<UInContext extends Context, UOutContext extends Context>(
     middleware: ConvexMiddleware<UInContext, UOutContext>,
   ): ConvexMiddleware<UInContext, UOutContext>;
-
   createMiddleware<UInContext extends Context, UOutContext extends Context>(
     middleware: ConvexMiddleware<UInContext, UOutContext>,
   ): ConvexMiddleware<UInContext, UOutContext> {

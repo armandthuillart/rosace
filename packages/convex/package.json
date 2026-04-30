@@ -3,7 +3,6 @@
   "type": "module",
   "exports": {
     "./api": "./src/_generated/api.ts",
-    "./svelte": "./src/svelte.ts",
     "./throttler": "./src/throttler.ts"
   },
   "dependencies": {
