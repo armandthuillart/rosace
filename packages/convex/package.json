@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "convex-test": "catalog:",
     "typescript": "catalog:"
   }
 }

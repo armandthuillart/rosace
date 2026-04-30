@@ -1,0 +1,512 @@
+import { convexTest } from "convex-test";
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+
+type QueryHandler = (
+  ctx: { db: unknown },
+  args: { payload: { type: "session:get"; token: string } },
+) => Promise<unknown>;
+
+type MutationHandler = (
+  ctx: { db: unknown },
+  args: { payload: { type: string } & Record<string, unknown> },
+) => Promise<unknown>;
+
+const modules = import.meta.glob("../../../convex/src/**/*.ts");
+const schema = defineSchema({
+  users: defineTable({
+    email: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
+    plan: v.string(),
+    verified: v.boolean(),
+  }).index("by_email", ["email"]),
+  accounts: defineTable({
+    userId: v.id("users"),
+    provider: v.string(),
+    subject: v.optional(v.string()),
+    passwordHash: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_provider_subject", ["provider", "subject"]),
+  sessions: defineTable({
+    userId: v.id("users"),
+    refreshTokenHash: v.string(),
+    expiresAt: v.number(),
+  }).index("by_refresh_token_hash", ["refreshTokenHash"]),
+  verifications: defineTable({
+    type: v.string(),
+    identifier: v.string(),
+    value: v.string(),
+    expiresAt: v.number(),
+  })
+    .index("by_identifier", ["identifier"])
+    .index("by_expires_at", ["expiresAt"]),
+});
+
+const { internalMutationGenericMock, internalQueryGenericMock, requireEnvMock } = vi.hoisted(
+  () => ({
+    internalMutationGenericMock: vi.fn((definition: { handler: MutationHandler }) => definition),
+    internalQueryGenericMock: vi.fn((definition: { handler: QueryHandler }) => definition),
+    requireEnvMock: vi.fn((key: string) => {
+      const env: Record<string, string> = {
+        AUTH_JWKS: JSON.stringify({
+          kid: "kid-1",
+          privateJwk: { kty: "RSA", n: "n", e: "AQAB", d: "d" },
+          publicJwks: { keys: [{ kty: "RSA", n: "n", e: "AQAB", kid: "kid-1" }] },
+        }),
+        AUTH_SECRET: "auth-secret",
+        CONVEX_SITE_URL: "https://app.example",
+      };
+      const value = env[key];
+      if (!value) throw new Error(`Missing env: ${key}`);
+      return value;
+    }),
+  }),
+);
+
+vi.mock("convex/server", async () => {
+  const actual = await vi.importActual<typeof import("convex/server")>("convex/server");
+  return {
+    ...actual,
+    internalMutationGeneric: internalMutationGenericMock,
+    internalQueryGeneric: internalQueryGenericMock,
+  };
+});
+
+vi.mock("@repo/helpers", () => ({ requireEnv: requireEnvMock }));
+
+vi.mock("jose", () => {
+  class SignJWTMock {
+    private subject = "";
+    setProtectedHeader(): this {
+      return this;
+    }
+    setSubject(subject: string): this {
+      this.subject = subject;
+      return this;
+    }
+    setAudience(): this {
+      return this;
+    }
+    setIssuer(): this {
+      return this;
+    }
+    setIssuedAt(): this {
+      return this;
+    }
+    setExpirationTime(): this {
+      return this;
+    }
+    async sign(): Promise<string> {
+      return `signed:${this.subject}`;
+    }
+  }
+  return {
+    importJWK: vi.fn(async () => ({ alg: "RS256" })),
+    SignJWT: SignJWTMock,
+  };
+});
+
+vi.mock("./crypto", () => ({
+  internalAction: { handler: vi.fn() },
+}));
+
+let mutationHandler: MutationHandler;
+let queryHandler: QueryHandler;
+
+beforeAll(async () => {
+  await import("./store");
+  mutationHandler = internalMutationGenericMock.mock.calls[0][0].handler;
+  queryHandler = internalQueryGenericMock.mock.calls[0][0].handler;
+});
+
+async function hashToken(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`${token}:${requireEnvMock("AUTH_SECRET")}`),
+  );
+  return Array.from(new Uint8Array(digest))
+    .map((value) => value.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+describe("convex store security/regression", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+  });
+
+  it("blocks duplicate credentials registration", async () => {
+    const t = convexTest({ schema, modules });
+    await t.run(async (ctx) => {
+      await ctx.db.insert("users", {
+        email: "john@example.com",
+        firstName: "John",
+        lastName: "Doe",
+        plan: "free",
+        verified: false,
+      });
+    });
+
+    await expect(
+      t.mutation(async (ctx) =>
+        mutationHandler(
+          { db: ctx.db },
+          {
+            payload: {
+              type: "credentials:register",
+              email: "john@example.com",
+              passwordHash: "hash-123",
+              firstName: "John",
+              lastName: "Doe",
+            },
+          },
+        ),
+      ),
+    ).rejects.toThrow("Account already exists.");
+  });
+
+  it("fails credentials login for missing user and wrong hash", async () => {
+    const t = convexTest({ schema, modules });
+    const missing = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "credentials:login", email: "missing@example.com" } },
+      ),
+    );
+    expect(missing).toBeNull();
+
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        email: "john@example.com",
+        firstName: "John",
+        lastName: "Doe",
+        plan: "free",
+        verified: false,
+      });
+      await ctx.db.insert("accounts", {
+        userId,
+        provider: "credentials",
+        passwordHash: "hash-123",
+      });
+    });
+
+    await expect(
+      t.mutation(async (ctx) =>
+        mutationHandler(
+          { db: ctx.db },
+          {
+            payload: {
+              type: "credentials:login",
+              email: "john@example.com",
+              passwordHash: "wrong",
+            },
+          },
+        ),
+      ),
+    ).rejects.toThrow("Invalid credentials.");
+  });
+
+  it("consumes oauth state once and blocks provider/state confusion", async () => {
+    const t = convexTest({ schema, modules });
+    await t.run(async (ctx) => {
+      await ctx.db.insert("verifications", {
+        type: "oauth:state",
+        identifier: "state-1",
+        value: JSON.stringify({ provider: "google", nonce: "nonce-1", verifier: "pkce-1" }),
+        expiresAt: Date.now() + 1000,
+      });
+    });
+
+    const mismatch = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "oauth:authorize:consume-state", provider: "apple", state: "state-1" } },
+      ),
+    );
+    const replay = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: { type: "oauth:authorize:consume-state", provider: "google", state: "state-1" },
+        },
+      ),
+    );
+
+    expect(mismatch).toBeNull();
+    expect(replay).toBeNull();
+  });
+
+  it("rejects malformed and expired oauth state payloads", async () => {
+    const t = convexTest({ schema, modules });
+    await t.run(async (ctx) => {
+      await ctx.db.insert("verifications", {
+        type: "oauth:state",
+        identifier: "state-bad",
+        value: "{not-json",
+        expiresAt: Date.now() + 1000,
+      });
+      await ctx.db.insert("verifications", {
+        type: "oauth:state",
+        identifier: "state-expired",
+        value: JSON.stringify({ provider: "google", nonce: "n", verifier: "v" }),
+        expiresAt: Date.now() - 1,
+      });
+    });
+
+    const malformed = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: {
+            type: "oauth:authorize:consume-state",
+            provider: "google",
+            state: "state-bad",
+          },
+        },
+      ),
+    );
+    const expired = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: {
+            type: "oauth:authorize:consume-state",
+            provider: "google",
+            state: "state-expired",
+          },
+        },
+      ),
+    );
+
+    expect(malformed).toBeNull();
+    expect(expired).toBeNull();
+  });
+
+  it("prevents oauth account takeover by reusing existing provider+subject", async () => {
+    const t = convexTest({ schema, modules });
+    const userId = await t.run(async (ctx) => {
+      const created = await ctx.db.insert("users", {
+        email: "existing@example.com",
+        firstName: "Ex",
+        lastName: "Isting",
+        plan: "free",
+        verified: true,
+      });
+      await ctx.db.insert("accounts", {
+        userId: created,
+        provider: "google",
+        subject: "subject-1",
+      });
+      return created;
+    });
+
+    await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: {
+            type: "oauth:authenticate:finalize",
+            provider: "google",
+            subject: "subject-1",
+            email: "attacker@example.com",
+            firstName: "Attacker",
+            lastName: "Name",
+            verified: false,
+          },
+        },
+      ),
+    );
+
+    const linkedAccounts = await t.run(async (ctx) =>
+      ctx.db
+        .query("accounts")
+        .filter((q) =>
+          q.and(q.eq(q.field("provider"), "google"), q.eq(q.field("subject"), "subject-1")),
+        )
+        .collect(),
+    );
+    expect(linkedAccounts).toHaveLength(1);
+    expect(linkedAccounts[0]?.userId).toBe(userId);
+  });
+
+  it("enforces one-time oauth handoff claim and expiry", async () => {
+    const t = convexTest({ schema, modules });
+    const now = vi.spyOn(Date, "now");
+    now.mockReturnValue(1000);
+
+    const issued = (await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: {
+            type: "oauth:handoff:issue",
+            sessionToken: "session-1",
+            accessToken: "access-1",
+            expiresAt: 5000,
+          },
+        },
+      ),
+    )) as { code: string };
+
+    const first = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "oauth:handoff:claim", code: issued.code } },
+      ),
+    );
+    const replay = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "oauth:handoff:claim", code: issued.code } },
+      ),
+    );
+
+    now.mockReturnValue(1000);
+    const expiring = (await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        {
+          payload: {
+            type: "oauth:handoff:issue",
+            sessionToken: "session-exp",
+            accessToken: "access-exp",
+            expiresAt: 5000,
+          },
+        },
+      ),
+    )) as { code: string };
+    now.mockReturnValue(70000);
+    const expired = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "oauth:handoff:claim", code: expiring.code } },
+      ),
+    );
+
+    expect(first).toEqual({
+      sessionToken: "session-1",
+      accessToken: "access-1",
+      expiresAt: 5000,
+    });
+    expect(replay).toBeNull();
+    expect(expired).toBeNull();
+  });
+
+  it("rejects malformed oauth handoff payload", async () => {
+    const t = convexTest({ schema, modules });
+    await t.run(async (ctx) => {
+      await ctx.db.insert("verifications", {
+        type: "oauth:handoff",
+        identifier: "handoff-bad-json",
+        value: "{not-json",
+        expiresAt: Date.now() + 1000,
+      });
+    });
+
+    const claimed = await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "oauth:handoff:claim", code: "handoff-bad-json" } },
+      ),
+    );
+    expect(claimed).toBeNull();
+  });
+
+  it("revokes only matching session and is safe for unknown token", async () => {
+    const t = convexTest({ schema, modules });
+    const validToken = "v".repeat(64);
+    const otherToken = "o".repeat(64);
+    const validHash = await hashToken(validToken);
+    const otherHash = await hashToken(otherToken);
+
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        email: "session@example.com",
+        firstName: "Sess",
+        lastName: "Ion",
+        plan: "free",
+        verified: false,
+      });
+      await ctx.db.insert("sessions", {
+        userId,
+        refreshTokenHash: validHash,
+        expiresAt: Date.now() + 10000,
+      });
+      await ctx.db.insert("sessions", {
+        userId,
+        refreshTokenHash: otherHash,
+        expiresAt: Date.now() + 10000,
+      });
+    });
+
+    await t.mutation(async (ctx) =>
+      mutationHandler(
+        { db: ctx.db },
+        { payload: { type: "session:revoke", token: "x".repeat(64) } },
+      ),
+    );
+    await t.mutation(async (ctx) =>
+      mutationHandler({ db: ctx.db }, { payload: { type: "session:revoke", token: validToken } }),
+    );
+
+    const sessions = await t.run(async (ctx) => ctx.db.query("sessions").collect());
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0]?.refreshTokenHash).toBe(otherHash);
+  });
+
+  it("session:get fails closed for expired token, unknown token, and missing user", async () => {
+    const t = convexTest({ schema, modules });
+    const token = "t".repeat(64);
+    const hash = await hashToken(token);
+
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        email: "john@example.com",
+        firstName: "John",
+        lastName: "Doe",
+        plan: "free",
+        verified: false,
+      });
+      await ctx.db.insert("sessions", {
+        userId,
+        refreshTokenHash: hash,
+        expiresAt: Date.now() - 1,
+      });
+    });
+
+    const expired = await t.query(async (ctx) =>
+      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token } }),
+    );
+    const unknown = await t.query(async (ctx) =>
+      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token: "u".repeat(64) } }),
+    );
+
+    const token2 = "z".repeat(64);
+    const hash2 = await hashToken(token2);
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        email: "ghost@example.com",
+        firstName: "Ghost",
+        lastName: "User",
+        plan: "free",
+        verified: false,
+      });
+      await ctx.db.insert("sessions", {
+        userId,
+        refreshTokenHash: hash2,
+        expiresAt: Date.now() + 10000,
+      });
+      await ctx.db.delete(userId);
+    });
+    const missingUser = await t.query(async (ctx) =>
+      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token: token2 } }),
+    );
+
+    expect(expired).toBeNull();
+    expect(unknown).toBeNull();
+    expect(missingUser).toBeNull();
+  });
+});

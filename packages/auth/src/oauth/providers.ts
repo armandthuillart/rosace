@@ -135,9 +135,15 @@ async function exchangeCode(
     if (!googlePayload.nonce || googlePayload.nonce !== options.nonce) {
       throw new Error("Invalid Google nonce.");
     }
+    if (!googlePayload.sub) {
+      throw new Error("Missing Google subject claim.");
+    }
+    if (!googlePayload.email) {
+      throw new Error("Missing Google email claim.");
+    }
 
     return {
-      email: googlePayload.email?.toLowerCase() ?? "",
+      email: googlePayload.email.toLowerCase(),
       firstName: googlePayload.given_name ?? "",
       lastName: googlePayload.family_name ?? "",
       subject: googlePayload.sub,
@@ -171,8 +177,15 @@ async function exchangeCode(
     issuer: "https://appleid.apple.com",
   });
   const applePayload = payload as unknown as AppleIdToken;
+
   if (!applePayload.nonce || applePayload.nonce !== options.nonce) {
     throw new Error("Invalid Apple nonce.");
+  }
+  if (!applePayload.sub) {
+    throw new Error("Missing Apple subject claim.");
+  }
+  if (!applePayload.email) {
+    throw new Error("Missing Apple email claim.");
   }
 
   let firstName = "";
@@ -189,7 +202,7 @@ async function exchangeCode(
   }
 
   return {
-    email: applePayload.email?.toLowerCase() ?? "",
+    email: applePayload.email.toLowerCase(),
     firstName,
     lastName,
     subject: applePayload.sub,

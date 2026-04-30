@@ -18,7 +18,8 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
-    "@types/node": "catalog:"
+    "@types/node": "catalog:",
+    "convex-test": "catalog:"
   },
   "peerDependencies": {
     "convex": "catalog:",

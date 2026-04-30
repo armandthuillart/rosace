@@ -8,8 +8,8 @@ import type { Session } from "./types";
 const LoginFormSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.email()),
   password: v.pipe(v.string(), v.minLength(8), v.maxLength(128)),
-  lastName: v.optional(v.string()),
-  firstName: v.optional(v.string()),
+  lastName: v.nullish(v.string()),
+  firstName: v.nullish(v.string()),
 });
 
 const handle: Handle = async ({ event, resolve }) => {

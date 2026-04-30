@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Accordion from "@components/Accordion.astro";
-import Link from "@components/Link.astro";
+import Anchor from "@components/Anchor.astro";
 
 export async function getStaticPaths() {
   return await getCollection("docs").then((entries) =>
@@ -73,7 +73,7 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
     <div
       class="[&_a]:relative [&_a]:font-medium [&_a]:whitespace-nowrap [&_a]:outline-hidden [&_a]:transition [&_a]:duration-200 [&_a]:after:pointer-events-none [&_a]:after:absolute [&_a]:after:right-0 [&_a]:after:bottom-0 [&_a]:after:left-0 [&_a]:after:h-0.5 [&_a]:after:rounded-xs [&_a]:after:bg-blue-400 [&_a]:after:transition [&_a]:after:duration-200 [&_a]:after:content-[''] dark:[&_a]:after:bg-blue-500 [&_a:hover]:text-blue-400 [&_a:hover]:after:translate-y-px dark:[&_a:hover]:text-blue-500 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:font-bold [&_h2:not(:first-of-type)]:mt-8 [&_li]:pl-[.5em] [&_li]:text-xl [&_li]:marker:text-gray-500 dark:[&_li]:marker:text-gray-400 [&_p]:my-3 [&_p]:text-xl [&_table]:mt-4 [&_table]:table-auto [&_table]:border-2 [&_table]:border-gray-200 dark:[&_table]:border-gray-800 [&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_td]:text-base [&_td]:leading-6 [&_td]:text-gray-700 dark:[&_td]:text-gray-300 [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:align-middle [&_th]:text-base [&_th]:font-semibold [&_th]:whitespace-nowrap [&_th]:text-gray-900 dark:[&_th]:text-gray-100 [&_thead]:border-b [&_thead]:border-gray-300 [&_thead]:bg-gray-100 dark:[&_thead]:border-gray-700 dark:[&_thead]:bg-gray-900 [&_tr]:border-b [&_tr]:border-gray-200 dark:[&_tr]:border-gray-800 [&_tr:last-child]:border-b-0 [&_ul]:my-3 [&_ul]:space-y-1.5 [&_ul]:pl-[2.5ch] [&_ul>li]:list-disc"
     >
-      <Content components={{ Accordion, a: Link }} />
+      <Content components={{ Accordion, a: Anchor }} />
     </div>
   </article>
 </BaseLayout>
