@@ -1,49 +1,15 @@
 import { requireEnv } from "@repo/helpers";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
-export type SocialProvider = "apple" | "google";
-
-type OAuthProfile = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  subject: string;
-  verified: boolean;
-};
-
-type ExchangeOptions = {
-  code: string;
-  nonce: string;
-  verifier?: string;
-  userForm?: string | null;
-};
-
-type GoogleIdToken = {
-  email: string;
-  exp: number;
-  email_verified?: boolean;
-  family_name?: string;
-  given_name?: string;
-  iss: string;
-  nonce?: string;
-  sub: string;
-};
-
-type AppleIdToken = {
-  email: string;
-  exp: number;
-  email_verified?: boolean | "true" | "false";
-  iss: string;
-  nonce?: string;
-  sub: string;
-};
-
-type AppleUserForm = {
-  name?: {
-    firstName?: string;
-    lastName?: string;
-  };
-};
+import type {
+  AppleIdToken,
+  AppleUserForm,
+  ExchangeOptions,
+  GoogleIdToken,
+  OAuthProfile,
+  SocialProvider,
+} from "./providers.types";
+export type { SocialProvider } from "./providers.types";
 
 const AUTHORIZATION_ENDPOINT_BY_PROVIDER = {
   apple: "https://appleid.apple.com/auth/authorize",

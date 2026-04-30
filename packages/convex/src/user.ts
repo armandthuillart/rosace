@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
-import { ConvexError } from "../procedures/errors";
-import { authQuery } from "./rpc";
+import { ConvexError } from "./errors";
+import { authQuery } from "./middleware";
 
 export const getUser = authQuery
   .returns(

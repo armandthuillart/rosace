@@ -1,9 +1,6 @@
 {
   "name": "@repo/helpers",
   "type": "module",
-  "types": [
-    "node"
-  ],
   "imports": {
     "#env": "./src/env.ts",
     "#string": "./src/string.ts"

@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["esnext", "dom"],
+    "lib": ["dom", "esnext"],
     "module": "esnext",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
@@ -15,8 +15,9 @@
     "skipLibCheck": true,
     "strict": true,
     "strictFunctionTypes": false,
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["node"]
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts", "node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

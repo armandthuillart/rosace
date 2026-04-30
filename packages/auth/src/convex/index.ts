@@ -1,6 +1,6 @@
-// TODO: a working vibe-coded mess to rewrite
+// TODO: a working but vibe-coded mess to rewrite
 
-import { rateLimiter } from "@repo/convex/rate-limiter";
+import { throttler } from "@repo/convex/throttler";
 import { requireEnv } from "@repo/helpers";
 import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
@@ -239,7 +239,7 @@ const registerRoutes = (http: HttpRouter) => {
       if (blocked) return blocked;
 
       const ipAddress = getClientIp(request);
-      const { ok, retryAfter } = await rateLimiter.limit(ctx, "logout", { key: ipAddress });
+      const { ok, retryAfter } = await throttler.limit(ctx, "logout", { key: ipAddress });
       if (!ok) {
         return new Response(null, {
           status: 429,
@@ -278,7 +278,7 @@ const registerRoutes = (http: HttpRouter) => {
 
       const ipAddress = getClientIp(request);
 
-      const { ok, retryAfter } = await rateLimiter.limit(ctx, "oauth", {
+      const { ok, retryAfter } = await throttler.limit(ctx, "oauth", {
         key: ipAddress,
       });
 
@@ -337,7 +337,7 @@ const registerRoutes = (http: HttpRouter) => {
 
       const ipAddress = getClientIp(request);
 
-      const { ok, retryAfter } = await rateLimiter.limit(ctx, "login", {
+      const { ok, retryAfter } = await throttler.limit(ctx, "login", {
         key: ipAddress,
       });
 

@@ -33,8 +33,10 @@ const SECTION_TITLES: Record<Section, string> = {
 };
 const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
 const sectionLines = new Map<Section, string[]>(SECTION_ORDER.map((section) => [section, []]));
+const sectionHasContent = new Set<Section>();
 const APP_SERVICE_ORDER: ServiceName[] = ["astro", "svelte"];
 const appLines = new Map<ServiceName, string[]>(APP_SERVICE_ORDER.map((service) => [service, []]));
+const appHasContent = new Set<ServiceName>();
 const MAX_LOGS_PER_BUCKET = 10;
 
 const SERVICE_COLORS: Record<ServiceName, string> = {
@@ -71,11 +73,14 @@ function timestamp() {
 }
 
 function renderSections() {
-  process.stdout.write("\x1b[2J\x1b[H");
+  console.clear();
   for (const section of SECTION_ORDER) {
+    const hasContent = section === "apps" ? appHasContent.size > 0 : sectionHasContent.has(section);
+    if (!hasContent) continue;
     process.stdout.write(`${SECTION_TITLES[section]}\n\n`);
     if (section === "apps") {
       for (const [index, service] of APP_SERVICE_ORDER.entries()) {
+        if (!appHasContent.has(service)) continue;
         for (const line of appLines.get(service) ?? []) {
           process.stdout.write(`${line}\n`);
         }
@@ -98,6 +103,7 @@ function pushLine(section: Section, line: string) {
   if (!lines) return;
   lines.push(line);
   if (lines.length > MAX_LOGS_PER_BUCKET) lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  sectionHasContent.add(section);
   renderSections();
 }
 
@@ -106,6 +112,7 @@ function pushAppLine(service: ServiceName, line: string) {
   if (!lines) return;
   lines.push(line);
   if (lines.length > MAX_LOGS_PER_BUCKET) lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  appHasContent.add(service);
   renderSections();
 }
 

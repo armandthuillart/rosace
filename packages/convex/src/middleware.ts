@@ -1,8 +1,8 @@
 import type { Auth } from "convex/server";
-import { ConvexError } from "convex/values";
 
-import { createBuilder } from "../procedures";
 import type { DataModel, Id } from "./_generated/dataModel";
+import { createBuilder } from "./builder";
+import { ConvexError } from "./errors";
 
 export const convex = createBuilder<DataModel>();
 
@@ -14,7 +14,7 @@ export const authMiddleware = convex
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
-      throw new ConvexError("You must be logged in to access this resource.");
+      throw new ConvexError({ code: "UNAUTHORIZED" });
     }
 
     const userId = identity.subject as Id<"users">;

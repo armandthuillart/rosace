@@ -29,7 +29,7 @@ import type {
   RegisteredReturnType,
   InferredHandlerReturn,
   FunctionVisibility,
-} from "./types";
+} from "./builder.types";
 
 class ConvexBuilderWithFunction<
   TDataModel extends GenericDataModel = GenericDataModel,

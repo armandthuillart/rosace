@@ -3,7 +3,8 @@ import { env } from "$env/dynamic/private";
 import { fail, redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
 import * as v from "valibot";
 
-import type { Session } from "./types";
+import { convexClient } from "./client";
+import type { Session } from "./index.types";
 
 const LoginFormSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.email()),
@@ -116,6 +117,8 @@ const login = async (event: RequestEvent) => {
   redirect(303, "/");
 };
 
-export function svelteAuth() {
+function svelteAuth() {
   return { handle, login, logout };
 }
+
+export { svelteAuth, convexClient };

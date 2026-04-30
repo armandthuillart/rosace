@@ -3,8 +3,8 @@
   "type": "module",
   "exports": {
     "./api": "./src/_generated/api.ts",
-    "./svelte": "./remote/svelte.ts",
-    "./rate-limiter": "./src/rate.limiter.ts"
+    "./svelte": "./src/svelte.ts",
+    "./throttler": "./src/throttler.ts"
   },
   "dependencies": {
     "@convex-dev/rate-limiter": "catalog:",
@@ -12,6 +12,7 @@
     "@react-email/components": "catalog:",
     "@react-email/render": "catalog:",
     "@repo/auth": "workspace:*",
+    "@repo/helpers": "workspace:*",
     "convex": "catalog:",
     "react": "catalog:",
     "stripe": "catalog:",

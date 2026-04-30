@@ -1,3 +1,4 @@
+import { requireEnv } from "@repo/helpers";
 import * as v from "valibot";
 
 const EnvSchema = v.object({
@@ -18,18 +19,18 @@ const EnvSchema = v.object({
 });
 
 export const env = v.parse(EnvSchema, {
-  APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,
-  APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET,
-  AUTH_JWKS: process.env.AUTH_JWKS,
-  AUTH_SECRET: process.env.AUTH_SECRET,
-  CONVEX_URL: process.env.CONVEX_URL,
-  CONVEX_SITE_URL: process.env.CONVEX_SITE_URL,
-  DASHBOARD_URL: process.env.DASHBOARD_URL,
-  DEPLOY_ENV: process.env.DEPLOY_ENV,
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  MARKETING_URL: process.env.MARKETING_URL,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
-  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  APPLE_CLIENT_ID: requireEnv("APPLE_CLIENT_ID"),
+  APPLE_CLIENT_SECRET: requireEnv("APPLE_CLIENT_SECRET"),
+  AUTH_JWKS: requireEnv("AUTH_JWKS"),
+  AUTH_SECRET: requireEnv("AUTH_SECRET"),
+  CONVEX_URL: requireEnv("CONVEX_URL"),
+  CONVEX_SITE_URL: requireEnv("CONVEX_SITE_URL"),
+  DASHBOARD_URL: requireEnv("DASHBOARD_URL"),
+  DEPLOY_ENV: requireEnv("DEPLOY_ENV"),
+  GOOGLE_CLIENT_ID: requireEnv("GOOGLE_CLIENT_ID"),
+  GOOGLE_CLIENT_SECRET: requireEnv("GOOGLE_CLIENT_SECRET"),
+  MARKETING_URL: requireEnv("MARKETING_URL"),
+  RESEND_API_KEY: requireEnv("RESEND_API_KEY"),
+  STRIPE_SECRET_KEY: requireEnv("STRIPE_SECRET_KEY"),
+  STRIPE_WEBHOOK_SECRET: requireEnv("STRIPE_WEBHOOK_SECRET"),
 });

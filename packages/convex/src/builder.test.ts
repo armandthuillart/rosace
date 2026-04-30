@@ -3,8 +3,8 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { describe, expect, it, vi } from "vite-plus/test";
 
-import { createBuilder } from "./index";
-import type { QueryCtx } from "./types";
+import { createBuilder } from "./builder";
+import type { QueryCtx } from "./builder.types";
 
 function mockQueryCtx() {
   return {} as QueryCtx;

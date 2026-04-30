@@ -5,7 +5,7 @@ import { v } from "convex/values";
 import { components } from "./_generated/api";
 import { OTP } from "./email.code";
 import { env } from "./env";
-import { convex } from "./rpc";
+import { convex } from "./middleware";
 
 const resend = new Resend(components.resend, {
   testMode: env.DEPLOY_ENV !== "production",
@@ -77,12 +77,7 @@ export const changeEmail = convex
 
 export const sendOtp = convex
   .action()
-  .input(
-    v.object({
-      otp: v.string(),
-      to: v.string(),
-    }),
-  )
+  .input(v.object({ otp: v.string(), to: v.string() }))
   .returns(v.string())
   .handler(async (ctx, input) => {
     let { to } = input;
