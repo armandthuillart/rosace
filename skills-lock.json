@@ -47,6 +47,12 @@
       "sourceType": "github",
       "computedHash": "d0ece1b2164ce1376e4ab6e98d6ac079df3a2a94f5f02224362b6a1ce2516ae9"
     },
+    "deslop": {
+      "source": "mikecann/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/deslop/SKILL.md",
+      "computedHash": "a238a8b75519a21b5d99223b927461a32fc311dcca145ff4f56c6cd55d97e860"
+    },
     "email-and-password-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",

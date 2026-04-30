@@ -50,6 +50,7 @@ class ConvexError extends BaseConvexError<ErrorData> {
 
     this.name = "ConvexError";
     this.code = code;
+    this.message = message;
   }
 }
 
