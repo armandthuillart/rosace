@@ -157,6 +157,47 @@ describe("convex auth routes security/regression", () => {
         payload: { type: "session:revoke", token: "victim-token" },
       });
     });
+
+    it("guarantees logout rejects csrf origin mismatch and cannot revoke sessions cross-site", async () => {
+      const routes = setupRoutes();
+      const ctx = createCtx();
+
+      const response = await routes.handler("POST", "/auth/logout")(
+        ctx,
+        new Request("https://convex.example/auth/logout", {
+          method: "POST",
+          headers: {
+            cookie: "session:refresh=target-session",
+            origin: "https://evil.example",
+          },
+        }),
+      );
+
+      expect(response.status).toBe(403);
+      expect(limitMock).not.toHaveBeenCalled();
+      expect(ctx.runMutation).not.toHaveBeenCalled();
+    });
+
+    it("guarantees logout rate limiting fails closed with retry metadata", async () => {
+      const routes = setupRoutes();
+      const ctx = createCtx();
+      limitMock.mockResolvedValueOnce({ ok: false, retryAfter: Date.now() + 2_000 });
+
+      const response = await routes.handler("POST", "/auth/logout")(
+        ctx,
+        new Request("https://convex.example/auth/logout", {
+          method: "POST",
+          headers: {
+            cookie: "session:refresh=target-session",
+            origin: "https://dashboard.example",
+          },
+        }),
+      );
+
+      expect(response.status).toBe(429);
+      expect(Number(response.headers.get("X-Retry-After"))).toBeGreaterThanOrEqual(1);
+      expect(ctx.runMutation).not.toHaveBeenCalled();
+    });
   });
 
   describe("oauth callback tampering and account-link hijack resistance", () => {
@@ -190,6 +231,23 @@ describe("convex auth routes security/regression", () => {
       expect(ctx.runMutation).toHaveBeenCalledWith("auth:mutation", {
         payload: { type: "oauth:authorize:consume-state", provider: "google", state: "bad-state" },
       });
+      expect(exchangeCodeMock).not.toHaveBeenCalled();
+    });
+
+    it("guarantees callback rejects unsupported providers to prevent account-link hijack pivots", async () => {
+      const routes = setupRoutes();
+      const ctx = createCtx();
+
+      const response = await routes.handler("GET", "/auth/callback/")(
+        ctx,
+        new Request(
+          "https://convex.example/auth/callback/credentials?code=auth-code&state=valid-state",
+        ),
+      );
+
+      expect(response.status).toBe(400);
+      await expect(response.text()).resolves.toBe("Credentials is not supported.");
+      expect(ctx.runMutation).not.toHaveBeenCalled();
       expect(exchangeCodeMock).not.toHaveBeenCalled();
     });
   });
@@ -227,6 +285,21 @@ describe("convex auth routes security/regression", () => {
       expect(replay.status).toBe(400);
       await expect(replay.text()).resolves.toBe("Invalid or expired handoff.");
       expect(replay.headers.get("set-cookie")).toContain("session:handoff=;");
+    });
+
+    it("guarantees missing handoff cookie is rejected and stale handoff is cleared", async () => {
+      const routes = setupRoutes();
+      const ctx = createCtx();
+
+      const response = await routes.handler("GET", "/auth/session/claim")(
+        ctx,
+        new Request("https://dashboard.example/auth/session/claim"),
+      );
+
+      expect(response.status).toBe(400);
+      await expect(response.text()).resolves.toBe("Missing code.");
+      expect(response.headers.get("set-cookie")).toContain("session:handoff=;");
+      expect(ctx.runMutation).not.toHaveBeenCalled();
     });
   });
 });

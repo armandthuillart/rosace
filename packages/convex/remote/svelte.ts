@@ -57,7 +57,7 @@ export function convexClient() {
         } else {
           convex.clearAuth();
         }
-      });
+      })();
 
       return convex;
     },
