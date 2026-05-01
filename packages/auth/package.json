@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     "./convex": "./src/convex/index.ts",
-    "./svelte": "./src/svelte/index.ts"
+    "./svelte/server": "./src/svelte/index.ts",
+    "./svelte/client": "./src/svelte/client.ts"
   },
   "dependencies": {
     "@noble/hashes": "catalog:",
