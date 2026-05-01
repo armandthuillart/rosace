@@ -6,8 +6,7 @@ interface Props extends HTMLAttributes<"a"> {
 }
 
 const { href, rel, target, ...props } = Astro.props;
-const hrefString = href instanceof URL ? href.toString() : href;
-const isExternal = /^(https?:)?\/\//.test(hrefString);
+const isExternal = /^(https?:)?\/\//.test(href.toString());
 ---
 
 <a

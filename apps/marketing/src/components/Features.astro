@@ -2,12 +2,8 @@
 import Icon from "@components/Icon.astro";
 ---
 
-<section
-  class="mx-auto mt-16 w-full max-w-5xl tracking-tight sm:mt-12"
-  id="features"
-  aria-labelledby="features-heading"
->
-  <h2 id="features-heading" class="sr-only">Features</h2>
+<section class="mx-auto mt-16 w-full max-w-5xl tracking-tight sm:mt-12">
+  <h2 class="sr-only">Features</h2>
 
   <ul class="grid gap-x-3 gap-y-10 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-4">
     <li class="group flex flex-col items-center gap-5 text-center">
@@ -26,7 +22,6 @@ import Icon from "@components/Icon.astro";
 
         <Icon
           class="absolute top-0 left-0 size-20 text-gray-400 group-hover:animate-[play-1_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_0.2s_forwards,play-2_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_1.74s_forwards] dark:text-gray-500"
-          fill="currentColor"
           name="play"
         />
       </div>
@@ -46,9 +41,9 @@ import Icon from "@components/Icon.astro";
           class="size-18 origin-bottom group-hover:animate-[music-headset-2_0.5s_ease-in-out_0.1s_both,music-headset-3_0.5s_ease-in-out_0.9s_forwards]"
         >
           <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
             class="size-18 origin-bottom text-gray-500 group-hover:animate-[music-headset-1_0.7s_ease-in-out_0s_both,music-headset-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
           >
             <path
               d="M12 2C6.5 2 2 6.47761 2 11.9502V15.6318V16.8259V18.0199C2 20.209 3.7 21.9005 5.9 21.9005C8.1 21.9005 9.8 20.209 9.8 18.0199V15.5323C9.8 13.4428 8.1 11.6517 5.9 11.6517C5.2 11.7512 4.6 11.9502 4 12.2488V11.9502C4 7.57214 7.6 3.99005 12 3.99005C16.4 3.99005 20 7.57214 20 11.9502V12.2488C19.4 11.9502 18.8 11.7512 18.1 11.7512C16 11.7512 14.2 13.4428 14.2 15.6318V18.1194C14.2 20.209 15.9 22 18.1 22C20.2 22 22 20.3085 22 18.1194V16.9254V15.7313V11.9502C22 6.47761 17.5 2 12 2Z"
@@ -57,15 +52,13 @@ import Icon from "@components/Icon.astro";
           </svg>
         </div>
 
-        <style></style>
-
         <div
           class="size-18 origin-bottom group-hover:animate-[music-note-2_0.5s_ease-in-out_0.1s_both,music-note-3_0.5s_ease-in-out_0.9s_forwards]"
         >
           <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
             class="size-18 origin-bottom text-gray-400 group-hover:animate-[music-note-1_0.7s_ease-in-out_0s_both,music-note-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-500"
+            fill="currentColor"
+            viewBox="0 0 24 24"
           >
             <path
               d="M20.9 1.47373C20.2 0.968418 19.3 0.867356 18.5 1.17054L10.3 4.00029C8.9 4.5056 8 5.81941 8 7.33534V10.7715V15.5214C7.4 15.2182 6.7 14.915 6 14.915C3.8 14.915 2 16.7341 2 18.9575C2 21.1809 3.8 23 6 23C8.2 23 10 21.1809 10 18.9575C10 18.8564 10 18.7554 10 18.6543V18.5533V11.4789L20 7.94172V12.9948C19.4 12.6916 18.7 12.3885 18 12.3885C15.8 12.3885 14 14.2076 14 16.431C14 18.6543 15.8 20.4734 18 20.4734C20.2 20.4734 22 18.6543 22 16.431C22 16.3299 22 16.2288 22 16.1278V16.0267V6.52684V3.59604C22 2.78754 21.6 1.97904 20.9 1.47373Z"
@@ -229,13 +222,10 @@ import Icon from "@components/Icon.astro";
       <div class="relative size-18">
         <Icon
           class="relative z-2 size-18 origin-center text-gray-500 transition duration-300 group-hover:translate-x-1 group-hover:delay-100 dark:text-gray-400"
-          fill="currentColor"
           name="zap"
         />
-
         <Icon
           class="absolute top-1/2 left-1/2 z-1 size-18 origin-center -translate-1/2 scale-25 text-gray-400 opacity-0 blur-sm transition duration-300 group-hover:-translate-x-16 group-hover:-translate-y-16 group-hover:scale-50 group-hover:opacity-100 group-hover:blur-none dark:text-gray-500"
-          fill="currentColor"
           name="zap"
         />
       </div>

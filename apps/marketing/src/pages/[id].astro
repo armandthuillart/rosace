@@ -5,32 +5,28 @@ import Accordion from "@components/Accordion.astro";
 import Anchor from "@components/Anchor.astro";
 
 export async function getStaticPaths() {
-  return await getCollection("docs").then((entries) =>
-    entries.map((entry) => ({
-      params: {
-        id: entry.id,
-      },
-      props: {
-        post: entry,
-      },
+  return await getCollection("docs").then((pages) =>
+    pages.map((page) => ({
+      params: { id: page.id },
+      props: { page },
     })),
   );
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { page } = Astro.props;
+const { Content } = await render(page);
 
-const formattedDate = new Intl.DateTimeFormat("en-US", {
+const formatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
-  month: "long",
   year: "numeric",
-}).format(post.data.date);
+  month: "long",
+});
 ---
 
-<BaseLayout title={post.data.title}>
+<BaseLayout title={page.data.title}>
   <article class="mx-auto mb-6 w-full max-w-3xl">
     <h1 class="mb-3 text-6xl font-bold sm:text-8xl">
-      {post.data.title}
+      {page.data.title}
     </h1>
 
     <div
@@ -67,7 +63,7 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
           stroke-width="1"></path>
       </svg>
 
-      <p class="text-xl">Last updated on {formattedDate}.</p>
+      <p class="text-xl">Last updated on {formatter.format(page.data.date)}.</p>
     </div>
 
     <div

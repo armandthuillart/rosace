@@ -8,7 +8,7 @@ const animate = Astro.url.pathname !== "/";
 <header
   class="dark:bg-gray-1000 dark:sm:bg-gray-1000/80 fixed top-0 z-50 w-full bg-white px-8 py-5 shadow-gray-100 transition-shadow duration-300 sm:bg-white/80 sm:py-7 sm:backdrop-blur-xl"
 >
-  <nav class="mx-auto flex w-full max-w-432 justify-between" aria-label="Primary">
+  <nav class="mx-auto flex w-full max-w-432 justify-between">
     <div class:list={["flex gap-2", animate && "delay-75"]}>
       <a
         aria-label="Go to homepage"
@@ -45,7 +45,7 @@ const animate = Astro.url.pathname !== "/";
       </a>
 
       <div
-        class="mt-2.5 self-start rounded-lg border-[1.5px] border-gray-300 bg-gray-200 px-1 py-px text-xs font-bold tracking-tight text-gray-600 uppercase dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
+        class="mt-2.5 self-start rounded-lg border-[1.5px] border-gray-300 bg-gray-200 px-1 py-px text-xs font-bold tracking-tight text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
       >
         Beta
       </div>
@@ -53,13 +53,13 @@ const animate = Astro.url.pathname !== "/";
 
     <div class="flex gap-5">
       <a
-        aria-label="Frequently asked questions"
+        aria-label="Frequently Asked Questions"
         class="group relative inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-4 text-center text-lg font-bold transition duration-300 before:absolute hover:bg-gray-100 focus-visible:outline-2 max-sm:bg-gray-100 dark:hover:bg-gray-800 dark:max-sm:bg-gray-800"
         href="/faqs"
       >
         <svg
-          fill="currentColor"
           class="size-6 origin-bottom transition duration-300 will-change-transform group-hover:-rotate-12"
+          fill="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -77,24 +77,19 @@ const animate = Astro.url.pathname !== "/";
       </a>
 
       <a
-        aria-label="Sign up for free"
         class="group relative inline-flex min-h-15 items-center justify-center gap-2 rounded-2xl bg-gray-200 py-4 pr-5 pl-13 text-center text-lg font-bold transition duration-300 before:absolute focus-visible:outline-2 max-sm:hidden dark:bg-gray-800"
         href={DASHBOARD_URL}
       >
         <Icon
           class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
-          fill="currentColor"
           name="arrow-right"
         />
-
         <span
           class="ease translate-x-0 transition duration-300 group-hover:-translate-x-8"
           >Go to app</span
         >
-
         <Icon
           class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
-          fill="currentColor"
           name="arrow-right"
         />
       </a>

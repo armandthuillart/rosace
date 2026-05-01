@@ -5,7 +5,6 @@ import Icon from "@components/Icon.astro";
 
 <section
   class="mx-auto mb-14 flex w-full flex-col items-center justify-center sm:mb-20 xl:w-4/5 xl:max-w-5xl"
-  id="hero"
 >
   <h1
     class="relative mb-14 text-center text-5xl leading-[1.05] font-bold tracking-tight delay-50 sm:mb-12 sm:text-8xl sm:leading-none"
@@ -13,7 +12,10 @@ import Icon from "@components/Icon.astro";
     Simplest way to<br />create animations.
   </h1>
 
-  <p class="sr-only">Motion design for people who never learned it. Free, browser-based, no install required.</p>
+  <p class="sr-only">
+    Motion design for people who never learned it. Free, browser-based, no
+    install required.
+  </p>
 
   <a
     aria-label="Start animating"
@@ -22,7 +24,6 @@ import Icon from "@components/Icon.astro";
   >
     <Icon
       class="ease absolute left-5 size-6 translate-x-0 opacity-100 transition duration-300 will-change-transform group-hover:-translate-x-full group-hover:scale-x-50 group-hover:opacity-0 group-hover:blur-sm"
-      fill="currentColor"
       name="arrow-right"
     />
 
@@ -33,7 +34,6 @@ import Icon from "@components/Icon.astro";
 
     <Icon
       class="ease absolute right-5 size-6 translate-x-full scale-x-50 opacity-0 blur-sm transition duration-300 will-change-transform group-hover:translate-x-0 group-hover:scale-x-100 group-hover:opacity-100 group-hover:blur-none"
-      fill="currentColor"
       name="arrow-right"
     />
   </a>
@@ -46,8 +46,7 @@ import Icon from "@components/Icon.astro";
     </p>
 
     <div class="flex items-center justify-center gap-1">
-      <Icon class="size-5" fill="currentColor" name="gift-card" />
-
+      <Icon class="size-5" name="gift-card" />
       <p class="text-lg/tight font-bold">For free, forever</p>
     </div>
   </div>
