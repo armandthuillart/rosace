@@ -12,7 +12,7 @@
 </p>
 
 > [!NOTE]
-> Rosace runs entirely in the browser, thanks to amazing open-source libraries like [GSAP](https://github.com/greensock/gsap) and [Three.js](https://github.com/mrdoob/three.js/).
+> Rosace runs entirely in the browser, thanks to amazing open-source libraries like [GSAP](https://gsap.com/) and [Three.js](https://threejs.org/).
 
 ## About
 
