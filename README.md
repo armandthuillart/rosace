@@ -24,7 +24,7 @@ You can [login](https://app.rosace.app/login) or [register](https://app.rosace.a
 
 ## Contributing
 
-### Building locally
+### Local development
 
 To get up and running:
 
