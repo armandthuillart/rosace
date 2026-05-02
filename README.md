@@ -12,7 +12,7 @@
 </p>
 
 > [!NOTE]
-> OpenAI is the founding sponsor of the new, open-source Warp repository, and the new agentic management workflows are powered by GPT models.
+> Rosace runs entirely in the browser, thanks to amazing open-source libraries like [GSAP](https://github.com/greensock/gsap) and [Three.js](https://github.com/mrdoob/three.js/).
 
 ## About
 
