@@ -1,5 +1,6 @@
 <a href="https://rosace.app">
-  <img alt="A preview of the dashboard" src="./.github/cover.png" />
+![Rosace](./.github/dark.png#gh-dark-mode-only)
+![Rosace](./.github/light.png#gh-light-mode-only)
 </a>
 
 <p align="center">
