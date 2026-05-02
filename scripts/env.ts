@@ -2,15 +2,17 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-function parseEnv(content: string): Record<string, string> {
+function parseEnv(content: string) {
   const env: Record<string, string> = {};
+
   for (const line of content.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
-    const idx = trimmed.indexOf("=");
-    if (idx === -1) continue;
-    env[trimmed.slice(0, idx)] = trimmed.slice(idx + 1);
+    const index = trimmed.indexOf("=");
+    if (index === -1) continue;
+    env[trimmed.slice(0, index)] = trimmed.slice(index + 1);
   }
+
   return env;
 }
 
@@ -26,7 +28,12 @@ const KEYS = {
   marketing: ["DASHBOARD_URL", "MARKETING_URL"],
 } as const;
 
-const targets = [
+const targets: Array<{
+  file: string;
+  from: "dev" | "prod";
+  keys: readonly string[];
+  prefix: Record<string, string>;
+}> = [
   {
     file: "apps/dashboard/.env.development",
     from: "dev",
@@ -54,12 +61,10 @@ const targets = [
 ] as const;
 
 for (const { file, from, keys, prefix } of targets) {
-  const content = `${keys
-    .map(
-      (key: string | number) =>
-        `${(prefix[key as keyof typeof prefix] ?? "") + key}=${envs[from][key] ?? ""}`,
-    )
-    .join("\n")}\n`;
+  const content =
+    keys
+      .map((key) => `${prefix[key] ?? ""}${key}=${envs[from][key] ?? ""}`)
+      .join("\n") + "\n";
 
   writeFileSync(join(root, file), content, "utf8");
 }
