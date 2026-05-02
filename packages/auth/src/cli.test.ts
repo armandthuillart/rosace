@@ -48,18 +48,18 @@ describe("auth cli security/regression", () => {
 
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
-      ["exec", "convex", "env", "get", "AUTH_SECRET"],
+      ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "AUTH_SECRET"],
       expect.objectContaining({ encoding: "utf8" }),
     );
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
-      ["exec", "convex", "env", "get", "PUBLIC_JWKS"],
+      ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "PUBLIC_JWKS"],
       expect.objectContaining({ encoding: "utf8" }),
     );
 
     const setCalls = execFileSyncMock.mock.calls.filter((call) => {
       const args = call[1] as string[] | undefined;
-      return args?.[2] === "env" && args?.[3] === "set";
+      return args?.[5] === "env" && args?.[6] === "set";
     });
     expect(setCalls).toHaveLength(1);
     expect(setCalls[0]?.[1]).toEqual(expect.arrayContaining(["PUBLIC_JWKS"]));
