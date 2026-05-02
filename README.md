@@ -1,24 +1,34 @@
-# Rosace
+<a href="https://rosace.app">
+  <img alt="A preview of the dashboard" src="./.github/cover.png" />
+</a>
 
-Internal monorepo for the Rosace product stack.
+<p align="center">
+  <a href="https://rosace.app">Website</a>
+  ·
+  <a href="https://app.rosace.app">Dashboard</a>
+</p>
 
-This repository contains:
+> [!NOTE]
+> OpenAI is the founding sponsor of the new, open-source Warp repository, and the new agentic management workflows are powered by GPT models.
 
-- `apps/dashboard` - SvelteKit dashboard app deployed on Cloudflare.
-- `apps/marketing` - Astro marketing site deployed on Cloudflare.
-- `packages/convex` - Convex backend, schema, auth routes, and integrations.
-- `packages/auth` - shared auth layer used by dashboard and backend.
-- `packages/helpers` - shared utilities used across packages.
+## About
 
-> [!IMPORTANT]
-> Use `vp` for all project workflows. Do not use `npm`, `pnpm`, `yarn`, or `bun` directly in this repository.
+[Rosace](https://rosace.app) is a fast and simple animation tool on the web.
 
-## Start Here
+## Usage
+
+You can [login](https://app.rosace.app/login) or [register](https://app.rosace.app/register) to get started.
+
+## Contributing
+
+### Building locally
+
+To get up and running:
 
 ### 1) Install dependencies
 
 ```bash
-vp install
+vp i
 ```
 
 ### 2) Configure root environment files
@@ -46,137 +56,65 @@ This command reads root env files and writes:
 ### 4) Run apps locally
 
 ```bash
-vp run dashboard#dev
-vp run marketing#dev
+vp run dev
 ```
 
-Defaults:
+## Architecture
 
-- Dashboard: `http://localhost:5173`
-- Marketing: `http://localhost:4321`
-
-## Daily Developer Tasks
-
-### Run backend workflow (Convex)
-
-```bash
-vp exec convex dev
-```
-
-### Run project checks
-
-```bash
-vp check
-vp test
-```
-
-Run both commands before opening or updating a PR.
-
-### Build apps
-
-```bash
-vp run dashboard#build
-vp run marketing#build
-```
-
-### Deploy apps
-
-```bash
-vp run dashboard#deploy
-vp run marketing#deploy
-```
-
-## Tooling Rules
-
-- Use `vp` as the single command surface for install, dev, checks, tests, and builds.
-- Use `vp run <workspace>#<script>` for workspace scripts.
-- Use `vp exec <binary>` for local package binaries (for example Convex CLI).
-- Do not call package managers directly in this monorepo.
-
-## Environment Notes
-
-Root keys defined in `.env.template` include:
-
-- `CONVEX_SITE_URL`
-- `CONVEX_URL`
-- `DASHBOARD_URL`
-- `MARKETING_URL`
-
-Some package-level services need additional secrets (auth provider, JWT, Stripe, email, and more). See:
-
-- `packages/convex/README.md`
-- `packages/auth/README.md`
-
-## Runtime Architecture
-
-The monorepo has two public web surfaces with different responsibilities:
-
-- `apps/marketing` is the acquisition layer (content, landing pages, SEO).
-- `apps/dashboard` is the authenticated product UI.
-- `packages/convex` is the source of truth for app data, domain logic, and realtime updates.
-- `packages/auth` provides shared auth primitives consumed by dashboard and backend flows.
-
-### Request and data flow
+### Diagram
 
 ```mermaid
-flowchart TB
-  subgraph edge[Apps]
+flowchart TD
+  subgraph Frontend
     direction TB
-    dashboard["Dashboard (SvelteKit)"]
-    marketing["Marketing (Astro)"]
+    dashboard["Dashboard<br/>(Svelte 5)"]
+    marketing["Marketing<br/>(Astro 6)"]
   end
 
-  subgraph backend[Backend]
+  subgraph "Backend"
     direction TB
-    convex["Database (@repo/convex)"]
-    auth["Auth (@repo/auth)"]
+    convex["BaaS<br/>(@repo/convex)"]
+    auth["Auth<br/>(@repo/auth)"]
   end
 
-  subgraph thirdParty[3P Integrations]
+  subgraph "Integrations"
     direction TB
-    stripe["Payments (Stripe)"]
-    email["Email (Resend)"]
+    stripe["Stripe"]
+    email["Resend"]
+    posthog["PostHog"]
   end
 
-  dashboard <--> convex
-  auth <--> dashboard
-  auth <--> convex
-  convex --> stripe
-  convex --> email
+  dashboard --- convex
+  marketing --- convex
+  auth -.- dashboard
+  auth -.- convex
+  convex -.- stripe
+  convex -.- email
+  dashboard -.- posthog
+
+  linkStyle 0 stroke:#a3c9e2,stroke-width:1px
+  linkStyle 1 stroke:#ceb6e2,stroke-width:1px,stroke-dasharray:5
+  linkStyle 2 stroke:#b9e6c2,stroke-width:1px,stroke-dasharray:6,stroke:#b9e6c2
+  linkStyle 3 stroke:#b9e6c2,stroke-width:1px,stroke-dasharray:6,stroke:#b9e6c2
+  linkStyle 4 stroke:#aee9e1,stroke-width:1px,stroke-dasharray:5
+  linkStyle 5 stroke:#ffd8b6,stroke-width:1px,stroke-dasharray:5
+  linkStyle 6 stroke:#f6aec7,stroke-width:1px,stroke-dasharray:4
 ```
 
-### How to reason about changes
+### How it works
 
-- UI-only changes in `apps/marketing` should not affect dashboard or backend behavior.
-- Product behavior changes usually start in `apps/dashboard` and land in `packages/convex`.
-- Authentication changes often touch both `packages/auth` and auth usage in `apps/dashboard` or `packages/convex`.
-- Integration changes (billing/email) are backend-first and should be implemented in `packages/convex`, then surfaced in UI.
+This repo has two main apps:
 
-## Command Reference
+- `apps/marketing`: The public marketing site and changelog.
+- `apps/dashboard`: The secure user dashboard (login required).
 
-| Command                   | Purpose                                    |
-| ------------------------- | ------------------------------------------ |
-| `vp install`              | Install workspace dependencies             |
-| `vp run prepare`          | Generate app env files from root env files |
-| `vp run dashboard#dev`    | Start dashboard dev server                 |
-| `vp run marketing#dev`    | Start marketing dev server                 |
-| `vp exec convex dev`      | Run Convex development workflow            |
-| `vp check`                | Run format, lint, and type checks          |
-| `vp test`                 | Run tests                                  |
-| `vp run dashboard#build`  | Build dashboard                            |
-| `vp run marketing#build`  | Build marketing                            |
-| `vp run dashboard#deploy` | Deploy dashboard to Cloudflare             |
-| `vp run marketing#deploy` | Deploy marketing to Cloudflare             |
+Supporting packages:
 
-## Troubleshooting
+- `packages/convex`: All business logic, including queries, mutations, and actions.
+- `packages/auth`: Shared authentication primitives used by both the dashboard and the backend.
 
-- `vp run prepare` fails: make sure `.env.development` and `.env.production` exist at repo root.
-- App env values look stale: rerun `vp run prepare` after any root env change.
-- Auth or backend issues in local dev: verify keys from `packages/auth/README.md` and `packages/convex/README.md`.
-- Command behaves unexpectedly: confirm you are using `vp` and not direct package manager commands.
+## References
 
-## Additional References
-
-- `AGENTS.md` - repository tooling rules and review checklist.
-- `packages/convex/README.md` - backend conventions and Convex usage.
+- `AGENTS.md` - for tooling rules and review checklist.
+- `packages/convex/README.md` - backend conventions and general usage.
 - `packages/auth/README.md` - auth flow and required auth configuration.
