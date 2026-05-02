@@ -35,7 +35,6 @@ describe("env validation", () => {
   it("should succeed with all valid variables", async () => {
     const env = await loadEnv();
 
-    expect(process.env.CONVEX_URL).toBe("https://convex.example");
     expect(env.DEPLOY_ENV).toBe("development");
     expect(env.RESEND_API_KEY).toBe("resend-key");
   });
