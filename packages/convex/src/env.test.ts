@@ -32,7 +32,7 @@ async function loadEnv() {
 }
 
 describe("env validation", () => {
-  it("succeeds with all valid variables", async () => {
+  it("should succeed with all valid variables", async () => {
     const env = await loadEnv();
 
     expect(env.CONVEX_URL).toBe("https://convex.example");
@@ -40,7 +40,7 @@ describe("env validation", () => {
     expect(env.RESEND_API_KEY).toBe("resend-key");
   });
 
-  it("throws when a required variable is missing", async () => {
+  it("should throw when a required variable is missing", async () => {
     requireEnv.mockImplementationOnce(() => {
       throw new Error("Missing CONVEX_URL");
     });
@@ -48,7 +48,7 @@ describe("env validation", () => {
     await expect(loadEnv()).rejects.toThrow();
   });
 
-  it("throws when DEPLOY_ENV is not 'development' or 'production'", async () => {
+  it("should throw when DEPLOY_ENV is not 'development' or 'production'", async () => {
     const EnvSchema = v.object({
       DEPLOY_ENV: v.union([v.literal("development"), v.literal("production")]),
     });
@@ -58,7 +58,7 @@ describe("env validation", () => {
     expect(() => v.parse(EnvSchema, { DEPLOY_ENV: "production" })).not.toThrow();
   });
 
-  it("accepts 'production' as valid DEPLOY_ENV", async () => {
+  it("should accept 'production' as valid DEPLOY_ENV", async () => {
     requireEnv.mockImplementation((key: string) => {
       const env: Record<string, string> = {
         APPLE_CLIENT_ID: "apple-id",

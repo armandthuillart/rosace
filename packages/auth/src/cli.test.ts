@@ -25,8 +25,8 @@ vi.mock("jose", () => ({
 
 import { createJwks, run } from "./cli";
 
-describe("auth cli security/regression", () => {
-  it("guarantees set is idempotent and initializes only missing secrets", async () => {
+describe("auth cli", () => {
+  it("should be idempotent and initialize only missing secrets", async () => {
     execFileSyncMock.mockReset();
     randomBytesMock.mockReset();
     generateKeyPairMock.mockReset();
@@ -37,9 +37,11 @@ describe("auth cli security/regression", () => {
       .mockReturnValueOnce("already-present")
       .mockReturnValueOnce("")
       .mockReturnValue("");
+
     randomBytesMock.mockReturnValue(Uint8Array.from({ length: 32 }, () => 1));
     randomUUIDMock.mockReturnValue("kid-fixed");
     generateKeyPairMock.mockResolvedValue({ publicKey: "pub", privateKey: "priv" });
+
     exportJWKMock.mockImplementation(async (key: unknown) =>
       key === "pub" ? { kty: "RSA", n: "pub-n", e: "AQAB" } : { kty: "RSA", d: "priv-d" },
     );
@@ -51,6 +53,7 @@ describe("auth cli security/regression", () => {
       ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "AUTH_SECRET"],
       expect.objectContaining({ encoding: "utf8" }),
     );
+
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
       ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "PUBLIC_JWKS"],
@@ -61,12 +64,13 @@ describe("auth cli security/regression", () => {
       const args = call[1] as string[] | undefined;
       return args?.[5] === "env" && args?.[6] === "set";
     });
+
     expect(setCalls).toHaveLength(1);
     expect(setCalls[0]?.[1]).toEqual(expect.arrayContaining(["PUBLIC_JWKS"]));
     expect(setCalls[0]?.[1]).not.toEqual(expect.arrayContaining(["AUTH_SECRET"]));
   });
 
-  it("guarantees rotate overwrites both secrets and honors --prod scope", async () => {
+  it("should overwrite both secrets and honor --prod scope", async () => {
     execFileSyncMock.mockReset();
 
     await run(["node", "auth", "rotate", "--prod"], {
@@ -90,6 +94,7 @@ describe("auth cli security/regression", () => {
     const setCalls = execFileSyncMock.mock.calls.map(
       (call) => (call[1] as string[] | undefined) ?? [],
     );
+
     expect(setCalls).toContainEqual([
       "exec",
       "convex",
@@ -100,6 +105,7 @@ describe("auth cli security/regression", () => {
       "AUTH_SECRET",
       "secret-prod",
     ]);
+
     expect(setCalls).toContainEqual([
       "exec",
       "convex",
@@ -112,13 +118,14 @@ describe("auth cli security/regression", () => {
     ]);
   });
 
-  it("guarantees created jwks keeps a single consistent kid across public and private keys", async () => {
+  it("should keep consistent kid across public and private keys", async () => {
     randomUUIDMock.mockReset();
     generateKeyPairMock.mockReset();
     exportJWKMock.mockReset();
 
     randomUUIDMock.mockReturnValue("kid-123");
     generateKeyPairMock.mockResolvedValue({ publicKey: "public", privateKey: "private" });
+
     exportJWKMock.mockImplementation(async (key: unknown) =>
       key === "public" ? { kty: "RSA", n: "n", e: "AQAB" } : { kty: "RSA", d: "d" },
     );

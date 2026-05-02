@@ -15,10 +15,11 @@ const schema = defineSchema({
     value: v.string(),
   }),
 });
+
 const modules = import.meta.glob("../src/**/*.ts");
 
-describe("procedure builder security/regression guarantees", () => {
-  it("guarantees middlewares execute in declared order and cannot bypass handler output", async () => {
+describe("procedure builder", () => {
+  it("should execute middlewares in declared order", async () => {
     const order: string[] = [];
     const builder = createBuilder();
 
@@ -58,8 +59,9 @@ describe("procedure builder security/regression guarantees", () => {
     ]);
   });
 
-  it("guarantees middleware chains that never call next fail closed with a clear error", async () => {
+  it("should fail closed when middleware never calls next", async () => {
     const builder = createBuilder();
+
     const swallow = builder.createMiddleware(async (ctx, _next) => {
       return { context: ctx };
     });
@@ -76,16 +78,17 @@ describe("procedure builder security/regression guarantees", () => {
     );
   });
 
-  it("guarantees callable procedure surface does not expose handler reassignment hooks", () => {
+  it("should not expose handler reassignment hooks", () => {
     const builder = createBuilder();
     const withHandler = builder.query().handler(async () => "first");
 
     expect(typeof (withHandler as { handler?: unknown }).handler).toBe("undefined");
   });
 
-  it("guarantees middleware added after handler still executes before handler logic", async () => {
+  it("should execute middleware added after handler before handler logic", async () => {
     const builder = createBuilder();
     const order: string[] = [];
+
     const appendAudit = builder.createMiddleware(async (ctx, next) => {
       order.push("middleware");
       return next(ctx);
@@ -105,9 +108,10 @@ describe("procedure builder security/regression guarantees", () => {
     expect(order).toEqual(["middleware", "handler"]);
   });
 
-  it("guarantees middleware exceptions propagate and stop downstream execution", async () => {
+  it("should propagate middleware exceptions and stop downstream", async () => {
     const builder = createBuilder();
     const downstream = vi.fn(async () => "ok");
+
     const thrower = builder.createMiddleware(async () => {
       throw new Error("blocked");
     });
@@ -119,8 +123,8 @@ describe("procedure builder security/regression guarantees", () => {
   });
 });
 
-describe("procedure builder convex-test integration guarantees", () => {
-  it("guarantees callable procedures run safely with a real Convex query context", async () => {
+describe("procedure builder convex-test integration", () => {
+  it("should run safely with a real Convex query context", async () => {
     const t = convexTest({ schema, modules });
     const builder = createBuilder();
     const order: string[] = [];
@@ -145,7 +149,7 @@ describe("procedure builder convex-test integration guarantees", () => {
     expect(order).toEqual(["mw", "handler"]);
   });
 
-  it("guarantees fail-closed behavior still holds with real Convex execution context", async () => {
+  it("should maintain fail-closed behavior with real Convex context", async () => {
     const t = convexTest({ schema, modules });
     const builder = createBuilder();
 

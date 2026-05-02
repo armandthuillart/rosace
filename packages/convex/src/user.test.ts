@@ -1,7 +1,7 @@
 import { convexTest } from "convex-test";
 import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-import { describe, expect, it, vi } from "vite-plus/test";
+import { GenericId, v } from "convex/values";
+import { describe, expect, it } from "vite-plus/test";
 
 const schema = defineSchema({
   users: defineTable({
@@ -13,50 +13,40 @@ const schema = defineSchema({
   }),
 });
 
-// Import after schema is defined
 const modules = import.meta.glob("./**/*.ts");
 
 describe("getUser", () => {
-  it("returns user data when user exists with valid auth context", async () => {
-    const t = convexTest({ schema, modules });
-
-    const user = {
-      _id: "user_123" as any,
-      email: "test@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      plan: "free" as const,
-      verified: true,
-    };
-
-    // Create a simpler test that doesn't go through auth middleware
-    const result = {
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
-
-    expect(result).toEqual({
-      email: "test@example.com",
-      firstName: "John",
-      lastName: "Doe",
+  it("should return user data when user exists", async () => {
+    const t = convexTest({
+      schema,
+      modules,
     });
+
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert("users", {
+        email: "test@example.com",
+        firstName: "John",
+        lastName: "Doe",
+        plan: "free",
+        verified: true,
+      });
+    });
+
+    const user = await t.run(async (ctx) => ctx.db.get(userId));
+
+    expect(user).toBeDefined();
+    expect(user?.email).toBe("test@example.com");
+    expect(user?.firstName).toBe("John");
   });
 
-  it("validates that getUser handler accesses ctx.userId and ctx.db", () => {
-    // Test the logic without the full Convex context
-    const userId = "user_456" as any;
-    const mockUser = {
-      email: "jane@example.com",
-      firstName: "Jane",
-      lastName: "Smith",
-    };
+  it("should handle missing user", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
 
-    const dbGet = vi.fn().mockResolvedValue({ ...mockUser, plan: "pro", verified: true });
-    const ctx = { userId, db: { get: dbGet } } as any;
+    const user = await t.run(async (ctx) => ctx.db.get("invalid_id" as GenericId<"users">));
 
-    // Simulate what getUser does
-    const user = ctx.db.get(ctx.userId);
-    expect(dbGet).toHaveBeenCalledWith(userId);
+    expect(user).toBeNull();
   });
 });

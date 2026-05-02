@@ -41,9 +41,11 @@ beforeAll(async () => {
 describe("crypto", () => {
   async function hashPassword(password: string): Promise<string> {
     const result = await cryptoHandler({}, { payload: { type: "password:hash", password } });
+
     if (!("hash" in result)) {
       throw new Error("Expected hash result");
     }
+
     return result.hash;
   }
 
@@ -54,20 +56,22 @@ describe("crypto", () => {
         payload: { type: "password:verify", password, hash },
       },
     );
+
     if (!("ok" in result)) {
       throw new Error("Expected verify result");
     }
+
     return result.ok;
   }
 
-  it("hashes then verifies the same password", async () => {
+  it("should hash then verify the same password", async () => {
     const hash = await hashPassword("s3cr3t");
-    expect(hash.startsWith("argon2id$")).toBe(true);
 
+    expect(hash.startsWith("argon2id$")).toBe(true);
     await expect(verifyPassword("s3cr3t", hash)).resolves.toBe(true);
   });
 
-  it("rejects invalid verification attempts", async () => {
+  it("should reject invalid verification attempts", async () => {
     const hash = await hashPassword("correct-password");
 
     await expect(verifyPassword("wrong-password", hash)).resolves.toBe(false);

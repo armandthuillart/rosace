@@ -4,7 +4,7 @@ import { ConvexError } from "./errors";
 import { authMiddleware, authQuery, authMutation, authAction } from "./middleware";
 
 describe("authMiddleware", () => {
-  it("throws UNAUTHORIZED when user is not authenticated", async () => {
+  it("should throw UNAUTHORIZED when user is not authenticated", async () => {
     const ctx = {
       auth: {
         getUserIdentity: vi.fn().mockResolvedValue(null),
@@ -24,7 +24,7 @@ describe("authMiddleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("adds userId to context when user is authenticated", async () => {
+  it("should add userId to context when user is authenticated", async () => {
     const ctx = {
       auth: {
         getUserIdentity: vi.fn().mockResolvedValue({
@@ -42,8 +42,9 @@ describe("authMiddleware", () => {
     expect(result).toBeDefined();
   });
 
-  it("passes userId as Id<'users'> type", async () => {
+  it("should pass userId as Id<'users'> type", async () => {
     const userId = "user_abc123" as any;
+
     const ctx = {
       auth: {
         getUserIdentity: vi.fn().mockResolvedValue({
@@ -53,6 +54,7 @@ describe("authMiddleware", () => {
     } as any;
 
     let capturedContext: any;
+
     const next = vi.fn().mockImplementation((ctx) => {
       capturedContext = ctx;
       return { context: ctx };
@@ -65,19 +67,19 @@ describe("authMiddleware", () => {
 });
 
 describe("pre-configured auth builders", () => {
-  it("authQuery has query function type", () => {
+  it("should have query function type", () => {
     expect(authQuery).toBeDefined();
   });
 
-  it("authMutation has mutation function type", () => {
+  it("should have mutation function type", () => {
     expect(authMutation).toBeDefined();
   });
 
-  it("authAction has action function type", () => {
+  it("should have action function type", () => {
     expect(authAction).toBeDefined();
   });
 
-  it("authQuery can have a handler attached", () => {
+  it("should allow handler attachment", () => {
     const withHandler = authQuery.handler(async (ctx) => {
       void ctx.userId;
       return "test";
@@ -86,7 +88,7 @@ describe("pre-configured auth builders", () => {
     expect(typeof withHandler).toBe("function");
   });
 
-  it("authQuery handler rejects without auth context", async () => {
+  it("should reject queries without auth context", async () => {
     const query = authQuery.handler(async (ctx) => {
       void ctx.userId;
       return "should not reach";
