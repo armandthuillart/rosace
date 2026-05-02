@@ -3,7 +3,7 @@
 </a>
 
 <p align="center">
-  <a href="https://rosace.app">Website</a>
+  <a href="https://rosace.app">Marketing</a>
   ·
   <a href="https://app.rosace.app">Dashboard</a>
 </p>
@@ -115,6 +115,6 @@ Supporting packages:
 
 ## References
 
-- `AGENTS.md` - for tooling rules and review checklist.
-- `packages/convex/README.md` - backend conventions and general usage.
-- `packages/auth/README.md` - auth flow and required auth configuration.
+- `AGENTS.md`: Repository tooling rules and review checklist.
+- `packages/auth/README.md`: In-depth explanation of how authentication works.
+- `packages/convex/README.md`: Our custom conventions and patterns for writing code.
