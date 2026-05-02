@@ -130,23 +130,19 @@ Operation keys:
   - With `{ email }`, it returns the credentials account password hash lookup payload.
   - With `{ email, passwordHash }`, it validates the hash match and creates a session.
 
-- `oauth:authorize:start`:
+- `oauth:authorize`:
 
   Stores OAuth state, nonce, and verifier with expiry.
 
-- `oauth:authorize:consume-state`:
+- `oauth:verify`:
 
   Consumes stored OAuth state one time and checks expiry.
 
-- `oauth:authenticate:finalize`:
+- `oauth:finalize`:
 
-  Resolves OAuth identity by linking or creating account and user records. Then creates a session.
+  Resolves OAuth identity by linking or creating account and user records. Creates session and issues one-time handoff code.
 
-- `oauth:handoff:issue`:
-
-  Stores a one-time handoff code with session payload. Uses a short TTL.
-
-- `oauth:handoff:claim`:
+- `oauth:claim`:
 
   Consumes the handoff code and returns the stored session payload one time.
 

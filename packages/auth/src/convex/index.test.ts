@@ -82,6 +82,7 @@ function setupRoutes() {
       routes.push(definition);
     },
   };
+
   convexAuth().registerRoutes(http as never);
 
   return {
@@ -91,9 +92,11 @@ function setupRoutes() {
           route.method === method &&
           (route.path === pathOrPrefix || route.pathPrefix === pathOrPrefix),
       );
+
       if (!match) {
         throw new Error(`Route not found: ${method} ${pathOrPrefix}`);
       }
+
       return match.handler;
     },
   };
@@ -106,7 +109,7 @@ describe("convex auth routes security/regression", () => {
   });
 
   describe("session boundaries and revocation isolation", () => {
-    it("guarantees session lookup fails closed and clears stale cookie", async () => {
+    it("should return null and clear stale cookie for missing session", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
       ctx.runQuery.mockResolvedValue(null);
@@ -126,7 +129,7 @@ describe("convex auth routes security/regression", () => {
       });
     });
 
-    it("guarantees logout revokes only presented session token and ignores missing cookie", async () => {
+    it("should revoke only presented token and ignore missing cookie", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
       ctx.runMutation.mockResolvedValue(null);
@@ -158,7 +161,7 @@ describe("convex auth routes security/regression", () => {
       });
     });
 
-    it("guarantees logout rejects csrf origin mismatch and cannot revoke sessions cross-site", async () => {
+    it("should reject logout with csrf origin mismatch", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
 
@@ -178,7 +181,7 @@ describe("convex auth routes security/regression", () => {
       expect(ctx.runMutation).not.toHaveBeenCalled();
     });
 
-    it("guarantees logout rate limiting fails closed with retry metadata", async () => {
+    it("should enforce rate limiting on logout", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
       limitMock.mockResolvedValueOnce({ ok: false, retryAfter: Date.now() + 2_000 });
@@ -201,7 +204,7 @@ describe("convex auth routes security/regression", () => {
   });
 
   describe("oauth callback tampering and account-link hijack resistance", () => {
-    it("guarantees callback rejects tampered requests missing state or code", async () => {
+    it("should reject tampered callback missing state or code", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
 
@@ -216,7 +219,7 @@ describe("convex auth routes security/regression", () => {
       expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
 
-    it("guarantees account linking fails closed when oauth state is expired, replayed, or forged", async () => {
+    it("should reject callback with expired or forged oauth state", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
       ctx.runMutation.mockResolvedValueOnce(null);
@@ -229,12 +232,12 @@ describe("convex auth routes security/regression", () => {
       expect(response.status).toBe(400);
       await expect(response.text()).resolves.toBe("Invalid or expired state.");
       expect(ctx.runMutation).toHaveBeenCalledWith("auth:mutation", {
-        payload: { type: "oauth:authorize:consume-state", provider: "google", state: "bad-state" },
+        payload: { type: "oauth:verify", provider: "google", state: "bad-state" },
       });
       expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
 
-    it("guarantees callback rejects unsupported providers to prevent account-link hijack pivots", async () => {
+    it("should reject unsupported providers in callback", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
 
@@ -253,9 +256,10 @@ describe("convex auth routes security/regression", () => {
   });
 
   describe("one-time handoff token guarantees", () => {
-    it("guarantees handoff claim is one-time and replay attempts fail closed", async () => {
+    it("should allow handoff claim only once", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
+
       ctx.runMutation
         .mockResolvedValueOnce({
           accessToken: "access-1",
@@ -287,7 +291,7 @@ describe("convex auth routes security/regression", () => {
       expect(replay.headers.get("set-cookie")).toContain("session:handoff=;");
     });
 
-    it("guarantees missing handoff cookie is rejected and stale handoff is cleared", async () => {
+    it("should reject missing handoff cookie", async () => {
       const routes = setupRoutes();
       const ctx = createCtx();
 

@@ -143,7 +143,7 @@ const internalMutation = internalMutationGeneric({
         token: v.string(),
       }),
       v.object({
-        type: v.literal("oauth:authorize:start"),
+        type: v.literal("oauth:authorize"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         state: v.string(),
         nonce: v.string(),
@@ -151,12 +151,12 @@ const internalMutation = internalMutationGeneric({
         expiresAt: v.number(),
       }),
       v.object({
-        type: v.literal("oauth:authorize:consume-state"),
+        type: v.literal("oauth:verify"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         state: v.string(),
       }),
       v.object({
-        type: v.literal("oauth:authenticate:finalize"),
+        type: v.literal("oauth:finalize"),
         provider: v.union(v.literal("apple"), v.literal("google")),
         accountId: v.string(),
         email: v.string(),
@@ -165,13 +165,7 @@ const internalMutation = internalMutationGeneric({
         lastName: v.string(),
       }),
       v.object({
-        type: v.literal("oauth:handoff:issue"),
-        sessionToken: v.string(),
-        accessToken: v.string(),
-        expiresAt: v.number(),
-      }),
-      v.object({
-        type: v.literal("oauth:handoff:claim"),
+        type: v.literal("oauth:claim"),
         code: v.string(),
       }),
     ),
@@ -254,7 +248,7 @@ const internalMutation = internalMutationGeneric({
         return null;
       }
 
-      case "oauth:authorize:start": {
+      case "oauth:authorize": {
         await ctx.db.insert("verifications", {
           type: "oauth:state",
           identifier: payload.state,
@@ -269,7 +263,7 @@ const internalMutation = internalMutationGeneric({
         return { ok: true };
       }
 
-      case "oauth:authorize:consume-state": {
+      case "oauth:verify": {
         const entry = await findAndSweepVerification(ctx, payload.state);
 
         if (!entry) {
@@ -300,7 +294,7 @@ const internalMutation = internalMutationGeneric({
         };
       }
 
-      case "oauth:authenticate:finalize": {
+      case "oauth:finalize": {
         const existingAccount = (await ctx.db
           .query("accounts")
           .withIndex("by_provider_account", (q) => q.eq("provider", payload.provider))
@@ -332,19 +326,16 @@ const internalMutation = internalMutationGeneric({
           });
         }
 
-        return createSession(ctx, userId);
-      }
-
-      case "oauth:handoff:issue": {
+        const session = await createSession(ctx, userId);
         const code = randomToken();
 
         await ctx.db.insert("verifications", {
           type: "oauth:handoff",
           identifier: code,
           value: JSON.stringify({
-            sessionToken: payload.sessionToken,
-            accessToken: payload.accessToken,
-            expiresAt: payload.expiresAt,
+            sessionToken: session.sessionToken,
+            accessToken: session.accessToken,
+            expiresAt: session.expiresAt,
           }),
           expiresAt: Date.now() + 60_000,
         });
@@ -352,7 +343,7 @@ const internalMutation = internalMutationGeneric({
         return { code };
       }
 
-      case "oauth:handoff:claim": {
+      case "oauth:claim": {
         const entry = await findAndSweepVerification(ctx, payload.code);
 
         if (!entry) {

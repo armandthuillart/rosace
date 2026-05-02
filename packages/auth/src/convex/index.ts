@@ -178,23 +178,6 @@ const registerRoutes = (http: HttpRouter) => {
   });
 
   http.route({
-    /**
-     * Session endpoint - returns authenticated user profile and Convex auth token.
-     *
-     * Response shape (NextAuth-compatible):
-     * - Unauthenticated: `null`
-     * - Authenticated: `{ user: {...}, token: string, expires: number }`
-     *
-     * Dual-purpose contract:
-     * - `user` - Server-side session truth (identity, plan, verification status)
-     * - `token` - Client-side Convex auth token (for convex.setAuth(token))
-     * - `expires` - Token expiration timestamp (epoch ms)
-     *
-     * Security:
-     * - Requires HttpOnly `session:token` cookie (Secure, SameSite=Lax)
-     * - Token is short-lived (15m) and never persisted client-side
-     * - Cache-Control: no-store prevents intermediary caching
-     */
     path: "/auth/session",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
@@ -216,6 +199,7 @@ const registerRoutes = (http: HttpRouter) => {
 
       if (!auth) {
         const headers = new Headers({ "Content-Type": "application/json" });
+
         for (const cookie of clearedAuthCookies()) headers.append("Set-Cookie", cookie);
 
         return new Response("null", { headers, status: 200 });
@@ -239,11 +223,15 @@ const registerRoutes = (http: HttpRouter) => {
       if (blocked) return blocked;
 
       const ipAddress = getClientIp(request);
-      const { ok, retryAfter } = await throttler.limit(ctx, "logout", { key: ipAddress });
+      const { ok, retryAfter } = await throttler.limit(ctx, "logout", {
+        key: ipAddress,
+      });
       if (!ok) {
         return new Response(null, {
           status: 429,
-          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+          headers: {
+            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+          },
         });
       }
 
@@ -285,7 +273,9 @@ const registerRoutes = (http: HttpRouter) => {
       if (!ok) {
         return new Response(null, {
           status: 429,
-          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+          headers: {
+            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+          },
         });
       }
 
@@ -308,7 +298,7 @@ const registerRoutes = (http: HttpRouter) => {
         STORE_MUTATION as unknown as never,
         {
           payload: {
-            type: "oauth:authorize:start",
+            type: "oauth:authorize",
             provider,
             state,
             nonce,
@@ -344,7 +334,9 @@ const registerRoutes = (http: HttpRouter) => {
       if (!ok) {
         return new Response(null, {
           status: 429,
-          headers: { "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)) },
+          headers: {
+            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+          },
         });
       }
 
@@ -428,7 +420,10 @@ const registerRoutes = (http: HttpRouter) => {
       const headers = new Headers({ "content-type": "application/json" });
       for (const cookie of sessionCookies(session)) headers.append("Set-Cookie", cookie);
 
-      return new Response(JSON.stringify({ ok: true }), { headers, status: 200 });
+      return new Response(JSON.stringify({ ok: true }), {
+        headers,
+        status: 200,
+      });
     }),
   });
 
@@ -462,7 +457,7 @@ const registerRoutes = (http: HttpRouter) => {
     const consumed = (await ctx.runMutation(
       STORE_MUTATION as unknown as never,
       {
-        payload: { type: "oauth:authorize:consume-state", provider, state },
+        payload: { type: "oauth:verify", provider, state },
       } as never,
     )) as { nonce: string; verifier?: string } | null;
 
@@ -487,36 +482,23 @@ const registerRoutes = (http: HttpRouter) => {
       return new Response("Provider did not return an email.", { status: 400 });
     }
 
-    const session = (await ctx.runMutation(
-      STORE_MUTATION as unknown as never,
-      {
-        payload: {
-          type: "oauth:authenticate:finalize",
-          accountId: profile.accountId,
-          provider,
-          email: profile.email,
-          emailVerified: profile.emailVerified,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-        },
+    const { code: handoff } = (await ctx.runMutation(STORE_MUTATION as unknown as never, {
+      payload: {
+        type: "oauth:finalize",
+        provider,
+        accountId: profile.accountId,
+        email: profile.email,
+        emailVerified: profile.emailVerified,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
       } as never,
-    )) as SessionPayload;
-
-    const { code: handoff } = (await ctx.runMutation(
-      STORE_MUTATION as unknown as never,
-      {
-        payload: {
-          type: "oauth:handoff:issue",
-          sessionToken: session.sessionToken,
-          accessToken: session.accessToken,
-          expiresAt: session.expiresAt,
-        },
-      } as never,
-    )) as { code: string };
+    })) as { code: string };
 
     const dashboard = requireEnv("DASHBOARD_URL");
 
-    const headers = new Headers({ Location: `${dashboard}/auth/session/claim` });
+    const headers = new Headers({
+      Location: `${dashboard}/auth/session/claim`,
+    });
     headers.append("Set-Cookie", handoffCookie(handoff));
     return new Response(null, { headers, status: 302 });
   });
@@ -547,14 +529,17 @@ const registerRoutes = (http: HttpRouter) => {
       const claimed = (await ctx.runMutation(
         STORE_MUTATION as never,
         {
-          payload: { type: "oauth:handoff:claim", code: handoff },
+          payload: { type: "oauth:claim", code: handoff },
         } as never,
       )) as SessionPayload | null;
 
       if (!claimed) {
         const headers = new Headers();
         headers.append("Set-Cookie", clearedHandoffCookie());
-        return new Response("Invalid or expired handoff.", { headers, status: 400 });
+        return new Response("Invalid or expired handoff.", {
+          headers,
+          status: 400,
+        });
       }
 
       const headers = new Headers({ Location: "/" });

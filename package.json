@@ -5,7 +5,6 @@
   ],
   "type": "module",
   "scripts": {
-    "auth": "bun run packages/auth/src/cli.ts",
     "dev": "bun ./scripts/run-dev.ts",
     "prepare": "bun ./scripts/touch-env.ts"
   },

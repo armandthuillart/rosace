@@ -1,19 +1,27 @@
 import { convexTest } from "convex-test";
-import { defineSchema, defineTable } from "convex/server";
+import { defineSchema, defineTable, GenericMutationCtx, GenericQueryCtx } from "convex/server";
 import { v } from "convex/values";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 type QueryHandler = (
-  ctx: { db: unknown },
-  args: { payload: { type: "session:get"; token: string } },
+  ctx: GenericQueryCtx<any>,
+  args: {
+    payload: {
+      type: "session:get";
+      token: string;
+    };
+  },
 ) => Promise<unknown>;
 
 type MutationHandler = (
-  ctx: { db: unknown },
-  args: { payload: { type: string } & Record<string, unknown> },
+  ctx: GenericMutationCtx<any>,
+  args: {
+    payload: { type: string } & Record<string, unknown>;
+  },
 ) => Promise<unknown>;
 
 const modules = import.meta.glob("../../../convex/src/**/*.ts");
+
 const schema = defineSchema({
   users: defineTable({
     email: v.string(),
@@ -22,6 +30,7 @@ const schema = defineSchema({
     lastName: v.string(),
     plan: v.union(v.literal("free"), v.literal("pro")),
   }).index("by_email", ["email"]),
+
   accounts: defineTable({
     userId: v.id("users"),
     provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
@@ -30,11 +39,13 @@ const schema = defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_provider_account", ["provider", "accountId"]),
+
   sessions: defineTable({
     userId: v.id("users"),
     token: v.string(),
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
+
   verifications: defineTable({
     type: v.string(),
     identifier: v.string(),
@@ -80,29 +91,37 @@ vi.mock("@repo/helpers", () => ({ requireEnv: requireEnvMock }));
 vi.mock("jose", () => {
   class SignJWTMock {
     private subject = "";
+
     setProtectedHeader(): this {
       return this;
     }
+
     setSubject(subject: string): this {
       this.subject = subject;
       return this;
     }
+
     setAudience(): this {
       return this;
     }
+
     setIssuer(): this {
       return this;
     }
+
     setIssuedAt(): this {
       return this;
     }
+
     setExpirationTime(): this {
       return this;
     }
+
     async sign(): Promise<string> {
       return `signed:${this.subject}`;
     }
   }
+
   return {
     importJWK: vi.fn(async () => ({ alg: "RS256" })),
     SignJWT: SignJWTMock,
@@ -118,8 +137,8 @@ let queryHandler: QueryHandler;
 
 beforeAll(async () => {
   await import("./store");
-  mutationHandler = internalMutationGenericMock.mock.calls[0][0].handler;
   queryHandler = internalQueryGenericMock.mock.calls[0][0].handler;
+  mutationHandler = internalMutationGenericMock.mock.calls[0][0].handler;
 });
 
 describe("convex store security/regression", () => {
@@ -128,8 +147,12 @@ describe("convex store security/regression", () => {
     vi.clearAllMocks();
   });
 
-  it("blocks duplicate credentials registration", async () => {
-    const t = convexTest({ schema, modules });
+  it("should block duplicate credentials registration", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     await t.run(async (ctx) => {
       await ctx.db.insert("users", {
         email: "john@example.com",
@@ -142,30 +165,30 @@ describe("convex store security/regression", () => {
 
     await expect(
       t.mutation(async (ctx) =>
-        mutationHandler(
-          { db: ctx.db },
-          {
-            payload: {
-              type: "credentials:register",
-              email: "john@example.com",
-              password: "hash-123",
-              firstName: "John",
-              lastName: "Doe",
-            },
+        mutationHandler(ctx, {
+          payload: {
+            type: "credentials:register",
+            email: "john@example.com",
+            password: "hash-123",
+            firstName: "John",
+            lastName: "Doe",
           },
-        ),
+        }),
       ),
     ).rejects.toThrow("Account already exists.");
   });
 
-  it("fails credentials login for missing user and wrong hash", async () => {
-    const t = convexTest({ schema, modules });
+  it("should fail credentials login for missing user or wrong password", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     await expect(
       t.mutation(async (ctx) =>
-        mutationHandler(
-          { db: ctx.db },
-          { payload: { type: "credentials:login", email: "missing@example.com" } },
-        ),
+        mutationHandler(ctx, {
+          payload: { type: "credentials:login", email: "missing@example.com" },
+        }),
       ),
     ).rejects.toThrow("Account does not exist.");
 
@@ -177,6 +200,7 @@ describe("convex store security/regression", () => {
         lastName: "Doe",
         plan: "free",
       });
+
       await ctx.db.insert("accounts", {
         accountId: "john@example.com",
         userId,
@@ -187,52 +211,58 @@ describe("convex store security/regression", () => {
 
     await expect(
       t.mutation(async (ctx) =>
-        mutationHandler(
-          { db: ctx.db },
-          {
-            payload: {
-              type: "credentials:login",
-              email: "john@example.com",
-              password: "wrong",
-            },
+        mutationHandler(ctx, {
+          payload: {
+            type: "credentials:login",
+            email: "john@example.com",
+            password: "wrong",
           },
-        ),
+        }),
       ),
     ).rejects.toThrow("Invalid credentials.");
   });
 
-  it("consumes oauth state once and blocks provider/state confusion", async () => {
-    const t = convexTest({ schema, modules });
+  it("should consume oauth state once and block provider mismatch", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
         type: "oauth:state",
         identifier: "state-1",
-        value: JSON.stringify({ provider: "google", nonce: "nonce-1", verifier: "pkce-1" }),
+        value: JSON.stringify({
+          provider: "google",
+          nonce: "nonce-1",
+          verifier: "pkce-1",
+        }),
         expiresAt: Date.now() + 1000,
       });
     });
 
     const mismatch = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "oauth:authorize:consume-state", provider: "apple", state: "state-1" } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:verify", provider: "apple", state: "state-1" },
+      }),
     );
+
     const replay = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: { type: "oauth:authorize:consume-state", provider: "google", state: "state-1" },
-        },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:verify", provider: "google", state: "state-1" },
+      }),
     );
 
     expect(mismatch).toBeNull();
     expect(replay).toBeNull();
   });
 
-  it("rejects malformed and expired oauth state payloads", async () => {
-    const t = convexTest({ schema, modules });
+  it("should reject malformed and expired oauth state", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
         type: "oauth:state",
@@ -240,6 +270,7 @@ describe("convex store security/regression", () => {
         value: "{not-json",
         expiresAt: Date.now() + 1000,
       });
+
       await ctx.db.insert("verifications", {
         type: "oauth:state",
         identifier: "state-expired",
@@ -249,36 +280,35 @@ describe("convex store security/regression", () => {
     });
 
     const malformed = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: {
-            type: "oauth:authorize:consume-state",
-            provider: "google",
-            state: "state-bad",
-          },
+      mutationHandler(ctx, {
+        payload: {
+          type: "oauth:verify",
+          provider: "google",
+          state: "state-bad",
         },
-      ),
+      }),
     );
+
     const expired = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: {
-            type: "oauth:authorize:consume-state",
-            provider: "google",
-            state: "state-expired",
-          },
+      mutationHandler(ctx, {
+        payload: {
+          type: "oauth:verify",
+          provider: "google",
+          state: "state-expired",
         },
-      ),
+      }),
     );
 
     expect(malformed).toBeNull();
     expect(expired).toBeNull();
   });
 
-  it("prevents oauth account takeover by reusing existing provider+accountId", async () => {
-    const t = convexTest({ schema, modules });
+  it("should prevent oauth account takeover via existing provider+accountId", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     const userId = await t.run(async (ctx) => {
       const created = await ctx.db.insert("users", {
         email: "existing@example.com",
@@ -287,29 +317,28 @@ describe("convex store security/regression", () => {
         lastName: "Isting",
         plan: "free",
       });
+
       await ctx.db.insert("accounts", {
         userId: created,
         provider: "google",
         accountId: "subject-1",
       });
+
       return created;
     });
 
     await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: {
-            type: "oauth:authenticate:finalize",
-            provider: "google",
-            accountId: "subject-1",
-            email: "attacker@example.com",
-            emailVerified: false,
-            firstName: "Attacker",
-            lastName: "Name",
-          },
+      mutationHandler(ctx, {
+        payload: {
+          type: "oauth:finalize",
+          provider: "google",
+          accountId: "subject-1",
+          email: "attacker@example.com",
+          emailVerified: false,
+          firstName: "Attacker",
+          lastName: "Name",
         },
-      ),
+      }),
     );
 
     const linkedAccounts = await t.run(async (ctx) =>
@@ -320,75 +349,85 @@ describe("convex store security/regression", () => {
         )
         .collect(),
     );
+
     expect(linkedAccounts).toHaveLength(1);
     expect(linkedAccounts[0]?.userId).toBe(userId);
   });
 
-  it("enforces one-time oauth handoff claim and expiry", async () => {
-    const t = convexTest({ schema, modules });
+  it("should enforce one-time oauth handoff claim and expiry", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     const now = vi.spyOn(Date, "now");
     now.mockReturnValue(1000);
 
     const issued = (await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: {
-            type: "oauth:handoff:issue",
-            sessionToken: "session-1",
-            accessToken: "access-1",
-            expiresAt: 5000,
-          },
+      mutationHandler(ctx, {
+        payload: {
+          type: "oauth:finalize",
+          provider: "google",
+          accountId: "subject-1",
+          email: "user@example.com",
+          emailVerified: true,
+          firstName: "User",
+          lastName: "Test",
         },
-      ),
+      }),
     )) as { code: string };
 
     const first = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "oauth:handoff:claim", code: issued.code } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:claim", code: issued.code },
+      }),
     );
+
     const replay = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "oauth:handoff:claim", code: issued.code } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:claim", code: issued.code },
+      }),
     );
 
     now.mockReturnValue(1000);
+
     const expiring = (await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        {
-          payload: {
-            type: "oauth:handoff:issue",
-            sessionToken: "session-exp",
-            accessToken: "access-exp",
-            expiresAt: 5000,
-          },
+      mutationHandler(ctx, {
+        payload: {
+          type: "oauth:finalize",
+          provider: "google",
+          accountId: "subject-exp",
+          email: "exp@example.com",
+          emailVerified: true,
+          firstName: "Exp",
+          lastName: "Iring",
         },
-      ),
+      }),
     )) as { code: string };
+
     now.mockReturnValue(70000);
+
     const expired = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "oauth:handoff:claim", code: expiring.code } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:claim", code: expiring.code },
+      }),
     );
 
     expect(first).toEqual({
-      sessionToken: "session-1",
-      accessToken: "access-1",
-      expiresAt: 5000,
+      sessionToken: expect.any(String),
+      accessToken: expect.any(String),
+      expiresAt: expect.any(Number),
     });
     expect(replay).toBeNull();
     expect(expired).toBeNull();
   });
 
-  it("rejects malformed oauth handoff payload", async () => {
-    const t = convexTest({ schema, modules });
+  it("should reject malformed oauth handoff payload", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
         type: "oauth:handoff",
@@ -399,16 +438,20 @@ describe("convex store security/regression", () => {
     });
 
     const claimed = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "oauth:handoff:claim", code: "handoff-bad-json" } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "oauth:claim", code: "handoff-bad-json" },
+      }),
     );
+
     expect(claimed).toBeNull();
   });
 
-  it("revokes only matching session and is safe for unknown token", async () => {
-    const t = convexTest({ schema, modules });
+  it("should revoke only matching session", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     const validToken = "v".repeat(64);
     const otherToken = "o".repeat(64);
 
@@ -420,11 +463,13 @@ describe("convex store security/regression", () => {
         lastName: "Ion",
         plan: "free",
       });
+
       await ctx.db.insert("sessions", {
         userId,
         token: validToken,
         expiresAt: Date.now() + 10000,
       });
+
       await ctx.db.insert("sessions", {
         userId,
         token: otherToken,
@@ -433,22 +478,29 @@ describe("convex store security/regression", () => {
     });
 
     await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "session:revoke", token: "x".repeat(64) } },
-      ),
+      mutationHandler(ctx, {
+        payload: { type: "session:revoke", token: "x".repeat(64) },
+      }),
     );
+
     await t.mutation(async (ctx) =>
-      mutationHandler({ db: ctx.db }, { payload: { type: "session:revoke", token: validToken } }),
+      mutationHandler(ctx, {
+        payload: { type: "session:revoke", token: validToken },
+      }),
     );
 
     const sessions = await t.run(async (ctx) => ctx.db.query("sessions").collect());
+
     expect(sessions).toHaveLength(1);
     expect(sessions[0]?.token).toBe(otherToken);
   });
 
-  it("session:get fails closed for expired token, unknown token, and missing user", async () => {
-    const t = convexTest({ schema, modules });
+  it("should return null for expired, unknown, or missing-user sessions", async () => {
+    const t = convexTest({
+      schema,
+      modules,
+    });
+
     const token = "t".repeat(64);
 
     await t.run(async (ctx) => {
@@ -459,6 +511,7 @@ describe("convex store security/regression", () => {
         lastName: "Doe",
         plan: "free",
       });
+
       await ctx.db.insert("sessions", {
         userId,
         token,
@@ -467,13 +520,17 @@ describe("convex store security/regression", () => {
     });
 
     const expired = await t.query(async (ctx) =>
-      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token } }),
+      queryHandler(ctx, { payload: { type: "session:get", token } }),
     );
+
     const unknown = await t.query(async (ctx) =>
-      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token: "u".repeat(64) } }),
+      queryHandler(ctx, {
+        payload: { type: "session:get", token: "u".repeat(64) },
+      }),
     );
 
     const token2 = "z".repeat(64);
+
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "ghost@example.com",
@@ -482,15 +539,23 @@ describe("convex store security/regression", () => {
         lastName: "User",
         plan: "free",
       });
+
       await ctx.db.insert("sessions", {
         userId,
         token: token2,
         expiresAt: Date.now() + 10000,
       });
+
       await ctx.db.delete(userId);
     });
+
     const missingUser = await t.query(async (ctx) =>
-      queryHandler({ db: ctx.db }, { payload: { type: "session:get", token: token2 } }),
+      queryHandler(ctx, {
+        payload: {
+          type: "session:get",
+          token: token2,
+        },
+      }),
     );
 
     expect(expired).toBeNull();
