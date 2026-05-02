@@ -148,10 +148,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should block duplicate credentials registration", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     await t.run(async (ctx) => {
       await ctx.db.insert("users", {
@@ -179,10 +176,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should fail credentials login for missing user or wrong password", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     await expect(
       t.mutation(async (ctx) =>
@@ -223,10 +217,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should consume oauth state once and block provider mismatch", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
@@ -258,10 +249,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should reject malformed and expired oauth state", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
@@ -304,10 +292,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should prevent oauth account takeover via existing provider+accountId", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     const userId = await t.run(async (ctx) => {
       const created = await ctx.db.insert("users", {
@@ -355,10 +340,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should enforce one-time oauth handoff claim and expiry", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     const now = vi.spyOn(Date, "now");
     now.mockReturnValue(1000);
@@ -423,10 +405,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should reject malformed oauth handoff payload", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
@@ -447,10 +426,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should revoke only matching session", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     const validToken = "v".repeat(64);
     const otherToken = "o".repeat(64);
@@ -496,10 +472,7 @@ describe("convex store security/regression", () => {
   });
 
   it("should return null for expired, unknown, or missing-user sessions", async () => {
-    const t = convexTest({
-      schema,
-      modules,
-    });
+    const t = convexTest({ schema, modules });
 
     const token = "t".repeat(64);
 

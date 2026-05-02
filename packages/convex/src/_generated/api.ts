@@ -60,41 +60,35 @@ export const internal: {
               email: string;
               firstName: string;
               lastName: string;
-              passwordHash: string;
+              password: string;
               type: "credentials:register";
             }
           | { email: string; type: "credentials:login" }
-          | { email: string; passwordHash: string; type: "credentials:login" }
+          | { email: string; password: string; type: "credentials:login" }
           | { token: string; type: "session:revoke" }
           | {
               expiresAt: number;
               nonce: string;
               provider: "apple" | "google";
               state: string;
-              type: "oauth:authorize:start";
+              type: "oauth:authorize";
               verifier?: string;
             }
           | {
               provider: "apple" | "google";
               state: string;
-              type: "oauth:authorize:consume-state";
+              type: "oauth:verify";
             }
           | {
+              accountId: string;
               email: string;
+              emailVerified: boolean;
               firstName: string;
               lastName: string;
               provider: "apple" | "google";
-              subject: string;
-              type: "oauth:authenticate:finalize";
-              verified: boolean;
+              type: "oauth:finalize";
             }
-          | {
-              accessToken: string;
-              expiresAt: number;
-              sessionToken: string;
-              type: "oauth:handoff:issue";
-            }
-          | { code: string; type: "oauth:handoff:claim" };
+          | { code: string; type: "oauth:claim" };
       },
       any
     >;

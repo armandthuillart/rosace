@@ -29,9 +29,12 @@ import type { GenericId } from "convex/values";
 export type DataModel = {
   accounts: {
     document: {
-      passwordHash?: string;
+      accessToken?: string;
+      accessTokenExpiresAt?: number;
+      accountId: string;
+      password?: string;
       provider: "apple" | "credentials" | "google";
-      subject?: string;
+      refreshToken?: string;
       userId: Id<"users">;
       _id: Id<"accounts">;
       _creationTime: number;
@@ -39,14 +42,17 @@ export type DataModel = {
     fieldPaths:
       | "_creationTime"
       | "_id"
-      | "passwordHash"
+      | "accessToken"
+      | "accessTokenExpiresAt"
+      | "accountId"
+      | "password"
       | "provider"
-      | "subject"
+      | "refreshToken"
       | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_provider_subject: ["provider", "subject", "_creationTime"];
+      by_provider_account: ["provider", "accountId", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -144,21 +150,16 @@ export type DataModel = {
   sessions: {
     document: {
       expiresAt: number;
-      refreshTokenHash: string;
+      token: string;
       userId: Id<"users">;
       _id: Id<"sessions">;
       _creationTime: number;
     };
-    fieldPaths:
-      | "_creationTime"
-      | "_id"
-      | "expiresAt"
-      | "refreshTokenHash"
-      | "userId";
+    fieldPaths: "_creationTime" | "_id" | "expiresAt" | "token" | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_refresh_token_hash: ["refreshTokenHash", "_creationTime"];
+      by_token: ["token", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -168,7 +169,7 @@ export type DataModel = {
     document: {
       cancelAt?: number;
       cancelAtPeriodEnd: boolean;
-      currentPeriodEnd: number;
+      currentPeriodEndsAt: number;
       customerId: string;
       priceId: string;
       productId: string;
@@ -191,7 +192,7 @@ export type DataModel = {
       | "_id"
       | "cancelAt"
       | "cancelAtPeriodEnd"
-      | "currentPeriodEnd"
+      | "currentPeriodEndsAt"
       | "customerId"
       | "priceId"
       | "productId"
@@ -211,10 +212,10 @@ export type DataModel = {
   users: {
     document: {
       email: string;
+      emailVerified: boolean;
       firstName: string;
       lastName: string;
       plan: "free" | "pro";
-      verified: boolean;
       _id: Id<"users">;
       _creationTime: number;
     };
@@ -222,10 +223,10 @@ export type DataModel = {
       | "_creationTime"
       | "_id"
       | "email"
+      | "emailVerified"
       | "firstName"
       | "lastName"
-      | "plan"
-      | "verified";
+      | "plan";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
@@ -238,28 +239,15 @@ export type DataModel = {
     document: {
       expiresAt: number;
       identifier: string;
-      type:
-        | "email:verify"
-        | "email:change"
-        | "password:reset"
-        | "account:delete"
-        | "oauth:state"
-        | "oauth:handoff";
       value: string;
       _id: Id<"verifications">;
       _creationTime: number;
     };
-    fieldPaths:
-      | "_creationTime"
-      | "_id"
-      | "expiresAt"
-      | "identifier"
-      | "type"
-      | "value";
+    fieldPaths: "_creationTime" | "_id" | "expiresAt" | "identifier" | "value";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_expires_at: ["expiresAt", "_creationTime"];
+      by_expires: ["expiresAt", "_creationTime"];
       by_identifier: ["identifier", "_creationTime"];
     };
     searchIndexes: {};
