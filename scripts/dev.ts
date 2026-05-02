@@ -12,10 +12,12 @@ type Service = {
   command: readonly [string, ...string[]];
   cwd?: string;
 };
+
 type ErrorIncidentState = {
   lines: string[];
   timer: ReturnType<typeof setTimeout> | null;
 };
+
 type LastErrorSignature = {
   signature: string;
   atMs: number;
@@ -24,25 +26,36 @@ type LastErrorSignature = {
 type BunColorApi = {
   color: (input: string, outputFormat?: "ansi") => string | null;
 };
+
+type Section = "scripts" | "apps" | "convex";
+
 const bunColor = (globalThis as { Bun?: BunColorApi }).Bun?.color;
+
 const RESET = "\x1b[0m";
 const SUCCESS_GREEN = "#22c55e";
-type Section = "scripts" | "apps" | "convex";
+
 const SECTION_TITLES: Record<Section, string> = {
   scripts: "1. Scripts.",
   apps: "2. Clients.",
   convex: "3. Servers.",
 };
+
 const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
+
 const sectionLines = new Map<Section, string[]>(
-  SECTION_ORDER.map((section) => [section, []]),
+  SECTION_ORDER.map((s) => [s, []]),
 );
+
 const sectionHasContent = new Set<Section>();
+
 const APP_SERVICE_ORDER: ServiceName[] = ["astro", "svelte"];
+
 const appLines = new Map<ServiceName, string[]>(
-  APP_SERVICE_ORDER.map((service) => [service, []]),
+  APP_SERVICE_ORDER.map((s) => [s, []]),
 );
+
 const appHasContent = new Set<ServiceName>();
+
 const MAX_LOGS_PER_BUCKET = 10;
 
 const SERVICE_COLORS: Record<ServiceName, string> = {
@@ -50,10 +63,14 @@ const SERVICE_COLORS: Record<ServiceName, string> = {
   svelte: "#FE3F01",
   convex: "#8D2676",
 };
+
 const ERROR_INCIDENT_DEBOUNCE_MS = 250;
 const ERROR_DUPLICATE_WINDOW_MS = 2000;
+
 const WORKSPACE_ROOT = process.cwd();
+
 const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
+
 const errorStates = new Map<ServiceName, ErrorIncidentState>();
 const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
 const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
@@ -82,21 +99,27 @@ function timestamp() {
   return `${hh}:${mm}:${ss}`;
 }
 
+function sectionHasVisibleContent(section: Section): boolean {
+  if (section === "apps") return appHasContent.size > 0;
+  return sectionHasContent.has(section);
+}
+
 function renderSections() {
   console.clear();
+
   for (const section of SECTION_ORDER) {
-    const hasContent =
-      section === "apps"
-        ? appHasContent.size > 0
-        : sectionHasContent.has(section);
-    if (!hasContent) continue;
+    if (!sectionHasVisibleContent(section)) continue;
+
     process.stdout.write(`${SECTION_TITLES[section]}\n\n`);
+
     if (section === "apps") {
       for (const [index, service] of APP_SERVICE_ORDER.entries()) {
         if (!appHasContent.has(service)) continue;
+
         for (const line of appLines.get(service) ?? []) {
           process.stdout.write(`${line}\n`);
         }
+
         if (index < APP_SERVICE_ORDER.length - 1) {
           process.stdout.write("\n");
         }
@@ -106,17 +129,23 @@ function renderSections() {
         process.stdout.write(`${line}\n`);
       }
     }
+
     process.stdout.write("\n");
   }
 }
 
 function pushLine(section: Section, line: string) {
   if (section === "apps") return;
+
   const lines = sectionLines.get(section);
   if (!lines) return;
+
   lines.push(line);
-  if (lines.length > MAX_LOGS_PER_BUCKET)
+
+  if (lines.length > MAX_LOGS_PER_BUCKET) {
     lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  }
+
   sectionHasContent.add(section);
   renderSections();
 }
@@ -124,9 +153,13 @@ function pushLine(section: Section, line: string) {
 function pushAppLine(service: ServiceName, line: string) {
   const lines = appLines.get(service);
   if (!lines) return;
+
   lines.push(line);
-  if (lines.length > MAX_LOGS_PER_BUCKET)
+
+  if (lines.length > MAX_LOGS_PER_BUCKET) {
     lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  }
+
   appHasContent.add(service);
   renderSections();
 }
@@ -146,54 +179,65 @@ function logLine(
 ) {
   const section: Section = service === "convex" ? "convex" : "apps";
   const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
-  const serviceTag =
-    kind === "info"
-      ? paint(SERVICE_COLORS[service], `[${service}]`)
-      : `[${service}]`;
-  const line = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
+
+  const isInfo = kind === "info";
+  const serviceTag = isInfo
+    ? paint(SERVICE_COLORS[service], `[${service}]`)
+    : `[${service}]`;
+
+  const formattedLine = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
 
   const outputLine =
     kind === "success"
-      ? paint(SUCCESS_GREEN, line)
+      ? paint(SUCCESS_GREEN, formattedLine)
       : kind === "error"
-        ? `\x1b[1;31m${line}${RESET}`
-        : line;
+        ? `\x1b[1;31m${formattedLine}${RESET}`
+        : formattedLine;
 
   if (section === "apps") {
     pushAppLine(service, outputLine);
     return;
   }
+
   pushLine(section, outputLine);
 }
 
 function logConvexHttpError(method: string, path: string, cause: string) {
   const line1 = `• [convex] ${timestamp()} ${method.toUpperCase()} / 500`;
   const line2 = `• [convex] ${timestamp()} ↳ route ${path} (${cause})`;
+
   pushLine("convex", `\x1b[1;31m${line1}${RESET}`);
   pushLine("convex", `\x1b[1;31m${line2}${RESET}`);
 }
 
-function serviceByName(name: ServiceName) {
-  return SERVICES.find((service) => service.name === name)!;
+function findServiceByName(name: ServiceName) {
+  const service = SERVICES.find((s) => s.name === name);
+  if (!service) throw new Error(`Service not found: ${name}`);
+  return service;
 }
 
 function getPrimaryLanIp() {
   const nets = networkInterfaces();
+
   for (const entries of Object.values(nets)) {
     for (const entry of entries ?? []) {
       if (entry.family === "IPv4" && !entry.internal) return entry.address;
     }
   }
+
   return null;
 }
 
 function buildNetworkUrlFromLocal(localMessage: string) {
   const localUrl = localMessage.match(/https?:\/\/\S+/i)?.[0];
   if (!localUrl) return null;
+
   const port = localUrl.match(/:(\d+)(?:\/|$)/)?.[1];
   if (!port) return null;
+
   const ip = getPrimaryLanIp();
   if (!ip) return null;
+
   return `http://${ip}:${port}/`;
 }
 
@@ -212,6 +256,7 @@ function formatPathForDisplay(path: string) {
 function stripAnsi(input: string) {
   let out = "";
   let i = 0;
+
   while (i < input.length) {
     if (input[i] === "\u001b" && input[i + 1] === "[") {
       i += 2;
@@ -225,10 +270,45 @@ function stripAnsi(input: string) {
       }
       continue;
     }
+
     out += input[i];
     i += 1;
   }
+
   return out;
+}
+
+function extractUrl(
+  text: string,
+): { url: string; type: "Local" | "Network" } | null {
+  const patterns = [
+    {
+      regex:
+        /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
+      type: "Local" as const,
+    },
+    {
+      regex:
+        /(?:➜\s+)?Network:?\s+(https?:\/\/\S+)|┃\s*Network\s+(https?:\/\/\S+)/i,
+      type: "Network" as const,
+    },
+    { regex: /local[^\n]*?(https?:\/\/\S+)/i, type: "Local" as const },
+    { regex: /network[^\n]*?(https?:\/\/\S+)/i, type: "Network" as const },
+  ];
+
+  for (const { regex, type } of patterns) {
+    const match = text.match(regex);
+    if (match) return { url: match[1] ?? match[2], type };
+  }
+
+  const anyUrlMatch = text.match(/https?:\/\/\S+/i);
+  if (anyUrlMatch) {
+    const url = anyUrlMatch[0];
+    const isLocalhost = /https?:\/\/(localhost|127\.0\.0\.1)/i.test(url);
+    return { url, type: isLocalhost ? "Local" : "Network" };
+  }
+
+  return null;
 }
 
 function toFriendlyMessage(
@@ -239,48 +319,15 @@ function toFriendlyMessage(
   const text = stripAnsi(rawLine).trim();
   if (!text) return null;
 
-  const localUrl = text.match(
-    /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
-  );
-  if (localUrl) {
-    const url = localUrl[1] ?? localUrl[2];
-    return { kind: "info" as const, message: `- Local: ${url}` };
-  }
-
-  const networkUrl = text.match(
-    /(?:➜\s+)?Network:?\s+(https?:\/\/\S+)|┃\s*Network\s+(https?:\/\/\S+)/i,
-  );
-  if (networkUrl) {
-    const url = networkUrl[1] ?? networkUrl[2];
-    return { kind: "info" as const, message: `- Network: ${url}` };
-  }
-
-  const genericLocal = text.match(/local[^\n]*?(https?:\/\/\S+)/i);
-  if (genericLocal) {
-    return { kind: "info" as const, message: `- Local: ${genericLocal[1]}` };
-  }
-
-  const genericNetwork = text.match(/network[^\n]*?(https?:\/\/\S+)/i);
-  if (genericNetwork) {
-    return {
-      kind: "info" as const,
-      message: `- Network: ${genericNetwork[1]}`,
-    };
-  }
-
-  const anyUrl = text.match(/https?:\/\/\S+/i);
-  if (anyUrl) {
-    const url = anyUrl[0];
-    const isLocalhost = /https?:\/\/(localhost|127\.0\.0\.1)/i.test(url);
-    if (isLocalhost) {
-      return { kind: "info" as const, message: `- Local: ${url}` };
-    }
-    return { kind: "info" as const, message: `- Network: ${url}` };
+  const url = extractUrl(text);
+  if (url) {
+    return { kind: "info" as const, message: `- ${url.type}: ${url.url}` };
   }
 
   if (service === "convex" && /Preparing Convex functions/i.test(text)) {
     return { kind: "info" as const, message: "Preparing functions..." };
   }
+
   if (service === "convex" && /Convex functions ready!/i.test(text)) {
     return { kind: "success" as const, message: "Functions ready." };
   }
@@ -296,6 +343,7 @@ function toFriendlyMessage(
 
   if (isNoise) return null;
   if (stream === "stderr") return { kind: "error" as const, message: text };
+
   return null;
 }
 
@@ -308,69 +356,66 @@ function isOverlayNoiseLine(line: string) {
   );
 }
 
+function enrichWorkspaceSpecifiers(input: string): string {
+  return input.replace(/\/[A-Za-z0-9._\-+/()]+/g, (specifier) => {
+    if (!specifier.startsWith("/")) return specifier;
+    if (/\.[a-z0-9]+$/i.test(specifier)) return specifier;
+
+    const candidateBase = `${WORKSPACE_ROOT}${specifier}`;
+    if (existsSync(candidateBase)) return specifier;
+
+    for (const extension of RESOLVABLE_EXTENSIONS) {
+      if (existsSync(`${candidateBase}${extension}`)) {
+        return `${specifier}${extension}`;
+      }
+    }
+
+    for (const extension of RESOLVABLE_EXTENSIONS) {
+      if (existsSync(`${candidateBase}/index${extension}`)) {
+        return `${specifier}/index${extension}`;
+      }
+    }
+
+    return specifier;
+  });
+}
+
+function stripLinePrefix(line: string): string {
+  return line
+    .replace(
+      /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
+      "",
+    )
+    .replaceAll(WORKSPACE_ROOT, "");
+}
+
 function normalizeCause(lines: string[]) {
-  const enrichWorkspaceSpecifiers = (input: string) =>
-    input.replace(/\/[A-Za-z0-9._\-+/()]+/g, (specifier) => {
-      // Only enrich workspace-relative absolute paths (e.g. /packages/helpers/src/env).
-      if (!specifier.startsWith("/")) return specifier;
-      if (/\.[a-z0-9]+$/i.test(specifier)) return specifier;
-
-      const candidateBase = `${WORKSPACE_ROOT}${specifier}`;
-      if (existsSync(candidateBase)) return specifier;
-
-      for (const extension of RESOLVABLE_EXTENSIONS) {
-        if (existsSync(`${candidateBase}${extension}`)) {
-          return `${specifier}${extension}`;
-        }
-      }
-
-      for (const extension of RESOLVABLE_EXTENSIONS) {
-        if (existsSync(`${candidateBase}/index${extension}`)) {
-          return `${specifier}/index${extension}`;
-        }
-      }
-
-      return specifier;
-    });
-
   const candidates = lines
-    .map((line) => line.trim())
+    .map((l) => l.trim())
     .filter(
-      (line) =>
-        line.length > 0 &&
-        !line.startsWith("at ") &&
-        !isOverlayNoiseLine(line) &&
-        !/^Error\s*\[[A-Z0-9_]+\]:\s*/.test(line),
+      (l) =>
+        l.length > 0 &&
+        !l.startsWith("at ") &&
+        !isOverlayNoiseLine(l) &&
+        !/^Error\s*\[[A-Z0-9_]+\]:\s*/.test(l),
     );
 
   const preferred =
-    candidates.find((line) =>
-      /Cannot find module|Module not found/i.test(line),
-    ) ??
-    candidates.find((line) =>
+    candidates.find((l) => /Cannot find module|Module not found/i.test(l)) ??
+    candidates.find((l) =>
       /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(
-        line,
+        l,
       ),
     ) ??
     candidates[0];
 
   if (preferred) {
-    const noPrefix = preferred.replace(
-      /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
-      "",
-    );
-    return enrichWorkspaceSpecifiers(noPrefix.replaceAll(WORKSPACE_ROOT, ""));
+    return enrichWorkspaceSpecifiers(stripLinePrefix(preferred));
   }
 
-  const fallback = lines.find((line) => !line.trim().startsWith("at "));
+  const fallback = lines.find((l) => !l.trim().startsWith("at "));
   if (fallback) {
-    const noPrefix = fallback
-      .trim()
-      .replace(
-        /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
-        "",
-      );
-    return enrichWorkspaceSpecifiers(noPrefix.replaceAll(WORKSPACE_ROOT, ""));
+    return enrichWorkspaceSpecifiers(stripLinePrefix(fallback.trim()));
   }
 
   return "Unknown runtime error";
@@ -382,9 +427,11 @@ function getOriginFromLines(lines: string[]) {
       /\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/,
     );
     if (!match) continue;
+
     const file = match[1];
     if (file.startsWith("node:")) continue;
     if (/\/node_modules\//.test(file)) continue;
+
     return `${formatPathForDisplay(file)}:${match[2]}:${match[3]}`;
   }
 
@@ -435,6 +482,7 @@ function flushErrorIncident(service: ServiceName) {
   ) {
     return;
   }
+
   lastErrorSignatures.set(service, { signature, atMs: now });
 
   logLine("error", service, `- ${cause}`);
@@ -456,7 +504,9 @@ function queueErrorLine(service: ServiceName, line: string) {
     })();
 
   current.lines.push(text);
+
   if (current.timer) clearTimeout(current.timer);
+
   current.timer = setTimeout(() => {
     flushErrorIncident(service);
   }, ERROR_INCIDENT_DEBOUNCE_MS);
@@ -467,12 +517,13 @@ function startService(
   children: Set<ReturnType<typeof spawn>>,
 ) {
   const startedAt = Date.now();
-  let readyShown = false;
-  let sawLocal = false;
-  let sawNetwork = false;
-  let sawReadySignal = false;
+
+  let isReadyShown = false;
+  let hasSeenLocal = false;
+  let hasSeenNetwork = false;
+  let hasSeenReadySignal = false;
   let serviceReadyMs: number | null = null;
-  let convexBootstrapped = false;
+  let isConvexBootstrapped = false;
 
   if (service.name !== "convex") {
     logLine("info", service.name, "Starting the development server...");
@@ -492,31 +543,37 @@ function startService(
       const convexHttpError = cleanedLine.match(
         /\[CONVEX H\((GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+([^)]+)\)\]\s+Uncaught Error:\s+(.+)$/i,
       );
+
       if (convexHttpError) {
         const [, method, path, cause] = convexHttpError;
         const current = errorStates.get(service.name);
+
         if (current?.timer) clearTimeout(current.timer);
         if (current) {
           current.lines.length = 0;
           current.timer = null;
         }
+
         suppressErrorIncidentsUntilMs.set(service.name, Date.now() + 750);
         logConvexHttpError(method, path, cause);
         return;
       }
 
       if (/Preparing Convex functions/i.test(cleanedLine)) {
-        if (!convexBootstrapped) {
+        if (!isConvexBootstrapped) {
           logLine("info", service.name, "Preparing functions...");
         }
         return;
       }
+
       if (/Convex functions ready!/i.test(cleanedLine)) {
-        if (!convexBootstrapped) {
-          convexBootstrapped = true;
+        if (!isConvexBootstrapped) {
+          isConvexBootstrapped = true;
+
           const convexReadyMatch = cleanedLine.match(
             /Convex functions ready!\s*\(([\d.]+)s\)/i,
           );
+
           if (convexReadyMatch) {
             const ms = Math.round(Number(convexReadyMatch[1]) * 1000);
             logLine("success", service.name, `Ready in ${formatDuration(ms)}.`);
@@ -530,44 +587,49 @@ function startService(
 
     const readyMatch = cleanedLine.match(/ready in\s+(\d+)\s*ms/i);
     if (service.name !== "convex" && readyMatch) {
-      sawReadySignal = true;
+      hasSeenReadySignal = true;
       serviceReadyMs = Number(readyMatch[1]);
     }
 
     const event = toFriendlyMessage(service.name, line, stream);
     if (!event) return;
+
     if (event.kind === "error") {
       queueErrorLine(service.name, event.message);
       return;
     }
 
-    if (service.name !== "convex" && event.message.startsWith("- Local:"))
-      sawLocal = true;
-    if (service.name !== "convex" && event.message.startsWith("- Network:")) {
-      if (sawNetwork) return;
-      sawNetwork = true;
+    if (service.name !== "convex" && event.message.startsWith("- Local:")) {
+      hasSeenLocal = true;
     }
+
+    if (service.name !== "convex" && event.message.startsWith("- Network:")) {
+      if (hasSeenNetwork) return;
+      hasSeenNetwork = true;
+    }
+
     logLine(event.kind, service.name, event.message);
 
     if (
       service.name === "astro" &&
       event.message.startsWith("- Local:") &&
-      !sawNetwork
+      !hasSeenNetwork
     ) {
       const fallbackNetworkUrl = buildNetworkUrlFromLocal(event.message);
       if (fallbackNetworkUrl) {
-        sawNetwork = true;
+        hasSeenNetwork = true;
         logLine("info", service.name, `- Network: ${fallbackNetworkUrl}`);
       }
     }
 
     const canEmitReady =
       service.name !== "convex" &&
-      !readyShown &&
-      ((sawReadySignal && sawLocal) || (sawLocal && sawNetwork));
+      !isReadyShown &&
+      ((hasSeenReadySignal && hasSeenLocal) ||
+        (hasSeenLocal && hasSeenNetwork));
 
     if (canEmitReady) {
-      readyShown = true;
+      isReadyShown = true;
       const readyMs = serviceReadyMs ?? Date.now() - startedAt;
       logLine("success", service.name, `Ready in ${formatDuration(readyMs)}.`);
     }
@@ -575,12 +637,12 @@ function startService(
 
   if (child.stdout) {
     const stdout = createInterface({ input: child.stdout });
-    stdout.on("line", (line) => onLine(line, "stdout"));
+    stdout.on("line", (l) => onLine(l, "stdout"));
   }
 
   if (child.stderr) {
     const stderr = createInterface({ input: child.stderr });
-    stderr.on("line", (line) => onLine(line, "stderr"));
+    stderr.on("line", (l) => onLine(l, "stderr"));
   }
 
   child.once("exit", (code) => {
@@ -613,6 +675,7 @@ function resolveServices(opts: {
   convex: boolean;
 }) {
   const selected: ServiceName[] = [];
+
   if (opts.astro) selected.push("astro");
   if (opts.svelte) selected.push("svelte");
   if (opts.convex) selected.push("convex");
@@ -625,11 +688,12 @@ function resolveServices(opts: {
   const withDependencies = new Set<ServiceName>(base);
   if (withDependencies.has("svelte")) withDependencies.add("convex");
 
-  return [...withDependencies].map((name) => serviceByName(name));
+  return [...withDependencies].map((name) => findServiceByName(name));
 }
 
 async function main() {
   const program = new Command();
+
   program
     .option("--skip-prepare", "Skip vp run prepare")
     .option("--astro", "Start astro")
