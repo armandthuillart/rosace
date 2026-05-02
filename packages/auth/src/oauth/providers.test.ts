@@ -52,7 +52,7 @@ describe("oauth providers", () => {
   });
 
   describe("getAuthorizationUrl", () => {
-    it("builds Google authorization URL with required params", () => {
+    it("should build Google authorization URL with required params", () => {
       const url = getAuthorizationUrl("google");
 
       expect(url.origin + url.pathname).toBe("https://accounts.google.com/o/oauth2/v2/auth");
@@ -62,7 +62,7 @@ describe("oauth providers", () => {
       expect(url.searchParams.get("redirect_uri")).toBe("https://app.example/auth/callback/google");
     });
 
-    it("builds Apple authorization URL with form_post mode", () => {
+    it("should build Apple authorization URL with form_post mode", () => {
       const url = getAuthorizationUrl("apple");
 
       expect(url.origin + url.pathname).toBe("https://appleid.apple.com/auth/authorize");
@@ -75,7 +75,7 @@ describe("oauth providers", () => {
   });
 
   describe("exchangeCodeForProfile", () => {
-    it("exchanges and normalizes Google identity payload", async () => {
+    it("should exchange and normalize Google identity payload", async () => {
       const fetchMock = vi
         .spyOn(globalThis, "fetch")
         .mockResolvedValue(
@@ -107,14 +107,15 @@ describe("oauth providers", () => {
       );
 
       const [, request] = fetchMock.mock.calls[0] ?? [];
-      const body = request?.body;
-      expect(body).toBeInstanceOf(URLSearchParams);
-      expect((body as URLSearchParams).get("client_id")).toBe(env.GOOGLE_CLIENT_ID);
-      expect((body as URLSearchParams).get("client_secret")).toBe(env.GOOGLE_CLIENT_SECRET);
-      expect((body as URLSearchParams).get("code")).toBe("auth-code");
-      expect((body as URLSearchParams).get("code_verifier")).toBe("pkce-verifier");
-      expect((body as URLSearchParams).get("grant_type")).toBe("authorization_code");
-      expect((body as URLSearchParams).get("redirect_uri")).toBe(
+      expect(request?.body).toBeInstanceOf(URLSearchParams);
+      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(env.GOOGLE_CLIENT_ID);
+      expect((request?.body as URLSearchParams)?.get("client_secret")).toBe(
+        env.GOOGLE_CLIENT_SECRET,
+      );
+      expect((request?.body as URLSearchParams)?.get("code")).toBe("auth-code");
+      expect((request?.body as URLSearchParams)?.get("code_verifier")).toBe("pkce-verifier");
+      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe("authorization_code");
+      expect((request?.body as URLSearchParams)?.get("redirect_uri")).toBe(
         "https://app.example/auth/callback/google",
       );
 
@@ -124,7 +125,7 @@ describe("oauth providers", () => {
       });
     });
 
-    it("throws when Google token exchange fails", async () => {
+    it("should throw when Google token exchange fails", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({}), { status: 401 }),
       );
@@ -138,7 +139,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Token exchange failed (401).");
     });
 
-    it("throws when Google id_token is missing", async () => {
+    it("should throw when Google id_token is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ access_token: "x" }), { status: 200 }),
       );
@@ -152,7 +153,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Google id_token.");
     });
 
-    it("throws when Google nonce does not match", async () => {
+    it("should throw when Google nonce does not match", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "google-token" }), { status: 200 }),
       );
@@ -172,7 +173,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Invalid Google nonce.");
     });
 
-    it("throws when Google JWT verification fails", async () => {
+    it("should throw when Google JWT verification fails", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "google-token" }), { status: 200 }),
       );
@@ -187,7 +188,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("invalid signature");
     });
 
-    it("throws when Google nonce is missing from token payload", async () => {
+    it("should throw when Google nonce is missing from token payload", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "google-token" }), { status: 200 }),
       );
@@ -207,7 +208,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Invalid Google nonce.");
     });
 
-    it("throws when Google verifier is missing", async () => {
+    it("should throw when Google verifier is missing", async () => {
       const fetchMock = vi.spyOn(globalThis, "fetch");
 
       await expect(
@@ -219,7 +220,7 @@ describe("oauth providers", () => {
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it("throws when Google subject claim is missing", async () => {
+    it("should throw when Google subject claim is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "google-token" }), { status: 200 }),
       );
@@ -239,7 +240,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Google subject claim.");
     });
 
-    it("throws when Google email claim is missing", async () => {
+    it("should throw when Google email claim is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "google-token" }), { status: 200 }),
       );
@@ -259,7 +260,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Google email claim.");
     });
 
-    it("exchanges and normalizes Apple identity payload with user form", async () => {
+    it("should exchange and normalize Apple identity payload with user form", async () => {
       const fetchMock = vi
         .spyOn(globalThis, "fetch")
         .mockResolvedValue(
@@ -296,13 +297,14 @@ describe("oauth providers", () => {
       );
 
       const [, request] = fetchMock.mock.calls[0] ?? [];
-      const body = request?.body;
-      expect(body).toBeInstanceOf(URLSearchParams);
-      expect((body as URLSearchParams).get("client_id")).toBe(env.APPLE_CLIENT_ID);
-      expect((body as URLSearchParams).get("client_secret")).toBe(env.APPLE_CLIENT_SECRET);
-      expect((body as URLSearchParams).get("code")).toBe("auth-code");
-      expect((body as URLSearchParams).get("grant_type")).toBe("authorization_code");
-      expect((body as URLSearchParams).get("redirect_uri")).toBe(
+      expect(request?.body).toBeInstanceOf(URLSearchParams);
+      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(env.APPLE_CLIENT_ID);
+      expect((request?.body as URLSearchParams)?.get("client_secret")).toBe(
+        env.APPLE_CLIENT_SECRET,
+      );
+      expect((request?.body as URLSearchParams)?.get("code")).toBe("auth-code");
+      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe("authorization_code");
+      expect((request?.body as URLSearchParams)?.get("redirect_uri")).toBe(
         "https://app.example/auth/callback/apple",
       );
 
@@ -312,7 +314,7 @@ describe("oauth providers", () => {
       });
     });
 
-    it("throws when Apple token exchange fails", async () => {
+    it("should throw when Apple token exchange fails", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({}), { status: 400 }),
       );
@@ -325,7 +327,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Token exchange failed (400).");
     });
 
-    it("throws when Apple id_token is missing", async () => {
+    it("should throw when Apple id_token is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ access_token: "x" }), { status: 200 }),
       );
@@ -338,7 +340,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Apple id_token.");
     });
 
-    it("throws when Apple nonce does not match", async () => {
+    it("should throw when Apple nonce does not match", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -357,7 +359,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Invalid Apple nonce.");
     });
 
-    it("throws when Apple JWT verification fails", async () => {
+    it("should throw when Apple JWT verification fails", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -371,7 +373,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("invalid signature");
     });
 
-    it("throws when Apple nonce is missing from token payload", async () => {
+    it("should throw when Apple nonce is missing from token payload", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -390,7 +392,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Invalid Apple nonce.");
     });
 
-    it("throws when Apple subject claim is missing", async () => {
+    it("should throw when Apple subject claim is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -409,7 +411,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Apple subject claim.");
     });
 
-    it("throws when Apple email claim is missing", async () => {
+    it("should throw when Apple email claim is missing", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -428,7 +430,7 @@ describe("oauth providers", () => {
       ).rejects.toThrow("Missing Apple email claim.");
     });
 
-    it("ignores malformed Apple userForm JSON", async () => {
+    it("should ignore malformed Apple userForm JSON", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -445,7 +447,7 @@ describe("oauth providers", () => {
       expect(profile.email).toBe("apple@example.com");
     });
 
-    it("marks Apple email as unverified when claim is false", async () => {
+    it("should mark Apple email as unverified when claim is false", async () => {
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(JSON.stringify({ id_token: "apple-token" }), { status: 200 }),
       );
@@ -466,7 +468,7 @@ describe("oauth providers", () => {
   });
 
   describe("createPkce", () => {
-    it("derives deterministic verifier/challenge values from crypto primitives", async () => {
+    it("should derive deterministic verifier/challenge values from crypto primitives", async () => {
       const randomBytes = Uint8Array.from({ length: 32 }, (_, index) => index + 1);
       const digestBytes = Uint8Array.from({ length: 32 }, (_, index) => 255 - index);
 
@@ -502,7 +504,7 @@ describe("oauth providers", () => {
       });
     });
 
-    it("returns url-safe, fixed-length PKCE parts", async () => {
+    it("should return url-safe, fixed-length PKCE parts", async () => {
       vi.spyOn(crypto, "getRandomValues").mockImplementation((array) => {
         if (array instanceof Uint8Array) {
           array.fill(7);
