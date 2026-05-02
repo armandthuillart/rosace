@@ -5,6 +5,7 @@
   ],
   "type": "module",
   "scripts": {
+    "auth": "bun run packages/auth/src/cli.ts",
     "dev": "bun ./scripts/run-dev.ts",
     "prepare": "bun ./scripts/touch-env.ts"
   },
@@ -40,7 +41,7 @@
     "convex-test": "^0.0.51",
     "dexie": "^4.4.2",
     "jose": "^6.2.3",
-    "knip": "^6.10.0",
+    "knip": "^6.11.0",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",

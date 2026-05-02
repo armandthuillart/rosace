@@ -121,7 +121,7 @@ describe("handle", () => {
   it("returns session from locals.auth when upstream session is valid", async () => {
     const event = makeEvent({
       url: "https://app.local/dashboard",
-      headers: { cookie: "session=abc" },
+      headers: { cookie: "session:token=abc" },
     });
 
     const resolve = vi.fn(async () => new Response("resolved"));
@@ -136,7 +136,7 @@ describe("handle", () => {
     const session = await event.locals.auth();
 
     expect(globalFetch).toHaveBeenCalledWith("https://convex.example/auth/session", {
-      headers: { cookie: "session=abc" },
+      headers: { cookie: "session:token=abc" },
       method: "GET",
     });
     expect(session).toEqual({ userId: "u_1" });
@@ -145,7 +145,7 @@ describe("handle", () => {
   it("fails closed when upstream session endpoint is unavailable", async () => {
     const event = makeEvent({
       url: "https://app.local/dashboard",
-      headers: { cookie: "session=abc" },
+      headers: { cookie: "session:token=abc" },
     });
     const resolve = vi.fn(async () => new Response("resolved"));
 

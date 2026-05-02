@@ -4,7 +4,7 @@ import * as v from "valibot";
 const EnvSchema = v.object({
   APPLE_CLIENT_ID: v.string(),
   APPLE_CLIENT_SECRET: v.string(),
-  AUTH_JWKS: v.string(),
+  PUBLIC_JWKS: v.string(),
   AUTH_SECRET: v.string(),
   CONVEX_URL: v.string(),
   CONVEX_SITE_URL: v.string(),
@@ -21,7 +21,7 @@ const EnvSchema = v.object({
 export const env = v.parse(EnvSchema, {
   APPLE_CLIENT_ID: requireEnv("APPLE_CLIENT_ID"),
   APPLE_CLIENT_SECRET: requireEnv("APPLE_CLIENT_SECRET"),
-  AUTH_JWKS: requireEnv("AUTH_JWKS"),
+  PUBLIC_JWKS: requireEnv("PUBLIC_JWKS"),
   AUTH_SECRET: requireEnv("AUTH_SECRET"),
   CONVEX_URL: requireEnv("CONVEX_URL"),
   CONVEX_SITE_URL: requireEnv("CONVEX_SITE_URL"),

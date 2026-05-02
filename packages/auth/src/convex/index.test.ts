@@ -14,19 +14,19 @@ type TestCtx = {
 };
 
 const {
-  createPkceMock,
-  exchangeCodeMock,
+  createPKCEMock,
+  exchangeCodeForProfileMock,
   getAuthorizationUrlMock,
   httpActionGenericMock,
   limitMock,
   requireEnvMock,
 } = vi.hoisted(() => ({
-  createPkceMock: vi.fn(async () => ({
+  createPKCEMock: vi.fn(async () => ({
     challenge: "pkce-challenge",
     method: "S256",
     verifier: "pkce-verifier",
   })),
-  exchangeCodeMock: vi.fn(),
+  exchangeCodeForProfileMock: vi.fn(),
   getAuthorizationUrlMock: vi.fn(() => new URL("https://accounts.google.com/o/oauth2/v2/auth")),
   httpActionGenericMock: vi.fn((handler: unknown) => handler),
   limitMock: vi.fn(async () => ({ ok: true, retryAfter: Date.now() + 1_000 })),
@@ -51,9 +51,9 @@ vi.mock("convex/server", async () => {
 
 vi.mock("@repo/helpers", () => ({ requireEnv: requireEnvMock }));
 vi.mock("@repo/convex/throttler", () => ({ throttler: { limit: limitMock } }));
-vi.mock("../providers", () => ({
-  createPkce: createPkceMock,
-  exchangeCode: exchangeCodeMock,
+vi.mock("../oauth/providers", () => ({
+  createPKCE: createPKCEMock,
+  exchangeCodeForProfile: exchangeCodeForProfileMock,
   getAuthorizationUrl: getAuthorizationUrlMock,
 }));
 vi.mock("./store", () => ({
@@ -114,13 +114,13 @@ describe("convex auth routes security/regression", () => {
       const response = await routes.handler("GET", "/auth/session")(
         ctx,
         new Request("https://convex.example/auth/session", {
-          headers: { cookie: "session:refresh=deadbeef" },
+          headers: { cookie: "session:token=deadbeef" },
         }),
       );
 
       expect(response.status).toBe(200);
       await expect(response.text()).resolves.toBe("null");
-      expect(response.headers.get("set-cookie")).toContain("session:refresh=;");
+      expect(response.headers.get("set-cookie")).toContain("session:token=;");
       expect(ctx.runQuery).toHaveBeenCalledWith("auth:query", {
         payload: { type: "session:get", token: "deadbeef" },
       });
@@ -144,7 +144,7 @@ describe("convex auth routes security/regression", () => {
         new Request("https://convex.example/auth/logout", {
           method: "POST",
           headers: {
-            cookie: "session:refresh=victim-token",
+            cookie: "session:token=victim-token",
             origin: "https://dashboard.example",
           },
         }),
@@ -167,7 +167,7 @@ describe("convex auth routes security/regression", () => {
         new Request("https://convex.example/auth/logout", {
           method: "POST",
           headers: {
-            cookie: "session:refresh=target-session",
+            cookie: "session:token=target-session",
             origin: "https://evil.example",
           },
         }),
@@ -188,7 +188,7 @@ describe("convex auth routes security/regression", () => {
         new Request("https://convex.example/auth/logout", {
           method: "POST",
           headers: {
-            cookie: "session:refresh=target-session",
+            cookie: "session:token=target-session",
             origin: "https://dashboard.example",
           },
         }),
@@ -213,7 +213,7 @@ describe("convex auth routes security/regression", () => {
       expect(response.status).toBe(400);
       await expect(response.text()).resolves.toBe("Missing code or state.");
       expect(ctx.runMutation).not.toHaveBeenCalled();
-      expect(exchangeCodeMock).not.toHaveBeenCalled();
+      expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
 
     it("guarantees account linking fails closed when oauth state is expired, replayed, or forged", async () => {
@@ -231,7 +231,7 @@ describe("convex auth routes security/regression", () => {
       expect(ctx.runMutation).toHaveBeenCalledWith("auth:mutation", {
         payload: { type: "oauth:authorize:consume-state", provider: "google", state: "bad-state" },
       });
-      expect(exchangeCodeMock).not.toHaveBeenCalled();
+      expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
 
     it("guarantees callback rejects unsupported providers to prevent account-link hijack pivots", async () => {
@@ -248,7 +248,7 @@ describe("convex auth routes security/regression", () => {
       expect(response.status).toBe(400);
       await expect(response.text()).resolves.toBe("Credentials is not supported.");
       expect(ctx.runMutation).not.toHaveBeenCalled();
-      expect(exchangeCodeMock).not.toHaveBeenCalled();
+      expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
   });
 
@@ -280,7 +280,7 @@ describe("convex auth routes security/regression", () => {
 
       expect(first.status).toBe(302);
       expect(first.headers.get("location")).toBe("/");
-      expect(first.headers.get("set-cookie")).toContain("session:refresh=session-1");
+      expect(first.headers.get("set-cookie")).toContain("session:token=session-1");
 
       expect(replay.status).toBe(400);
       await expect(replay.text()).resolves.toBe("Invalid or expired handoff.");

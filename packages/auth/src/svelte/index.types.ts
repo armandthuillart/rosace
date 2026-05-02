@@ -1,3 +1,5 @@
+import { GenericId } from "convex/values";
+
 declare global {
   namespace App {
     interface Locals {
@@ -10,16 +12,19 @@ declare global {
 }
 
 type User = {
-  id: string;
+  _id: GenericId<"users">;
+  _creationTime: number;
   email: string;
+  emailVerified: boolean;
   firstName: string;
   lastName: string;
   plan: "free" | "pro";
-  verified: boolean;
 };
 
-export type Session = {
+type Session = {
   user: User;
   token: string;
-  expires: number;
+  expiresAt: number;
 } | null;
+
+export type { Session, User };

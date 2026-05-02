@@ -43,7 +43,7 @@ vi.mock("jose", () => ({
   jwtVerify: jwtVerifyMock,
 }));
 
-import { createPkce, exchangeCode, getAuthorizationUrl } from "./providers";
+import { createPKCE, exchangeCodeForProfile, getAuthorizationUrl } from "./providers";
 
 describe("oauth providers", () => {
   beforeEach(() => {
@@ -74,7 +74,7 @@ describe("oauth providers", () => {
     });
   });
 
-  describe("exchangeCode", () => {
+  describe("exchangeCodeForProfile", () => {
     it("exchanges and normalizes Google identity payload", async () => {
       const fetchMock = vi
         .spyOn(globalThis, "fetch")
@@ -83,18 +83,18 @@ describe("oauth providers", () => {
         );
       jwtVerifyMock.mockResolvedValue({ payload: googlePayload });
 
-      const profile = await exchangeCode("google", {
+      const profile = await exchangeCodeForProfile("google", {
         code: "auth-code",
         nonce: "nonce-123",
         verifier: "pkce-verifier",
       });
 
       expect(profile).toEqual({
+        accountId: "google-subject",
         email: "user@example.com",
+        emailVerified: true,
         firstName: "Jane",
         lastName: "Doe",
-        subject: "google-subject",
-        verified: true,
       });
 
       expect(fetchMock).toHaveBeenCalledWith(
@@ -130,7 +130,7 @@ describe("oauth providers", () => {
       );
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -144,7 +144,7 @@ describe("oauth providers", () => {
       );
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -164,7 +164,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -179,7 +179,7 @@ describe("oauth providers", () => {
       jwtVerifyMock.mockRejectedValue(new Error("invalid signature"));
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -199,7 +199,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -211,7 +211,7 @@ describe("oauth providers", () => {
       const fetchMock = vi.spyOn(globalThis, "fetch");
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
         }),
@@ -231,7 +231,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -251,7 +251,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("google", {
+        exchangeCodeForProfile("google", {
           code: "auth-code",
           nonce: "nonce-123",
           verifier: "pkce-verifier",
@@ -267,7 +267,7 @@ describe("oauth providers", () => {
         );
       jwtVerifyMock.mockResolvedValue({ payload: applePayload });
 
-      const profile = await exchangeCode("apple", {
+      const profile = await exchangeCodeForProfile("apple", {
         code: "auth-code",
         nonce: "nonce-apple",
         userForm: JSON.stringify({
@@ -279,11 +279,11 @@ describe("oauth providers", () => {
       });
 
       expect(profile).toEqual({
+        accountId: "apple-subject",
         email: "apple@example.com",
+        emailVerified: true,
         firstName: "Ada",
         lastName: "Lovelace",
-        subject: "apple-subject",
-        verified: true,
       });
 
       expect(fetchMock).toHaveBeenCalledWith(
@@ -318,7 +318,7 @@ describe("oauth providers", () => {
       );
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -331,7 +331,7 @@ describe("oauth providers", () => {
       );
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -350,7 +350,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -364,7 +364,7 @@ describe("oauth providers", () => {
       jwtVerifyMock.mockRejectedValue(new Error("invalid signature"));
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -383,7 +383,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -402,7 +402,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -421,7 +421,7 @@ describe("oauth providers", () => {
       });
 
       await expect(
-        exchangeCode("apple", {
+        exchangeCodeForProfile("apple", {
           code: "auth-code",
           nonce: "nonce-apple",
         }),
@@ -434,7 +434,7 @@ describe("oauth providers", () => {
       );
       jwtVerifyMock.mockResolvedValue({ payload: applePayload });
 
-      const profile = await exchangeCode("apple", {
+      const profile = await exchangeCodeForProfile("apple", {
         code: "auth-code",
         nonce: "nonce-apple",
         userForm: "{not-json",
@@ -456,12 +456,12 @@ describe("oauth providers", () => {
         },
       });
 
-      const profile = await exchangeCode("apple", {
+      const profile = await exchangeCodeForProfile("apple", {
         code: "auth-code",
         nonce: "nonce-apple",
       });
 
-      expect(profile.verified).toBe(false);
+      expect(profile.emailVerified).toBe(false);
     });
   });
 
@@ -491,7 +491,7 @@ describe("oauth providers", () => {
           return digestBytes.buffer;
         });
 
-      const pkce = await createPkce();
+      const pkce = await createPKCE();
 
       expect(randomValuesMock).toHaveBeenCalledOnce();
       expect(digestMock).toHaveBeenCalledWith("SHA-256", expect.any(Uint8Array));
@@ -510,7 +510,7 @@ describe("oauth providers", () => {
         return array;
       });
 
-      const pkce = await createPkce();
+      const pkce = await createPKCE();
 
       expect(pkce.method).toBe("S256");
       expect(pkce.verifier).toMatch(/^[A-Za-z0-9_-]+$/);

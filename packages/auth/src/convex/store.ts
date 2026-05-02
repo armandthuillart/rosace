@@ -1,53 +1,42 @@
 import { requireEnv } from "@repo/helpers";
-import { internalMutationGeneric, internalQueryGeneric } from "convex/server";
-import { v } from "convex/values";
+import {
+  GenericDataModel,
+  GenericMutationCtx,
+  internalMutationGeneric,
+  internalQueryGeneric,
+} from "convex/server";
+import { GenericId, v } from "convex/values";
 import { SignJWT, importJWK, type JWK } from "jose";
 
+import { Session, User } from "../svelte/index.types";
 import { internalAction } from "./crypto";
+import { Account, Verification } from "./index.types";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30;
 const SWEEP_BATCH_SIZE = 64;
 
-type AnyCtx = { db: any };
-
-type AuthJwks = {
+type PublicJwks = {
   kid: string;
   privateJwk: JWK;
   publicJwks: { keys: JWK[] };
 };
 
-async function hashSessionToken(token: string): Promise<string> {
-  const secret = requireEnv("AUTH_SECRET");
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(`${token}:${secret}`),
-  );
-
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+function getPublicJwks() {
+  return JSON.stringify((JSON.parse(requireEnv("PUBLIC_JWKS")) as PublicJwks).publicJwks);
 }
 
-function randomToken(byteLength = 32): string {
+function randomToken(byteLength = 32) {
   const buffer = new Uint8Array(byteLength);
   crypto.getRandomValues(buffer);
   return Array.from(buffer, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-function loadAuthJwks(): AuthJwks {
-  return JSON.parse(requireEnv("AUTH_JWKS")) as AuthJwks;
-}
-
-function getPublicJwks(): string {
-  return JSON.stringify(loadAuthJwks().publicJwks);
-}
-
-async function signAuthToken(userId: string): Promise<string> {
-  const jwks = loadAuthJwks();
-  const privateKey = await importJWK(jwks.privateJwk, "RS256");
+async function signJWT(userId: GenericId<"users">) {
+  const publicJwks = JSON.parse(requireEnv("PUBLIC_JWKS")) as PublicJwks;
+  const privateKey = await importJWK(publicJwks.privateJwk, "RS256");
 
   return new SignJWT({})
-    .setProtectedHeader({ alg: "RS256", kid: jwks.kid })
+    .setProtectedHeader({ alg: "RS256", kid: publicJwks.kid })
     .setSubject(userId)
     .setAudience("convex")
     .setIssuer(requireEnv("CONVEX_SITE_URL"))
@@ -56,39 +45,46 @@ async function signAuthToken(userId: string): Promise<string> {
     .sign(privateKey);
 }
 
-async function findAndSweepVerification(db: any, identifier: string) {
-  const entry = await db
+async function findAndSweepVerification(
+  ctx: GenericMutationCtx<GenericDataModel>,
+  identifier: string,
+) {
+  const entry = (await ctx.db
     .query("verifications")
-    .withIndex("by_identifier", (q: any) => q.eq("identifier", identifier))
-    .first();
+    .withIndex("by_identifier", (q) => q.eq("identifier", identifier))
+    .first()) as Verification | null;
 
-  const expired = await db
+  const expired = (await ctx.db
     .query("verifications")
-    .withIndex("by_expires_at", (q: any) => q.lte("expiresAt", Date.now()))
-    .take(SWEEP_BATCH_SIZE);
+    .withIndex("by_expires_at", (q) => q.lte("expiresAt", Date.now()))
+    .take(SWEEP_BATCH_SIZE)) as Verification[];
 
   for (const row of expired) {
-    await db.delete(row._id);
+    await ctx.db.delete(row._id);
   }
 
-  if (entry && expired.some((row: any) => row._id === entry._id)) return null;
+  if (entry && expired.some((row) => row._id === entry._id)) {
+    return null;
+  }
 
   return entry;
 }
 
-async function createSession(ctx: AnyCtx, userId: unknown) {
+async function createSession(
+  ctx: GenericMutationCtx<GenericDataModel>,
+  userId: GenericId<"users">,
+) {
   const token = randomToken();
-  const refreshTokenHash = await hashSessionToken(token);
   const expiresAt = Date.now() + SESSION_DURATION_MS;
 
   await ctx.db.insert("sessions", {
     userId,
-    refreshTokenHash,
+    token,
     expiresAt,
   });
 
   return {
-    accessToken: await signAuthToken(String(userId)),
+    accessToken: await signJWT(userId),
     expiresAt,
     sessionToken: token,
   };
@@ -96,37 +92,30 @@ async function createSession(ctx: AnyCtx, userId: unknown) {
 
 const internalQuery = internalQueryGeneric({
   args: {
-    payload: v.object({
-      type: v.literal("session:get"),
-      token: v.string(),
-    }),
+    payload: v.object({ token: v.string(), type: v.literal("session:get") }),
   },
   handler: async (ctx, { payload }) => {
-    const refreshTokenHash = await hashSessionToken(payload.token);
-
-    const session = await ctx.db
+    const session = (await ctx.db
       .query("sessions")
-      .withIndex("by_refresh_token_hash", (q) => q.eq("refreshTokenHash", refreshTokenHash))
-      .first();
+      .withIndex("by_token", (q) => q.eq("token", payload.token))
+      .first()) as {
+      userId: GenericId<"users">;
+      token: string;
+      expiresAt: number;
+    } | null;
 
-    if (!session) return null;
-    if (session.expiresAt <= Date.now()) return null;
+    if (!session || session.expiresAt <= Date.now()) {
+      return null;
+    }
 
-    const user = await ctx.db.get(session.userId);
+    const user = (await ctx.db.get(session.userId)) as User | null;
     if (!user) return null;
 
     return {
-      user: {
-        id: user._id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        plan: user.plan,
-        verified: user.verified,
-      },
-      token: await signAuthToken(String(user._id)),
-      expires: session.expiresAt,
-    };
+      user,
+      token: await signJWT(user._id),
+      expiresAt: session.expiresAt,
+    } satisfies Session;
   },
 });
 
@@ -136,9 +125,9 @@ const internalMutation = internalMutationGeneric({
       v.object({
         type: v.literal("credentials:register"),
         email: v.string(),
-        passwordHash: v.string(),
         firstName: v.string(),
         lastName: v.string(),
+        password: v.string(),
       }),
       v.object({
         type: v.literal("credentials:login"),
@@ -147,7 +136,7 @@ const internalMutation = internalMutationGeneric({
       v.object({
         type: v.literal("credentials:login"),
         email: v.string(),
-        passwordHash: v.string(),
+        password: v.string(),
       }),
       v.object({
         type: v.literal("session:revoke"),
@@ -169,11 +158,11 @@ const internalMutation = internalMutationGeneric({
       v.object({
         type: v.literal("oauth:authenticate:finalize"),
         provider: v.union(v.literal("apple"), v.literal("google")),
-        subject: v.string(),
+        accountId: v.string(),
         email: v.string(),
+        emailVerified: v.boolean(),
         firstName: v.string(),
         lastName: v.string(),
-        verified: v.boolean(),
       }),
       v.object({
         type: v.literal("oauth:handoff:issue"),
@@ -188,79 +177,85 @@ const internalMutation = internalMutationGeneric({
     ),
   },
   handler: async (ctx, { payload }) => {
-    const db = ctx.db as any;
-
     switch (payload.type) {
       case "credentials:register": {
-        const existing = await db
+        const alreadyExists = (await ctx.db
           .query("users")
-          .withIndex("by_email", (q: any) => q.eq("email", payload.email))
-          .first();
+          .withIndex("by_email", (q) => q.eq("email", payload.email))
+          .first()) as User | null;
 
-        if (existing) throw new Error("Account already exists.");
+        if (alreadyExists) {
+          throw new Error("Account already exists.");
+        }
 
-        const userId = await db.insert("users", {
+        const userId = await ctx.db.insert("users", {
           email: payload.email,
+          emailVerified: false,
           firstName: payload.firstName,
           lastName: payload.lastName,
           plan: "free",
-          verified: false,
         });
 
-        await db.insert("accounts", {
-          userId,
+        await ctx.db.insert("accounts", {
+          accountId: payload.email,
+          password: payload.password,
           provider: "credentials",
-          passwordHash: payload.passwordHash,
+          userId,
         });
 
-        return createSession({ db }, userId);
+        return createSession(ctx, userId);
       }
 
       case "credentials:login": {
-        const existing = await db
+        const user = (await ctx.db
           .query("users")
-          .withIndex("by_email", (q: any) => q.eq("email", payload.email))
-          .first();
+          .withIndex("by_email", (q) => q.eq("email", payload.email))
+          .first()) as User | null;
 
-        if (!existing) return null;
-
-        const account = await db
-          .query("accounts")
-          .withIndex("by_user", (q: any) => q.eq("userId", existing._id))
-          .filter((q: any) => q.eq(q.field("provider"), "credentials"))
-          .first();
-
-        if (!account?.passwordHash) return null;
-
-        if (!("passwordHash" in payload)) {
-          return {
-            userId: existing._id,
-            passwordHash: account.passwordHash,
-          };
+        if (!user) {
+          throw new Error("Account does not exist.");
         }
 
-        if (account.passwordHash !== payload.passwordHash) throw new Error("Invalid credentials.");
+        const account = (await ctx.db
+          .query("accounts")
+          .withIndex("by_user", (q) => q.eq("userId", user._id))
+          .filter((q) => q.eq(q.field("provider"), "credentials"))
+          .first()) as Account | null;
 
-        return createSession({ db }, existing._id);
+        if (!account || !account.password) {
+          throw new Error("Account not found.");
+        }
+
+        if (!("password" in payload)) {
+          return { password: account.password, userId: user._id };
+        }
+
+        if (account.password !== payload.password) {
+          throw new Error("Invalid credentials.");
+        }
+
+        return createSession(ctx, user._id);
       }
 
       case "session:revoke": {
-        const refreshTokenHash = await hashSessionToken(payload.token);
-
-        const session = await db
+        const session = (await ctx.db
           .query("sessions")
-          .withIndex("by_refresh_token_hash", (q: any) =>
-            q.eq("refreshTokenHash", refreshTokenHash),
-          )
-          .first();
+          .withIndex("by_token", (q) => q.eq("token", payload.token))
+          .first()) as {
+          _id: GenericId<"sessions">;
+          token: string;
+          expiresAt: number;
+        } | null;
 
-        if (session) await db.delete(session._id);
+        if (session) {
+          await ctx.db.delete(session._id);
+        }
 
-        return { ok: true };
+        return null;
       }
 
       case "oauth:authorize:start": {
-        await db.insert("verifications", {
+        await ctx.db.insert("verifications", {
           type: "oauth:state",
           identifier: payload.state,
           value: JSON.stringify({
@@ -275,65 +270,75 @@ const internalMutation = internalMutationGeneric({
       }
 
       case "oauth:authorize:consume-state": {
-        const entry = await findAndSweepVerification(db, payload.state);
+        const entry = await findAndSweepVerification(ctx, payload.state);
 
-        if (!entry || entry.type !== "oauth:state") return null;
+        if (!entry) {
+          return null;
+        }
 
-        await db.delete(entry._id);
-        if (entry.expiresAt <= Date.now()) return null;
+        await ctx.db.delete(entry._id);
+
+        if (entry.expiresAt <= Date.now()) {
+          return null;
+        }
 
         let parsed: { provider: string; nonce: string; verifier?: string };
+
         try {
           parsed = JSON.parse(entry.value);
         } catch {
           return null;
         }
 
-        if (parsed.provider !== payload.provider) return null;
+        if (parsed.provider !== payload.provider) {
+          return null;
+        }
 
-        return { nonce: parsed.nonce, verifier: parsed.verifier };
+        return {
+          nonce: parsed.nonce,
+          verifier: parsed.verifier,
+        };
       }
 
       case "oauth:authenticate:finalize": {
-        const existingAccount = await db
+        const existingAccount = (await ctx.db
           .query("accounts")
-          .withIndex("by_provider_subject", (q: any) =>
-            q.eq("provider", payload.provider).eq("subject", payload.subject),
-          )
-          .first();
+          .withIndex("by_provider_account", (q) => q.eq("provider", payload.provider))
+          .filter((q) => q.eq(q.field("accountId"), payload.accountId))
+          .first()) as Account | null;
 
         let userId = existingAccount?.userId;
 
         if (!userId) {
-          const existingUser = await db
+          const existingUser = (await ctx.db
             .query("users")
-            .withIndex("by_email", (q: any) => q.eq("email", payload.email))
-            .first();
+            .withIndex("by_email", (q) => q.eq("email", payload.email))
+            .first()) as User | null;
 
           userId = existingUser
             ? existingUser._id
-            : await db.insert("users", {
+            : await ctx.db.insert("users", {
                 email: payload.email,
+                emailVerified: payload.emailVerified,
                 firstName: payload.firstName,
                 lastName: payload.lastName,
                 plan: "free",
-                verified: payload.verified,
               });
 
-          await db.insert("accounts", {
+          await ctx.db.insert("accounts", {
             userId,
             provider: payload.provider,
-            subject: payload.subject,
+            accountId: payload.accountId,
           });
         }
 
-        return createSession({ db }, userId);
+        return createSession(ctx, userId);
       }
 
       case "oauth:handoff:issue": {
         const code = randomToken();
 
-        await db.insert("verifications", {
+        await ctx.db.insert("verifications", {
           type: "oauth:handoff",
           identifier: code,
           value: JSON.stringify({
@@ -348,12 +353,17 @@ const internalMutation = internalMutationGeneric({
       }
 
       case "oauth:handoff:claim": {
-        const entry = await findAndSweepVerification(db, payload.code);
+        const entry = await findAndSweepVerification(ctx, payload.code);
 
-        if (!entry || entry.type !== "oauth:handoff") return null;
+        if (!entry) {
+          return null;
+        }
 
-        await db.delete(entry._id);
-        if (entry.expiresAt <= Date.now()) return null;
+        await ctx.db.delete(entry._id);
+
+        if (entry.expiresAt <= Date.now()) {
+          return null;
+        }
 
         try {
           return JSON.parse(entry.value) as {

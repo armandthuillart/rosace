@@ -14,10 +14,24 @@ type Deps = {
 
 function getEnv(name: string, prod = false): string {
   try {
-    return execFileSync("vp", ["exec", "convex", "env", "get", ...(prod ? ["--prod"] : []), name], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    }).trim();
+    return execFileSync(
+      "vp",
+      [
+        "exec",
+        "--filter",
+        "./packages/convex",
+        "--",
+        "convex",
+        "env",
+        "get",
+        ...(prod ? ["--prod"] : []),
+        name,
+      ],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    ).trim();
   } catch {
     return "";
   }
@@ -26,7 +40,19 @@ function getEnv(name: string, prod = false): string {
 function setEnv(name: string, value: string, prod = false): void {
   execFileSync(
     "vp",
-    ["exec", "convex", "env", "set", ...(prod ? ["--prod"] : []), "--", name, value],
+    [
+      "exec",
+      "--filter",
+      "./packages/convex",
+      "--",
+      "convex",
+      "env",
+      "set",
+      ...(prod ? ["--prod"] : []),
+      "--",
+      name,
+      value,
+    ],
     { stdio: "inherit" },
   );
 }
@@ -70,7 +96,7 @@ function buildProgram(deps: Deps): Command {
 
   program
     .command("set")
-    .description("Set AUTH_SECRET and AUTH_JWKS if they are missing.")
+    .description("Set AUTH_SECRET and PUBLIC_JWKS if they are missing.")
     .option("--prod", "Set variables in production deployment.")
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
@@ -82,17 +108,17 @@ function buildProgram(deps: Deps): Command {
         console.info(`✔ "AUTH_SECRET" already set`);
       }
 
-      if (deps.getEnv("AUTH_JWKS", isProd) === "") {
-        deps.setEnv("AUTH_JWKS", await deps.createJwks(), isProd);
-        console.info(`✔ Set "AUTH_JWKS"`);
+      if (deps.getEnv("PUBLIC_JWKS", isProd) === "") {
+        deps.setEnv("PUBLIC_JWKS", await deps.createJwks(), isProd);
+        console.info(`✔ Set "PUBLIC_JWKS"`);
       } else {
-        console.info(`✔ "AUTH_JWKS" already set`);
+        console.info(`✔ "PUBLIC_JWKS" already set`);
       }
     });
 
   program
     .command("rotate")
-    .description("Rotate AUTH_SECRET and AUTH_JWKS.")
+    .description("Rotate AUTH_SECRET and PUBLIC_JWKS.")
     .option("--prod", "Rotate variables in production deployment.")
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
@@ -100,8 +126,8 @@ function buildProgram(deps: Deps): Command {
       deps.setEnv("AUTH_SECRET", deps.randomSecret(), isProd);
       console.info(`✔ Rotated "AUTH_SECRET"`);
 
-      deps.setEnv("AUTH_JWKS", await deps.createJwks(), isProd);
-      console.info(`✔ Rotated "AUTH_JWKS"`);
+      deps.setEnv("PUBLIC_JWKS", await deps.createJwks(), isProd);
+      console.info(`✔ Rotated "PUBLIC_JWKS"`);
     });
 
   return program;

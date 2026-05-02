@@ -6,12 +6,12 @@ import { httpActionGeneric, type HttpRouter } from "convex/server";
 import * as v from "valibot";
 
 import {
-  createPkce,
-  exchangeCode,
+  createPKCE,
+  exchangeCodeForProfile,
   getAuthorizationUrl,
   type SocialProvider,
 } from "../oauth/providers";
-import { getPublicJwks, authStore } from "./store";
+import { authStore, getPublicJwks } from "./store";
 
 const STORE_QUERY = "auth:query" as const;
 const STORE_ACTION = "auth:action" as const;
@@ -122,12 +122,12 @@ function requireAllowedProvider(request: Request, allowed: readonly Provider[]):
 function sessionCookies(payload: SessionPayload) {
   const maxAgeSession = Math.max(1, Math.floor((payload.expiresAt - Date.now()) / 1000));
   return [
-    `session:refresh=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
+    `session:token=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
   ];
 }
 
 function clearedAuthCookies() {
-  return ["session:refresh=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
+  return ["session:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"];
 }
 
 function handoffCookie(code: string) {
@@ -191,14 +191,14 @@ const registerRoutes = (http: HttpRouter) => {
      * - `expires` - Token expiration timestamp (epoch ms)
      *
      * Security:
-     * - Requires HttpOnly, Secure, SameSite=Lax session cookie
+     * - Requires HttpOnly `session:token` cookie (Secure, SameSite=Lax)
      * - Token is short-lived (15m) and never persisted client-side
      * - Cache-Control: no-store prevents intermediary caching
      */
     path: "/auth/session",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const token = readCookies(request)["session:refresh"];
+      const token = readCookies(request)["session:token"];
 
       if (!token) {
         return new Response("null", {
@@ -247,7 +247,7 @@ const registerRoutes = (http: HttpRouter) => {
         });
       }
 
-      const token = readCookies(request)["session:refresh"];
+      const token = readCookies(request)["session:token"];
 
       if (token) {
         await ctx
@@ -294,7 +294,7 @@ const registerRoutes = (http: HttpRouter) => {
 
       const state = crypto.randomUUID().replace(/-/g, "");
       const nonce = crypto.randomUUID().replace(/-/g, "");
-      const { verifier, challenge, method } = await createPkce();
+      const { verifier, challenge, method } = await createPKCE();
 
       url.searchParams.set("state", state);
       url.searchParams.set("nonce", nonce);
@@ -378,7 +378,7 @@ const registerRoutes = (http: HttpRouter) => {
               payload: {
                 type: "credentials:register",
                 email: payload.email,
-                passwordHash: hash,
+                password: hash,
                 firstName,
                 lastName,
               },
@@ -393,7 +393,7 @@ const registerRoutes = (http: HttpRouter) => {
                 email: payload.email,
               },
             } as never,
-          )) as { userId: string; passwordHash: string } | null;
+          )) as { userId: string; password: string } | null;
 
           if (!account) return new Response(null, { status: 401 });
 
@@ -403,7 +403,7 @@ const registerRoutes = (http: HttpRouter) => {
               payload: {
                 type: "password:verify",
                 password: payload.password,
-                hash: account.passwordHash,
+                hash: account.password,
               },
             } as never,
           )) as { ok: boolean };
@@ -416,7 +416,7 @@ const registerRoutes = (http: HttpRouter) => {
               payload: {
                 type: "credentials:login",
                 email: payload.email,
-                passwordHash: account.passwordHash,
+                password: account.password,
               },
             } as never,
           )) as SessionPayload;
@@ -472,7 +472,7 @@ const registerRoutes = (http: HttpRouter) => {
 
     let profile;
     try {
-      profile = await exchangeCode(provider, {
+      profile = await exchangeCodeForProfile(provider, {
         code,
         nonce: consumed.nonce,
         userForm,
@@ -492,12 +492,12 @@ const registerRoutes = (http: HttpRouter) => {
       {
         payload: {
           type: "oauth:authenticate:finalize",
+          accountId: profile.accountId,
           provider,
-          subject: profile.subject,
           email: profile.email,
+          emailVerified: profile.emailVerified,
           firstName: profile.firstName,
           lastName: profile.lastName,
-          verified: profile.verified,
         },
       } as never,
     )) as SessionPayload;
@@ -545,7 +545,7 @@ const registerRoutes = (http: HttpRouter) => {
       }
 
       const claimed = (await ctx.runMutation(
-        STORE_MUTATION as unknown as never,
+        STORE_MUTATION as never,
         {
           payload: { type: "oauth:handoff:claim", code: handoff },
         } as never,
@@ -567,7 +567,10 @@ const registerRoutes = (http: HttpRouter) => {
 };
 
 function convexAuth() {
-  return { authStore, registerRoutes };
+  return {
+    authStore,
+    registerRoutes,
+  };
 }
 
 export { convexAuth };

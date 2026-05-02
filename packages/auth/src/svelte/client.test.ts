@@ -91,14 +91,15 @@ describe("convexClient security/regression guarantees", () => {
       ok: true,
       json: vi.fn().mockResolvedValue({
         token: "session-jwt",
-        expires: 1_700_000_000_000,
+        expiresAt: 1_700_000_000_000,
         user: {
+          _id: "user_1",
+          _creationTime: 0,
           email: "user@example.com",
+          emailVerified: true,
           firstName: "Ada",
-          id: "user_1",
           lastName: "Lovelace",
           plan: "pro",
-          verified: true,
         },
       }),
     });

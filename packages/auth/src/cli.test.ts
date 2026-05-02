@@ -53,7 +53,7 @@ describe("auth cli security/regression", () => {
     );
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
-      ["exec", "convex", "env", "get", "AUTH_JWKS"],
+      ["exec", "convex", "env", "get", "PUBLIC_JWKS"],
       expect.objectContaining({ encoding: "utf8" }),
     );
 
@@ -62,7 +62,7 @@ describe("auth cli security/regression", () => {
       return args?.[2] === "env" && args?.[3] === "set";
     });
     expect(setCalls).toHaveLength(1);
-    expect(setCalls[0]?.[1]).toEqual(expect.arrayContaining(["AUTH_JWKS"]));
+    expect(setCalls[0]?.[1]).toEqual(expect.arrayContaining(["PUBLIC_JWKS"]));
     expect(setCalls[0]?.[1]).not.toEqual(expect.arrayContaining(["AUTH_SECRET"]));
   });
 
@@ -107,7 +107,7 @@ describe("auth cli security/regression", () => {
       "set",
       "--prod",
       "--",
-      "AUTH_JWKS",
+      "PUBLIC_JWKS",
       '{"kid":"prod"}',
     ]);
   });

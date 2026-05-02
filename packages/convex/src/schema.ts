@@ -4,44 +4,39 @@ import { v } from "convex/values";
 export default defineSchema({
   users: defineTable({
     email: v.string(),
+    emailVerified: v.boolean(),
     firstName: v.string(),
     lastName: v.string(),
     plan: v.union(v.literal("free"), v.literal("pro")),
-    verified: v.boolean(),
   }).index("by_email", ["email"]),
 
   accounts: defineTable({
     userId: v.id("users"),
     provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
-    subject: v.optional(v.string()),
-    passwordHash: v.optional(v.string()),
+    accountId: v.string(),
+    accessToken: v.optional(v.string()),
+    accessTokenExpiresAt: v.optional(v.number()),
+    refreshToken: v.optional(v.string()),
+    password: v.optional(v.string()),
   })
-    .index("by_provider_subject", ["provider", "subject"])
+    .index("by_provider_account", ["provider", "accountId"])
     .index("by_user", ["userId"]),
 
   sessions: defineTable({
     userId: v.id("users"),
-    refreshTokenHash: v.string(),
+    token: v.string(),
     expiresAt: v.number(),
   })
-    .index("by_refresh_token_hash", ["refreshTokenHash"])
+    .index("by_token", ["token"])
     .index("by_user", ["userId"]),
 
   verifications: defineTable({
-    type: v.union(
-      v.literal("email:verify"),
-      v.literal("email:change"),
-      v.literal("password:reset"),
-      v.literal("account:delete"),
-      v.literal("oauth:state"),
-      v.literal("oauth:handoff"),
-    ),
     identifier: v.string(),
     value: v.string(),
     expiresAt: v.number(),
   })
     .index("by_identifier", ["identifier"])
-    .index("by_expires_at", ["expiresAt"]),
+    .index("by_expires", ["expiresAt"]),
 
   customers: defineTable({
     userId: v.id("users"),
@@ -68,7 +63,7 @@ export default defineSchema({
       v.literal("unpaid"),
       v.literal("paused"),
     ),
-    currentPeriodEnd: v.number(),
+    currentPeriodEndsAt: v.number(),
     cancelAtPeriodEnd: v.boolean(),
     cancelAt: v.optional(v.number()),
   })

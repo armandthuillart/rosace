@@ -1,11 +1,11 @@
 export type SocialProvider = "apple" | "google";
 
 export type OAuthProfile = {
+  accountId: string;
   email: string;
+  emailVerified: boolean;
   firstName: string;
   lastName: string;
-  subject: string;
-  verified: boolean;
 };
 
 export type ExchangeOptions = {

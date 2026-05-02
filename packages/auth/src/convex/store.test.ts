@@ -17,24 +17,24 @@ const modules = import.meta.glob("../../../convex/src/**/*.ts");
 const schema = defineSchema({
   users: defineTable({
     email: v.string(),
+    emailVerified: v.boolean(),
     firstName: v.string(),
     lastName: v.string(),
-    plan: v.string(),
-    verified: v.boolean(),
+    plan: v.union(v.literal("free"), v.literal("pro")),
   }).index("by_email", ["email"]),
   accounts: defineTable({
     userId: v.id("users"),
-    provider: v.string(),
-    subject: v.optional(v.string()),
-    passwordHash: v.optional(v.string()),
+    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
+    accountId: v.string(),
+    password: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
-    .index("by_provider_subject", ["provider", "subject"]),
+    .index("by_provider_account", ["provider", "accountId"]),
   sessions: defineTable({
     userId: v.id("users"),
-    refreshTokenHash: v.string(),
+    token: v.string(),
     expiresAt: v.number(),
-  }).index("by_refresh_token_hash", ["refreshTokenHash"]),
+  }).index("by_token", ["token"]),
   verifications: defineTable({
     type: v.string(),
     identifier: v.string(),
@@ -51,7 +51,7 @@ const { internalMutationGenericMock, internalQueryGenericMock, requireEnvMock } 
     internalQueryGenericMock: vi.fn((definition: { handler: QueryHandler }) => definition),
     requireEnvMock: vi.fn((key: string) => {
       const env: Record<string, string> = {
-        AUTH_JWKS: JSON.stringify({
+        PUBLIC_JWKS: JSON.stringify({
           kid: "kid-1",
           privateJwk: { kty: "RSA", n: "n", e: "AQAB", d: "d" },
           publicJwks: { keys: [{ kty: "RSA", n: "n", e: "AQAB", kid: "kid-1" }] },
@@ -122,16 +122,6 @@ beforeAll(async () => {
   queryHandler = internalQueryGenericMock.mock.calls[0][0].handler;
 });
 
-async function hashToken(token: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(`${token}:${requireEnvMock("AUTH_SECRET")}`),
-  );
-  return Array.from(new Uint8Array(digest))
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 describe("convex store security/regression", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -143,10 +133,10 @@ describe("convex store security/regression", () => {
     await t.run(async (ctx) => {
       await ctx.db.insert("users", {
         email: "john@example.com",
+        emailVerified: false,
         firstName: "John",
         lastName: "Doe",
         plan: "free",
-        verified: false,
       });
     });
 
@@ -158,7 +148,7 @@ describe("convex store security/regression", () => {
             payload: {
               type: "credentials:register",
               email: "john@example.com",
-              passwordHash: "hash-123",
+              password: "hash-123",
               firstName: "John",
               lastName: "Doe",
             },
@@ -170,26 +160,28 @@ describe("convex store security/regression", () => {
 
   it("fails credentials login for missing user and wrong hash", async () => {
     const t = convexTest({ schema, modules });
-    const missing = await t.mutation(async (ctx) =>
-      mutationHandler(
-        { db: ctx.db },
-        { payload: { type: "credentials:login", email: "missing@example.com" } },
+    await expect(
+      t.mutation(async (ctx) =>
+        mutationHandler(
+          { db: ctx.db },
+          { payload: { type: "credentials:login", email: "missing@example.com" } },
+        ),
       ),
-    );
-    expect(missing).toBeNull();
+    ).rejects.toThrow("Account does not exist.");
 
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "john@example.com",
+        emailVerified: false,
         firstName: "John",
         lastName: "Doe",
         plan: "free",
-        verified: false,
       });
       await ctx.db.insert("accounts", {
+        accountId: "john@example.com",
         userId,
         provider: "credentials",
-        passwordHash: "hash-123",
+        password: "hash-123",
       });
     });
 
@@ -201,7 +193,7 @@ describe("convex store security/regression", () => {
             payload: {
               type: "credentials:login",
               email: "john@example.com",
-              passwordHash: "wrong",
+              password: "wrong",
             },
           },
         ),
@@ -285,20 +277,20 @@ describe("convex store security/regression", () => {
     expect(expired).toBeNull();
   });
 
-  it("prevents oauth account takeover by reusing existing provider+subject", async () => {
+  it("prevents oauth account takeover by reusing existing provider+accountId", async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
       const created = await ctx.db.insert("users", {
         email: "existing@example.com",
+        emailVerified: true,
         firstName: "Ex",
         lastName: "Isting",
         plan: "free",
-        verified: true,
       });
       await ctx.db.insert("accounts", {
         userId: created,
         provider: "google",
-        subject: "subject-1",
+        accountId: "subject-1",
       });
       return created;
     });
@@ -310,11 +302,11 @@ describe("convex store security/regression", () => {
           payload: {
             type: "oauth:authenticate:finalize",
             provider: "google",
-            subject: "subject-1",
+            accountId: "subject-1",
             email: "attacker@example.com",
+            emailVerified: false,
             firstName: "Attacker",
             lastName: "Name",
-            verified: false,
           },
         },
       ),
@@ -323,8 +315,8 @@ describe("convex store security/regression", () => {
     const linkedAccounts = await t.run(async (ctx) =>
       ctx.db
         .query("accounts")
-        .filter((q) =>
-          q.and(q.eq(q.field("provider"), "google"), q.eq(q.field("subject"), "subject-1")),
+        .withIndex("by_provider_account", (q) =>
+          q.eq("provider", "google").eq("accountId", "subject-1"),
         )
         .collect(),
     );
@@ -419,25 +411,23 @@ describe("convex store security/regression", () => {
     const t = convexTest({ schema, modules });
     const validToken = "v".repeat(64);
     const otherToken = "o".repeat(64);
-    const validHash = await hashToken(validToken);
-    const otherHash = await hashToken(otherToken);
 
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "session@example.com",
+        emailVerified: false,
         firstName: "Sess",
         lastName: "Ion",
         plan: "free",
-        verified: false,
       });
       await ctx.db.insert("sessions", {
         userId,
-        refreshTokenHash: validHash,
+        token: validToken,
         expiresAt: Date.now() + 10000,
       });
       await ctx.db.insert("sessions", {
         userId,
-        refreshTokenHash: otherHash,
+        token: otherToken,
         expiresAt: Date.now() + 10000,
       });
     });
@@ -454,25 +444,24 @@ describe("convex store security/regression", () => {
 
     const sessions = await t.run(async (ctx) => ctx.db.query("sessions").collect());
     expect(sessions).toHaveLength(1);
-    expect(sessions[0]?.refreshTokenHash).toBe(otherHash);
+    expect(sessions[0]?.token).toBe(otherToken);
   });
 
   it("session:get fails closed for expired token, unknown token, and missing user", async () => {
     const t = convexTest({ schema, modules });
     const token = "t".repeat(64);
-    const hash = await hashToken(token);
 
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "john@example.com",
+        emailVerified: false,
         firstName: "John",
         lastName: "Doe",
         plan: "free",
-        verified: false,
       });
       await ctx.db.insert("sessions", {
         userId,
-        refreshTokenHash: hash,
+        token,
         expiresAt: Date.now() - 1,
       });
     });
@@ -485,18 +474,17 @@ describe("convex store security/regression", () => {
     );
 
     const token2 = "z".repeat(64);
-    const hash2 = await hashToken(token2);
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "ghost@example.com",
+        emailVerified: false,
         firstName: "Ghost",
         lastName: "User",
         plan: "free",
-        verified: false,
       });
       await ctx.db.insert("sessions", {
         userId,
-        refreshTokenHash: hash2,
+        token: token2,
         expiresAt: Date.now() + 10000,
       });
       await ctx.db.delete(userId);

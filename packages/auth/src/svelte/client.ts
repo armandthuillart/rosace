@@ -2,18 +2,7 @@
 import { env } from "$env/dynamic/public";
 import { ConvexHttpClient } from "convex/browser";
 
-type Session = {
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    plan: "free" | "pro";
-    verified: boolean;
-  };
-  token: string;
-  expires: number;
-} | null;
+import { Session } from "./index.types";
 
 const CONVEX_URL = env.PUBLIC_CONVEX_URL!;
 

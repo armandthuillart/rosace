@@ -6,7 +6,7 @@ const { requireEnv } = vi.hoisted(() => ({
     const env: Record<string, string> = {
       APPLE_CLIENT_ID: "apple-id",
       APPLE_CLIENT_SECRET: "apple-secret",
-      AUTH_JWKS: "jwks",
+      PUBLIC_JWKS: "jwks",
       AUTH_SECRET: "secret",
       CONVEX_URL: "https://convex.example",
       CONVEX_SITE_URL: "https://site.example",
@@ -63,7 +63,7 @@ describe("env validation", () => {
       const env: Record<string, string> = {
         APPLE_CLIENT_ID: "apple-id",
         APPLE_CLIENT_SECRET: "apple-secret",
-        AUTH_JWKS: "jwks",
+        PUBLIC_JWKS: "jwks",
         AUTH_SECRET: "secret",
         CONVEX_URL: "https://convex.example",
         CONVEX_SITE_URL: "https://site.example",

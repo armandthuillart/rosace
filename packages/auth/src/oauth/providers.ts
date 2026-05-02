@@ -16,13 +16,6 @@ const AUTHORIZATION_ENDPOINT_BY_PROVIDER = {
   google: "https://accounts.google.com/o/oauth2/v2/auth",
 } satisfies Record<SocialProvider, string>;
 
-/**
- * Returns the provider authorization URL used to start an OAuth login flow.
- *
- * @param provider - OAuth provider selected by the user.
- * @returns Fully configured authorization URL for the provider.
- * @throws {Error} If required provider or site environment variables are missing.
- */
 function getAuthorizationUrl(provider: SocialProvider): URL {
   const redirectUri = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
   const url = new URL(AUTHORIZATION_ENDPOINT_BY_PROVIDER[provider]);
@@ -42,29 +35,14 @@ function getAuthorizationUrl(provider: SocialProvider): URL {
   return url;
 }
 
-const GOOGLE_JWKS = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 const APPLE_JWKS = createRemoteJWKSet(new URL("https://appleid.apple.com/auth/keys"));
+const GOOGLE_JWKS = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 
-/**
- * Exchanges an OAuth authorization code and normalizes identity claims into
- * the internal profile shape consumed by auth routes.
- *
- * Apple only includes the user name on the first consent via callback form
- * payload, so `userForm` is consumed opportunistically when present.
- *
- * @param provider - Provider that issued the authorization code.
- * @param options - Exchange payload and provider-specific fields.
- * @param options.code - OAuth authorization code returned to the callback.
- * @param options.verifier - PKCE verifier required for Google.
- * @param options.userForm - Optional raw Apple `user` form field JSON.
- * @returns Normalized OAuth profile.
- * @throws {Error} If required exchange inputs are missing or provider exchange fails.
- */
-async function exchangeCode(
+async function exchangeCodeForProfile(
   provider: SocialProvider,
   options: ExchangeOptions,
 ): Promise<OAuthProfile> {
-  const redirectUri = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
+  const redirectURI = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
 
   if (provider === "google") {
     if (!options.verifier) {
@@ -80,7 +58,7 @@ async function exchangeCode(
         code: options.code,
         code_verifier: options.verifier,
         grant_type: "authorization_code",
-        redirect_uri: redirectUri,
+        redirect_uri: redirectURI,
       }),
     });
 
@@ -109,11 +87,11 @@ async function exchangeCode(
     }
 
     return {
+      accountId: googlePayload.sub,
       email: googlePayload.email.toLowerCase(),
+      emailVerified: googlePayload.email_verified ?? false,
       firstName: googlePayload.given_name ?? "",
       lastName: googlePayload.family_name ?? "",
-      subject: googlePayload.sub,
-      verified: googlePayload.email_verified ?? false,
     };
   }
 
@@ -125,7 +103,7 @@ async function exchangeCode(
       client_secret: requireEnv("APPLE_CLIENT_SECRET"),
       code: options.code,
       grant_type: "authorization_code",
-      redirect_uri: redirectUri,
+      redirect_uri: redirectURI,
     }),
   });
 
@@ -163,25 +141,20 @@ async function exchangeCode(
       firstName = parsed.name?.firstName ?? "";
       lastName = parsed.name?.lastName ?? "";
     } catch {
-      // Ignore malformed user payload.
+      // no-op
     }
   }
 
   return {
+    accountId: applePayload.sub,
     email: applePayload.email.toLowerCase(),
+    emailVerified: applePayload.email_verified === true || applePayload.email_verified === "true",
     firstName,
     lastName,
-    subject: applePayload.sub,
-    verified: applePayload.email_verified === true || applePayload.email_verified === "true",
   };
 }
 
-/**
- * Creates a PKCE verifier/challenge pair using the S256 transform.
- *
- * @returns PKCE values to attach to authorization and token requests.
- */
-async function createPkce(): Promise<{
+async function createPKCE(): Promise<{
   challenge: string;
   method: "S256";
   verifier: string;
@@ -202,4 +175,4 @@ async function createPkce(): Promise<{
   return { challenge, method: "S256", verifier };
 }
 
-export { createPkce, exchangeCode, getAuthorizationUrl };
+export { createPKCE, exchangeCodeForProfile, getAuthorizationUrl };

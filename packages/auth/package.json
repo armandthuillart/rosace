@@ -1,7 +1,7 @@
 {
   "name": "@repo/auth",
   "bin": {
-    "auth": "./src/cli.ts"
+    "auth": "bun run packages/auth/src/cli.ts"
   },
   "type": "module",
   "exports": {

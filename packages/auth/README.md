@@ -13,7 +13,7 @@ As of April 2026:
 
 This package gives that control by keeping auth-critical behavior in-house:
 
-- session lifecycle in first-party cookies (`session:refresh`)
+- session lifecycle in first-party cookies (`session:token`)
 - short-lived Convex JWT issuance from server session state
 - explicit credentials and OAuth flows in typed Convex functions
 - explicit persistence model (`users`, `accounts`, `sessions`, `verifications`)
@@ -71,7 +71,7 @@ Only starts authenticated Convex fetches when `data.user` exists. Prevents unaut
 
 - `POST /auth/logout`:
 
-  Revokes the current refresh session when present. Clears `session:refresh`. Returns `204`.
+  Revokes the current refresh session when present. Clears `session:token`. Returns `204`.
   Rate limit: 100 requests / 60 seconds per IP.
 
 - `POST /auth/login/credentials`:
@@ -92,7 +92,7 @@ Only starts authenticated Convex fetches when `data.user` exists. Prevents unaut
 
 - `GET /auth/session/claim`:
 
-  Consumes handoff code, sets `session:refresh` cookie, then redirects to `/`.
+  Consumes handoff code, sets `session:token` cookie, then redirects to `/`.
 
 ## Key namespace
 
