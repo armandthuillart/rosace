@@ -95,7 +95,8 @@ export default {
   async tail(events: TraceItem[], env: Env, ctx: ExecutionContext) {
     // Filter errors only
     const errors = events.filter(
-      (event) => event.outcome === "exception" || event.outcome === "exceededCpu",
+      (event) =>
+        event.outcome === "exception" || event.outcome === "exceededCpu",
     );
 
     if (errors.length > 0) {

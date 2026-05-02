@@ -90,7 +90,11 @@ export const getUser = authQuery
   .handler(async (ctx) => {
     const user = await ctx.db.get(ctx.userId);
     if (!user) throw new ConvexError({ code: "INTERNAL_SERVER_ERROR" });
-    return { email: user.email, firstName: user.firstName, lastName: user.lastName };
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
   })
   .public();
 ```

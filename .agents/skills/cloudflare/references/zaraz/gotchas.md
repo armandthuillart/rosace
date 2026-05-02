@@ -23,7 +23,8 @@ console.log("Consent:", zaraz.consent.getAll());
 
 ```javascript
 // Clear consent cookie
-document.cookie = "zaraz-consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.cookie =
+  "zaraz-consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 location.reload();
 ```
 

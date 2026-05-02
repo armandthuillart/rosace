@@ -40,9 +40,15 @@ class WorkerApp extends pulumi.ComponentResource {
 ## Full-Stack Worker App
 
 ```typescript
-const kv = new cloudflare.WorkersKvNamespace("cache", { accountId, title: "api-cache" });
+const kv = new cloudflare.WorkersKvNamespace("cache", {
+  accountId,
+  title: "api-cache",
+});
 const db = new cloudflare.D1Database("db", { accountId, name: "app-database" });
-const bucket = new cloudflare.R2Bucket("assets", { accountId, name: "app-assets" });
+const bucket = new cloudflare.R2Bucket("assets", {
+  accountId,
+  name: "app-assets",
+});
 
 const apiWorker = new cloudflare.WorkerScript("api", {
   accountId,
@@ -70,7 +76,10 @@ const worker = new cloudflare.WorkerScript(`worker-${stack}`, {
 ## Queue-Based Processing
 
 ```typescript
-const queue = new cloudflare.Queue("processing-queue", { accountId, name: "image-processing" });
+const queue = new cloudflare.Queue("processing-queue", {
+  accountId,
+  name: "image-processing",
+});
 
 // Producer: API receives requests
 const apiWorker = new cloudflare.WorkerScript("api", {
@@ -85,7 +94,9 @@ const processorWorker = new cloudflare.WorkerScript("processor", {
   accountId,
   name: "processor-worker",
   content: processorCode,
-  queueConsumers: [{ queue: queue.name, maxBatchSize: 10, maxRetries: 3, maxWaitTimeMs: 5000 }],
+  queueConsumers: [
+    { queue: queue.name, maxBatchSize: 10, maxRetries: 3, maxWaitTimeMs: 5000 },
+  ],
   r2BucketBindings: [{ name: "OUTPUT_BUCKET", bucketName: outputBucket.name }],
 });
 ```
@@ -109,7 +120,10 @@ const apiWorker = new cloudflare.WorkerScript("api", {
 ## Event-Driven Architecture
 
 ```typescript
-const eventQueue = new cloudflare.Queue("events", { accountId, name: "event-bus" });
+const eventQueue = new cloudflare.Queue("events", {
+  accountId,
+  name: "event-bus",
+});
 const producer = new cloudflare.WorkerScript("producer", {
   accountId,
   name: "api-producer",
@@ -169,9 +183,15 @@ const workerConfig = {
 };
 
 // Create resources
-const kv = new cloudflare.WorkersKvNamespace("kv", { accountId, title: "my-kv" });
+const kv = new cloudflare.WorkersKvNamespace("kv", {
+  accountId,
+  title: "my-kv",
+});
 const db = new cloudflare.D1Database("db", { accountId, name: "my-db" });
-const bucket = new cloudflare.R2Bucket("bucket", { accountId, name: "my-bucket" });
+const bucket = new cloudflare.R2Bucket("bucket", {
+  accountId,
+  name: "my-bucket",
+});
 
 // Generate wrangler.toml after resources created
 const wranglerGen = new command.local.Command(
@@ -229,13 +249,18 @@ const worker = new cloudflare.WorkerScript(
 
 ```typescript
 import * as command from "@pulumi/command";
-const build = new command.local.Command("build", { create: "npm run build", dir: "./worker" });
+const build = new command.local.Command("build", {
+  create: "npm run build",
+  dir: "./worker",
+});
 const worker = new cloudflare.WorkerScript(
   "worker",
   {
     accountId,
     name: "my-worker",
-    content: build.stdout.apply(() => fs.readFileSync("./worker/dist/index.js", "utf8")),
+    content: build.stdout.apply(() =>
+      fs.readFileSync("./worker/dist/index.js", "utf8"),
+    ),
   },
   { dependsOn: [build] },
 );

@@ -35,7 +35,10 @@ import { RtkMeeting } from "@cloudflare/realtimekit-react-ui";
 
 ```typescript
 @Component({
-  template: `<rtk-meeting [authToken]="authToken" (rtkLeave)="onLeave($event)"></rtk-meeting>`,
+  template: `<rtk-meeting
+    [authToken]="authToken"
+    (rtkLeave)="onLeave($event)"
+  ></rtk-meeting>`,
 })
 export class AppComponent {
   authToken = "<token>";
@@ -67,9 +70,21 @@ const meeting = new RealtimeKitClient({
   audio: true,
   autoSwitchAudioDevice: true,
   mediaConfiguration: {
-    video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-    audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-    screenshare: { width: { max: 1920 }, height: { max: 1080 }, frameRate: { ideal: 15 } },
+    video: {
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
+      frameRate: { ideal: 30 },
+    },
+    audio: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+    },
+    screenshare: {
+      width: { max: 1920 },
+      height: { max: 1080 },
+      frameRate: { ideal: 15 },
+    },
   },
 });
 await meeting.join();
@@ -131,7 +146,9 @@ curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<account_id>/realtim
 
 ```jsonc
 {
-  "d1_databases": [{ "binding": "DB", "database_name": "meetings", "database_id": "d1-id" }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "meetings", "database_id": "d1-id" },
+  ],
   "r2_buckets": [{ "binding": "RECORDINGS", "bucket_name": "recordings" }],
   "kv_namespaces": [{ "binding": "SESSIONS", "id": "kv-id" }],
 }

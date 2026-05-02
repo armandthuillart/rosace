@@ -5,13 +5,18 @@ See [README.md](./README.md), [configuration.md](./configuration.md), [api.md](.
 ## High-Traffic Read-Heavy
 
 ```typescript
-const sql = postgres(env.HYPERDRIVE.connectionString, { max: 5, prepare: true });
+const sql = postgres(env.HYPERDRIVE.connectionString, {
+  max: 5,
+  prepare: true,
+});
 
 // Cacheable: popular content
-const posts = await sql`SELECT * FROM posts WHERE published = true ORDER BY views DESC LIMIT 20`;
+const posts =
+  await sql`SELECT * FROM posts WHERE published = true ORDER BY views DESC LIMIT 20`;
 
 // Cacheable: user profiles
-const [user] = await sql`SELECT id, username, bio FROM users WHERE id = ${userId}`;
+const [user] =
+  await sql`SELECT id, username, bio FROM users WHERE id = ${userId}`;
 ```
 
 **Benefits:** Trending/profiles cached (60s), connection pooling handles spikes.
@@ -26,13 +31,17 @@ interface Env {
 
 // Reads: cached
 if (req.method === "GET") {
-  const sql = postgres(env.HYPERDRIVE_CACHED.connectionString, { prepare: true });
+  const sql = postgres(env.HYPERDRIVE_CACHED.connectionString, {
+    prepare: true,
+  });
   const products = await sql`SELECT * FROM products WHERE category = ${cat}`;
 }
 
 // Writes: no cache (immediate consistency)
 if (req.method === "POST") {
-  const sql = postgres(env.HYPERDRIVE_REALTIME.connectionString, { prepare: true });
+  const sql = postgres(env.HYPERDRIVE_REALTIME.connectionString, {
+    prepare: true,
+  });
   await sql`INSERT INTO orders ${sql(data)}`;
 }
 ```
@@ -40,11 +49,15 @@ if (req.method === "POST") {
 ## Analytics Dashboard
 
 ```typescript
-const client = new Client({ connectionString: env.HYPERDRIVE.connectionString });
+const client = new Client({
+  connectionString: env.HYPERDRIVE.connectionString,
+});
 await client.connect();
 
 // Aggregate queries cached (use fixed timestamps for caching)
-const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+const thirtyDaysAgo = new Date(
+  Date.now() - 30 * 24 * 60 * 60 * 1000,
+).toISOString();
 const dailyStats = await client.query(
   `
   SELECT DATE(created_at) as date, COUNT(*) as orders, SUM(amount) as revenue
@@ -54,7 +67,9 @@ const dailyStats = await client.query(
   [thirtyDaysAgo],
 );
 
-const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+const sevenDaysAgo = new Date(
+  Date.now() - 7 * 24 * 60 * 60 * 1000,
+).toISOString();
 const topProducts = await client.query(
   `
   SELECT p.name, COUNT(oi.id) as count, SUM(oi.quantity * oi.price) as revenue

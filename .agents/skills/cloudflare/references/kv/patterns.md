@@ -23,7 +23,9 @@ async function getCached(env: Env, key: string): Promise<any> {
   }
 
   // L3: Origin (slow)
-  const origin = await fetch(`https://api.example.com/${key}`).then((r) => r.json());
+  const origin = await fetch(`https://api.example.com/${key}`).then((r) =>
+    r.json(),
+  );
 
   // Backfill caches
   await env.CACHE.put(key, JSON.stringify(origin), { expirationTtl: 300 }); // 5min in KV
@@ -36,7 +38,11 @@ async function getCached(env: Env, key: string): Promise<any> {
 ## API Response Caching
 
 ```typescript
-async function getCachedData(env: Env, key: string, fetcher: () => Promise<any>): Promise<any> {
+async function getCachedData(
+  env: Env,
+  key: string,
+  fetcher: () => Promise<any>,
+): Promise<any> {
   const cached = await env.MY_KV.get(key, "json");
   if (cached) return cached;
 
@@ -62,15 +68,22 @@ async function createSession(env: Env, userId: string): Promise<string> {
   const sessionId = crypto.randomUUID();
   const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
 
-  await env.SESSIONS.put(`session:${sessionId}`, JSON.stringify({ userId, expiresAt }), {
-    expirationTtl: 86400,
-    metadata: { createdAt: Date.now() },
-  });
+  await env.SESSIONS.put(
+    `session:${sessionId}`,
+    JSON.stringify({ userId, expiresAt }),
+    {
+      expirationTtl: 86400,
+      metadata: { createdAt: Date.now() },
+    },
+  );
 
   return sessionId;
 }
 
-async function getSession(env: Env, sessionId: string): Promise<Session | null> {
+async function getSession(
+  env: Env,
+  sessionId: string,
+): Promise<Session | null> {
   const data = await env.SESSIONS.get<Session>(`session:${sessionId}`, "json");
   if (!data || data.expiresAt < Date.now()) return null;
   return data;

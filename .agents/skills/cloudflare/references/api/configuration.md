@@ -50,7 +50,10 @@ const client = new Cloudflare({
 });
 
 // Per-request overrides
-await client.zones.get({ zone_id: "zone-id" }, { timeout: 5000, maxRetries: 0 });
+await client.zones.get(
+  { zone_id: "zone-id" },
+  { timeout: 5000, maxRetries: 0 },
+);
 ```
 
 ### Python

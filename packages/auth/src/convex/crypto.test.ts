@@ -41,9 +41,12 @@ beforeAll(async () => {
 
 describe("crypto", () => {
   it("should hash a password with argon2id prefix", async () => {
-    const result = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: { type: "password:hash", password: "s3cr3t" },
-    });
+    const result = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: { type: "password:hash", password: "s3cr3t" },
+      },
+    );
 
     if (!("hash" in result)) {
       throw new Error("Expected hash result");
@@ -53,17 +56,27 @@ describe("crypto", () => {
   });
 
   it("should verify a password against its hash", async () => {
-    const hashResult = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: { type: "password:hash", password: "s3cr3t" },
-    });
+    const hashResult = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: { type: "password:hash", password: "s3cr3t" },
+      },
+    );
 
     if (!("hash" in hashResult)) {
       throw new Error("Expected hash result");
     }
 
-    const verifyResult = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: { type: "password:verify", password: "s3cr3t", hash: hashResult.hash },
-    });
+    const verifyResult = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: {
+          type: "password:verify",
+          password: "s3cr3t",
+          hash: hashResult.hash,
+        },
+      },
+    );
 
     if (!("ok" in verifyResult)) {
       throw new Error("Expected verify result");
@@ -73,21 +86,27 @@ describe("crypto", () => {
   });
 
   it("should reject verification with wrong password", async () => {
-    const hashResult = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: { type: "password:hash", password: "correct-password" },
-    });
+    const hashResult = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: { type: "password:hash", password: "correct-password" },
+      },
+    );
 
     if (!("hash" in hashResult)) {
       throw new Error("Expected hash result");
     }
 
-    const verifyResult = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: {
-        type: "password:verify",
-        password: "wrong-password",
-        hash: hashResult.hash,
+    const verifyResult = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: {
+          type: "password:verify",
+          password: "wrong-password",
+          hash: hashResult.hash,
+        },
       },
-    });
+    );
 
     if (!("ok" in verifyResult)) {
       throw new Error("Expected verify result");
@@ -97,13 +116,16 @@ describe("crypto", () => {
   });
 
   it("should reject verification with invalid hash", async () => {
-    const result = await cryptoHandler({} as GenericActionCtx<GenericDataModel>, {
-      payload: {
-        type: "password:verify",
-        password: "irrelevant",
-        hash: "not-a-valid-hash",
+    const result = await cryptoHandler(
+      {} as GenericActionCtx<GenericDataModel>,
+      {
+        payload: {
+          type: "password:verify",
+          password: "irrelevant",
+          hash: "not-a-valid-hash",
+        },
       },
-    });
+    );
 
     if (!("ok" in result)) {
       throw new Error("Expected verify result");

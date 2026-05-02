@@ -1,13 +1,18 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 
-const { execFileSyncMock, exportJWKMock, generateKeyPairMock, randomBytesMock, randomUUIDMock } =
-  vi.hoisted(() => ({
-    execFileSyncMock: vi.fn(),
-    exportJWKMock: vi.fn(),
-    generateKeyPairMock: vi.fn(),
-    randomBytesMock: vi.fn(),
-    randomUUIDMock: vi.fn(),
-  }));
+const {
+  execFileSyncMock,
+  exportJWKMock,
+  generateKeyPairMock,
+  randomBytesMock,
+  randomUUIDMock,
+} = vi.hoisted(() => ({
+  execFileSyncMock: vi.fn(),
+  exportJWKMock: vi.fn(),
+  generateKeyPairMock: vi.fn(),
+  randomBytesMock: vi.fn(),
+  randomUUIDMock: vi.fn(),
+}));
 
 vi.mock("node:child_process", () => ({
   execFileSync: execFileSyncMock,
@@ -40,23 +45,46 @@ describe("auth cli", () => {
 
     randomBytesMock.mockReturnValue(Uint8Array.from({ length: 32 }, () => 1));
     randomUUIDMock.mockReturnValue("kid-fixed");
-    generateKeyPairMock.mockResolvedValue({ publicKey: "pub", privateKey: "priv" });
+    generateKeyPairMock.mockResolvedValue({
+      publicKey: "pub",
+      privateKey: "priv",
+    });
 
     exportJWKMock.mockImplementation(async (key: unknown) =>
-      key === "pub" ? { kty: "RSA", n: "pub-n", e: "AQAB" } : { kty: "RSA", d: "priv-d" },
+      key === "pub"
+        ? { kty: "RSA", n: "pub-n", e: "AQAB" }
+        : { kty: "RSA", d: "priv-d" },
     );
 
     await run(["node", "auth", "set"]);
 
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
-      ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "AUTH_SECRET"],
+      [
+        "exec",
+        "--filter",
+        "./packages/convex",
+        "--",
+        "convex",
+        "env",
+        "get",
+        "AUTH_SECRET",
+      ],
       expect.objectContaining({ encoding: "utf8" }),
     );
 
     expect(execFileSyncMock).toHaveBeenCalledWith(
       "vp",
-      ["exec", "--filter", "./packages/convex", "--", "convex", "env", "get", "PUBLIC_JWKS"],
+      [
+        "exec",
+        "--filter",
+        "./packages/convex",
+        "--",
+        "convex",
+        "env",
+        "get",
+        "PUBLIC_JWKS",
+      ],
       expect.objectContaining({ encoding: "utf8" }),
     );
 
@@ -67,7 +95,9 @@ describe("auth cli", () => {
 
     expect(setCalls).toHaveLength(1);
     expect(setCalls[0]?.[1]).toEqual(expect.arrayContaining(["PUBLIC_JWKS"]));
-    expect(setCalls[0]?.[1]).not.toEqual(expect.arrayContaining(["AUTH_SECRET"]));
+    expect(setCalls[0]?.[1]).not.toEqual(
+      expect.arrayContaining(["AUTH_SECRET"]),
+    );
   });
 
   it("should overwrite both secrets and honor --prod scope", async () => {
@@ -124,10 +154,15 @@ describe("auth cli", () => {
     exportJWKMock.mockReset();
 
     randomUUIDMock.mockReturnValue("kid-123");
-    generateKeyPairMock.mockResolvedValue({ publicKey: "public", privateKey: "private" });
+    generateKeyPairMock.mockResolvedValue({
+      publicKey: "public",
+      privateKey: "private",
+    });
 
     exportJWKMock.mockImplementation(async (key: unknown) =>
-      key === "public" ? { kty: "RSA", n: "n", e: "AQAB" } : { kty: "RSA", d: "d" },
+      key === "public"
+        ? { kty: "RSA", n: "n", e: "AQAB" }
+        : { kty: "RSA", d: "d" },
     );
 
     const raw = await createJwks();

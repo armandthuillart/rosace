@@ -28,7 +28,9 @@ const uploadData = await client.stream.directUpload.create({
 async function uploadVideo(file: File, uploadURL: string) {
   const formData = new FormData();
   formData.append("file", file);
-  return fetch(uploadURL, { method: "POST", body: formData }).then((r) => r.json());
+  return fetch(uploadURL, { method: "POST", body: formData }).then((r) =>
+    r.json(),
+  );
 }
 ```
 
@@ -85,15 +87,24 @@ const gif = `https://customer-<CODE>.cloudflarestream.com/${videoId}/thumbnails/
 
 ```typescript
 // Low volume (<1k/day): Use API
-async function getSignedToken(accountId: string, videoId: string, apiToken: string) {
+async function getSignedToken(
+  accountId: string,
+  videoId: string,
+  apiToken: string,
+) {
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/${videoId}/token`,
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         exp: Math.floor(Date.now() / 1000) + 3600,
-        accessRules: [{ type: "ip.geoip.country", action: "allow", country: ["US"] }],
+        accessRules: [
+          { type: "ip.geoip.country", action: "allow", country: ["US"] },
+        ],
       }),
     },
   );
@@ -132,12 +143,19 @@ async function uploadCaption(
 
 ```typescript
 // TODO: Requires Workers AI integration - see workers-ai reference
-async function generateAICaptions(accountId: string, videoId: string, apiToken: string) {
+async function generateAICaptions(
+  accountId: string,
+  videoId: string,
+  apiToken: string,
+) {
   return fetch(
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/${videoId}/captions/generate`,
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ language: "en" }),
     },
   ).then((r) => r.json());
@@ -154,15 +172,21 @@ async function clipVideo(
   startTime: number,
   endTime: number,
 ) {
-  return fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/clip`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      clippedFromVideoUID: videoId,
-      startTimeSeconds: startTime,
-      endTimeSeconds: endTime,
-    }),
-  }).then((r) => r.json());
+  return fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/clip`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clippedFromVideoUID: videoId,
+        startTimeSeconds: startTime,
+        endTimeSeconds: endTime,
+      }),
+    },
+  ).then((r) => r.json());
 }
 ```
 

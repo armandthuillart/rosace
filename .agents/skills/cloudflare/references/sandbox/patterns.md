@@ -90,7 +90,9 @@ export default {
     const sandbox = getSandbox(env.Sandbox, "app-server");
 
     // Start server
-    const process = await sandbox.startProcess("node server.js", { processId: "server" });
+    const process = await sandbox.startProcess("node server.js", {
+      processId: "server",
+    });
 
     // Wait for server to be ready
     await process.waitForPort(8080); // Wait for port listening
@@ -188,8 +190,12 @@ export default {
 
 ```typescript
 // Clone repo
-await sandbox.exec("git clone https://github.com/user/repo.git /workspace/repo");
+await sandbox.exec(
+  "git clone https://github.com/user/repo.git /workspace/repo",
+);
 
 // Authenticated (use env secrets)
-await sandbox.exec(`git clone https://${env.GITHUB_TOKEN}@github.com/user/repo.git`);
+await sandbox.exec(
+  `git clone https://${env.GITHUB_TOKEN}@github.com/user/repo.git`,
+);
 ```

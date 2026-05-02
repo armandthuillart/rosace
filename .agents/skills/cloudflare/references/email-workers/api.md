@@ -74,7 +74,9 @@ msg.addMessage({
   data: "Thank you for your message.",
 });
 
-await message.reply(new EmailMessage("support@example.com", message.from, msg.asRaw()));
+await message.reply(
+  new EmailMessage("support@example.com", message.from, msg.asRaw()),
+);
 ```
 
 **Requirements**:
@@ -113,7 +115,10 @@ await env.EMAIL.send(new EmailMessage(from, to, mimeContent));
   "send_email": [
     { "name": "EMAIL" }, // Type 1: Any verified address
     { "name": "LOGS", "destination_address": "logs@example.com" }, // Type 2: Single dest
-    { "name": "TEAM", "allowed_destination_addresses": ["a@ex.com", "b@ex.com"] }, // Type 3: Dest allowlist
+    {
+      "name": "TEAM",
+      "allowed_destination_addresses": ["a@ex.com", "b@ex.com"],
+    }, // Type 3: Dest allowlist
     { "name": "NOREPLY", "allowed_sender_addresses": ["noreply@ex.com"] }, // Type 4: Sender allowlist
   ],
 }
@@ -127,7 +132,10 @@ postal-mime v2.7.3 parses incoming emails into structured data.
 interface ParsedEmail {
   headers: Array<{ key: string; value: string }>;
   from: { name: string; address: string } | null;
-  to: Array<{ name: string; address: string }> | { name: string; address: string } | null;
+  to:
+    | Array<{ name: string; address: string }>
+    | { name: string; address: string }
+    | null;
   cc: Array<{ name: string; address: string }> | null;
   bcc: Array<{ name: string; address: string }> | null;
   subject: string;
@@ -220,7 +228,11 @@ interface Env {
 }
 
 export default {
-  async email(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
+  async email(
+    message: ForwardableEmailMessage,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
     // Fully typed
   },
 };

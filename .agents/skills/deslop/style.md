@@ -233,7 +233,15 @@ function buildUser(id: string, name: string, isAdmin: boolean) {
 }
 
 // Good: object params and object return
-function buildUserLabel({ id, name, isAdmin }: { id: string; name: string; isAdmin: boolean }) {
+function buildUserLabel({
+  id,
+  name,
+  isAdmin,
+}: {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+}) {
   return {
     id,
     label: `${name}-${isAdmin ? "admin" : "user"}`,

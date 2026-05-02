@@ -128,7 +128,11 @@ npm install --save-dev @cloudflare/workers-types
 import type { ForwardableEmailMessage } from "@cloudflare/workers-types";
 
 export default {
-  async email(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
+  async email(
+    message: ForwardableEmailMessage,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
     await message.forward("dest@example.com");
   },
 } satisfies ExportedHandler<Env>;

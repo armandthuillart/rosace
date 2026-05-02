@@ -191,7 +191,12 @@ SplitText.create(".split", {
   type: "lines",
   autoSplit: true,
   onSplit(self) {
-    return gsap.from(self.lines, { y: 100, opacity: 0, stagger: 0.05, duration: 0.5 });
+    return gsap.from(self.lines, {
+      y: 100,
+      opacity: 0,
+      stagger: 0.05,
+      duration: 0.5,
+    });
   },
 });
 ```
@@ -270,7 +275,11 @@ gsap.registerPlugin(MorphSVGPlugin);
 // convert primitives to path first if needed:
 MorphSVGPlugin.convertToPath("circle, rect, ellipse, line");
 
-gsap.to("#diamond", { duration: 1, morphSVG: "#lightning", ease: "power2.inOut" });
+gsap.to("#diamond", {
+  duration: 1,
+  morphSVG: "#lightning",
+  ease: "power2.inOut",
+});
 // object form:
 gsap.to("#diamond", {
   duration: 1,

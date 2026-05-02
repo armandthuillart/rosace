@@ -12,7 +12,11 @@ export default defineSchema({
 
   accounts: defineTable({
     userId: v.id("users"),
-    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
+    provider: v.union(
+      v.literal("apple"),
+      v.literal("credentials"),
+      v.literal("google"),
+    ),
     accountId: v.string(),
     accessToken: v.optional(v.string()),
     accessTokenExpiresAt: v.optional(v.number()),

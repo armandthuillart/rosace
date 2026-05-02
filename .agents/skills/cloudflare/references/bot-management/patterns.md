@@ -72,7 +72,12 @@ export default {
     const cf = request.cf as IncomingRequestCfProperties | undefined;
     const botMgmt = cf?.botManagement;
 
-    if (botMgmt?.score && botMgmt.score < 30 && !botMgmt.corporateProxy && !botMgmt.verifiedBot) {
+    if (
+      botMgmt?.score &&
+      botMgmt.score < 30 &&
+      !botMgmt.corporateProxy &&
+      !botMgmt.verifiedBot
+    ) {
       return new Response("Datacenter traffic blocked", { status: 403 });
     }
 

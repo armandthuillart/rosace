@@ -99,7 +99,10 @@ const pc = new RTCPeerConnection({
 });
 
 // 2. Add tracks
-const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+const stream = await navigator.mediaDevices.getUserMedia({
+  video: true,
+  audio: true,
+});
 stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
 // 3. Create offer
@@ -142,7 +145,13 @@ const publishedTrackId = tracks[0].trackName; // Share with others
 const res = await fetch(`/api/sessions/${sessionId}/tracks`, {
   method: "POST",
   body: JSON.stringify({
-    tracks: [{ location: "remote", trackName: remoteTrackId, sessionId: remoteSessionId }],
+    tracks: [
+      {
+        location: "remote",
+        trackName: remoteTrackId,
+        sessionId: remoteSessionId,
+      },
+    ],
   }),
 });
 

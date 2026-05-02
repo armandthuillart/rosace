@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { convexTest } from "convex-test";
 import { defineSchema, defineTable } from "convex/server";
 import { GenericId, v } from "convex/values";
@@ -45,7 +46,9 @@ describe("getUser", () => {
       modules,
     });
 
-    const user = await t.run(async (ctx) => ctx.db.get("invalid_id" as GenericId<"users">));
+    const user = await t.run(async (ctx) =>
+      ctx.db.get("invalid_id" as GenericId<"users">),
+    );
 
     expect(user).toBeNull();
   });

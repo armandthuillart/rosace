@@ -22,7 +22,11 @@ const object = await env.MY_BUCKET.get(key, {
 });
 
 if (!object) return new Response("Not found", { status: 404 });
-if (!object.body) return new Response(null, { status: 304, headers: { etag: object.httpEtag } });
+if (!object.body)
+  return new Response(null, {
+    status: 304,
+    headers: { etag: object.httpEtag },
+  });
 
 return new Response(object.body, { headers: { etag: object.httpEtag } });
 ```
@@ -31,17 +35,25 @@ return new Response(object.body, { headers: { etag: object.httpEtag } });
 
 ```typescript
 const key = url.pathname.slice(1);
-if (!key || key.includes("..")) return new Response("Invalid key", { status: 400 });
+if (!key || key.includes(".."))
+  return new Response("Invalid key", { status: 400 });
 
 const object = await env.MY_BUCKET.put(key, request.body, {
-  httpMetadata: { contentType: request.headers.get("content-type") || "application/octet-stream" },
+  httpMetadata: {
+    contentType:
+      request.headers.get("content-type") || "application/octet-stream",
+  },
   customMetadata: {
     uploadedAt: new Date().toISOString(),
     ip: request.headers.get("cf-connecting-ip") || "unknown",
   },
 });
 
-return Response.json({ key: object.key, size: object.size, etag: object.httpEtag });
+return Response.json({
+  key: object.key,
+  size: object.size,
+  etag: object.httpEtag,
+});
 ```
 
 ## Multipart with Progress
@@ -57,7 +69,10 @@ const uploadedParts: R2UploadedPart[] = [];
 try {
   for (let i = 0; i < partCount; i++) {
     const start = i * PART_SIZE;
-    const part = await multipart.uploadPart(i + 1, file.slice(start, start + PART_SIZE));
+    const part = await multipart.uploadPart(
+      i + 1,
+      file.slice(start, start + PART_SIZE),
+    );
     uploadedParts.push(part);
     onProgress?.(Math.round(((i + 1) / partCount) * 100));
   }
@@ -116,12 +131,19 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 const s3 = new S3Client({
   region: "auto",
   endpoint: `https://${env.ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: { accessKeyId: env.R2_ACCESS_KEY_ID, secretAccessKey: env.R2_SECRET_ACCESS_KEY },
+  credentials: {
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+  },
 });
 
-const url = await getSignedUrl(s3, new PutObjectCommand({ Bucket: "my-bucket", Key: key }), {
-  expiresIn: 3600,
-});
+const url = await getSignedUrl(
+  s3,
+  new PutObjectCommand({ Bucket: "my-bucket", Key: key }),
+  {
+    expiresIn: 3600,
+  },
+);
 return Response.json({ uploadUrl: url });
 
 // Client: Upload directly
@@ -133,7 +155,11 @@ await fetch(uploadUrl, { method: "PUT", body: file });
 
 ```typescript
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     const cache = caches.default;
     const url = new URL(request.url);
     const cacheKey = new Request(url.toString(), request);

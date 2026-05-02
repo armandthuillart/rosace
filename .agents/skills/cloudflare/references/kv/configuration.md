@@ -45,7 +45,11 @@ interface Env {
 
 ```typescript
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     // env.MY_KV is now typed as KVNamespace
     const value = await env.MY_KV.get("key");
     return new Response(value || "Not found");

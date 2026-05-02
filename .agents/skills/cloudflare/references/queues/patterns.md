@@ -7,7 +7,11 @@
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const { userId, reportType } = await request.json();
-    await env.REPORT_QUEUE.send({ userId, reportType, requestedAt: Date.now() });
+    await env.REPORT_QUEUE.send({
+      userId,
+      reportType,
+      requestedAt: Date.now(),
+    });
     return Response.json({ message: "Report queued", status: "pending" });
   },
 };

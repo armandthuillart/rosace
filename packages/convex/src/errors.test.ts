@@ -12,7 +12,10 @@ describe("ConvexError", () => {
   });
 
   it("should use provided message when given", () => {
-    const error = new ConvexError({ code: "UNAUTHORIZED", message: "Invalid token" });
+    const error = new ConvexError({
+      code: "UNAUTHORIZED",
+      message: "Invalid token",
+    });
 
     expect(error.code).toBe("UNAUTHORIZED");
     expect(error.data.message).toBe("Invalid token");
@@ -37,7 +40,10 @@ describe("ConvexError", () => {
   });
 
   it("should have data with code and message properties", () => {
-    const error = new ConvexError({ code: "BAD_REQUEST", message: "Bad input" });
+    const error = new ConvexError({
+      code: "BAD_REQUEST",
+      message: "Bad input",
+    });
 
     expect(error.data).toBeDefined();
     expect(error.data.code).toBe("BAD_REQUEST");

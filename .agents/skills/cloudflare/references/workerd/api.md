@@ -44,7 +44,11 @@ interface Env {
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     return new Response(await env.CACHE.get("key"));
   },
 };
@@ -144,7 +148,9 @@ export default {
 const { readable, writable } = new TransformStream();
 const writer = writable.getWriter();
 writer.write(new TextEncoder().encode("data: Hello\n\n"));
-return new Response(readable, { headers: { "Content-Type": "text/event-stream" } });
+return new Response(readable, {
+  headers: { "Content-Type": "text/event-stream" },
+});
 ```
 
 ### HTMLRewriter (HTML Parsing/Transformation)
@@ -154,7 +160,10 @@ const response = await fetch("https://example.com");
 return new HTMLRewriter()
   .on("a[href]", {
     element(el) {
-      el.setAttribute("href", `/proxy?url=${encodeURIComponent(el.getAttribute("href"))}`);
+      el.setAttribute(
+        "href",
+        `/proxy?url=${encodeURIComponent(el.getAttribute("href"))}`,
+      );
     },
   })
   .on("script", {

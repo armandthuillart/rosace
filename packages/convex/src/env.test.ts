@@ -53,8 +53,12 @@ describe("env validation", () => {
     });
 
     expect(() => v.parse(EnvSchema, { DEPLOY_ENV: "staging" })).toThrow();
-    expect(() => v.parse(EnvSchema, { DEPLOY_ENV: "development" })).not.toThrow();
-    expect(() => v.parse(EnvSchema, { DEPLOY_ENV: "production" })).not.toThrow();
+    expect(() =>
+      v.parse(EnvSchema, { DEPLOY_ENV: "development" }),
+    ).not.toThrow();
+    expect(() =>
+      v.parse(EnvSchema, { DEPLOY_ENV: "production" }),
+    ).not.toThrow();
   });
 
   it("should accept 'production' as valid DEPLOY_ENV", async () => {

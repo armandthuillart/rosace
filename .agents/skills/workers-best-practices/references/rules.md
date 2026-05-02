@@ -232,7 +232,9 @@ Service bindings are zero-cost, bypass the public internet, and support type-saf
 import { WorkerEntrypoint } from "cloudflare:workers";
 
 export class AuthService extends WorkerEntrypoint {
-  async verifyToken(token: string): Promise<{ userId: string; valid: boolean }> {
+  async verifyToken(
+    token: string,
+  ): Promise<{ userId: string; valid: boolean }> {
     return { userId: "user-123", valid: true };
   }
 }
@@ -291,12 +293,19 @@ Enable `observability` in wrangler config before deploying to production. Use `h
 ```ts
 // Structured JSON — searchable and filterable
 console.log(
-  JSON.stringify({ message: "incoming request", method: request.method, path: url.pathname }),
+  JSON.stringify({
+    message: "incoming request",
+    method: request.method,
+    path: url.pathname,
+  }),
 );
 
 // Error severity
 console.error(
-  JSON.stringify({ message: "request failed", error: e instanceof Error ? e.message : String(e) }),
+  JSON.stringify({
+    message: "request failed",
+    error: e instanceof Error ? e.message : String(e),
+  }),
 );
 ```
 
@@ -321,7 +330,11 @@ Workers reuse isolates across requests. Module-level mutable variables cause cro
 
 ```ts
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     const userId = request.headers.get("X-User-Id");
     const result = await handleRequest(userId, env);
     return Response.json(result);
@@ -366,7 +379,10 @@ const response = await fetch("https://api.example.com/process", {
 
 // Correct: waitUntil when you don't need the result before responding
 ctx.waitUntil(
-  fetch("https://api.example.com/webhook", { method: "POST", body: JSON.stringify(data) }),
+  fetch("https://api.example.com/webhook", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
 );
 ```
 
@@ -374,7 +390,10 @@ Anti-pattern:
 
 ```ts
 // Floating promise — result dropped, error swallowed
-fetch("https://api.example.com/webhook", { method: "POST", body: JSON.stringify(data) });
+fetch("https://api.example.com/webhook", {
+  method: "POST",
+  body: JSON.stringify(data),
+});
 ```
 
 ### Be aware of platform limits
@@ -411,7 +430,10 @@ const token = Array.from(tokenBytes)
 
 ```ts
 // Constant-time comparison — hash first to avoid length leak
-async function verifyToken(provided: string, expected: string): Promise<boolean> {
+async function verifyToken(
+  provided: string,
+  expected: string,
+): Promise<boolean> {
   const encoder = new TextEncoder();
   const [providedHash, expectedHash] = await Promise.all([
     crypto.subtle.digest("SHA-256", encoder.encode(provided)),

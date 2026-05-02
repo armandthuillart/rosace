@@ -105,7 +105,9 @@ export default {
       const data = await response.json();
 
       // Filter port 53 for browser clients
-      const filteredUrls = data.iceServers.urls.filter((url: string) => !url.includes(":53"));
+      const filteredUrls = data.iceServers.urls.filter(
+        (url: string) => !url.includes(":53"),
+      );
 
       return Response.json({
         iceServers: [

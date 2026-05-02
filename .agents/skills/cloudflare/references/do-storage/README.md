@@ -25,7 +25,9 @@ export class Counter extends DurableObject {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
     this.sql = ctx.storage.sql;
-    this.sql.exec("CREATE TABLE IF NOT EXISTS data(key TEXT PRIMARY KEY, value INTEGER)");
+    this.sql.exec(
+      "CREATE TABLE IF NOT EXISTS data(key TEXT PRIMARY KEY, value INTEGER)",
+    );
   }
 
   async increment(): Promise<number> {

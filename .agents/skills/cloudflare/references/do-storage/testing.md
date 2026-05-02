@@ -29,11 +29,15 @@ import { describe, it, expect } from "vitest";
 describe("Counter DO", () => {
   it("increments counter", async () => {
     const id = env.COUNTER.idFromName("test");
-    const result = await runInDurableObject(env.COUNTER, id, async (instance, state) => {
-      const val1 = await instance.increment();
-      const val2 = await instance.increment();
-      return { val1, val2 };
-    });
+    const result = await runInDurableObject(
+      env.COUNTER,
+      id,
+      async (instance, state) => {
+        const val1 = await instance.increment();
+        const val2 = await instance.increment();
+        return { val1, val2 };
+      },
+    );
     expect(result.val1).toBe(1);
     expect(result.val2).toBe(2);
   });
@@ -143,10 +147,14 @@ it("restores from bookmark", async () => {
   const id = env.MY_DO.idFromName("pitr-test");
 
   // Create checkpoint
-  const bookmark = await runInDurableObject(env.MY_DO, id, async (instance, state) => {
-    await state.storage.put("value", 1);
-    return await state.storage.getCurrentBookmark();
-  });
+  const bookmark = await runInDurableObject(
+    env.MY_DO,
+    id,
+    async (instance, state) => {
+      await state.storage.put("value", 1);
+      return await state.storage.getCurrentBookmark();
+    },
+  );
 
   // Modify and restore
   await runInDurableObject(env.MY_DO, id, async (instance, state) => {

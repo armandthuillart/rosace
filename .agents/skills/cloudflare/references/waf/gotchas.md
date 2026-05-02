@@ -91,11 +91,17 @@ await client.rulesets.update({
 });
 
 // CORRECT: Get existing rules first
-const ruleset = await client.rulesets.get({ zone_id: "zone_id", ruleset_id: "ruleset_id" });
+const ruleset = await client.rulesets.get({
+  zone_id: "zone_id",
+  ruleset_id: "ruleset_id",
+});
 await client.rulesets.update({
   zone_id: "zone_id",
   ruleset_id: "ruleset_id",
-  rules: [...ruleset.rules, { action: "block", expression: "cf.waf.score gt 50" }],
+  rules: [
+    ...ruleset.rules,
+    { action: "block", expression: "cf.waf.score gt 50" },
+  ],
 });
 ```
 

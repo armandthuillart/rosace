@@ -10,7 +10,8 @@ export class SessionBackend extends Container {
 
 export default {
   async fetch(request: Request, env: Env) {
-    const sessionId = request.headers.get("X-Session-ID") || crypto.randomUUID();
+    const sessionId =
+      request.headers.get("X-Session-ID") || crypto.randomUUID();
     const container = env.SESSION_BACKEND.getByName(sessionId);
     await container.startAndWaitForPorts();
     return container.fetch(request);
@@ -54,7 +55,8 @@ export default {
 export default {
   async fetch(request: Request, env: Env) {
     if (request.headers.get("Upgrade") === "websocket") {
-      const sessionId = request.headers.get("X-Session-ID") || crypto.randomUUID();
+      const sessionId =
+        request.headers.get("X-Session-ID") || crypto.randomUUID();
       const container = env.WS_BACKEND.getByName(sessionId);
       await container.startAndWaitForPorts();
 

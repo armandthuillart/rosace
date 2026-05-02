@@ -76,7 +76,11 @@ await client.rulesets.create({
     },
 
     // Geographic blocking
-    { action: "block", expression: 'ip.geoip.country in {"CN" "RU"}', enabled: true },
+    {
+      action: "block",
+      expression: 'ip.geoip.country in {"CN" "RU"}',
+      enabled: true,
+    },
   ],
 });
 ```
@@ -178,7 +182,9 @@ await client.rulesets.create({
   rules: [
     {
       action: "skip",
-      action_parameters: { phases: ["http_request_firewall_managed", "http_ratelimit"] },
+      action_parameters: {
+        phases: ["http_request_firewall_managed", "http_ratelimit"],
+      },
       expression: "ip.src in {192.0.2.0/24}",
     },
     { action: "block", expression: "cf.waf.score gt 50" },

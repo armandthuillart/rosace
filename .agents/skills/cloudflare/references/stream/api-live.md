@@ -28,7 +28,10 @@ async function createLiveInput(accountId: string, apiToken: string) {
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/live_inputs`,
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         recording: { mode: "automatic", timeoutSeconds: 30 },
         deleteRecordingAfterDays: 30,
@@ -39,7 +42,11 @@ async function createLiveInput(accountId: string, apiToken: string) {
   return {
     uid: result.uid,
     rtmps: { url: result.rtmps.url, streamKey: result.rtmps.streamKey },
-    srt: { url: result.srt.url, streamId: result.srt.streamId, passphrase: result.srt.passphrase },
+    srt: {
+      url: result.srt.url,
+      streamId: result.srt.streamId,
+      passphrase: result.srt.passphrase,
+    },
     webRTC: result.webRTC,
   };
 }
@@ -48,7 +55,11 @@ async function createLiveInput(accountId: string, apiToken: string) {
 ## Check Live Status
 
 ```typescript
-async function getLiveStatus(accountId: string, liveInputId: string, apiToken: string) {
+async function getLiveStatus(
+  accountId: string,
+  liveInputId: string,
+  apiToken: string,
+) {
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/live_inputs/${liveInputId}`,
     { headers: { Authorization: `Bearer ${apiToken}` } },
@@ -78,7 +89,10 @@ async function createLiveOutput(
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/stream/live_inputs/${liveInputId}/outputs`,
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         url: `${outputUrl}/${streamKey}`,
         enabled: true,
@@ -122,7 +136,10 @@ async function startWebRTCBroadcast(liveInputId: string) {
   const pc = new RTCPeerConnection();
 
   // Add local media tracks
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  });
   stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
   // Create offer

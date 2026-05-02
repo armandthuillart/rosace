@@ -24,7 +24,9 @@ console.log(result.response);
 
 ```typescript
 const stream = await env.AI.run(model, { messages, stream: true });
-return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
+return new Response(stream, {
+  headers: { "Content-Type": "text/event-stream" },
+});
 ```
 
 ## Embeddings

@@ -63,7 +63,10 @@ db.id.apply(async (dbId) => {
     `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${dbId}/query`,
     {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiToken}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ sql: "CREATE TABLE users (id INT)" }),
     },
   );
@@ -84,13 +87,23 @@ class D1MigrationProvider implements pulumi.dynamic.ResourceProvider {
       `https://api.cloudflare.com/client/v4/accounts/${inputs.accountId}/d1/database/${inputs.databaseId}/query`,
       {
         method: "POST",
-        headers: { Authorization: `Bearer ${inputs.apiToken}`, "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${inputs.apiToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ sql: inputs.sql }),
       },
     );
-    return { id: `${inputs.databaseId}-${Date.now()}`, outs: await response.json() };
+    return {
+      id: `${inputs.databaseId}-${Date.now()}`,
+      outs: await response.json(),
+    };
   }
-  async update(id: string, olds: any, news: any): Promise<pulumi.dynamic.UpdateResult> {
+  async update(
+    id: string,
+    olds: any,
+    news: any,
+  ): Promise<pulumi.dynamic.UpdateResult> {
     if (olds.sql !== news.sql) await this.create(news);
     return {};
   }

@@ -95,7 +95,11 @@ Filter by `scriptName` for a specific Worker. Add `datetimeFiveMinutes` dimensio
 query RecentFirewallEvents($zoneTag: string!, $start: Time!) {
   viewer {
     zones(filter: { zoneTag: $zoneTag }) {
-      firewallEventsAdaptive(filter: { datetime_gt: $start }, limit: 50, orderBy: [datetime_DESC]) {
+      firewallEventsAdaptive(
+        filter: { datetime_gt: $start }
+        limit: 50
+        orderBy: [datetime_DESC]
+      ) {
         action
         source
         clientIP

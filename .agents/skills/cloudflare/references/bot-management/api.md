@@ -30,7 +30,8 @@ export default {
     if (!botMgmt) return fetch(request);
     if (botMgmt.verifiedBot) return fetch(request); // Allow verified bots
     if (botMgmt.score === 1) return new Response("Blocked", { status: 403 });
-    if (botMgmt.score < 30) return new Response("Challenge required", { status: 429 });
+    if (botMgmt.score < 30)
+      return new Response("Challenge required", { status: 429 });
 
     return fetch(request);
   },

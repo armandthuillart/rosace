@@ -58,7 +58,9 @@ env.ANALYTICS.writeDataPoint({
 ```typescript
 export default {
   async tail(events, env, ctx) {
-    const critical = events.filter((e) => e.exceptions.length > 0 || e.event.wallTime > 1000000);
+    const critical = events.filter(
+      (e) => e.exceptions.length > 0 || e.event.wallTime > 1000000,
+    );
     if (critical.length === 0) return;
 
     ctx.waitUntil(
@@ -89,7 +91,10 @@ export default {
       name: e.scriptName || "worker.request",
       attributes: [
         { key: "worker.outcome", value: { stringValue: e.event.outcome } },
-        { key: "worker.cpu_time_us", value: { intValue: String(e.event.cpuTime) } },
+        {
+          key: "worker.cpu_time_us",
+          value: { intValue: String(e.event.cpuTime) },
+        },
       ],
     }));
 
@@ -97,7 +102,9 @@ export default {
       fetch("https://api.honeycomb.io/v1/traces", {
         method: "POST",
         headers: { "X-Honeycomb-Team": env.HONEYCOMB_KEY },
-        body: JSON.stringify({ resourceSpans: [{ scopeSpans: [{ spans: otelSpans }] }] }),
+        body: JSON.stringify({
+          resourceSpans: [{ scopeSpans: [{ spans: otelSpans }] }],
+        }),
       }),
     );
   },

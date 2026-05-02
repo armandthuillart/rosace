@@ -64,7 +64,10 @@ const selector = "h1";
 await page.evaluate(() => document.querySelector(selector));
 
 // ✅ Pass as argument
-await page.evaluate((sel) => document.querySelector(sel)?.textContent, selector);
+await page.evaluate(
+  (sel) => document.querySelector(sel)?.textContent,
+  selector,
+);
 ```
 
 ## Performance

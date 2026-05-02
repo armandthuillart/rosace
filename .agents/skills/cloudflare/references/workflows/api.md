@@ -22,7 +22,10 @@ const data = await step.waitForEvent<PayloadType>("wait", {
   timeout: "24h",
 }); // Default 24h, max 365d
 try {
-  const event = await step.waitForEvent("wait", { event: "approval", timeout: "1h" });
+  const event = await step.waitForEvent("wait", {
+    event: "approval",
+    timeout: "1h",
+  });
 } catch (e) {
   /* Timeout */
 }
@@ -103,7 +106,10 @@ export class ParentWorkflow extends WorkflowEntrypoint<Env, Params> {
     const child = await step.do(
       "start child",
       async () =>
-        await this.env.CHILD_WORKFLOW.create({ id: `child-${event.instanceId}`, params: {} }),
+        await this.env.CHILD_WORKFLOW.create({
+          id: `child-${event.instanceId}`,
+          params: {},
+        }),
     );
   }
 }
@@ -116,7 +122,8 @@ import { NonRetryableError } from "cloudflare:workers";
 
 // NonRetryableError
 await step.do("validate", async () => {
-  if (!event.payload.paymentMethod) throw new NonRetryableError("Payment method required");
+  if (!event.payload.paymentMethod)
+    throw new NonRetryableError("Payment method required");
   const res = await fetch("https://api.example.com/charge", { method: "POST" });
   if (res.status === 401) throw new NonRetryableError("Invalid credentials"); // Don't retry
   if (!res.ok) throw new Error("Retryable failure"); // Will retry
@@ -134,7 +141,9 @@ try {
 
 // Idempotency
 await step.do("charge", async () => {
-  const sub = await fetch(`https://api/subscriptions/${id}`).then((r) => r.json());
+  const sub = await fetch(`https://api/subscriptions/${id}`).then((r) =>
+    r.json(),
+  );
   if (sub.charged) return sub; // Already done
   return await fetch(`https://api/subscriptions/${id}`, {
     method: "POST",

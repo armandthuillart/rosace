@@ -28,7 +28,10 @@ function makeEvent(input: {
   method?: string;
   headers?: Headers | Record<string, string>;
   body?: FormData | string | null;
-  fetchImpl?: (input: Request | URL | string, init?: RequestInit) => Promise<Response>;
+  fetchImpl?: (
+    input: Request | URL | string,
+    init?: RequestInit,
+  ) => Promise<Response>;
 }): RequestEvent {
   const cookies: Cookies = {
     get: vi.fn(),
@@ -80,7 +83,9 @@ describe("handle", () => {
       headers: { "x-proxy": "1" },
     });
 
-    const globalFetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(upstream);
+    const globalFetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(upstream);
 
     const event = makeEvent({
       url: "https://app.local/auth/login?next=%2Fdashboard",
@@ -129,17 +134,22 @@ describe("handle", () => {
 
     const globalFetch = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(new Response(JSON.stringify({ userId: "u_1" }), { status: 200 }));
+      .mockResolvedValue(
+        new Response(JSON.stringify({ userId: "u_1" }), { status: 200 }),
+      );
 
     const { handle } = svelteAuth();
     await handle({ event, resolve });
 
     const session = await event.locals.auth();
 
-    expect(globalFetch).toHaveBeenCalledWith("https://convex.example/auth/session", {
-      headers: { cookie: "session:token=abc" },
-      method: "GET",
-    });
+    expect(globalFetch).toHaveBeenCalledWith(
+      "https://convex.example/auth/session",
+      {
+        headers: { cookie: "session:token=abc" },
+        method: "GET",
+      },
+    );
     expect(session).toEqual({ userId: "u_1" });
   });
 
@@ -192,7 +202,9 @@ describe("login", () => {
     if (!loginRequest) throw new Error("Expected login request");
     expect(loginRequest).toEqual(expect.objectContaining({ method: "POST" }));
     expect(loginRequest.headers).toBeInstanceOf(Headers);
-    expect((loginRequest.headers as Headers).get("origin")).toBe("https://app.local");
+    expect((loginRequest.headers as Headers).get("origin")).toBe(
+      "https://app.local",
+    );
     expect(typeof loginRequest.body).toBe("string");
     expect(JSON.parse(loginRequest.body as string)).toEqual({
       email: "john@example.com",
@@ -225,9 +237,13 @@ describe("login", () => {
 
     const [, registerRequest] = vi.mocked(event.fetch).mock.calls[0] ?? [];
     if (!registerRequest) throw new Error("Expected register request");
-    expect(registerRequest).toEqual(expect.objectContaining({ method: "POST" }));
+    expect(registerRequest).toEqual(
+      expect.objectContaining({ method: "POST" }),
+    );
     expect(registerRequest.headers).toBeInstanceOf(Headers);
-    expect((registerRequest.headers as Headers).get("origin")).toBe("https://app.local");
+    expect((registerRequest.headers as Headers).get("origin")).toBe(
+      "https://app.local",
+    );
     expect(typeof registerRequest.body).toBe("string");
     expect(JSON.parse(registerRequest.body as string)).toEqual({
       email: "john@example.com",
@@ -299,7 +315,9 @@ describe("logout", () => {
     const [, logoutRequest] = vi.mocked(event.fetch).mock.calls[0] ?? [];
     if (!logoutRequest) throw new Error("Expected logout request");
     expect(logoutRequest.headers).toBeInstanceOf(Headers);
-    expect((logoutRequest.headers as Headers).get("origin")).toBe("https://app.local");
+    expect((logoutRequest.headers as Headers).get("origin")).toBe(
+      "https://app.local",
+    );
     expect(redirect).toHaveBeenCalledWith(303, "/login");
   });
 });

@@ -35,7 +35,12 @@ for (let [key, value] of this.ctx.storage.kv.list()) {
 }
 
 // List options: start, prefix, reverse, limit
-this.ctx.storage.kv.list({ start: "user:", prefix: "user:", reverse: true, limit: 100 });
+this.ctx.storage.kv.list({
+  start: "user:",
+  prefix: "user:",
+  reverse: true,
+  limit: 100,
+});
 ```
 
 ## Async KV API (Both backends)
@@ -51,7 +56,10 @@ await this.ctx.storage.list({ prefix: "user:", limit: 100 });
 
 // Options: allowConcurrency, noCache, allowUnconfirmed
 await this.ctx.storage.get("key", { allowConcurrency: true, noCache: true });
-await this.ctx.storage.put("key", value, { allowUnconfirmed: true, noCache: true });
+await this.ctx.storage.put("key", value, {
+  allowUnconfirmed: true,
+  noCache: true,
+});
 ```
 
 ### Storage Options
@@ -67,8 +75,16 @@ await this.ctx.storage.put("key", value, { allowUnconfirmed: true, noCache: true
 ```typescript
 // Sync (SQL/sync KV only)
 this.ctx.storage.transactionSync(() => {
-  this.sql.exec("UPDATE accounts SET balance = balance - ? WHERE id = ?", 100, 1);
-  this.sql.exec("UPDATE accounts SET balance = balance + ? WHERE id = ?", 100, 2);
+  this.sql.exec(
+    "UPDATE accounts SET balance = balance - ? WHERE id = ?",
+    100,
+    1,
+  );
+  this.sql.exec(
+    "UPDATE accounts SET balance = balance + ? WHERE id = ?",
+    100,
+    2,
+  );
   return "result";
 });
 

@@ -94,8 +94,16 @@ for (const file of files.objects) {
 ```jsonc
 {
   "workflows": [
-    { "name": "user-onboarding", "binding": "USER_ONBOARDING", "class_name": "UserOnboarding" },
-    { "name": "data-processing", "binding": "DATA_PROCESSING", "class_name": "DataProcessing" },
+    {
+      "name": "user-onboarding",
+      "binding": "USER_ONBOARDING",
+      "class_name": "UserOnboarding",
+    },
+    {
+      "name": "data-processing",
+      "binding": "DATA_PROCESSING",
+      "class_name": "DataProcessing",
+    },
   ],
 }
 ```
@@ -137,7 +145,9 @@ await step.do("use bindings", async () => {
   const kv = await this.env.KV.get("key");
   const db = await this.env.DB.prepare("SELECT * FROM users").first();
   const file = await this.env.BUCKET.get("file.txt");
-  const ai = await this.env.AI.run("@cf/meta/llama-2-7b-chat-int8", { prompt: "Hi" });
+  const ai = await this.env.AI.run("@cf/meta/llama-2-7b-chat-int8", {
+    prompt: "Hi",
+  });
 });
 ```
 

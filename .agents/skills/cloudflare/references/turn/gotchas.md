@@ -121,7 +121,10 @@ Implement in all production apps:
 
 ```typescript
 pc.addEventListener("iceconnectionstatechange", async () => {
-  if (pc.iceConnectionState === "failed" || pc.iceConnectionState === "disconnected") {
+  if (
+    pc.iceConnectionState === "failed" ||
+    pc.iceConnectionState === "disconnected"
+  ) {
     await refreshTURNCredentials(pc);
     pc.restartIce();
     const offer = await pc.createOffer({ iceRestart: true });

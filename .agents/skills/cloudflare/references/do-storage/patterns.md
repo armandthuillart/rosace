@@ -64,14 +64,26 @@ export class UserCache extends DurableObject {
 
 ```typescript
 export class RateLimiter extends DurableObject {
-  async checkLimit(key: string, limit: number, window: number): Promise<boolean> {
+  async checkLimit(
+    key: string,
+    limit: number,
+    window: number,
+  ): Promise<boolean> {
     const now = Date.now();
-    this.sql.exec("DELETE FROM requests WHERE key = ? AND timestamp < ?", key, now - window);
+    this.sql.exec(
+      "DELETE FROM requests WHERE key = ? AND timestamp < ?",
+      key,
+      now - window,
+    );
     const count = this.sql
       .exec("SELECT COUNT(*) as count FROM requests WHERE key = ?", key)
       .one().count;
     if (count >= limit) return false;
-    this.sql.exec("INSERT INTO requests (key, timestamp) VALUES (?, ?)", key, now);
+    this.sql.exec(
+      "INSERT INTO requests (key, timestamp) VALUES (?, ?)",
+      key,
+      now,
+    );
     return true;
   }
 }
@@ -84,7 +96,8 @@ export class BatchProcessor extends DurableObject {
   pending: string[] = [];
   async addItem(item: string) {
     this.pending.push(item);
-    if (!(await this.ctx.storage.getAlarm())) await this.ctx.storage.setAlarm(Date.now() + 5000);
+    if (!(await this.ctx.storage.getAlarm()))
+      await this.ctx.storage.setAlarm(Date.now() + 5000);
   }
   async alarm() {
     const items = [...this.pending];
@@ -143,7 +156,9 @@ Hierarchical DO pattern where parent manages child DOs:
 export class Workspace extends DurableObject {
   async createDocument(name: string): Promise<string> {
     const docId = crypto.randomUUID();
-    const childId = this.env.DOCUMENT.idFromName(`${this.ctx.id.toString()}:${docId}`);
+    const childId = this.env.DOCUMENT.idFromName(
+      `${this.ctx.id.toString()}:${docId}`,
+    );
     const childStub = this.env.DOCUMENT.get(childId);
     await childStub.initialize(name);
 
@@ -168,7 +183,9 @@ export class Workspace extends DurableObject {
 // Child DO
 export class Document extends DurableObject {
   async initialize(name: string) {
-    this.sql.exec("CREATE TABLE IF NOT EXISTS content(key TEXT PRIMARY KEY, value TEXT)");
+    this.sql.exec(
+      "CREATE TABLE IF NOT EXISTS content(key TEXT PRIMARY KEY, value TEXT)",
+    );
     this.sql.exec("INSERT INTO content VALUES (?, ?)", "name", name);
   }
 }

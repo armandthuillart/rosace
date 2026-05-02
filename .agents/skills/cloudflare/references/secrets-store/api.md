@@ -45,7 +45,10 @@ export default {
 
 ```typescript
 // Parallel fetch
-const [stripeKey, sendgridKey] = await Promise.all([env.STRIPE_KEY.get(), env.SENDGRID_KEY.get()]);
+const [stripeKey, sendgridKey] = await Promise.all([
+  env.STRIPE_KEY.get(),
+  env.SENDGRID_KEY.get(),
+]);
 
 // ❌ Missing .get()
 const key = env.API_KEY;

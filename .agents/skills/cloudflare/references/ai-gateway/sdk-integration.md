@@ -23,7 +23,11 @@ const { text } = await generateText({
 
 // Automatic fallback array
 const { text } = await generateText({
-  model: gateway([openai("gpt-4o"), anthropic("claude-sonnet-4-5"), openai("gpt-4o-mini")]),
+  model: gateway([
+    openai("gpt-4o"),
+    anthropic("claude-sonnet-4-5"),
+    openai("gpt-4o-mini"),
+  ]),
   prompt: "Complex task",
 });
 ```

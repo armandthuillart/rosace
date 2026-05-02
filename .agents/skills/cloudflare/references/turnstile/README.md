@@ -20,7 +20,11 @@ Turnstile is a user-friendly CAPTCHA alternative that runs challenges in the bac
 
 ```html
 <!-- 1. Add script -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+  async
+  defer
+></script>
 
 <!-- 2. Add widget to form -->
 <form action="/submit" method="POST">
@@ -51,15 +55,18 @@ export default {
     const formData = await request.formData();
     const token = formData.get("cf-turnstile-response");
 
-    const result = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret: env.TURNSTILE_SECRET,
-        response: token,
-        remoteip: request.headers.get("CF-Connecting-IP"),
-      }),
-    });
+    const result = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: env.TURNSTILE_SECRET,
+          response: token,
+          remoteip: request.headers.get("CF-Connecting-IP"),
+        }),
+      },
+    );
 
     const validation = await result.json();
     if (!validation.success) {

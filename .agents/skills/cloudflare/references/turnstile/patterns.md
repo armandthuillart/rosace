@@ -8,7 +8,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    ></script>
   </head>
   <body>
     <form action="/submit" method="POST">
@@ -108,15 +112,18 @@ export default {
 
     // Validate token
     const ip = request.headers.get("CF-Connecting-IP");
-    const result = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret: env.TURNSTILE_SECRET,
-        response: token,
-        remoteip: ip,
-      }),
-    });
+    const result = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: env.TURNSTILE_SECRET,
+          response: token,
+          remoteip: ip,
+        }),
+      },
+    );
 
     const validation = await result.json();
 
@@ -134,7 +141,9 @@ export default {
 
 ```typescript
 // functions/submit.ts - same pattern as Workers, use ctx.env and ctx.request
-export const onRequestPost: PagesFunction<{ TURNSTILE_SECRET: string }> = async (ctx) => {
+export const onRequestPost: PagesFunction<{
+  TURNSTILE_SECRET: string;
+}> = async (ctx) => {
   const token = (await ctx.request.formData()).get("cf-turnstile-response");
   // Validate with ctx.env.TURNSTILE_SECRET (same as Workers pattern above)
 };
@@ -186,7 +195,9 @@ let widgetId = window.turnstile.render("#container", {
 
 ```javascript
 const SITE_KEY =
-  process.env.NODE_ENV === "production" ? "YOUR_PRODUCTION_SITE_KEY" : "1x00000000000000000000AA"; // Always passes
+  process.env.NODE_ENV === "production"
+    ? "YOUR_PRODUCTION_SITE_KEY"
+    : "1x00000000000000000000AA"; // Always passes
 
 const SECRET_KEY =
   process.env.NODE_ENV === "production"

@@ -4,7 +4,11 @@
 
 ```typescript
 export default {
-  async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
     console.log("Cron executed:", new Date(controller.scheduledTime));
   },
 };
@@ -120,7 +124,10 @@ export class DataProcessingWorkflow extends WorkflowEntrypoint {
 export default {
   async scheduled(controller, env, ctx) {
     const instance = await env.MY_WORKFLOW.create({
-      params: { scheduledTime: controller.scheduledTime, cron: controller.cron },
+      params: {
+        scheduledTime: controller.scheduledTime,
+        cron: controller.cron,
+      },
     });
     console.log(`Started workflow: ${instance.id}`);
   },
@@ -165,7 +172,10 @@ describe("Scheduled Handler", () => {
       type: "scheduled" as const,
       noRetry: () => {},
     };
-    const ctx = { waitUntil: (p: Promise<any>) => p, passThroughOnException: () => {} };
+    const ctx = {
+      waitUntil: (p: Promise<any>) => p,
+      passThroughOnException: () => {},
+    };
     await worker.scheduled(controller, env, ctx);
     expect(await env.MY_KV.get("last_run")).toBeDefined();
   });
@@ -173,7 +183,12 @@ describe("Scheduled Handler", () => {
   it("handles multiple crons", async () => {
     const ctx = { waitUntil: () => {}, passThroughOnException: () => {} };
     await worker.scheduled(
-      { scheduledTime: Date.now(), cron: "*/5 * * * *", type: "scheduled", noRetry: () => {} },
+      {
+        scheduledTime: Date.now(),
+        cron: "*/5 * * * *",
+        type: "scheduled",
+        noRetry: () => {},
+      },
       env,
       ctx,
     );

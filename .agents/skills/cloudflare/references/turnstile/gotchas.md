@@ -12,12 +12,16 @@
 // CORRECT - Server validates token
 app.post("/submit", async (req, res) => {
   const token = req.body["cf-turnstile-response"];
-  const validation = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body: JSON.stringify({ secret: SECRET, response: token }),
-  }).then((r) => r.json());
+  const validation = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      body: JSON.stringify({ secret: SECRET, response: token }),
+    },
+  ).then((r) => r.json());
 
-  if (!validation.success) return res.status(403).json({ error: "CAPTCHA failed" });
+  if (!validation.success)
+    return res.status(403).json({ error: "CAPTCHA failed" });
 });
 ```
 

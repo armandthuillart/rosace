@@ -16,11 +16,17 @@ async function fetchWithAuth(url: string, key: string) {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    let resp = await fetchWithAuth("https://api.example.com", await env.PRIMARY_KEY.get());
+    let resp = await fetchWithAuth(
+      "https://api.example.com",
+      await env.PRIMARY_KEY.get(),
+    );
 
     // Fallback during rotation
     if (!resp.ok && env.FALLBACK_KEY) {
-      resp = await fetchWithAuth("https://api.example.com", await env.FALLBACK_KEY.get());
+      resp = await fetchWithAuth(
+        "https://api.example.com",
+        await env.FALLBACK_KEY.get(),
+      );
     }
 
     return resp;

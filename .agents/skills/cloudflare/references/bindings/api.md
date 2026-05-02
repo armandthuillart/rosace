@@ -51,7 +51,11 @@ interface Env {
 
 ```typescript
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     const value = await env.MY_KV.get("key");
     return new Response(value);
   },
@@ -80,7 +84,10 @@ export default app;
 ### Method 3: Module Workers (Legacy)
 
 ```typescript
-export async function handleRequest(request: Request, env: Env): Promise<Response> {
+export async function handleRequest(
+  request: Request,
+  env: Env,
+): Promise<Response> {
   const value = await env.MY_KV.get("key");
   return new Response(value);
 }

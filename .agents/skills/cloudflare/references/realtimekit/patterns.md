@@ -51,8 +51,12 @@ RealtimeKit provides 133+ pre-built Stencil.js Web Components with framework wra
 import RealtimeKitClient from "@cloudflare/realtimekit";
 
 const meeting = new RealtimeKitClient({ authToken, video: true, audio: true });
-meeting.self.on("roomJoined", () => console.log("Joined:", meeting.meta.meetingTitle));
-meeting.participants.joined.on("participantJoined", (p) => console.log(`${p.name} joined`));
+meeting.self.on("roomJoined", () =>
+  console.log("Joined:", meeting.meta.meetingTitle),
+);
+meeting.participants.joined.on("participantJoined", (p) =>
+  console.log(`${p.name} joined`),
+);
 await meeting.join();
 ```
 

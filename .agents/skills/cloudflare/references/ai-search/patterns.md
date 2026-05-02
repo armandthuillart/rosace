@@ -36,7 +36,9 @@ const stream = await env.AI.autorag("docs").aiSearch({
   model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   stream: true,
 });
-return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
+return new Response(stream, {
+  headers: { "Content-Type": "text/event-stream" },
+});
 ```
 
 ## Score Threshold

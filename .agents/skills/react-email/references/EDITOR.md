@@ -237,7 +237,9 @@ export function MyEditor() {
         <div style={{ flex: 1 }}>
           <EditorContent editor={editor} />
         </div>
-        <Inspector.Root style={{ width: 240, borderLeft: "1px solid #e5e7eb", padding: 16 }}>
+        <Inspector.Root
+          style={{ width: 240, borderLeft: "1px solid #e5e7eb", padding: 16 }}
+        >
           <Inspector.Breadcrumb />
           <Inspector.Document />
           <Inspector.Node />
@@ -345,7 +347,8 @@ const Callout = EmailNode.create({
       "div",
       mergeAttributes(HTMLAttributes, {
         "data-callout": "",
-        style: "padding: 12px 16px; background: #f4f4f5; border-left: 3px solid #1c1c1c;",
+        style:
+          "padding: 12px 16px; background: #f4f4f5; border-left: 3px solid #1c1c1c;",
       }),
       0,
     ];

@@ -73,7 +73,9 @@ export default {
 ```js
 export default {
   async scheduled(event, env) {
-    const jwks = await (await fetch("https://auth.example.com/.well-known/jwks.json")).json();
+    const jwks = await (
+      await fetch("https://auth.example.com/.well-known/jwks.json")
+    ).json();
     await fetch(
       `https://api.cloudflare.com/client/v4/zones/${env.ZONE_ID}/api_gateway/token_validation/${env.CONFIG_ID}`,
       {

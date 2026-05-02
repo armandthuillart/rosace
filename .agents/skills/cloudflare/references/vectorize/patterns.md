@@ -17,8 +17,13 @@ const matches = await env.VECTORIZE.query(result.data[0], { topK: 5 }); // Pass 
 ## OpenAI Integration
 
 ```typescript
-const response = await openai.embeddings.create({ model: "text-embedding-ada-002", input: query });
-const matches = await env.VECTORIZE.query(response.data[0].embedding, { topK: 5 });
+const response = await openai.embeddings.create({
+  model: "text-embedding-ada-002",
+  input: query,
+});
+const matches = await env.VECTORIZE.query(response.data[0].embedding, {
+  topK: 5,
+});
 ```
 
 ## RAG Pattern
@@ -28,7 +33,10 @@ const matches = await env.VECTORIZE.query(response.data[0].embedding, { topK: 5 
 const emb = await env.AI.run("@cf/baai/bge-base-en-v1.5", { text: [query] });
 
 // 2. Search vectors
-const matches = await env.VECTORIZE.query(emb.data[0], { topK: 5, returnMetadata: "indexed" });
+const matches = await env.VECTORIZE.query(emb.data[0], {
+  topK: 5,
+  returnMetadata: "indexed",
+});
 
 // 3. Fetch full docs from R2/D1/KV
 const docs = await Promise.all(
@@ -46,7 +54,9 @@ const answer = await env.AI.run("@cf/meta/llama-3-8b-instruct", {
 ### Namespaces (< 50K tenants, fastest)
 
 ```typescript
-await env.VECTORIZE.upsert([{ id: "1", values: emb, namespace: `tenant-${id}` }]);
+await env.VECTORIZE.upsert([
+  { id: "1", values: emb, namespace: `tenant-${id}` },
+]);
 await env.VECTORIZE.query(vec, { namespace: `tenant-${id}`, topK: 10 });
 ```
 
@@ -57,7 +67,9 @@ wrangler vectorize create-metadata-index my-index --property-name=tenantId --typ
 ```
 
 ```typescript
-await env.VECTORIZE.upsert([{ id: "1", values: emb, metadata: { tenantId: id } }]);
+await env.VECTORIZE.upsert([
+  { id: "1", values: emb, metadata: { tenantId: id } },
+]);
 await env.VECTORIZE.query(vec, { filter: { tenantId: id }, topK: 10 });
 ```
 

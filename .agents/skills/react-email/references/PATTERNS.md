@@ -33,7 +33,11 @@ interface PasswordResetProps {
   expiryHours?: number;
 }
 
-export default function PasswordReset({ resetUrl, email, expiryHours = 1 }: PasswordResetProps) {
+export default function PasswordReset({
+  resetUrl,
+  email,
+  expiryHours = 1,
+}: PasswordResetProps) {
   return (
     <Html lang="en">
       <Tailwind config={{ presets: [pixelBasedPreset] }}>
@@ -41,12 +45,16 @@ export default function PasswordReset({ resetUrl, email, expiryHours = 1 }: Pass
         <Body className="bg-gray-100 font-sans">
           <Preview>Reset your password - Action required</Preview>
           <Container className="mx-auto py-10 px-5 max-w-xl bg-white">
-            <Heading className="text-2xl font-bold text-gray-800 mb-5">Reset Your Password</Heading>
+            <Heading className="text-2xl font-bold text-gray-800 mb-5">
+              Reset Your Password
+            </Heading>
             <Text className="text-base leading-7 text-gray-800 my-4">
-              A password reset was requested for your account: <strong>{email}</strong>
+              A password reset was requested for your account:{" "}
+              <strong>{email}</strong>
             </Text>
             <Text className="text-base leading-7 text-gray-800 my-4">
-              Click the button below to reset your password. This link expires in {expiryHours} hour
+              Click the button below to reset your password. This link expires
+              in {expiryHours} hour
               {expiryHours > 1 ? "s" : ""}.
             </Text>
             <Button
@@ -57,8 +65,8 @@ export default function PasswordReset({ resetUrl, email, expiryHours = 1 }: Pass
             </Button>
             <Hr className="border-solid border-gray-200 my-6" />
             <Text className="text-sm text-gray-500 leading-5 my-2">
-              If you didn't request this, please ignore this email. Your password will remain
-              unchanged.
+              If you didn't request this, please ignore this email. Your
+              password will remain unchanged.
             </Text>
             <Text className="text-sm text-gray-500 leading-5 my-2">
               For security, this link will only work once.
@@ -138,19 +146,31 @@ export default function OrderConfirmation({
       <Tailwind config={{ presets: [pixelBasedPreset] }}>
         <Head />
         <Body className="bg-gray-100 font-sans">
-          <Preview>Order #{orderNumber} confirmed - Thank you for your purchase!</Preview>
+          <Preview>
+            Order #{orderNumber} confirmed - Thank you for your purchase!
+          </Preview>
           <Container className="mx-auto py-10 px-5 max-w-xl">
-            <Heading className="text-3xl font-bold text-gray-800 mb-2">Order Confirmed</Heading>
-            <Text className="text-base text-gray-500 mb-6">Thank you for your order!</Text>
+            <Heading className="text-3xl font-bold text-gray-800 mb-2">
+              Order Confirmed
+            </Heading>
+            <Text className="text-base text-gray-500 mb-6">
+              Thank you for your order!
+            </Text>
 
             <Section className="bg-gray-50 p-4 rounded mb-6">
               <Row>
                 <Column>
-                  <Text className="text-xs text-gray-500 uppercase mb-1">Order Number</Text>
-                  <Text className="text-base font-bold text-gray-800 m-0">#{orderNumber}</Text>
+                  <Text className="text-xs text-gray-500 uppercase mb-1">
+                    Order Number
+                  </Text>
+                  <Text className="text-base font-bold text-gray-800 m-0">
+                    #{orderNumber}
+                  </Text>
                 </Column>
                 <Column>
-                  <Text className="text-xs text-gray-500 uppercase mb-1">Order Date</Text>
+                  <Text className="text-xs text-gray-500 uppercase mb-1">
+                    Order Date
+                  </Text>
                   <Text className="text-base font-bold text-gray-800 m-0">
                     {orderDate.toLocaleDateString()}
                   </Text>
@@ -177,9 +197,13 @@ export default function OrderConfirmation({
                     />
                   </Column>
                   <Column className="align-top pl-4">
-                    <Text className="text-base font-bold text-gray-800 m-0 mb-1">{item.name}</Text>
+                    <Text className="text-base font-bold text-gray-800 m-0 mb-1">
+                      {item.name}
+                    </Text>
                     {item.sku && (
-                      <Text className="text-sm text-gray-400 m-0 mb-2">SKU: {item.sku}</Text>
+                      <Text className="text-sm text-gray-400 m-0 mb-2">
+                        SKU: {item.sku}
+                      </Text>
                     )}
                     <Text className="text-sm text-gray-500 m-0">
                       Quantity: {item.quantity} × ${item.price.toFixed(2)}
@@ -202,7 +226,9 @@ export default function OrderConfirmation({
                   <Text className="text-sm text-gray-500 my-2">Subtotal</Text>
                 </Column>
                 <Column className="text-right">
-                  <Text className="text-sm text-gray-800 my-2">${subtotal.toFixed(2)}</Text>
+                  <Text className="text-sm text-gray-800 my-2">
+                    ${subtotal.toFixed(2)}
+                  </Text>
                 </Column>
               </Row>
               <Row>
@@ -210,7 +236,9 @@ export default function OrderConfirmation({
                   <Text className="text-sm text-gray-500 my-2">Shipping</Text>
                 </Column>
                 <Column className="text-right">
-                  <Text className="text-sm text-gray-800 my-2">${shipping.toFixed(2)}</Text>
+                  <Text className="text-sm text-gray-800 my-2">
+                    ${shipping.toFixed(2)}
+                  </Text>
                 </Column>
               </Row>
               <Row>
@@ -218,16 +246,22 @@ export default function OrderConfirmation({
                   <Text className="text-sm text-gray-500 my-2">Tax</Text>
                 </Column>
                 <Column className="text-right">
-                  <Text className="text-sm text-gray-800 my-2">${tax.toFixed(2)}</Text>
+                  <Text className="text-sm text-gray-800 my-2">
+                    ${tax.toFixed(2)}
+                  </Text>
                 </Column>
               </Row>
               <Hr className="border-solid border-gray-200 my-3" />
               <Row>
                 <Column>
-                  <Text className="text-lg font-bold text-gray-800 my-2">Total</Text>
+                  <Text className="text-lg font-bold text-gray-800 my-2">
+                    Total
+                  </Text>
                 </Column>
                 <Column className="text-right">
-                  <Text className="text-lg font-bold text-gray-800 my-2">${total.toFixed(2)}</Text>
+                  <Text className="text-lg font-bold text-gray-800 my-2">
+                    ${total.toFixed(2)}
+                  </Text>
                 </Column>
               </Row>
             </Section>
@@ -238,16 +272,24 @@ export default function OrderConfirmation({
               Shipping Address
             </Heading>
             <Section className="bg-gray-50 p-4 rounded">
-              <Text className="text-sm text-gray-800 my-1">{shippingAddress.name}</Text>
-              <Text className="text-sm text-gray-800 my-1">{shippingAddress.street}</Text>
               <Text className="text-sm text-gray-800 my-1">
-                {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zip}
+                {shippingAddress.name}
               </Text>
-              <Text className="text-sm text-gray-800 my-1">{shippingAddress.country}</Text>
+              <Text className="text-sm text-gray-800 my-1">
+                {shippingAddress.street}
+              </Text>
+              <Text className="text-sm text-gray-800 my-1">
+                {shippingAddress.city}, {shippingAddress.state}{" "}
+                {shippingAddress.zip}
+              </Text>
+              <Text className="text-sm text-gray-800 my-1">
+                {shippingAddress.country}
+              </Text>
             </Section>
 
             <Text className="text-sm text-gray-500 mt-8">
-              Questions about your order? Reply to this email and we'll help you out.
+              Questions about your order? Reply to this email and we'll help you
+              out.
             </Text>
           </Container>
         </Body>
@@ -354,7 +396,9 @@ export default function Notification({
           <Container className="mx-auto max-w-xl bg-white border border-solid border-gray-200 rounded overflow-hidden">
             <Section className={`h-1 w-full ${severityColors[severity]}`} />
 
-            <Heading className="text-2xl font-bold text-gray-800 mx-6 mt-6 mb-4">{title}</Heading>
+            <Heading className="text-2xl font-bold text-gray-800 mx-6 mt-6 mb-4">
+              {title}
+            </Heading>
 
             <Text
               className={`inline-block px-3 py-1 text-xs font-bold text-white rounded-full mx-6 mb-4 ${severityBtnColors[severity]}`}
@@ -362,7 +406,9 @@ export default function Notification({
               {severity.toUpperCase()}
             </Text>
 
-            <Text className="text-base leading-6 text-gray-800 mx-6 mb-4">{message}</Text>
+            <Text className="text-base leading-6 text-gray-800 mx-6 mb-4">
+              {message}
+            </Text>
 
             <Text className="text-sm text-gray-500 mx-6 mb-6">
               {new Date(timestamp).toLocaleString("en-US", {
@@ -374,7 +420,10 @@ export default function Notification({
             {logData && (
               <>
                 <Hr className="border-solid border-gray-200 my-6" />
-                <Heading as="h2" className="text-lg font-bold text-gray-800 mx-6 my-4">
+                <Heading
+                  as="h2"
+                  className="text-lg font-bold text-gray-800 mx-6 my-4"
+                >
                   Log Details
                 </Heading>
                 <Section className="overflow-auto mx-6">
@@ -397,7 +446,8 @@ export default function Notification({
 
             <Hr className="border-solid border-gray-200 my-6" />
             <Text className="text-xs text-gray-500 mx-6 mb-6">
-              This is an automated notification. Please do not reply to this email.
+              This is an automated notification. Please do not reply to this
+              email.
             </Text>
           </Container>
         </Body>
@@ -459,7 +509,10 @@ interface NewsletterProps {
   unsubscribeUrl: string;
 }
 
-export default function Newsletter({ articles, unsubscribeUrl }: NewsletterProps) {
+export default function Newsletter({
+  articles,
+  unsubscribeUrl,
+}: NewsletterProps) {
   return (
     <Html lang="en">
       <Tailwind config={{ presets: [pixelBasedPreset] }}>
@@ -495,7 +548,10 @@ export default function Newsletter({ articles, unsubscribeUrl }: NewsletterProps
                   width="600"
                   className="w-full rounded-lg mb-4"
                 />
-                <Heading as="h2" className="text-2xl font-bold text-gray-900 my-4">
+                <Heading
+                  as="h2"
+                  className="text-2xl font-bold text-gray-900 my-4"
+                >
                   {articles[0].title}
                 </Heading>
                 <Text className="text-base leading-6 text-gray-500 my-4">
@@ -518,67 +574,76 @@ export default function Newsletter({ articles, unsubscribeUrl }: NewsletterProps
             {/* Two-Column Articles */}
             {articles.slice(1, 5).length > 0 && (
               <>
-                <Heading as="h2" className="text-2xl font-bold text-gray-900 mx-5 my-4">
+                <Heading
+                  as="h2"
+                  className="text-2xl font-bold text-gray-900 mx-5 my-4"
+                >
                   More From This Week
                 </Heading>
-                {Array.from({ length: Math.ceil(articles.slice(1, 5).length / 2) }).map(
-                  (_, rowIndex) => {
-                    const leftArticle = articles[1 + rowIndex * 2];
-                    const rightArticle = articles[2 + rowIndex * 2];
+                {Array.from({
+                  length: Math.ceil(articles.slice(1, 5).length / 2),
+                }).map((_, rowIndex) => {
+                  const leftArticle = articles[1 + rowIndex * 2];
+                  const rightArticle = articles[2 + rowIndex * 2];
 
-                    return (
-                      <Section key={rowIndex} className="px-5 mb-6">
-                        <Row>
-                          {leftArticle && (
-                            <Column className="w-1/2 align-top px-1">
-                              <Img
-                                src={leftArticle.image}
-                                alt={leftArticle.title}
-                                width="280"
-                                className="w-full rounded mb-3"
-                              />
-                              <Heading as="h3" className="text-lg font-bold text-gray-900 my-3">
-                                {leftArticle.title}
-                              </Heading>
-                              <Text className="text-sm leading-5 text-gray-500 my-2">
-                                {leftArticle.excerpt}
-                              </Text>
-                              <Link
-                                href={leftArticle.url}
-                                className="text-sm text-blue-600 no-underline font-semibold"
-                              >
-                                Read article →
-                              </Link>
-                            </Column>
-                          )}
+                  return (
+                    <Section key={rowIndex} className="px-5 mb-6">
+                      <Row>
+                        {leftArticle && (
+                          <Column className="w-1/2 align-top px-1">
+                            <Img
+                              src={leftArticle.image}
+                              alt={leftArticle.title}
+                              width="280"
+                              className="w-full rounded mb-3"
+                            />
+                            <Heading
+                              as="h3"
+                              className="text-lg font-bold text-gray-900 my-3"
+                            >
+                              {leftArticle.title}
+                            </Heading>
+                            <Text className="text-sm leading-5 text-gray-500 my-2">
+                              {leftArticle.excerpt}
+                            </Text>
+                            <Link
+                              href={leftArticle.url}
+                              className="text-sm text-blue-600 no-underline font-semibold"
+                            >
+                              Read article →
+                            </Link>
+                          </Column>
+                        )}
 
-                          {rightArticle && (
-                            <Column className="w-1/2 align-top px-1">
-                              <Img
-                                src={rightArticle.image}
-                                alt={rightArticle.title}
-                                width="280"
-                                className="w-full rounded mb-3"
-                              />
-                              <Heading as="h3" className="text-lg font-bold text-gray-900 my-3">
-                                {rightArticle.title}
-                              </Heading>
-                              <Text className="text-sm leading-5 text-gray-500 my-2">
-                                {rightArticle.excerpt}
-                              </Text>
-                              <Link
-                                href={rightArticle.url}
-                                className="text-sm text-blue-600 no-underline font-semibold"
-                              >
-                                Read article →
-                              </Link>
-                            </Column>
-                          )}
-                        </Row>
-                      </Section>
-                    );
-                  },
-                )}
+                        {rightArticle && (
+                          <Column className="w-1/2 align-top px-1">
+                            <Img
+                              src={rightArticle.image}
+                              alt={rightArticle.title}
+                              width="280"
+                              className="w-full rounded mb-3"
+                            />
+                            <Heading
+                              as="h3"
+                              className="text-lg font-bold text-gray-900 my-3"
+                            >
+                              {rightArticle.title}
+                            </Heading>
+                            <Text className="text-sm leading-5 text-gray-500 my-2">
+                              {rightArticle.excerpt}
+                            </Text>
+                            <Link
+                              href={rightArticle.url}
+                              className="text-sm text-blue-600 no-underline font-semibold"
+                            >
+                              Read article →
+                            </Link>
+                          </Column>
+                        )}
+                      </Row>
+                    </Section>
+                  );
+                })}
               </>
             )}
 
@@ -589,7 +654,10 @@ export default function Newsletter({ articles, unsubscribeUrl }: NewsletterProps
               <Text className="text-sm text-gray-500 my-2">
                 You're receiving this because you subscribed to our newsletter.
               </Text>
-              <Link href={unsubscribeUrl} className="text-sm text-blue-600 underline block my-2">
+              <Link
+                href={unsubscribeUrl}
+                className="text-sm text-blue-600 underline block my-2"
+              >
                 Unsubscribe from this list
               </Link>
               <Text className="text-sm text-gray-500 my-2">
@@ -607,7 +675,8 @@ Newsletter.PreviewProps = {
   articles: [
     {
       title: "The Future of Web Development in 2026",
-      excerpt: "Exploring the latest trends and technologies shaping modern web development.",
+      excerpt:
+        "Exploring the latest trends and technologies shaping modern web development.",
       image: "https://via.placeholder.com/600x300",
       url: "https://example.com/article-1",
       author: "Jane Doe",
@@ -681,13 +750,17 @@ export default function TeamInvitation({
             </Heading>
 
             <Text className="text-base leading-7 text-gray-800 my-4">
-              <strong>{inviterName}</strong> ({inviterEmail}) has invited you to join the{" "}
-              <strong>{teamName}</strong> team.
+              <strong>{inviterName}</strong> ({inviterEmail}) has invited you to
+              join the <strong>{teamName}</strong> team.
             </Text>
 
             <Section className="bg-gray-50 p-5 rounded border border-solid border-gray-200 my-6">
-              <Text className="text-xs text-gray-500 uppercase font-bold mb-2">Role</Text>
-              <Text className="text-lg font-bold text-gray-800 m-0">{role}</Text>
+              <Text className="text-xs text-gray-500 uppercase font-bold mb-2">
+                Role
+              </Text>
+              <Text className="text-lg font-bold text-gray-800 m-0">
+                {role}
+              </Text>
             </Section>
 
             <Text className="text-base leading-7 text-gray-800 my-4">
@@ -704,10 +777,12 @@ export default function TeamInvitation({
             <Hr className="border-solid border-gray-200 my-6" />
 
             <Text className="text-sm text-gray-500 leading-5 my-2">
-              This invitation will expire in {expiryDays} day{expiryDays > 1 ? "s" : ""}.
+              This invitation will expire in {expiryDays} day
+              {expiryDays > 1 ? "s" : ""}.
             </Text>
             <Text className="text-sm text-gray-500 leading-5 my-2">
-              If you weren't expecting this invitation, you can safely ignore this email.
+              If you weren't expecting this invitation, you can safely ignore
+              this email.
             </Text>
           </Container>
         </Body>

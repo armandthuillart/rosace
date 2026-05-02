@@ -50,7 +50,9 @@ modified.headers.set('X-Custom', 'value');
 
 ```javascript
 // Background work (after response sent)
-ctx.waitUntil(fetch("https://logs.example.com", { method: "POST", body: "..." }));
+ctx.waitUntil(
+  fetch("https://logs.example.com", { method: "POST", body: "..." }),
+);
 return new Response("OK"); // Returns immediately
 ```
 
@@ -89,7 +91,10 @@ crypto.randomUUID(); // UUID v4
 crypto.getRandomValues(new Uint8Array(16));
 
 // SHA-256 hash
-const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(data));
+const hash = await crypto.subtle.digest(
+  "SHA-256",
+  new TextEncoder().encode(data),
+);
 ```
 
 ## Limits (Playground = Free Plan)

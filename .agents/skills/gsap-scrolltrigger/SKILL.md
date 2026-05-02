@@ -112,8 +112,10 @@ With **batchMax** and **interval** for finer control:
 ScrollTrigger.batch(".card", {
   interval: 0.1,
   batchMax: 4,
-  onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, stagger: 0.1, overwrite: true }),
-  onLeaveBack: (batch) => gsap.set(batch, { opacity: 0, y: 50, overwrite: true }),
+  onEnter: (batch) =>
+    gsap.to(batch, { opacity: 1, y: 0, stagger: 0.1, overwrite: true }),
+  onLeaveBack: (batch) =>
+    gsap.set(batch, { opacity: 0, y: 50, overwrite: true }),
 });
 ```
 
@@ -143,7 +145,12 @@ ScrollTrigger.scrollerProxy(document.body, {
     return scrollbar.scrollTop;
   },
   getBoundingClientRect() {
-    return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+    return {
+      top: 0,
+      left: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
   },
 });
 scrollbar.addListener(ScrollTrigger.update);

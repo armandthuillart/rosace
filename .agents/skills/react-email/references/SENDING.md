@@ -39,7 +39,9 @@ const { data, error } = await resend.emails.send({
   from: "Acme <onboarding@resend.dev>",
   to: ["user@example.com"],
   subject: "Welcome to Acme",
-  react: <WelcomeEmail name="John" verificationUrl="https://example.com/verify" />,
+  react: (
+    <WelcomeEmail name="John" verificationUrl="https://example.com/verify" />
+  ),
 });
 
 if (error) {

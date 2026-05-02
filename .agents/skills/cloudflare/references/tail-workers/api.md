@@ -4,7 +4,11 @@
 
 ```typescript
 export default {
-  async tail(events: TraceItem[], env: Env, ctx: ExecutionContext): Promise<void> {
+  async tail(
+    events: TraceItem[],
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
     // Process events
   },
 } satisfies ExportedHandler<Env>;
@@ -131,7 +135,11 @@ interface Env {
 }
 
 export default {
-  async tail(events: TraceItem[], env: Env, ctx: ExecutionContext): Promise<void> {
+  async tail(
+    events: TraceItem[],
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
     const payload = events.map((event) => ({
       script: event.scriptName,
       timestamp: event.eventTimestamp,

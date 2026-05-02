@@ -68,7 +68,10 @@ const bucket = new cloudflare.R2Bucket("my-bucket", {
 ## D1 Databases (cloudflare.D1Database)
 
 ```typescript
-const db = new cloudflare.D1Database("my-db", { accountId, name: "my-database" });
+const db = new cloudflare.D1Database("my-db", {
+  accountId,
+  name: "my-database",
+});
 
 // Migrations via wrangler
 import * as command from "@pulumi/command";

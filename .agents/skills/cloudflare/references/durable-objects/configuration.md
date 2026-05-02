@@ -69,7 +69,12 @@ await stub.someMethod(); // Data stays in EU
     { "tag": "v1", "new_sqlite_classes": ["MyDO"] }, // Create SQLite (recommended)
     // { "tag": "v1", "new_classes": ["MyDO"] },                // Create KV (paid only)
     { "tag": "v2", "renamed_classes": [{ "from": "Old", "to": "New" }] },
-    { "tag": "v3", "transferred_classes": [{ "from": "Src", "from_script": "old", "to": "Dest" }] },
+    {
+      "tag": "v3",
+      "transferred_classes": [
+        { "from": "Src", "from_script": "old", "to": "Dest" },
+      ],
+    },
     { "tag": "v4", "deleted_classes": ["Obsolete"] }, // Destroys ALL data!
   ],
 }
@@ -95,7 +100,13 @@ Separate DO namespaces per environment (staging/production have distinct object 
   "env": {
     "production": {
       "durable_objects": {
-        "bindings": [{ "name": "MY_DO", "class_name": "MyDO", "environment": "production" }],
+        "bindings": [
+          {
+            "name": "MY_DO",
+            "class_name": "MyDO",
+            "environment": "production",
+          },
+        ],
       },
     },
   },

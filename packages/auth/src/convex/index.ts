@@ -27,7 +27,9 @@ type SessionPayload = {
   sessionToken: string;
 };
 
-type ProviderCheck = { blocked: Response; provider: null } | { blocked: null; provider: Provider };
+type ProviderCheck =
+  | { blocked: Response; provider: null }
+  | { blocked: null; provider: Provider };
 
 const LoginSchema = v.pipe(
   v.object({
@@ -39,7 +41,10 @@ const LoginSchema = v.pipe(
   v.transform((input) => ({
     ...input,
     email: input.email.toLowerCase(),
-    flow: input.firstName && input.lastName ? ("register" as const) : ("login" as const),
+    flow:
+      input.firstName && input.lastName
+        ? ("register" as const)
+        : ("login" as const),
   })),
 );
 
@@ -95,8 +100,14 @@ function getClientIp(request: Request): string {
   );
 }
 
-function requireAllowedProvider(request: Request, allowed: readonly Provider[]): ProviderCheck {
-  const provider = new URL(request.url).pathname.replace(/\/+$/, "").split("/").at(-1);
+function requireAllowedProvider(
+  request: Request,
+  allowed: readonly Provider[],
+): ProviderCheck {
+  const provider = new URL(request.url).pathname
+    .replace(/\/+$/, "")
+    .split("/")
+    .at(-1);
 
   if (!provider) {
     return {
@@ -120,7 +131,10 @@ function requireAllowedProvider(request: Request, allowed: readonly Provider[]):
 }
 
 function sessionCookies(payload: SessionPayload) {
-  const maxAgeSession = Math.max(1, Math.floor((payload.expiresAt - Date.now()) / 1000));
+  const maxAgeSession = Math.max(
+    1,
+    Math.floor((payload.expiresAt - Date.now()) / 1000),
+  );
   return [
     `session:token=${payload.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`,
   ];
@@ -169,7 +183,8 @@ const registerRoutes = (http: HttpRouter) => {
     handler: httpActionGeneric(async () => {
       return new Response(getPublicJwks(), {
         headers: {
-          "cache-control": "public, max-age=3600, stale-while-revalidate=60, stale-if-error=86400",
+          "cache-control":
+            "public, max-age=3600, stale-while-revalidate=60, stale-if-error=86400",
           "content-type": "application/json",
         },
         status: 200,
@@ -200,7 +215,8 @@ const registerRoutes = (http: HttpRouter) => {
       if (!auth) {
         const headers = new Headers({ "Content-Type": "application/json" });
 
-        for (const cookie of clearedAuthCookies()) headers.append("Set-Cookie", cookie);
+        for (const cookie of clearedAuthCookies())
+          headers.append("Set-Cookie", cookie);
 
         return new Response("null", { headers, status: 200 });
       }
@@ -230,7 +246,9 @@ const registerRoutes = (http: HttpRouter) => {
         return new Response(null, {
           status: 429,
           headers: {
-            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+            "X-Retry-After": String(
+              Math.ceil((retryAfter! - Date.now()) / 1000),
+            ),
           },
         });
       }
@@ -251,7 +269,8 @@ const registerRoutes = (http: HttpRouter) => {
       }
 
       const headers = new Headers();
-      for (const cookie of clearedAuthCookies()) headers.append("Set-Cookie", cookie);
+      for (const cookie of clearedAuthCookies())
+        headers.append("Set-Cookie", cookie);
 
       return new Response(null, { headers, status: 204 });
     }),
@@ -274,7 +293,9 @@ const registerRoutes = (http: HttpRouter) => {
         return new Response(null, {
           status: 429,
           headers: {
-            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+            "X-Retry-After": String(
+              Math.ceil((retryAfter! - Date.now()) / 1000),
+            ),
           },
         });
       }
@@ -335,7 +356,9 @@ const registerRoutes = (http: HttpRouter) => {
         return new Response(null, {
           status: 429,
           headers: {
-            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
+            "X-Retry-After": String(
+              Math.ceil((retryAfter! - Date.now()) / 1000),
+            ),
           },
         });
       }
@@ -352,7 +375,8 @@ const registerRoutes = (http: HttpRouter) => {
         if (payload.flow === "register") {
           const firstName = payload.firstName;
           const lastName = payload.lastName;
-          if (!firstName || !lastName) return new Response(null, { status: 400 });
+          if (!firstName || !lastName)
+            return new Response(null, { status: 400 });
 
           const { hash } = (await ctx.runAction(
             STORE_ACTION as unknown as never,
@@ -418,7 +442,8 @@ const registerRoutes = (http: HttpRouter) => {
       }
 
       const headers = new Headers({ "content-type": "application/json" });
-      for (const cookie of sessionCookies(session)) headers.append("Set-Cookie", cookie);
+      for (const cookie of sessionCookies(session))
+        headers.append("Set-Cookie", cookie);
 
       return new Response(JSON.stringify({ ok: true }), {
         headers,
@@ -482,17 +507,20 @@ const registerRoutes = (http: HttpRouter) => {
       return new Response("Provider did not return an email.", { status: 400 });
     }
 
-    const { code: handoff } = (await ctx.runMutation(STORE_MUTATION as unknown as never, {
-      payload: {
-        type: "oauth:finalize",
-        provider,
-        accountId: profile.accountId,
-        email: profile.email,
-        emailVerified: profile.emailVerified,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-      } as never,
-    })) as { code: string };
+    const { code: handoff } = (await ctx.runMutation(
+      STORE_MUTATION as unknown as never,
+      {
+        payload: {
+          type: "oauth:finalize",
+          provider,
+          accountId: profile.accountId,
+          email: profile.email,
+          emailVerified: profile.emailVerified,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+        } as never,
+      },
+    )) as { code: string };
 
     const dashboard = requireEnv("DASHBOARD_URL");
 
@@ -544,7 +572,8 @@ const registerRoutes = (http: HttpRouter) => {
 
       const headers = new Headers({ Location: "/" });
       headers.append("Set-Cookie", clearedHandoffCookie());
-      for (const cookie of sessionCookies(claimed)) headers.append("Set-Cookie", cookie);
+      for (const cookie of sessionCookies(claimed))
+        headers.append("Set-Cookie", cookie);
 
       return new Response(null, { headers, status: 302 });
     }),

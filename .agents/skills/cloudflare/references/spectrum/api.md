@@ -79,10 +79,17 @@ const app = await client.spectrum.apps.create({
 const apps = await client.spectrum.apps.list({ zone_id: "your-zone-id" });
 
 // Get
-const appDetails = await client.spectrum.apps.get({ zone_id: "your-zone-id", app_id: app.id });
+const appDetails = await client.spectrum.apps.get({
+  zone_id: "your-zone-id",
+  app_id: app.id,
+});
 
 // Update
-await client.spectrum.apps.update({ zone_id: "your-zone-id", app_id: app.id, tls: "full" });
+await client.spectrum.apps.update({
+  zone_id: "your-zone-id",
+  app_id: app.id,
+  tls: "full",
+});
 
 // Delete
 await client.spectrum.apps.delete({ zone_id: "your-zone-id", app_id: app.id });

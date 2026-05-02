@@ -12,7 +12,9 @@
 ```jsonc
 {
   "name": "my-worker",
-  "analytics_engine_datasets": [{ "binding": "ANALYTICS", "dataset": "my_events" }],
+  "analytics_engine_datasets": [
+    { "binding": "ANALYTICS", "dataset": "my_events" },
+  ],
 }
 ```
 
@@ -83,10 +85,14 @@ export default {
 
 ```jsonc
 {
-  "analytics_engine_datasets": [{ "binding": "ANALYTICS", "dataset": "prod_events" }],
+  "analytics_engine_datasets": [
+    { "binding": "ANALYTICS", "dataset": "prod_events" },
+  ],
   "env": {
     "staging": {
-      "analytics_engine_datasets": [{ "binding": "ANALYTICS", "dataset": "staging_events" }],
+      "analytics_engine_datasets": [
+        { "binding": "ANALYTICS", "dataset": "staging_events" },
+      ],
     },
   },
 }

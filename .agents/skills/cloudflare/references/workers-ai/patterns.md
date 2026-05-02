@@ -4,7 +4,9 @@
 
 ```typescript
 // 1. Embed query
-const embedding = await env.AI.run("@cf/baai/bge-base-en-v1.5", { text: query });
+const embedding = await env.AI.run("@cf/baai/bge-base-en-v1.5", {
+  text: query,
+});
 
 // 2. Search vectors
 const results = await env.VECTORIZE.query(embedding.data[0], {
@@ -37,7 +39,9 @@ const writer = writable.getWriter();
 
 (async () => {
   for await (const chunk of stream) {
-    await writer.write(new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`));
+    await writer.write(
+      new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`),
+    );
   }
   await writer.write(new TextEncoder().encode("data: [DONE]\n\n"));
   await writer.close();
@@ -99,7 +103,9 @@ messages: [
 
 ```typescript
 const [sentiment, summary, embedding] = await Promise.all([
-  env.AI.run("@cf/mistral/mistral-7b-instruct-v0.1", { messages: sentimentPrompt }),
+  env.AI.run("@cf/mistral/mistral-7b-instruct-v0.1", {
+    messages: sentimentPrompt,
+  }),
   env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages: summaryPrompt }),
   env.AI.run("@cf/baai/bge-base-en-v1.5", { text }),
 ]);

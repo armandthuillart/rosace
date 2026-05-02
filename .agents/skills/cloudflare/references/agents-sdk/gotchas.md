@@ -25,7 +25,11 @@ export class ChatAgent extends AIChatAgent<Env> {
       this.messages = this.messages.slice(-50);
     }
 
-    return this.streamText({ model: openai("gpt-4"), messages: this.messages, onFinish });
+    return this.streamText({
+      model: openai("gpt-4"),
+      messages: this.messages,
+      onFinish,
+    });
   }
 }
 ```

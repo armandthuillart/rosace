@@ -13,7 +13,9 @@
   "vars": { "ENVIRONMENT": "production" },
   "kv_namespaces": [{ "binding": "MY_KV", "id": "abc123" }],
   "r2_buckets": [{ "binding": "MY_BUCKET", "bucket_name": "my-bucket" }],
-  "d1_databases": [{ "binding": "DB", "database_name": "my-db", "database_id": "xyz789" }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "my-db", "database_id": "xyz789" },
+  ],
 
   // Environments
   "env": {
@@ -47,7 +49,9 @@
   "r2_buckets": [{ "binding": "MY_BUCKET", "bucket_name": "my-bucket" }],
 
   // D1 (SQL database)
-  "d1_databases": [{ "binding": "DB", "database_name": "my-db", "database_id": "xyz789" }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "my-db", "database_id": "xyz789" },
+  ],
 
   // Durable Objects (stateful coordination)
   "durable_objects": {
@@ -125,7 +129,11 @@ Import generated types:
 import type { Env } from "./.wrangler/types/runtime";
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     await env.MY_KV.get("key"); // Fully typed, autocomplete works
     return new Response("OK");
   },

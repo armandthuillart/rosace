@@ -98,7 +98,12 @@ await meeting.leave();
 ## TypeScript Types
 
 ```typescript
-import type { RealtimeKitClient, States, UIConfig, Participant } from "@cloudflare/realtimekit";
+import type {
+  RealtimeKitClient,
+  States,
+  UIConfig,
+  Participant,
+} from "@cloudflare/realtimekit";
 
 // Main interface
 interface RealtimeKitClient {

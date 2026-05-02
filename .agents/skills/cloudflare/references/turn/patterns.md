@@ -125,7 +125,10 @@ class TURNCredentialsManager {
     expiresAt: number;
   } | null = null;
 
-  async getCredentials(keyId: string, keySecret: string): Promise<RTCIceServer[]> {
+  async getCredentials(
+    keyId: string,
+    keySecret: string,
+  ): Promise<RTCIceServer[]> {
     const now = Date.now();
 
     if (this.creds && this.creds.expiresAt > now) {
@@ -139,13 +142,18 @@ class TURNCredentialsManager {
       `https://rtc.live.cloudflare.com/v1/turn/keys/${keyId}/credentials/generate`,
       {
         method: "POST",
-        headers: { Authorization: `Bearer ${keySecret}`, "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${keySecret}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ ttl }),
       },
     );
 
     const data = await res.json();
-    const filteredUrls = data.iceServers.urls.filter((url: string) => !url.includes(":53"));
+    const filteredUrls = data.iceServers.urls.filter(
+      (url: string) => !url.includes(":53"),
+    );
 
     this.creds = {
       username: data.iceServers.username,
@@ -182,10 +190,16 @@ class TURNCredentialsManager {
 const config = { iceServers: await getTURNConfig(), iceTransportPolicy: "all" };
 
 // IoT/predictable connectivity: force TURN
-const config = { iceServers: await getTURNConfig(), iceTransportPolicy: "relay" };
+const config = {
+  iceServers: await getTURNConfig(),
+  iceTransportPolicy: "relay",
+};
 
 // Screen sharing: reduce overhead
-const pc = new RTCPeerConnection({ iceServers: await getTURNConfig(), bundlePolicy: "max-bundle" });
+const pc = new RTCPeerConnection({
+  iceServers: await getTURNConfig(),
+  bundlePolicy: "max-bundle",
+});
 ```
 
 ## Integration with Cloudflare Calls SFU
@@ -204,7 +218,11 @@ const session = await callsClient.createSession({
 ```typescript
 pc.addEventListener("icecandidate", (event) => {
   if (event.candidate) {
-    console.log("ICE candidate:", event.candidate.type, event.candidate.protocol);
+    console.log(
+      "ICE candidate:",
+      event.candidate.type,
+      event.candidate.protocol,
+    );
   }
 });
 

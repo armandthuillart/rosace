@@ -39,8 +39,14 @@
 
 ```typescript
 const session = env.DB.withSession();
-await session.prepare("INSERT INTO users (name) VALUES (?)").bind("Alice").run();
-const user = await session.prepare("SELECT * FROM users WHERE name = ?").bind("Alice").first(); // Guaranteed to see Alice
+await session
+  .prepare("INSERT INTO users (name) VALUES (?)")
+  .bind("Alice")
+  .run();
+const user = await session
+  .prepare("SELECT * FROM users WHERE name = ?")
+  .bind("Alice")
+  .first(); // Guaranteed to see Alice
 ```
 
 **When to use sessions:** Write → Read patterns, transactions requiring consistency
@@ -68,7 +74,8 @@ Then import: `import type { Env } from './.wrangler/types/runtime';`
 export class MyDO {
   async fetch(request: Request) {
     const { method } = await request.json();
-    if (method === "increment") return new Response(String(await this.increment()));
+    if (method === "increment")
+      return new Response(String(await this.increment()));
   }
   async increment() {
     return ++this.value;

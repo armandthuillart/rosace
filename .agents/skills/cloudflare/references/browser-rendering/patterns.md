@@ -29,7 +29,9 @@ if (sessionId) {
   browser = await puppeteer.connect(env.MYBROWSER, sessionId);
 } else {
   browser = await puppeteer.launch(env.MYBROWSER, { keep_alive: 600000 });
-  await env.SESSION_KV.put("browser-session", browser.sessionId(), { expirationTtl: 600 });
+  await env.SESSION_KV.put("browser-session", browser.sessionId(), {
+    expirationTtl: 600,
+  });
 }
 // Don't close browser to keep session alive
 ```
@@ -85,7 +87,8 @@ if (limits.remaining < 60000) return new Response("Quota low", { status: 429 });
 try {
   await page.goto(url, { timeout: 30000, waitUntil: "networkidle0" });
 } catch (e) {
-  if (e.message.includes("timeout")) return new Response("Timeout", { status: 504 });
+  if (e.message.includes("timeout"))
+    return new Response("Timeout", { status: 504 });
   if (e.message.includes("Session limit"))
     return new Response("Too many sessions", { status: 429 });
 } finally {

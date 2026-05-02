@@ -13,11 +13,21 @@
   },
   "kv_namespaces": [{ "binding": "KV", "id": "abcd1234..." }],
   "d1_databases": [
-    { "binding": "DB", "database_id": "xxxx-xxxx", "database_name": "production-db" },
+    {
+      "binding": "DB",
+      "database_id": "xxxx-xxxx",
+      "database_name": "production-db",
+    },
   ],
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "my-bucket" }],
   "durable_objects": {
-    "bindings": [{ "name": "COUNTER", "class_name": "Counter", "script_name": "counter-worker" }],
+    "bindings": [
+      {
+        "name": "COUNTER",
+        "class_name": "Counter",
+        "script_name": "counter-worker",
+      },
+    ],
   },
   "services": [{ "binding": "API", "service": "api-worker" }],
   "queues": { "producers": [{ "binding": "QUEUE", "queue": "my-queue" }] },

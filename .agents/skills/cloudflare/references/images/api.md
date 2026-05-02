@@ -12,7 +12,13 @@ binding = "IMAGES"
 
 ```typescript
 const imageResponse = await env.IMAGES.input(fileBuffer)
-  .transform({ width: 800, height: 600, fit: "cover", quality: 85, format: "avif" })
+  .transform({
+    width: 800,
+    height: 600,
+    fit: "cover",
+    quality: 85,
+    format: "avif",
+  })
   .output();
 return imageResponse.response();
 ```
@@ -43,7 +49,11 @@ interface TransformOptions {
 
 ```typescript
 await env.IMAGES.input(baseImage)
-  .draw(env.IMAGES.input(watermark).transform({ width: 100 }), { top: 10, left: 10, opacity: 0.8 })
+  .draw(env.IMAGES.input(watermark).transform({ width: 100 }), {
+    top: 10,
+    left: 10,
+    opacity: 0.8,
+  })
   .output();
 ```
 

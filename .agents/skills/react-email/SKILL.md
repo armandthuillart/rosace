@@ -63,7 +63,10 @@ interface WelcomeEmailProps {
   verificationUrl: string;
 }
 
-export default function WelcomeEmail({ name, verificationUrl }: WelcomeEmailProps) {
+export default function WelcomeEmail({
+  name,
+  verificationUrl,
+}: WelcomeEmailProps) {
   return (
     <Html lang="en">
       <Tailwind
@@ -83,7 +86,9 @@ export default function WelcomeEmail({ name, verificationUrl }: WelcomeEmailProp
           <Preview>Welcome - Verify your email</Preview>
           <Container className="max-w-xl mx-auto p-5">
             <Heading className="text-2xl text-gray-800">Welcome!</Heading>
-            <Text className="text-base text-gray-800">Hi {name}, thanks for signing up!</Text>
+            <Text className="text-base text-gray-800">
+              Hi {name}, thanks for signing up!
+            </Text>
             <Button
               href={verificationUrl}
               className="bg-brand text-white px-5 py-3 rounded block text-center no-underline box-border"
@@ -193,7 +198,14 @@ const baseURL =
     : "";
 
 export default function Email() {
-  return <Img src={`${baseURL}/static/logo.png`} alt="Logo" width="150" height="50" />;
+  return (
+    <Img
+      src={`${baseURL}/static/logo.png`}
+      alt="Logo"
+      width="150"
+      height="50"
+    />
+  );
 }
 ```
 
@@ -271,7 +283,9 @@ const { data, error } = await resend.emails.send({
   from: "Acme <onboarding@resend.dev>",
   to: ["user@example.com"],
   subject: "Welcome to Acme",
-  react: <WelcomeEmail name="John" verificationUrl="https://example.com/verify" />,
+  react: (
+    <WelcomeEmail name="John" verificationUrl="https://example.com/verify" />
+  ),
 });
 ```
 
@@ -317,7 +331,9 @@ import { useRef } from "react";
 export function MyEditor() {
   const ref = useRef<EmailEditorRef>(null);
 
-  return <EmailEditor ref={ref} content="<p>Start typing...</p>" theme="basic" />;
+  return (
+    <EmailEditor ref={ref} content="<p>Start typing...</p>" theme="basic" />
+  );
 }
 ```
 

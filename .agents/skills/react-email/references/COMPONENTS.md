@@ -62,8 +62,12 @@ export default function Email() {
       >
         <Body className="bg-gray-100 font-sans">
           <Container className="max-w-xl mx-auto p-5">
-            <Heading className="text-2xl font-bold text-brand mb-4">Welcome!</Heading>
-            <Text className="text-base text-gray-700 mb-4">Your content here.</Text>
+            <Heading className="text-2xl font-bold text-brand mb-4">
+              Welcome!
+            </Heading>
+            <Text className="text-base text-gray-700 mb-4">
+              Your content here.
+            </Text>
             <Button
               href="https://example.com"
               className="bg-brand text-white px-6 py-3 rounded-lg block text-center box-border"
@@ -105,7 +109,9 @@ Root wrapper for the email. Always use as the outermost component.
 import { Html, Tailwind, pixelBasedPreset } from "@react-email/components";
 
 <Html lang="en" dir="ltr">
-  <Tailwind config={{ presets: [pixelBasedPreset] }}>{/* email content */}</Tailwind>
+  <Tailwind config={{ presets: [pixelBasedPreset] }}>
+    {/* email content */}
+  </Tailwind>
 </Html>;
 ```
 
@@ -143,7 +149,9 @@ A layout component that centers your content horizontally on a breaking point. H
 ```tsx
 import { Container } from "@react-email/components";
 
-<Container className="max-w-xl mx-auto p-5">{/* centered content */}</Container>;
+<Container className="max-w-xl mx-auto p-5">
+  {/* centered content */}
+</Container>;
 ```
 
 ### Section
@@ -222,7 +230,9 @@ A block of text separated by blank spaces.
 ```tsx
 import { Text } from "@react-email/components";
 
-<Text className="text-base leading-6 text-gray-800 my-4">Your paragraph content here.</Text>;
+<Text className="text-base leading-6 text-gray-800 my-4">
+  Your paragraph content here.
+</Text>;
 ```
 
 ### Button
@@ -259,7 +269,11 @@ A hyperlink to web pages, email addresses, or anything else a URL can address.
 ```tsx
 import { Link } from "@react-email/components";
 
-<Link href="https://example.com" target="_blank" className="text-blue-600 underline">
+<Link
+  href="https://example.com"
+  target="_blank"
+  className="text-blue-600 underline"
+>
   Visit our website
 </Link>;
 ```
@@ -332,7 +346,12 @@ const Email = () => {
 
   return (
     <div className="overflow-auto">
-      <CodeBlock fontFamily="monospace" theme={dracula} language="javascript" code={code} />
+      <CodeBlock
+        fontFamily="monospace"
+        theme={dracula}
+        language="javascript"
+        code={code}
+      />
     </div>
   );
 };
@@ -359,7 +378,8 @@ Display a predictable inline code HTML element that works on all email clients.
 import { Text, CodeInline } from "@react-email/components";
 
 <Text className="text-base text-gray-800">
-  Run <CodeInline className="bg-gray-100 px-1 rounded">npm install</CodeInline> to get started.
+  Run <CodeInline className="bg-gray-100 px-1 rounded">npm install</CodeInline>{" "}
+  to get started.
 </Text>;
 ```
 

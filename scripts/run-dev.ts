@@ -21,7 +21,9 @@ type LastErrorSignature = {
   atMs: number;
 };
 
-type BunColorApi = { color: (input: string, outputFormat?: "ansi") => string | null };
+type BunColorApi = {
+  color: (input: string, outputFormat?: "ansi") => string | null;
+};
 const bunColor = (globalThis as { Bun?: BunColorApi }).Bun?.color;
 const RESET = "\x1b[0m";
 const SUCCESS_GREEN = "#22c55e";
@@ -32,10 +34,14 @@ const SECTION_TITLES: Record<Section, string> = {
   convex: "3. Servers.",
 };
 const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
-const sectionLines = new Map<Section, string[]>(SECTION_ORDER.map((section) => [section, []]));
+const sectionLines = new Map<Section, string[]>(
+  SECTION_ORDER.map((section) => [section, []]),
+);
 const sectionHasContent = new Set<Section>();
 const APP_SERVICE_ORDER: ServiceName[] = ["astro", "svelte"];
-const appLines = new Map<ServiceName, string[]>(APP_SERVICE_ORDER.map((service) => [service, []]));
+const appLines = new Map<ServiceName, string[]>(
+  APP_SERVICE_ORDER.map((service) => [service, []]),
+);
 const appHasContent = new Set<ServiceName>();
 const MAX_LOGS_PER_BUCKET = 10;
 
@@ -55,7 +61,11 @@ const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
 const SERVICES: readonly Service[] = [
   { name: "svelte", command: ["vp", "run", "dashboard#dev"] },
   { name: "astro", command: ["vp", "run", "marketing#dev"] },
-  { name: "convex", command: ["vp", "exec", "convex", "dev"], cwd: "packages/convex" },
+  {
+    name: "convex",
+    command: ["vp", "exec", "convex", "dev"],
+    cwd: "packages/convex",
+  },
 ];
 
 function paint(color: string, text: string) {
@@ -75,7 +85,10 @@ function timestamp() {
 function renderSections() {
   console.clear();
   for (const section of SECTION_ORDER) {
-    const hasContent = section === "apps" ? appHasContent.size > 0 : sectionHasContent.has(section);
+    const hasContent =
+      section === "apps"
+        ? appHasContent.size > 0
+        : sectionHasContent.has(section);
     if (!hasContent) continue;
     process.stdout.write(`${SECTION_TITLES[section]}\n\n`);
     if (section === "apps") {
@@ -102,7 +115,8 @@ function pushLine(section: Section, line: string) {
   const lines = sectionLines.get(section);
   if (!lines) return;
   lines.push(line);
-  if (lines.length > MAX_LOGS_PER_BUCKET) lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  if (lines.length > MAX_LOGS_PER_BUCKET)
+    lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
   sectionHasContent.add(section);
   renderSections();
 }
@@ -111,7 +125,8 @@ function pushAppLine(service: ServiceName, line: string) {
   const lines = appLines.get(service);
   if (!lines) return;
   lines.push(line);
-  if (lines.length > MAX_LOGS_PER_BUCKET) lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
+  if (lines.length > MAX_LOGS_PER_BUCKET)
+    lines.splice(0, lines.length - MAX_LOGS_PER_BUCKET);
   appHasContent.add(service);
   renderSections();
 }
@@ -124,11 +139,17 @@ function logGlobalSuccess(message: string) {
   pushLine("scripts", paint(SUCCESS_GREEN, `✓ ${timestamp()} ${message}`));
 }
 
-function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
+function logLine(
+  kind: "info" | "success" | "error",
+  service: ServiceName,
+  message: string,
+) {
   const section: Section = service === "convex" ? "convex" : "apps";
   const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
   const serviceTag =
-    kind === "info" ? paint(SERVICE_COLORS[service], `[${service}]`) : `[${service}]`;
+    kind === "info"
+      ? paint(SERVICE_COLORS[service], `[${service}]`)
+      : `[${service}]`;
   const line = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
 
   const outputLine =
@@ -210,11 +231,17 @@ function stripAnsi(input: string) {
   return out;
 }
 
-function toFriendlyMessage(service: ServiceName, rawLine: string, stream: "stdout" | "stderr") {
+function toFriendlyMessage(
+  service: ServiceName,
+  rawLine: string,
+  stream: "stdout" | "stderr",
+) {
   const text = stripAnsi(rawLine).trim();
   if (!text) return null;
 
-  const localUrl = text.match(/(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i);
+  const localUrl = text.match(
+    /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
+  );
   if (localUrl) {
     const url = localUrl[1] ?? localUrl[2];
     return { kind: "info" as const, message: `- Local: ${url}` };
@@ -235,7 +262,10 @@ function toFriendlyMessage(service: ServiceName, rawLine: string, stream: "stdou
 
   const genericNetwork = text.match(/network[^\n]*?(https?:\/\/\S+)/i);
   if (genericNetwork) {
-    return { kind: "info" as const, message: `- Network: ${genericNetwork[1]}` };
+    return {
+      kind: "info" as const,
+      message: `- Network: ${genericNetwork[1]}`,
+    };
   }
 
   const anyUrl = text.match(/https?:\/\/\S+/i);
@@ -271,7 +301,9 @@ function toFriendlyMessage(service: ServiceName, rawLine: string, stream: "stdou
 
 function isOverlayNoiseLine(line: string) {
   return (
-    /^Click outside, press Esc key, or fix the code to dismiss\.?$/i.test(line) ||
+    /^Click outside, press Esc key, or fix the code to dismiss\.?$/i.test(
+      line,
+    ) ||
     /^You can also disable this overlay by setting .*vite\.config\./i.test(line)
   );
 }
@@ -312,9 +344,13 @@ function normalizeCause(lines: string[]) {
     );
 
   const preferred =
-    candidates.find((line) => /Cannot find module|Module not found/i.test(line)) ??
     candidates.find((line) =>
-      /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(line),
+      /Cannot find module|Module not found/i.test(line),
+    ) ??
+    candidates.find((line) =>
+      /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(
+        line,
+      ),
     ) ??
     candidates[0];
 
@@ -330,7 +366,10 @@ function normalizeCause(lines: string[]) {
   if (fallback) {
     const noPrefix = fallback
       .trim()
-      .replace(/^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i, "");
+      .replace(
+        /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
+        "",
+      );
     return enrichWorkspaceSpecifiers(noPrefix.replaceAll(WORKSPACE_ROOT, ""));
   }
 
@@ -339,7 +378,9 @@ function normalizeCause(lines: string[]) {
 
 function getOriginFromLines(lines: string[]) {
   for (const line of lines) {
-    const match = line.match(/\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/);
+    const match = line.match(
+      /\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/,
+    );
     if (!match) continue;
     const file = match[1];
     if (file.startsWith("node:")) continue;
@@ -348,9 +389,13 @@ function getOriginFromLines(lines: string[]) {
   }
 
   for (const line of lines) {
-    const importedFromMatch = line.match(/\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i);
+    const importedFromMatch = line.match(
+      /\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i,
+    );
     if (importedFromMatch) {
-      return formatPathForDisplay(importedFromMatch[1].replace(/[)\],.;]+$/, ""));
+      return formatPathForDisplay(
+        importedFromMatch[1].replace(/[)\],.;]+$/, ""),
+      );
     }
   }
 
@@ -383,7 +428,11 @@ function flushErrorIncident(service: ServiceName) {
   const now = Date.now();
 
   const last = lastErrorSignatures.get(service);
-  if (last && last.signature === signature && now - last.atMs < ERROR_DUPLICATE_WINDOW_MS) {
+  if (
+    last &&
+    last.signature === signature &&
+    now - last.atMs < ERROR_DUPLICATE_WINDOW_MS
+  ) {
     return;
   }
   lastErrorSignatures.set(service, { signature, atMs: now });
@@ -413,7 +462,10 @@ function queueErrorLine(service: ServiceName, line: string) {
   }, ERROR_INCIDENT_DEBOUNCE_MS);
 }
 
-function startService(service: Service, children: Set<ReturnType<typeof spawn>>) {
+function startService(
+  service: Service,
+  children: Set<ReturnType<typeof spawn>>,
+) {
   const startedAt = Date.now();
   let readyShown = false;
   let sawLocal = false;
@@ -462,7 +514,9 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
       if (/Convex functions ready!/i.test(cleanedLine)) {
         if (!convexBootstrapped) {
           convexBootstrapped = true;
-          const convexReadyMatch = cleanedLine.match(/Convex functions ready!\s*\(([\d.]+)s\)/i);
+          const convexReadyMatch = cleanedLine.match(
+            /Convex functions ready!\s*\(([\d.]+)s\)/i,
+          );
           if (convexReadyMatch) {
             const ms = Math.round(Number(convexReadyMatch[1]) * 1000);
             logLine("success", service.name, `Ready in ${formatDuration(ms)}.`);
@@ -487,14 +541,19 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
       return;
     }
 
-    if (service.name !== "convex" && event.message.startsWith("- Local:")) sawLocal = true;
+    if (service.name !== "convex" && event.message.startsWith("- Local:"))
+      sawLocal = true;
     if (service.name !== "convex" && event.message.startsWith("- Network:")) {
       if (sawNetwork) return;
       sawNetwork = true;
     }
     logLine(event.kind, service.name, event.message);
 
-    if (service.name === "astro" && event.message.startsWith("- Local:") && !sawNetwork) {
+    if (
+      service.name === "astro" &&
+      event.message.startsWith("- Local:") &&
+      !sawNetwork
+    ) {
       const fallbackNetworkUrl = buildNetworkUrlFromLocal(event.message);
       if (fallbackNetworkUrl) {
         sawNetwork = true;
@@ -541,18 +600,27 @@ async function waitForExit(child: ReturnType<typeof spawn>) {
 
 async function runPrepare() {
   logGlobalInfo("Preparing .env.* files...");
-  const child = spawn("vp", ["run", "prepare"], { stdio: ["ignore", "ignore", "ignore"] });
+  const child = spawn("vp", ["run", "prepare"], {
+    stdio: ["ignore", "ignore", "ignore"],
+  });
   await waitForExit(child);
   logGlobalSuccess(".env.* files were prepared successfully.");
 }
 
-function resolveServices(opts: { astro: boolean; svelte: boolean; convex: boolean }) {
+function resolveServices(opts: {
+  astro: boolean;
+  svelte: boolean;
+  convex: boolean;
+}) {
   const selected: ServiceName[] = [];
   if (opts.astro) selected.push("astro");
   if (opts.svelte) selected.push("svelte");
   if (opts.convex) selected.push("convex");
 
-  const base = selected.length > 0 ? selected : (["astro", "svelte", "convex"] as ServiceName[]);
+  const base =
+    selected.length > 0
+      ? selected
+      : (["astro", "svelte", "convex"] as ServiceName[]);
 
   const withDependencies = new Set<ServiceName>(base);
   if (withDependencies.has("svelte")) withDependencies.add("convex");

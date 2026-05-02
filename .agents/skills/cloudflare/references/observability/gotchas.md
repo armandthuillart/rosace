@@ -59,7 +59,11 @@ Ensure `observability.traces.enabled = true`, set `head_sampling_rate` to 1.0 fo
 ```typescript
 // Date.now() is coarsened - trace spans are accurate
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     // For user-facing timing, Date.now() is fine
     const start = Date.now();
     const response = await processRequest(request);

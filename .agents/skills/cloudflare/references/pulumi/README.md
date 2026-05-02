@@ -29,7 +29,9 @@ Programmatic management of Cloudflare resources: Workers, Pages, D1, KV, R2, DNS
 import * as cloudflare from "@pulumi/cloudflare";
 
 // API Token (recommended): CLOUDFLARE_API_TOKEN env
-const provider = new cloudflare.Provider("cf", { apiToken: process.env.CLOUDFLARE_API_TOKEN });
+const provider = new cloudflare.Provider("cf", {
+  apiToken: process.env.CLOUDFLARE_API_TOKEN,
+});
 
 // API Key (legacy): CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL env
 const provider = new cloudflare.Provider("cf", {

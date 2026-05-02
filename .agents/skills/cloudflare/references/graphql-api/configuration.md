@@ -43,7 +43,10 @@ curl -s https://api.cloudflare.com/client/v4/graphql \
 ```typescript
 const GRAPHQL_ENDPOINT = "https://api.cloudflare.com/client/v4/graphql";
 
-async function queryGraphQL<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
+async function queryGraphQL<T>(
+  query: string,
+  variables: Record<string, unknown> = {},
+): Promise<T> {
   const response = await fetch(GRAPHQL_ENDPOINT, {
     method: "POST",
     headers: {
@@ -52,9 +55,14 @@ async function queryGraphQL<T>(query: string, variables: Record<string, unknown>
     },
     body: JSON.stringify({ query, variables }),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  const json = (await response.json()) as { data: T | null; errors?: { message: string }[] };
-  if (json.errors?.length) throw new Error(json.errors.map((e) => e.message).join("; "));
+  if (!response.ok)
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  const json = (await response.json()) as {
+    data: T | null;
+    errors?: { message: string }[];
+  };
+  if (json.errors?.length)
+    throw new Error(json.errors.map((e) => e.message).join("; "));
   return json.data!;
 }
 ```

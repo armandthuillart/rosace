@@ -34,7 +34,10 @@ interface Env {
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
-    const socket = connect({ hostname: env.DB_HOST, port: parseInt(env.DB_PORT) });
+    const socket = connect({
+      hostname: env.DB_HOST,
+      port: parseInt(env.DB_PORT),
+    });
   },
 };
 ```

@@ -127,7 +127,8 @@ export default {
 ```typescript
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const locale = request.headers.get("Accept-Language")?.split(",")[0] || "en";
+    const locale =
+      request.headers.get("Accept-Language")?.split(",")[0] || "en";
     const url = new URL(request.url);
     if (url.pathname === "/") {
       return env.ASSETS.fetch(`/${locale}/index.html`);

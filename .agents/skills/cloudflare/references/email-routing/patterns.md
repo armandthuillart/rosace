@@ -213,7 +213,9 @@ interface Env {
 export default {
   async email(message, env, ctx) {
     const subdomain = message.to.split("@")[1].split(".")[0];
-    const config = (await env.TENANTS.get(subdomain, "json")) as { forward: string } | null;
+    const config = (await env.TENANTS.get(subdomain, "json")) as {
+      forward: string;
+    } | null;
 
     if (!config) {
       message.setReject("Unknown tenant");

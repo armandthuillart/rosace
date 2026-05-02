@@ -85,7 +85,12 @@ Configure via Magic Transit/WAN tunnel endpoints (CNI v2).
 
 ```typescript
 await client.magicTransit.tunnels.update(accountId, tunnelId, {
-  health_check: { enabled: true, target: "192.0.2.1", rate: "high", type: "request" },
+  health_check: {
+    enabled: true,
+    target: "192.0.2.1",
+    rate: "high",
+    type: "request",
+  },
 });
 ```
 

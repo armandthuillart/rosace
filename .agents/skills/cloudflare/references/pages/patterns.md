@@ -5,12 +5,18 @@
 ```typescript
 // functions/api/todos/[id].ts
 export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
-  const todo = await env.DB.prepare("SELECT * FROM todos WHERE id = ?").bind(params.id).first();
+  const todo = await env.DB.prepare("SELECT * FROM todos WHERE id = ?")
+    .bind(params.id)
+    .first();
   if (!todo) return new Response("Not found", { status: 404 });
   return Response.json(todo);
 };
 
-export const onRequestPut: PagesFunction<Env> = async ({ env, params, request }) => {
+export const onRequestPut: PagesFunction<Env> = async ({
+  env,
+  params,
+  request,
+}) => {
   const body = await request.json();
   await env.DB.prepare("UPDATE todos SET title = ?, completed = ? WHERE id = ?")
     .bind(body.title, body.completed, params.id)
@@ -32,7 +38,10 @@ const auth: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    const payload = await verifyJWT(authHeader.substring(7), context.env.JWT_SECRET);
+    const payload = await verifyJWT(
+      authHeader.substring(7),
+      context.env.JWT_SECRET,
+    );
     context.data.user = payload;
     return context.next();
   } catch (err) {
@@ -68,8 +77,13 @@ export const onRequest: PagesFunction = async (context) => {
 // functions/api/contact.ts
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const formData = await request.formData();
-  await env.QUEUE.send({ name: formData.get("name"), email: formData.get("email") });
-  return new Response("<h1>Thanks!</h1>", { headers: { "Content-Type": "text/html" } });
+  await env.QUEUE.send({
+    name: formData.get("name"),
+    email: formData.get("email"),
+  });
+  return new Response("<h1>Thanks!</h1>", {
+    headers: { "Content-Type": "text/html" },
+  });
 };
 ```
 

@@ -34,7 +34,11 @@ await client.rulesets.create({
   name: "Custom WAF",
   rules: [
     { action: "block", expression: "cf.waf.score gt 50", enabled: true },
-    { action: "challenge", expression: 'http.request.uri.path eq "/admin"', enabled: true },
+    {
+      action: "challenge",
+      expression: 'http.request.uri.path eq "/admin"',
+      enabled: true,
+    },
   ],
 });
 
@@ -145,7 +149,11 @@ const wafCustom = new cloudflare.Ruleset("waf-custom", {
   phase: "http_request_firewall_custom",
   rules: [
     { action: "block", expression: "cf.waf.score gt 50", enabled: true },
-    { action: "challenge", expression: 'http.request.uri.path eq "/admin"', enabled: true },
+    {
+      action: "challenge",
+      expression: 'http.request.uri.path eq "/admin"',
+      enabled: true,
+    },
   ],
 });
 
@@ -207,9 +215,12 @@ WAF configuration is zone-level (not Worker-specific). Configuration methods:
 ```typescript
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    return fetch(`https://api.cloudflare.com/client/v4/zones/${env.ZONE_ID}/rulesets`, {
-      headers: { Authorization: `Bearer ${env.CF_API_TOKEN}` },
-    });
+    return fetch(
+      `https://api.cloudflare.com/client/v4/zones/${env.ZONE_ID}/rulesets`,
+      {
+        headers: { Authorization: `Bearer ${env.CF_API_TOKEN}` },
+      },
+    );
   },
 };
 ```

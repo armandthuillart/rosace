@@ -64,7 +64,10 @@ async function createJwks() {
     extractable: true,
   });
 
-  const [publicJwk, privateJwk] = await Promise.all([exportJWK(publicKey), exportJWK(privateKey)]);
+  const [publicJwk, privateJwk] = await Promise.all([
+    exportJWK(publicKey),
+    exportJWK(privateKey),
+  ]);
 
   return JSON.stringify({
     kid,

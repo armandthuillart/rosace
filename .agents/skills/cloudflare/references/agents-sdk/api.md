@@ -100,7 +100,9 @@ export class MyAgent extends Agent<Env> {
   @callable()
   async processTask(input: { text: string }): Promise<{ result: string }> {
     return {
-      result: await this.env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt: input.text }),
+      result: await this.env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+        prompt: input.text,
+      }),
     };
   }
 }
@@ -120,7 +122,11 @@ conn.close(1000, "Goodbye");
 const r = await this.env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt });
 
 // Manual streaming (prefer AIChatAgent)
-const stream = await client.chat.completions.create({ model: "gpt-4", messages, stream: true });
+const stream = await client.chat.completions.create({
+  model: "gpt-4",
+  messages,
+  stream: true,
+});
 for await (const chunk of stream)
   conn.send(JSON.stringify({ chunk: chunk.choices[0].delta.content }));
 ```
@@ -135,10 +141,19 @@ Model Context Protocol for exposing tools:
 // Register & use MCP server
 await this.mcp.registerServer("github", {
   url: env.MCP_SERVER_URL,
-  auth: { type: "oauth", clientId: env.GITHUB_CLIENT_ID, clientSecret: env.GITHUB_CLIENT_SECRET },
+  auth: {
+    type: "oauth",
+    clientId: env.GITHUB_CLIENT_ID,
+    clientSecret: env.GITHUB_CLIENT_SECRET,
+  },
 });
 const tools = await this.mcp.getAITools(["github"]);
-return this.streamText({ model: openai("gpt-4"), messages: this.messages, tools, onFinish });
+return this.streamText({
+  model: openai("gpt-4"),
+  messages: this.messages,
+  tools,
+  onFinish,
+});
 ```
 
 ## Task Queue
@@ -162,7 +177,11 @@ async destroy() { /* cleanup before agent destroyed */ }
 const r = await this.env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt });
 
 // Manual streaming (prefer AIChatAgent for auto-streaming)
-const stream = await client.chat.completions.create({ model: "gpt-4", messages, stream: true });
+const stream = await client.chat.completions.create({
+  model: "gpt-4",
+  messages,
+  stream: true,
+});
 for await (const chunk of stream) {
   if (chunk.choices[0]?.delta?.content)
     conn.send(JSON.stringify({ chunk: chunk.choices[0].delta.content }));
@@ -181,15 +200,23 @@ const result = await agent.processTask({ text: "Hello" }); // Call @callable met
 // useAgentChat() - AI chat UI
 import { useAgentChat } from "@cloudflare/ai-chat/react";
 const agent = useAgent({ agent: "ChatAgent" });
-const { messages, input, handleInputChange, handleSubmit, isLoading, stop, clearHistory } =
-  useAgentChat({
-    agent,
-    maxSteps: 5, // Max tool iterations
-    resume: true, // Auto-resume on disconnect
-    onToolCall: async (toolCall) => {
-      // Client tools (human-in-the-loop)
-      if (toolCall.toolName === "confirm") return { ok: window.confirm("Proceed?") };
-    },
-  });
+const {
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+  isLoading,
+  stop,
+  clearHistory,
+} = useAgentChat({
+  agent,
+  maxSteps: 5, // Max tool iterations
+  resume: true, // Auto-resume on disconnect
+  onToolCall: async (toolCall) => {
+    // Client tools (human-in-the-loop)
+    if (toolCall.toolName === "confirm")
+      return { ok: window.confirm("Proceed?") };
+  },
+});
 // status: "ready" | "submitted" | "streaming" | "error"
 ```

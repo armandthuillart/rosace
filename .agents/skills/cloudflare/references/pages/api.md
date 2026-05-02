@@ -31,7 +31,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { request, env, params, data } = context;
 
-  const user = await env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(params.id).first();
+  const user = await env.DB.prepare("SELECT * FROM users WHERE id = ?")
+    .bind(params.id)
+    .first();
 
   return Response.json(user);
 };
@@ -113,10 +115,14 @@ export const onRequest = [errorHandler, auth];
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   // KV
   const cached = await env.KV.get("key", "json");
-  await env.KV.put("key", JSON.stringify({ data: "value" }), { expirationTtl: 3600 });
+  await env.KV.put("key", JSON.stringify({ data: "value" }), {
+    expirationTtl: 3600,
+  });
 
   // D1
-  const result = await env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(userId).first();
+  const result = await env.DB.prepare("SELECT * FROM users WHERE id = ?")
+    .bind(userId)
+    .first();
 
   // R2, Queue, AI - see respective reference docs
 
@@ -186,7 +192,9 @@ const data = await DB.prepare("SELECT * FROM users").all();
 // Solid Start (server function)
 import { getRequestEvent } from "solid-js/web";
 const event = getRequestEvent();
-const data = await event.locals.runtime.env.DB.prepare("SELECT * FROM users").all();
+const data = await event.locals.runtime.env.DB.prepare(
+  "SELECT * FROM users",
+).all();
 ```
 
 **✅ Supported adapters** (2026):

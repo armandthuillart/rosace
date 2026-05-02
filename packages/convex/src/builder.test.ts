@@ -82,7 +82,9 @@ describe("procedure builder", () => {
     const builder = createBuilder();
     const withHandler = builder.query().handler(async () => "first");
 
-    expect(typeof (withHandler as { handler?: unknown }).handler).toBe("undefined");
+    expect(typeof (withHandler as { handler?: unknown }).handler).toBe(
+      "undefined",
+    );
   });
 
   it("should execute middleware added after handler before handler logic", async () => {
@@ -143,7 +145,9 @@ describe("procedure builder convex-test integration", () => {
         return "ok";
       });
 
-    const output = await t.query(async (ctx) => procedure(ctx as unknown as QueryCtx, {}));
+    const output = await t.query(async (ctx) =>
+      procedure(ctx as unknown as QueryCtx, {}),
+    );
 
     expect(output).toBe("ok");
     expect(order).toEqual(["mw", "handler"]);
@@ -153,13 +157,17 @@ describe("procedure builder convex-test integration", () => {
     const t = convexTest({ schema, modules });
     const builder = createBuilder();
 
-    const swallow = builder.createMiddleware(async (ctx, _next) => ({ context: ctx }));
+    const swallow = builder.createMiddleware(async (ctx, _next) => ({
+      context: ctx,
+    }));
     const procedure = builder
       .query()
       .use(swallow)
       .handler(async () => "unreachable");
 
-    await expect(t.query(async (ctx) => procedure(ctx as unknown as QueryCtx, {}))).rejects.toThrow(
+    await expect(
+      t.query(async (ctx) => procedure(ctx as unknown as QueryCtx, {})),
+    ).rejects.toThrow(
       "Middleware chain completed without calling the handler.",
     );
   });

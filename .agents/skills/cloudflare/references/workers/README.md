@@ -17,7 +17,11 @@ Cloudflare Workers run on V8 isolates (NOT containers/VMs):
 
 ```typescript
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
     return new Response("Hello World!");
   },
 };

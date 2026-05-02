@@ -96,7 +96,10 @@ async queue(batch: MessageBatch, env: Env): Promise<void> {
 await env.MY_QUEUE.send(data, { contentType: "json" });
 
 // Use v8 only for push consumers with complex JS types
-await env.MY_QUEUE.send({ date: new Date(), tags: new Set() }, { contentType: "v8" });
+await env.MY_QUEUE.send(
+  { date: new Date(), tags: new Set() },
+  { contentType: "v8" },
+);
 ```
 
 ### "Messages Not Being Delivered"

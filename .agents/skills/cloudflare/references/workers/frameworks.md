@@ -135,7 +135,10 @@ app.openapi(route, (c) => {
   return c.json({ id });
 });
 
-app.doc("/openapi.json", { openapi: "3.0.0", info: { version: "1.0.0", title: "API" } });
+app.doc("/openapi.json", {
+  openapi: "3.0.0",
+  info: { version: "1.0.0", title: "API" },
+});
 ```
 
 ### Testing with Hono

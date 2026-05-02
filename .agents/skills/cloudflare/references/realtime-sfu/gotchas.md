@@ -84,7 +84,11 @@ if ("connection" in navigator) {
 ## Retry with Exponential Backoff
 
 ```typescript
-async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3) {
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 3,
+) {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const res = await fetch(url, options);

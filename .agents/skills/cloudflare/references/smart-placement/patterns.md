@@ -8,7 +8,9 @@ export default {
     const user = await env.DATABASE.prepare("SELECT * FROM users WHERE id = ?")
       .bind(userId)
       .first();
-    const orders = await env.DATABASE.prepare("SELECT * FROM orders WHERE user_id = ?")
+    const orders = await env.DATABASE.prepare(
+      "SELECT * FROM orders WHERE user_id = ?",
+    )
       .bind(userId)
       .all();
     return Response.json({ user, orders });

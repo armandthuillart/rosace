@@ -35,8 +35,12 @@ function getAuthorizationUrl(provider: SocialProvider): URL {
   return url;
 }
 
-const APPLE_JWKS = createRemoteJWKSet(new URL("https://appleid.apple.com/auth/keys"));
-const GOOGLE_JWKS = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
+const APPLE_JWKS = createRemoteJWKSet(
+  new URL("https://appleid.apple.com/auth/keys"),
+);
+const GOOGLE_JWKS = createRemoteJWKSet(
+  new URL("https://www.googleapis.com/oauth2/v3/certs"),
+);
 
 async function exchangeCodeForProfile(
   provider: SocialProvider,
@@ -148,7 +152,9 @@ async function exchangeCodeForProfile(
   return {
     accountId: applePayload.sub,
     email: applePayload.email.toLowerCase(),
-    emailVerified: applePayload.email_verified === true || applePayload.email_verified === "true",
+    emailVerified:
+      applePayload.email_verified === true ||
+      applePayload.email_verified === "true",
     firstName,
     lastName,
   };
@@ -162,14 +168,20 @@ async function createPKCE(): Promise<{
   const toBase64Url = (bytes: Uint8Array) => {
     let binary = "";
     for (const byte of bytes) binary += String.fromCharCode(byte);
-    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    return btoa(binary)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/g, "");
   };
 
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
 
   const verifier = toBase64Url(bytes);
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(verifier),
+  );
   const challenge = toBase64Url(new Uint8Array(digest));
 
   return { challenge, method: "S256", verifier };

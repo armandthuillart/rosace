@@ -57,7 +57,11 @@ function App() {
 ```typescript
 import RealtimeKitClient from "@cloudflare/realtimekit";
 
-const meeting = new RealtimeKitClient({ authToken: "<token>", video: true, audio: true });
+const meeting = new RealtimeKitClient({
+  authToken: "<token>",
+  video: true,
+  audio: true,
+});
 await meeting.join();
 ```
 

@@ -46,7 +46,10 @@ if (profile) {
 }
 
 // Bulk get with type
-const configs = await env.MY_KV.get<Config>(["config:app", "config:feature"], "json");
+const configs = await env.MY_KV.get<Config>(
+  ["config:app", "config:feature"],
+  "json",
+);
 // Map<string, Config | null>
 ```
 

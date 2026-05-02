@@ -1,7 +1,12 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 
 import { ConvexError } from "./errors";
-import { authMiddleware, authQuery, authMutation, authAction } from "./middleware";
+import {
+  authMiddleware,
+  authQuery,
+  authMutation,
+  authAction,
+} from "./middleware";
 
 describe("authMiddleware", () => {
   it("should throw UNAUTHORIZED when user is not authenticated", async () => {
@@ -33,7 +38,9 @@ describe("authMiddleware", () => {
       },
     } as any;
 
-    const next = vi.fn().mockResolvedValue({ context: { ...ctx, userId: "user_123" as any } });
+    const next = vi
+      .fn()
+      .mockResolvedValue({ context: { ...ctx, userId: "user_123" as any } });
 
     const result = await authMiddleware(ctx, next);
 

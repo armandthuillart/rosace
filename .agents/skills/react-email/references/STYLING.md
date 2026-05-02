@@ -156,7 +156,11 @@ Use consistent spacing that respects content hierarchy. Larger margins for headi
 - Include `alt` text for accessibility
 
 ```tsx
-<Img src="https://example.com/image.png" alt="Description" className="w-full h-auto" />
+<Img
+  src="https://example.com/image.png"
+  alt="Description"
+  className="w-full h-auto"
+/>
 ```
 
 ## Buttons
@@ -260,7 +264,11 @@ import tailwindConfig, { brandAssets } from "./tailwind.config";
 <Tailwind config={tailwindConfig}>
   <Body className="bg-gray-100 font-sans">
     <Container className="bg-white p-6">
-      <Img src={brandAssets.logo.src} alt={brandAssets.logo.alt} width={brandAssets.logo.width} />
+      <Img
+        src={brandAssets.logo.src}
+        alt={brandAssets.logo.alt}
+        width={brandAssets.logo.width}
+      />
       <Button className="bg-brand-primary text-white">Action</Button>
     </Container>
   </Body>

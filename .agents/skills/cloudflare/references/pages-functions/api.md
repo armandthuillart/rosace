@@ -76,7 +76,9 @@ interface Env {
   DB: D1Database;
 }
 export const onRequest: PagesFunction<Env> = async (ctx) => {
-  const user = await ctx.env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(123).first();
+  const user = await ctx.env.DB.prepare("SELECT * FROM users WHERE id = ?")
+    .bind(123)
+    .first();
   return Response.json(user);
 };
 ```
@@ -114,7 +116,9 @@ interface Env {
   AI: Ai;
 }
 export const onRequest: PagesFunction<Env> = async (ctx) => {
-  const resp = await ctx.env.AI.run("@cf/meta/llama-3.1-8b-instruct", { prompt: "Hello" });
+  const resp = await ctx.env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+    prompt: "Hello",
+  });
   return Response.json(resp);
 };
 ```

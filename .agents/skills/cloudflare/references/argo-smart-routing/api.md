@@ -122,11 +122,16 @@ print(f"Updated: {result.value} at {result.modified_on}")
 **Pattern:**
 
 ```typescript
-async function safelyEnableArgo(client: Cloudflare, zoneId: string): Promise<boolean> {
+async function safelyEnableArgo(
+  client: Cloudflare,
+  zoneId: string,
+): Promise<boolean> {
   const status = await client.argo.smartRouting.get({ zone_id: zoneId });
 
   if (!status.editable) {
-    console.error("Cannot modify Argo: editable=false (check billing/permissions)");
+    console.error(
+      "Cannot modify Argo: editable=false (check billing/permissions)",
+    );
     return false;
   }
 
@@ -177,7 +182,10 @@ async function enableArgoWithErrorHandling(client: Cloudflare, zoneId: string) {
     return result;
   } catch (error) {
     if (error instanceof RateLimitError) {
-      console.error("Rate limited. Retry after:", error.response?.headers.get("retry-after"));
+      console.error(
+        "Rate limited. Retry after:",
+        error.response?.headers.get("retry-after"),
+      );
       // Implement exponential backoff
     } else if (error instanceof APIError) {
       console.error("API error:", error.status, error.message);

@@ -36,7 +36,9 @@ export async function onRequest(ctx) {
 
 // Auth
 async function auth(ctx: EventContext<Env>) {
-  const token = ctx.request.headers.get("authorization")?.replace("Bearer ", "");
+  const token = ctx.request.headers
+    .get("authorization")
+    ?.replace("Bearer ", "");
   if (!token) return new Response("Unauthorized", { status: 401 });
   const session = await ctx.env.KV.get(`session:${token}`);
   if (!session) return new Response("Invalid", { status: 401 });
@@ -49,7 +51,10 @@ async function auth(ctx: EventContext<Env>) {
 
 ```typescript
 // CORS middleware
-const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST" };
+const cors = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST",
+};
 export async function onRequestOptions() {
   return new Response(null, { headers: cors });
 }
@@ -64,7 +69,9 @@ async function rateLimit(ctx: EventContext<Env>) {
   const ip = ctx.request.headers.get("CF-Connecting-IP") || "unknown";
   const count = parseInt((await ctx.env.KV.get(`rate:${ip}`)) || "0");
   if (count >= 100) return new Response("Rate limited", { status: 429 });
-  await ctx.env.KV.put(`rate:${ip}`, (count + 1).toString(), { expirationTtl: 3600 });
+  await ctx.env.KV.put(`rate:${ip}`, (count + 1).toString(), {
+    expirationTtl: 3600,
+  });
   return ctx.next();
 }
 ```
@@ -75,7 +82,8 @@ async function rateLimit(ctx: EventContext<Env>) {
 // JSON & file upload
 export async function onRequestPost(ctx) {
   const ct = ctx.request.headers.get("content-type") || "";
-  if (ct.includes("application/json")) return Response.json(await ctx.request.json());
+  if (ct.includes("application/json"))
+    return Response.json(await ctx.request.json());
   if (ct.includes("multipart/form-data")) {
     const file = (await ctx.request.formData()).get("file") as File;
     await ctx.env.BUCKET.put(file.name, file.stream());

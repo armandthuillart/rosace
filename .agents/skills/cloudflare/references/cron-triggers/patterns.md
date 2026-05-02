@@ -10,7 +10,9 @@ export default {
     });
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     ctx.waitUntil(
-      env.MY_KV.put("cached_data", JSON.stringify(await response.json()), { expirationTtl: 3600 }),
+      env.MY_KV.put("cached_data", JSON.stringify(await response.json()), {
+        expirationTtl: 3600,
+      }),
     );
   },
 };
@@ -77,7 +79,9 @@ export default {
       services.map(async (service) => {
         const start = Date.now();
         try {
-          const response = await fetch(service.url, { signal: AbortSignal.timeout(5000) });
+          const response = await fetch(service.url, {
+            signal: AbortSignal.timeout(5000),
+          });
           return {
             name: service.name,
             status: response.ok ? "up" : "down",
@@ -120,7 +124,10 @@ export default {
       batch.map((item) =>
         fetch("https://api.example.com/process", {
           method: "POST",
-          headers: { Authorization: `Bearer ${env.API_KEY}`, "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${env.API_KEY}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(item),
         }),
       ),
@@ -128,7 +135,9 @@ export default {
     console.log(
       `Processed ${results.filter((r) => r.status === "fulfilled").length}/${batch.length} items`,
     );
-    ctx.waitUntil(env.QUEUE_KV.put("pending_items", JSON.stringify(queueData.slice(100))));
+    ctx.waitUntil(
+      env.QUEUE_KV.put("pending_items", JSON.stringify(queueData.slice(100))),
+    );
   },
 };
 ```
@@ -158,11 +167,18 @@ export default {
 export default {
   async scheduled(controller, env, ctx) {
     const startTime = Date.now();
-    const meta = { cron: controller.cron, scheduledTime: controller.scheduledTime };
+    const meta = {
+      cron: controller.cron,
+      scheduledTime: controller.scheduledTime,
+    };
     console.log("[START]", meta);
     try {
       const result = await performTask(env);
-      console.log("[SUCCESS]", { ...meta, duration: Date.now() - startTime, count: result.count });
+      console.log("[SUCCESS]", {
+        ...meta,
+        duration: Date.now() - startTime,
+        count: result.count,
+      });
       ctx.waitUntil(
         env.METRICS.put(
           `cron:${controller.scheduledTime}`,
@@ -171,11 +187,18 @@ export default {
         ),
       );
     } catch (error) {
-      console.error("[ERROR]", { ...meta, duration: Date.now() - startTime, error: error.message });
+      console.error("[ERROR]", {
+        ...meta,
+        duration: Date.now() - startTime,
+        error: error.message,
+      });
       ctx.waitUntil(
         fetch(env.ALERT_WEBHOOK, {
           method: "POST",
-          body: JSON.stringify({ text: `Cron failed: ${controller.cron}`, error: error.message }),
+          body: JSON.stringify({
+            text: `Cron failed: ${controller.cron}`,
+            error: error.message,
+          }),
         }),
       );
       throw error;

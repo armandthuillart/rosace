@@ -21,11 +21,15 @@ const scriptFile = new File([scriptContent], `${scriptName}.mjs`, {
   type: "application/javascript+module",
 });
 
-await client.workersForPlatforms.dispatch.namespaces.scripts.update(namespace, scriptName, {
-  account_id: accountId,
-  metadata: { main_module: `${scriptName}.mjs` },
-  files: [scriptFile],
-});
+await client.workersForPlatforms.dispatch.namespaces.scripts.update(
+  namespace,
+  scriptName,
+  {
+    account_id: accountId,
+    metadata: { main_module: `${scriptName}.mjs` },
+    files: [scriptFile],
+  },
+);
 ```
 
 ## TypeScript Types
@@ -178,7 +182,11 @@ Control external fetch from user Workers:
 const userWorker = env.DISPATCHER.get(
   workerName,
   {},
-  { outbound: { customer_context: { customer_name: workerName, url: request.url } } },
+  {
+    outbound: {
+      customer_context: { customer_name: workerName, url: request.url },
+    },
+  },
 );
 ```
 

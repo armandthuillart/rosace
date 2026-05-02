@@ -87,7 +87,9 @@ try {
     console.log(`Rate limited. Retry after ${retryAfter} seconds`);
 
     // Implement exponential backoff
-    await new Promise((resolve) => setTimeout(resolve, (retryAfter || 60) * 1000));
+    await new Promise((resolve) =>
+      setTimeout(resolve, (retryAfter || 60) * 1000),
+    );
     // Retry request
   }
 }

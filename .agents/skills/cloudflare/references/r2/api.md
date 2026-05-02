@@ -31,10 +31,14 @@ if (!object) return new Response("Not found", { status: 404 });
 // Body: arrayBuffer(), text(), json(), blob(), body (ReadableStream)
 
 // Ranged reads
-const object = await env.MY_BUCKET.get(key, { range: { offset: 0, length: 1024 } });
+const object = await env.MY_BUCKET.get(key, {
+  range: { offset: 0, length: 1024 },
+});
 
 // Conditional GET
-const object = await env.MY_BUCKET.get(key, { onlyIf: { etagMatches: '"abc123"' } });
+const object = await env.MY_BUCKET.get(key, {
+  onlyIf: { etagMatches: '"abc123"' },
+});
 ```
 
 ## HEAD (Metadata Only)
@@ -99,12 +103,19 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 const s3 = new S3Client({
   region: "auto",
   endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-  credentials: { accessKeyId: env.R2_ACCESS_KEY_ID, secretAccessKey: env.R2_SECRET_ACCESS_KEY },
+  credentials: {
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+  },
 });
 
-const uploadUrl = await getSignedUrl(s3, new PutObjectCommand({ Bucket: "my-bucket", Key: key }), {
-  expiresIn: 3600,
-});
+const uploadUrl = await getSignedUrl(
+  s3,
+  new PutObjectCommand({ Bucket: "my-bucket", Key: key }),
+  {
+    expiresIn: 3600,
+  },
+);
 return Response.json({ uploadUrl });
 ```
 
@@ -121,7 +132,10 @@ interface R2Bucket {
   ): Promise<R2Object | null>;
   delete(keys: string | string[]): Promise<void>;
   list(options?: R2ListOptions): Promise<R2Objects>;
-  createMultipartUpload(key: string, options?: R2MultipartOptions): Promise<R2MultipartUpload>;
+  createMultipartUpload(
+    key: string,
+    options?: R2MultipartOptions,
+  ): Promise<R2MultipartUpload>;
   resumeMultipartUpload(key: string, uploadId: string): R2MultipartUpload;
 }
 

@@ -132,15 +132,18 @@ interface SiteverifyRequest {
 
 ```javascript
 // Cloudflare Workers
-const result = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    secret: env.TURNSTILE_SECRET,
-    response: token,
-    remoteip: request.headers.get("CF-Connecting-IP"),
-  }),
-});
+const result = await fetch(
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      secret: env.TURNSTILE_SECRET,
+      response: token,
+      remoteip: request.headers.get("CF-Connecting-IP"),
+    }),
+  },
+);
 const data = await result.json();
 ```
 
@@ -238,7 +241,11 @@ declare global {
 
 ```html
 <!-- Standard -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+  async
+  defer
+></script>
 
 <!-- Explicit render mode -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>

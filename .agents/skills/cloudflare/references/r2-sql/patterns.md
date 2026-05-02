@@ -42,7 +42,13 @@ Response:
 ```json
 {
   "success": true,
-  "result": [{ "user_id": "user_123", "timestamp": "2025-01-15T10:30:00Z", "status": 200 }],
+  "result": [
+    {
+      "user_id": "user_123",
+      "timestamp": "2025-01-15T10:30:00Z",
+      "status": 200
+    }
+  ],
   "errors": []
 }
 ```

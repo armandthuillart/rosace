@@ -145,7 +145,12 @@ Actions validate or transform data within a `pipe()`. They MUST be used inside p
 
 ```typescript
 // Actions are used in pipe()
-const EmailSchema = v.pipe(v.string(), v.trim(), v.email(), v.endsWith("@example.com"));
+const EmailSchema = v.pipe(
+  v.string(),
+  v.trim(),
+  v.email(),
+  v.endsWith("@example.com"),
+);
 ```
 
 ## Pipelines
@@ -160,7 +165,10 @@ const UsernameSchema = v.pipe(
   v.trim(),
   v.minLength(3, "Username must be at least 3 characters"),
   v.maxLength(20, "Username must be at most 20 characters"),
-  v.regex(/^[a-z0-9_]+$/i, "Username can only contain letters, numbers, and underscores"),
+  v.regex(
+    /^[a-z0-9_]+$/i,
+    "Username can only contain letters, numbers, and underscores",
+  ),
 );
 
 const AgeSchema = v.pipe(
@@ -213,7 +221,10 @@ const AgeSchema = v.pipe(
 const PasswordSchema = v.pipe(
   v.string(),
   v.minLength(8),
-  v.check((input) => /[A-Z]/.test(input), "Password must contain an uppercase letter"),
+  v.check(
+    (input) => /[A-Z]/.test(input),
+    "Password must contain an uppercase letter",
+  ),
   v.check((input) => /[0-9]/.test(input), "Password must contain a number"),
 );
 ```
@@ -236,7 +247,12 @@ These actions modify the value without changing its type:
 - `v.toMaxValue(n)` — Clamp to maximum value (if greater than n, set to n)
 
 ```typescript
-const NormalizedEmailSchema = v.pipe(v.string(), v.trim(), v.toLowerCase(), v.email());
+const NormalizedEmailSchema = v.pipe(
+  v.string(),
+  v.trim(),
+  v.toLowerCase(),
+  v.email(),
+);
 
 // Clamp number to range 0-100
 const PercentageSchema = v.pipe(v.number(), v.toMinValue(0), v.toMaxValue(100));
@@ -435,7 +451,11 @@ const ArgsSchema = v.tupleWithRest(
 ```typescript
 const StringOrNumberSchema = v.union([v.string(), v.number()]);
 
-const StatusSchema = v.union([v.literal("pending"), v.literal("active"), v.literal("inactive")]);
+const StatusSchema = v.union([
+  v.literal("pending"),
+  v.literal("active"),
+  v.literal("inactive"),
+]);
 ```
 
 ### Picklist (for string/number literals)
@@ -731,7 +751,10 @@ const DateFromStringSchema = v.pipe(
 );
 
 // Date validation
-const FutureDateSchema = v.pipe(v.date(), v.minValue(new Date(), "Date must be in the future"));
+const FutureDateSchema = v.pipe(
+  v.date(),
+  v.minValue(new Date(), "Date must be in the future"),
+);
 ```
 
 ## Additional Resources

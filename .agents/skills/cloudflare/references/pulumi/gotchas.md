@@ -23,7 +23,9 @@ const build = new command.local.Command("build", {
 const worker = new cloudflare.WorkerScript(
   "worker",
   {
-    content: build.stdout.apply(() => fs.readFileSync("./worker/dist/index.js", "utf8")),
+    content: build.stdout.apply(() =>
+      fs.readFileSync("./worker/dist/index.js", "utf8"),
+    ),
   },
   { dependsOn: [build] },
 );
@@ -156,7 +158,10 @@ const worker = new cloudflare.WorkerScript("worker", {
 });
 
 // ADVANCED: Manual versioning for gradual rollouts (v6.x)
-const worker = new cloudflare.Worker("worker", { accountId, name: "my-worker" });
+const worker = new cloudflare.Worker("worker", {
+  accountId,
+  name: "my-worker",
+});
 const version = new cloudflare.WorkerVersion("v1", {
   accountId,
   workerId: worker.id,

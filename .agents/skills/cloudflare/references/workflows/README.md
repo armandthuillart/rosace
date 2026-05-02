@@ -22,7 +22,11 @@ Durable multi-step applications with automatic retries, state persistence, and l
 ## Quick Start
 
 ```typescript
-import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
+import {
+  WorkflowEntrypoint,
+  WorkflowStep,
+  WorkflowEvent,
+} from "cloudflare:workers";
 
 type Env = { MY_WORKFLOW: Workflow; DB: D1Database };
 type Params = { userId: string };

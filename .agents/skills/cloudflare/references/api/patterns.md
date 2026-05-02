@@ -166,7 +166,9 @@ async function createZoneWithRetry(name: string, maxAttempts = 3) {
     } catch (err) {
       if (err instanceof Cloudflare.RateLimitError && attempt < maxAttempts) {
         const retryAfter = parseInt(err.headers["retry-after"] || "5");
-        console.log(`Rate limited, waiting ${retryAfter}s (retry ${attempt}/${maxAttempts})`);
+        console.log(
+          `Rate limited, waiting ${retryAfter}s (retry ${attempt}/${maxAttempts})`,
+        );
         await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
       } else {
         throw err;
@@ -190,7 +192,9 @@ if (zone.status === "active") {
 
 ```typescript
 // Process multiple zones, continue on errors
-const results = await Promise.allSettled(zoneIds.map((id) => client.zones.get({ zone_id: id })));
+const results = await Promise.allSettled(
+  zoneIds.map((id) => client.zones.get({ zone_id: id })),
+);
 
 results.forEach((result, i) => {
   if (result.status === "fulfilled") {

@@ -14,7 +14,10 @@ const client = new Cloudflare({
 
 ```typescript
 // List rulesets
-await client.rulesets.list({ zone_id: "zone_id", phase: "http_request_firewall_managed" });
+await client.rulesets.list({
+  zone_id: "zone_id",
+  phase: "http_request_firewall_managed",
+});
 
 // Get ruleset
 await client.rulesets.get({ zone_id: "zone_id", ruleset_id: "ruleset_id" });
@@ -33,8 +36,17 @@ await client.rulesets.update({
   zone_id: "zone_id",
   ruleset_id: "ruleset_id",
   rules: [
-    { id: "rule_id", action: "block", expression: "cf.waf.score gt 40", enabled: true },
-    { action: "challenge", expression: 'http.request.uri.path contains "/admin"', enabled: true },
+    {
+      id: "rule_id",
+      action: "block",
+      expression: "cf.waf.score gt 40",
+      enabled: true,
+    },
+    {
+      action: "challenge",
+      expression: 'http.request.uri.path contains "/admin"',
+      enabled: true,
+    },
   ],
 });
 

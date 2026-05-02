@@ -1,4 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vite-plus/test";
 
 type MockConvexClient = {
   clearAuth: ReturnType<typeof vi.fn>;
@@ -71,9 +78,12 @@ describe("convexClient security/regression guarantees", () => {
 
     await flushAsyncWork();
 
-    expect(fetchMock).toHaveBeenCalledWith("https://convex.example/auth/session", {
-      credentials: "include",
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://convex.example/auth/session",
+      {
+        credentials: "include",
+      },
+    );
     expect(clientInstance.clearAuth).toHaveBeenCalledTimes(1);
     expect(clientInstance.setAuth).not.toHaveBeenCalled();
   });

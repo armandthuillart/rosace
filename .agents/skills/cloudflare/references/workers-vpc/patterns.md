@@ -11,7 +11,10 @@ import { connect } from "cloudflare:sockets";
 ### Simple Request-Response
 
 ```typescript
-const socket = connect({ hostname: "echo.example.com", port: 7 }, { secureTransport: "on" });
+const socket = connect(
+  { hostname: "echo.example.com", port: 7 },
+  { secureTransport: "on" },
+);
 try {
   await socket.opened;
   const writer = socket.writable.getWriter();
@@ -52,7 +55,10 @@ async function readAll(socket: Socket): Promise<Uint8Array> {
 
 ```typescript
 // Stream socket data directly to HTTP response
-const socket = connect({ hostname: "stream.internal", port: 9000 }, { secureTransport: "on" });
+const socket = connect(
+  { hostname: "stream.internal", port: 9000 },
+  { secureTransport: "on" },
+);
 const writer = socket.writable.getWriter();
 await writer.write(new TextEncoder().encode("STREAM\n"));
 await writer.close();
@@ -68,7 +74,9 @@ return new Response(socket.readable);
 // Recv: $<len>\r\n<data>\r\n or $-1\r\n for null
 const socket = connect({ hostname: "redis.internal", port: 6379 });
 const writer = socket.writable.getWriter();
-await writer.write(new TextEncoder().encode(`*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n`));
+await writer.write(
+  new TextEncoder().encode(`*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n`),
+);
 ```
 
 ### PostgreSQL
@@ -134,7 +142,10 @@ async function connectWithFallback(
   port: number,
 ): Promise<Socket> {
   try {
-    const socket = connect({ hostname: primary, port }, { secureTransport: "on" });
+    const socket = connect(
+      { hostname: primary, port },
+      { secureTransport: "on" },
+    );
     await socket.opened;
     return socket;
   } catch {
@@ -148,16 +159,23 @@ async function connectWithFallback(
 ### Destination Allowlist (Prevent SSRF)
 
 ```typescript
-const ALLOWED_HOSTS = ["db.internal.company.net", "api.internal.company.net", /^10\.0\.1\.\d+$/];
+const ALLOWED_HOSTS = [
+  "db.internal.company.net",
+  "api.internal.company.net",
+  /^10\.0\.1\.\d+$/,
+];
 
 function isAllowed(hostname: string): boolean {
-  return ALLOWED_HOSTS.some((p) => (p instanceof RegExp ? p.test(hostname) : p === hostname));
+  return ALLOWED_HOSTS.some((p) =>
+    p instanceof RegExp ? p.test(hostname) : p === hostname,
+  );
 }
 
 export default {
   async fetch(req: Request): Promise<Response> {
     const target = new URL(req.url).searchParams.get("host");
-    if (!target || !isAllowed(target)) return new Response("Forbidden", { status: 403 });
+    if (!target || !isAllowed(target))
+      return new Response("Forbidden", { status: 403 });
     const socket = connect({ hostname: target, port: 443 });
     // Use socket...
   },
@@ -224,10 +242,12 @@ export default {
     const url = new URL(req.url);
     const proto = url.pathname.slice(1); // /redis
     const host = url.searchParams.get("host");
-    if (!host || !PROTOCOLS[proto]) return new Response("Invalid", { status: 400 });
+    if (!host || !PROTOCOLS[proto])
+      return new Response("Invalid", { status: 400 });
     const result = await PROTOCOLS[proto].test(
       host,
-      parseInt(url.searchParams.get("port") || "") || PROTOCOLS[proto].defaultPort,
+      parseInt(url.searchParams.get("port") || "") ||
+        PROTOCOLS[proto].defaultPort,
     );
     return new Response(result);
   },

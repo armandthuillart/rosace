@@ -6,7 +6,11 @@
 
 ```typescript
 interface ExportedHandler<Env = unknown> {
-  email?(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): void | Promise<void>;
+  email?(
+    message: ForwardableEmailMessage,
+    env: Env,
+    ctx: ExecutionContext,
+  ): void | Promise<void>;
 }
 ```
 
@@ -113,7 +117,10 @@ interface SendEmail {
 
 interface EmailMessage {
   from: string | { name?: string; email: string };
-  to: string | { name?: string; email: string } | Array<string | { name?: string; email: string }>;
+  to:
+    | string
+    | { name?: string; email: string }
+    | Array<string | { name?: string; email: string }>;
   subject: string;
   text?: string;
   html?: string;

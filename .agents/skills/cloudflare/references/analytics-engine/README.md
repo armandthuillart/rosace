@@ -57,7 +57,9 @@ Alternative scenarios:
 
 ```jsonc
 {
-  "analytics_engine_datasets": [{ "binding": "ANALYTICS", "dataset": "my_events" }],
+  "analytics_engine_datasets": [
+    { "binding": "ANALYTICS", "dataset": "my_events" },
+  ],
 }
 ```
 

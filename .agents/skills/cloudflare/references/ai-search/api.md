@@ -64,8 +64,14 @@ interface SearchResult {
 ## Streaming
 
 ```typescript
-const stream = await env.AI.autorag("docs").aiSearch({ query, model, stream: true });
-return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
+const stream = await env.AI.autorag("docs").aiSearch({
+  query,
+  model,
+  stream: true,
+});
+return new Response(stream, {
+  headers: { "Content-Type": "text/event-stream" },
+});
 ```
 
 ## Error Types

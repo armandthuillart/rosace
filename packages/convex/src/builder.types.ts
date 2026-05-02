@@ -8,12 +8,14 @@ import type { GenericValidator, PropertyValidators } from "convex/values";
 
 type EmptyObject = Record<never, never>;
 
-type QueryCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericQueryCtx<DataModel>;
+type QueryCtx<DataModel extends GenericDataModel = GenericDataModel> =
+  GenericQueryCtx<DataModel>;
 
 type MutationCtx<DataModel extends GenericDataModel = GenericDataModel> =
   GenericMutationCtx<DataModel>;
 
-type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericActionCtx<DataModel>;
+type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> =
+  GenericActionCtx<DataModel>;
 
 type Context = object;
 type FunctionType = "query" | "mutation" | "action";
@@ -37,7 +39,10 @@ interface ConvexBuilderDef<
 
 type Promisable<T> = T | PromiseLike<T>;
 
-type ConvexMiddleware<TInContext extends Context, TOutContext extends Context> = (
+type ConvexMiddleware<
+  TInContext extends Context,
+  TOutContext extends Context,
+> = (
   context: TInContext,
   next: <U extends Context>(context: U) => Promisable<{ context: U }>,
 ) => Promisable<{
@@ -65,7 +70,9 @@ type RequiredKeys<T extends Record<PropertyKey, any>> = {
 type ValidatorType<T> = T extends GenericValidator ? T["type"] : never;
 
 type OptionalArgs<T extends Record<PropertyKey, any>> = {
-  [K in OptionalKeys<T>]?: T[K] extends GenericValidator ? ValidatorType<T[K]> | undefined : never;
+  [K in OptionalKeys<T>]?: T[K] extends GenericValidator
+    ? ValidatorType<T[K]> | undefined
+    : never;
 };
 
 type RequiredArgs<T extends Record<PropertyKey, any>> = {
@@ -76,20 +83,25 @@ type InferArgs<T extends ConvexArgsValidator> = T extends GenericValidator
   ? T["type"]
   : RequiredArgs<T> & OptionalArgs<T>;
 
-type InferredArgs<T extends ConvexArgsValidator | undefined> = T extends ConvexArgsValidator
-  ? InferArgs<T>
-  : EmptyObject;
+type InferredArgs<T extends ConvexArgsValidator | undefined> =
+  T extends ConvexArgsValidator ? InferArgs<T> : EmptyObject;
 
 type CallableBuilder<
   TCurrentContext extends Context,
   TArgsValidator extends ConvexArgsValidator | undefined,
   THandlerReturn,
-> = (context: TCurrentContext, args: InferredArgs<TArgsValidator>) => Promise<THandlerReturn>;
+> = (
+  context: TCurrentContext,
+  args: InferredArgs<TArgsValidator>,
+) => Promise<THandlerReturn>;
 
 type InferReturns<T extends ConvexReturnsValidator> = ValidatorType<T>;
 
-type ExpectedReturnType<TReturnsValidator extends ConvexReturnsValidator | undefined> =
-  TReturnsValidator extends ConvexReturnsValidator ? InferReturns<TReturnsValidator> : any;
+type ExpectedReturnType<
+  TReturnsValidator extends ConvexReturnsValidator | undefined,
+> = TReturnsValidator extends ConvexReturnsValidator
+  ? InferReturns<TReturnsValidator>
+  : any;
 
 type InferredHandlerReturn<
   TReturnsValidator extends ConvexReturnsValidator | undefined,

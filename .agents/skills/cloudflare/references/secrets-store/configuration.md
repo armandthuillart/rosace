@@ -129,12 +129,20 @@ Best practice: Separate names for local/prod:
   "env": {
     "development": {
       "secrets_store_secrets": [
-        { "binding": "API_KEY", "store_id": "store", "secret_name": "dev_api_key" },
+        {
+          "binding": "API_KEY",
+          "store_id": "store",
+          "secret_name": "dev_api_key",
+        },
       ],
     },
     "production": {
       "secrets_store_secrets": [
-        { "binding": "API_KEY", "store_id": "store", "secret_name": "prod_api_key" },
+        {
+          "binding": "API_KEY",
+          "store_id": "store",
+          "secret_name": "prod_api_key",
+        },
       ],
     },
   },

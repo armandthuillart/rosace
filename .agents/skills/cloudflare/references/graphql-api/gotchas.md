@@ -76,7 +76,10 @@ For high-confidence numbers, use `confidence(level: 0.95)` to get estimate bound
 GraphQL returns HTTP 200 even on failures. **Always check `response.errors`:**
 
 ```json
-{ "data": null, "errors": [{ "message": "filter is required for httpRequestsAdaptiveGroups" }] }
+{
+  "data": null,
+  "errors": [{ "message": "filter is required for httpRequestsAdaptiveGroups" }]
+}
 ```
 
 ## Plan-Based Availability

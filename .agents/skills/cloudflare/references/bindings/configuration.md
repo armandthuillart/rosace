@@ -6,8 +6,12 @@
 {
   "kv_namespaces": [{ "binding": "MY_KV", "id": "..." }],
   "r2_buckets": [{ "binding": "MY_BUCKET", "bucket_name": "my-bucket" }],
-  "d1_databases": [{ "binding": "DB", "database_name": "my-db", "database_id": "..." }],
-  "durable_objects": { "bindings": [{ "name": "MY_DO", "class_name": "MyDO" }] },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "my-db", "database_id": "..." },
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "MY_DO", "class_name": "MyDO" }],
+  },
   "vectorize": [{ "binding": "VECTORIZE", "index_name": "my-index" }],
   "queues": { "producers": [{ "binding": "MY_QUEUE", "queue": "my-queue" }] },
 }
@@ -61,7 +65,9 @@ npx wrangler workflows create my-workflow
   "mtls_certificates": [{ "binding": "MY_CERT", "certificate_id": "..." }],
   "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "..." }],
   "unsafe": {
-    "bindings": [{ "name": "RATE_LIMITER", "type": "ratelimit", "namespace_id": "..." }],
+    "bindings": [
+      { "name": "RATE_LIMITER", "type": "ratelimit", "namespace_id": "..." },
+    ],
   },
 }
 ```
@@ -142,7 +148,9 @@ npx wrangler dev --remote  # Uses production bindings
   "vars": { "API_URL": "https://api.example.com" },
   "kv_namespaces": [{ "binding": "CACHE", "id": "abc123" }],
   "r2_buckets": [{ "binding": "ASSETS", "bucket_name": "my-assets" }],
-  "d1_databases": [{ "binding": "DB", "database_name": "my-db", "database_id": "xyz789" }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "my-db", "database_id": "xyz789" },
+  ],
   "services": [{ "binding": "AUTH", "service": "auth-worker" }],
   "ai": { "binding": "AI" },
 }
@@ -155,7 +163,13 @@ npx wrangler dev --remote  # Uses production bindings
 ```jsonc
 {
   "durable_objects": {
-    "bindings": [{ "name": "COUNTER", "class_name": "Counter", "script_name": "my-worker" }],
+    "bindings": [
+      {
+        "name": "COUNTER",
+        "class_name": "Counter",
+        "script_name": "my-worker",
+      },
+    ],
   },
 }
 ```
