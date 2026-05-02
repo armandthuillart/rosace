@@ -70,10 +70,11 @@ function makeEvent(input: {
 
 describe("handle", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
   });
 
-  it("proxies /auth/* requests to upstream", async () => {
+  it("should proxy /auth/* requests to upstream", async () => {
     const upstream = new Response("ok", {
       status: 201,
       headers: { "x-proxy": "1" },
@@ -107,7 +108,7 @@ describe("handle", () => {
     expect(response.headers.get("x-proxy")).toBe("1");
   });
 
-  it("returns null from locals.auth when cookie is missing", async () => {
+  it("should return null from locals.auth when cookie is missing", async () => {
     const event = makeEvent({ url: "https://app.local/dashboard" });
     const resolve = vi.fn(async () => new Response("resolved"));
 
@@ -118,7 +119,7 @@ describe("handle", () => {
     expect(session).toBeNull();
   });
 
-  it("returns session from locals.auth when upstream session is valid", async () => {
+  it("should return session from locals.auth when upstream session is valid", async () => {
     const event = makeEvent({
       url: "https://app.local/dashboard",
       headers: { cookie: "session:token=abc" },
@@ -142,7 +143,7 @@ describe("handle", () => {
     expect(session).toEqual({ userId: "u_1" });
   });
 
-  it("fails closed when upstream session endpoint is unavailable", async () => {
+  it("should fail closed when upstream session endpoint is unavailable", async () => {
     const event = makeEvent({
       url: "https://app.local/dashboard",
       headers: { cookie: "session:token=abc" },
@@ -163,10 +164,11 @@ describe("handle", () => {
 
 describe("login", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
   });
 
-  it("redirects to / on successful login flow (omitted names)", async () => {
+  it("should redirect to / on successful login (omitted names)", async () => {
     const formData = new FormData();
     formData.set("email", "john@example.com");
     formData.set("password", "password123");
@@ -199,7 +201,7 @@ describe("login", () => {
     expect(redirect).toHaveBeenCalledWith(303, "/");
   });
 
-  it("sends firstName and lastName for register flow", async () => {
+  it("should send firstName and lastName for register flow", async () => {
     const formData = new FormData();
     formData.set("email", "john@example.com");
     formData.set("password", "password123");
@@ -236,7 +238,7 @@ describe("login", () => {
     expect(redirect).toHaveBeenCalledWith(303, "/");
   });
 
-  it("returns fail(400) when register flow is missing one name", async () => {
+  it("should return fail(400) when register flow is missing one name", async () => {
     const formData = new FormData();
     formData.set("email", "john@example.com");
     formData.set("password", "password123");
@@ -269,10 +271,11 @@ describe("login", () => {
 
 describe("logout", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     vi.clearAllMocks();
   });
 
-  it("posts to /auth/logout and redirects to /login", async () => {
+  it("should post to /auth/logout and redirect to /login", async () => {
     const event = makeEvent({
       url: "https://app.local/logout",
       headers: { origin: "https://app.local" },

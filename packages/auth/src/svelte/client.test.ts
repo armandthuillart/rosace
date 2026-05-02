@@ -16,6 +16,8 @@ describe("convexClient security/regression guarantees", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
     vi.resetModules();
 
     clientInstance = {
@@ -40,13 +42,15 @@ describe("convexClient security/regression guarantees", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     vi.clearAllMocks();
   });
 
-  it("guarantees auth is cleared when session fetch is disabled (fail-closed)", async () => {
+  it("should clear auth when session fetch is disabled (fail-closed)", async () => {
     const { convexClient } = await import("./client");
 
     const client = convexClient().useConvex({ shouldFetch: () => false });
+
     await flushAsyncWork();
 
     expect(client).toBe(clientInstance);
@@ -55,14 +59,16 @@ describe("convexClient security/regression guarantees", () => {
     expect(clientInstance.setAuth).not.toHaveBeenCalled();
   });
 
-  it("guarantees non-2xx session responses clear auth and never set attacker-controlled state", async () => {
+  it("should clear auth on non-2xx session responses", async () => {
     fetchMock.mockResolvedValue({
       ok: false,
       json: vi.fn(),
     });
+
     const { convexClient } = await import("./client");
 
     convexClient().useConvex({ shouldFetch: () => true });
+
     await flushAsyncWork();
 
     expect(fetchMock).toHaveBeenCalledWith("https://convex.example/auth/session", {
@@ -72,21 +78,23 @@ describe("convexClient security/regression guarantees", () => {
     expect(clientInstance.setAuth).not.toHaveBeenCalled();
   });
 
-  it("guarantees malformed or null session payloads fail closed by clearing auth", async () => {
+  it("should clear auth on malformed or null session payloads", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({ user: { id: "u1" } }),
     });
+
     const { convexClient } = await import("./client");
 
     convexClient().useConvex({ shouldFetch: () => true });
+
     await flushAsyncWork();
 
     expect(clientInstance.setAuth).not.toHaveBeenCalled();
     expect(clientInstance.clearAuth).toHaveBeenCalledTimes(1);
   });
 
-  it("guarantees valid session token is applied and stale auth is not cleared", async () => {
+  it("should apply valid session token and preserve auth", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({
@@ -103,24 +111,28 @@ describe("convexClient security/regression guarantees", () => {
         },
       }),
     });
+
     const { convexClient } = await import("./client");
 
     convexClient().useConvex({ shouldFetch: () => true });
+
     await flushAsyncWork();
 
     expect(clientInstance.setAuth).toHaveBeenCalledWith("session-jwt");
     expect(clientInstance.clearAuth).not.toHaveBeenCalled();
   });
 
-  it("guarantees convex http client singleton reuse to prevent auth-desync regressions", async () => {
+  it("should reuse convex http client singleton to prevent auth desync", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue(null),
     });
+
     const { convexClient } = await import("./client");
 
     const first = convexClient().useConvex({ shouldFetch: () => true });
     const second = convexClient().useConvex({ shouldFetch: () => true });
+
     await flushAsyncWork();
 
     expect(first).toBe(second);
