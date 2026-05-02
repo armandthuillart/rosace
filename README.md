@@ -46,7 +46,7 @@ Start from `.env.template` and fill required values.
 ### 3) Generate app env files
 
 ```bash
-vp run prepare
+vp run env
 ```
 
 This command reads root env files and writes:

@@ -5,8 +5,8 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "bun ./scripts/run-dev.ts",
-    "prepare": "bun ./scripts/touch-env.ts"
+    "dev": "bun ./scripts/dev.ts",
+    "env": "bun ./scripts/env.ts"
   },
   "devDependencies": {
     "@types/node": "catalog:",
