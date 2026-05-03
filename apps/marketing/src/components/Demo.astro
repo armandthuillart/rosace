@@ -6,16 +6,17 @@ import Icon from "@components/Icon.astro";
   <h2 class="sr-only">Demo</h2>
 
   <div
-    class="relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-[2.5rem] bg-gray-300 p-5 dark:bg-gray-900"
+    class="relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-4xl bg-gray-300 p-5 sm:rounded-[2.5rem] dark:bg-gray-900"
+    id="demo-container"
   >
     <div
-      class="2xl:shadow-panel shadow-float absolute left-5 z-50 flex h-145 w-3xs shrink-0 origin-left flex-col rounded-[1.25rem] bg-white 2xl:static 2xl:h-full dark:bg-gray-800"
+      class="shadow-float xl:shadow-panel absolute left-5 z-50 flex h-145 w-3xs shrink-0 origin-left flex-col rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
       id="demo-left-panel"
     >
     </div>
 
     <div class="flex w-full justify-center">
-      <div class="flex flex-col gap-3 max-sm:w-full max-sm:max-w-3xs">
+      <div class="flex flex-col gap-3 max-sm:w-full">
         <div class="flex h-7 justify-between">
           <div
             class="flex items-center rounded-lg bg-gray-100 px-2.5 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
@@ -69,7 +70,7 @@ import Icon from "@components/Icon.astro";
     </div>
 
     <div
-      class="2xl:shadow-panel shadow-float absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col rounded-[1.25rem] bg-white 2xl:static 2xl:h-full dark:bg-gray-800"
+      class="shadow-float xl:shadow-panel absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
       id="demo-right-panel"
     >
     </div>
@@ -93,37 +94,72 @@ import Icon from "@components/Icon.astro";
   import waapi from "@motion/waapi";
 
   let mm = waapi.matchMedia();
-  let breakpoint = 1280;
+
+  let sm = 640;
+  let xl = 1280;
 
   mm.add(
     {
-      largeScreen: `(min-width: ${breakpoint}px)`,
-      smallScreen: `(max-width: ${breakpoint - 1}px)`,
+      desktop: `(min-width: ${xl}px)`,
+      tablet: `(min-width: ${sm}px) and (max-width: ${xl - 1}px)`,
+      mobile: `(max-width: ${sm - 1}px)`,
     },
     (context) => {
-      let { largeScreen, smallScreen } = context.conditions;
+      let { tablet, dark } = context.conditions;
+
+      let container = document.getElementById("demo-container")!;
 
       let leftPanel = document.getElementById("demo-left-panel")!;
       let rightPanel = document.getElementById("demo-right-panel")!;
 
-      let tl = waapi.timeline();
+      if (tablet) {
+        const handleMouseEnter = () => {
+          waapi.to(
+            [leftPanel, rightPanel],
+            {
+              scale: 1,
+              x: "0%",
+            },
+            {
+              duration: 0.5,
+              ease: "cubic-bezier(.32, .72, 0, 1)",
+            },
+          );
+        };
 
-      tl.set(leftPanel, {
-        autoAlpha: largeScreen ? 1 : 0,
-        x: largeScreen ? 0 : "-100%",
-      });
+        const handleMouseLeave = () => {
+          waapi.to(
+            leftPanel,
+            {
+              scale: tablet ? 0.85 : 1,
+              x: tablet ? "-75%" : "0%",
+            },
+            {
+              duration: 0.5,
+              ease: "cubic-bezier(.32, .72, 0, 1)",
+            },
+          );
+          waapi.to(
+            rightPanel,
+            {
+              scale: tablet ? 0.85 : 1,
+              x: tablet ? "75%" : "0%",
+            },
+            {
+              duration: 0.5,
+              ease: "cubic-bezier(.32, .72, 0, 1)",
+            },
+          );
+        };
 
-      tl.set(rightPanel, {
-        autoAlpha: largeScreen ? 1 : 1,
-        scale: largeScreen ? 1 : 0.85,
-        x: largeScreen ? 0 : "75%",
-      });
+        container.addEventListener("mouseenter", handleMouseEnter);
+        container.addEventListener("mouseleave", handleMouseLeave);
 
-      tl.to(rightPanel, {
-        autoAlpha: 1,
-        scale: 1,
-        x: 0,
-      });
+        return () => {
+          container.removeEventListener("mouseenter", handleMouseEnter);
+          container.removeEventListener("mouseleave", handleMouseLeave);
+        };
+      }
 
       return () => {};
     },

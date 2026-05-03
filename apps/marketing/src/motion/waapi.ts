@@ -1,6 +1,6 @@
 import matchMedia from "./matchMedia";
 
-export type Target = Element | Array<Element>;
+export type Target = HTMLElement | Array<HTMLElement>;
 
 export interface AnimateOptions {
   delay?: number;
@@ -117,6 +117,17 @@ const timeline = (): TimelineControls => {
   let active: Animation[] = [];
   let cursor = 0;
 
+  let scheduled = false;
+  const scheduleRun = () => {
+    if (!scheduled) {
+      scheduled = true;
+      queueMicrotask(() => {
+        scheduled = false;
+        run();
+      });
+    }
+  };
+
   const addTo = (
     target: Target,
     keyframes: AnimatableProperties | AnimatableProperties[],
@@ -125,6 +136,7 @@ const timeline = (): TimelineControls => {
     const normalized = Array.isArray(keyframes) ? keyframes : [keyframes];
     steps.push({ target, keyframes: normalized, options, at: cursor });
     cursor += (options.duration ?? 0.3) + (options.delay ?? 0);
+    scheduleRun();
   };
 
   const addFrom = (
@@ -182,6 +194,12 @@ const timeline = (): TimelineControls => {
   return tl;
 };
 
-const waapi = { animate, matchMedia, set, timeline };
+const to = (
+  target: Target,
+  keyframes: AnimatableProperties | AnimatableProperties[],
+  options?: AnimateOptions,
+) => animate(target, keyframes, options);
+
+const waapi = { animate, matchMedia, set, timeline, to };
 
 export default waapi;
