@@ -52,21 +52,29 @@ const resolveKeyframe = (props: AnimatableProperties): Keyframe => {
     const y = typeof props.y === "number" ? `${props.y}px` : props.y;
     transforms.push(`translateY(${y})`);
   }
-  if (props.rotate !== undefined) transforms.push(`rotate(${props.rotate}deg)`);
-  if (props.scale !== undefined) transforms.push(`scale(${props.scale})`);
-  if (props.scaleX !== undefined) transforms.push(`scaleX(${props.scaleX})`);
-  if (props.scaleY !== undefined) transforms.push(`scaleY(${props.scaleY})`);
 
-  if (transforms.length) rest.transform = transforms.join(" ");
+  if (props.rotate !== undefined) {
+    transforms.push(`rotate(${props.rotate}deg)`);
+  }
+
+  if (props.scale !== undefined) {
+    transforms.push(`scale(${props.scale})`);
+  }
+  if (props.scaleX !== undefined) {
+    transforms.push(`scaleX(${props.scaleX})`);
+  }
+  if (props.scaleY !== undefined) {
+    transforms.push(`scaleY(${props.scaleY})`);
+  }
+
+  if (transforms.length) {
+    rest.transform = transforms.join(" ");
+  }
 
   if (props.autoAlpha !== undefined) {
     rest.opacity = props.autoAlpha;
     rest.visibility = props.autoAlpha > 0 ? "visible" : "hidden";
   }
-  if (props.backgroundColor !== undefined) rest.backgroundColor = props.backgroundColor;
-  if (props.color !== undefined) rest.color = props.color;
-  if (props.borderRadius !== undefined) rest.borderRadius = `${props.borderRadius}px`;
-  if (props.filter !== undefined) rest.filter = props.filter;
 
   return rest as Keyframe;
 };

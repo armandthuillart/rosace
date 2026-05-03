@@ -13,7 +13,7 @@ type Service = {
   cwd?: string;
 };
 
-type ErrorIncidentState = {
+type ErrorIncident = {
   lines: string[];
   timer: ReturnType<typeof setTimeout> | null;
 };
@@ -67,7 +67,7 @@ const WORKSPACE_ROOT = process.cwd();
 
 const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
 
-const errorStates = new Map<ServiceName, ErrorIncidentState>();
+const errorStates = new Map<ServiceName, ErrorIncident>();
 const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
 const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
 
@@ -463,7 +463,7 @@ function queueErrorLine(service: ServiceName, line: string) {
   const current =
     errorStates.get(service) ??
     (() => {
-      const initial: ErrorIncidentState = { lines: [], timer: null };
+      const initial: ErrorIncident = { lines: [], timer: null };
       errorStates.set(service, initial);
       return initial;
     })();

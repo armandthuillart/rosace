@@ -1,9 +1,4 @@
-<a href="https://rosace.app">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./.github/dark.png">
-    <img alt="Rosace" src="./.github/light.png">
-  </picture>
-</a>
+[![Rosace](./preview.png)](https://rosace.app)
 
 <p align="center">
   <a href="https://rosace.app">Marketing</a>
