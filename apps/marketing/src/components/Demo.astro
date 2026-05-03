@@ -48,11 +48,17 @@ import Icon from "@components/Icon.astro";
           <div
             class="aspect-9/16 shrink-0 overflow-hidden rounded-[.875rem] bg-[conic-gradient(var(--a)_25%,var(--b)_0_50%,var(--a)_0_75%,var(--b)_0)] bg-size-[1rem_1rem] bg-center [--a:var(--color-gray-200)] [--b:var(--color-gray-100)] max-sm:hidden dark:[--a:var(--color-gray-700)] dark:[--b:var(--color-gray-800)]"
           >
+            <div class="" id="layout-camera"></div>
           </div>
 
           <div
-            class="shadow-panel shrink-0 rounded-[.875rem] bg-white max-sm:size-full sm:aspect-9/16 dark:bg-gray-800"
+            class="shadow-panel relative shrink-0 rounded-[.875rem] bg-white max-sm:size-full sm:aspect-9/16 dark:bg-gray-800"
           >
+            <div class="absolute inset-0 perspective-[1000px]">
+              <div class="relative size-full transform-3d" id="scene-camera">
+                <div class="flex size-full flex-col"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -60,10 +66,20 @@ import Icon from "@components/Icon.astro";
           class="shadow-track relative flex h-18 flex-col rounded-[.875rem] bg-white dark:bg-gray-800"
         >
           <div
-            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center -space-x-1 rounded-md bg-white text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center -space-x-1 rounded-md bg-white dark:bg-gray-800"
           >
-            <Icon class="size-3.5" name="play" />
-            <Icon class="size-3.5" name="pause" />
+            <div class="animate-shimmer relative flex -space-x-1">
+              <Icon
+                class="size-3.5 text-transparent"
+                name="play"
+                style="mask-image: url('/sprites.svg#play'); mask-mode: alpha;"
+              />
+              <Icon
+                class="size-3.5 text-transparent"
+                name="pause"
+                style="mask-image: url('/sprites.svg#pause'); mask-mode: alpha;"
+              />
+            </div>
           </div>
         </div>
       </div>

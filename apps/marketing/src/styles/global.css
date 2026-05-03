@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --animate-shimmer: shimmer 2s linear infinite;
   --color-blue-400: oklch(67% 0.183 249);
   --color-blue-500: oklch(62.7% 0.17 249);
   --color-gray-50: oklch(98.5% 0 0);
@@ -40,6 +41,15 @@
     --shadow-track:
       0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
       inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
   }
 }
 
