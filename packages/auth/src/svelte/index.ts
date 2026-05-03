@@ -23,15 +23,12 @@ const handle: Handle = async ({ event, resolve }) => {
         ? undefined
         : await event.request.text();
 
-    const upstream = await fetch(
-      `${target}${source.pathname}${source.search}`,
-      {
-        method: event.request.method,
-        headers: event.request.headers,
-        body,
-        redirect: "manual",
-      },
-    );
+    const upstream = await fetch(`${target}${source.pathname}${source.search}`, {
+      method: event.request.method,
+      headers: event.request.headers,
+      body,
+      redirect: "manual",
+    });
 
     return new Response(upstream.body, {
       status: upstream.status,
@@ -79,14 +76,10 @@ const login = async (event: RequestEvent) => {
     firstName: formData.get("firstName"),
   };
 
-  const { email, password, lastName, firstName } = v.parse(
-    LoginFormSchema,
-    rawData,
-  );
+  const { email, password, lastName, firstName } = v.parse(LoginFormSchema, rawData);
 
   const register = Boolean(firstName || lastName);
-  const missing =
-    !email || !password || (register && (!firstName || !lastName));
+  const missing = !email || !password || (register && (!firstName || !lastName));
 
   if (missing) {
     return fail(400, {

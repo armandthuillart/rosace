@@ -22,9 +22,7 @@ type PublicJwks = {
 };
 
 function getPublicJwks() {
-  return JSON.stringify(
-    (JSON.parse(requireEnv("PUBLIC_JWKS")) as PublicJwks).publicJwks,
-  );
+  return JSON.stringify((JSON.parse(requireEnv("PUBLIC_JWKS")) as PublicJwks).publicJwks);
 }
 
 function randomToken(byteLength = 32) {
@@ -299,9 +297,7 @@ const internalMutation = internalMutationGeneric({
       case "oauth:finalize": {
         const existingAccount = (await ctx.db
           .query("accounts")
-          .withIndex("by_provider_account", (q) =>
-            q.eq("provider", payload.provider),
-          )
+          .withIndex("by_provider_account", (q) => q.eq("provider", payload.provider))
           .filter((q) => q.eq(q.field("accountId"), payload.accountId))
           .first()) as Account | null;
 
@@ -373,9 +369,7 @@ const internalMutation = internalMutationGeneric({
 
       default: {
         const _never: never = payload;
-        throw new Error(
-          `Unsupported auth mutation op: ${JSON.stringify(_never)}`,
-        );
+        throw new Error(`Unsupported auth mutation op: ${JSON.stringify(_never)}`);
       }
     }
   },

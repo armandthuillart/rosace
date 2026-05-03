@@ -15,12 +15,15 @@
   --color-gray-900: oklch(23.5% 0 0);
   --color-gray-1000: oklch(17.8% 0 0);
   --shadow-panel: var(--shadow-aside);
+  --shadow-float: var(--shadow-float);
   --shadow-track: var(--shadow-track);
 }
 
 :root {
-  --shadow-panel:
-    0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
+  --shadow-panel: 0px 0px 0.5px oklch(0% 0 0 / 30%), 0px 1px 3px oklch(0% 0 0 / 15%);
+  --shadow-float:
+    0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
+    0px 2px 5px oklch(0% 0 0 / 15%);
   --shadow-track:
     0px 0px 0.5px oklch(0% 0 0 / 18%), 0px 3px 8px oklch(0% 0 0 / 10%),
     0px 1px 3px oklch(0% 0 0 / 10%);
@@ -30,12 +33,13 @@
   :root {
     --shadow-panel:
       0px 0px 0.5px oklch(0% 0 0 / 50%), 0px 1px 3px oklch(0% 0 0 / 40%),
-      inset 0px 0.5px 0px oklch(100% 0 0 / 10%),
-      inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+      inset 0px 0.5px 0px oklch(100% 0 0 / 10%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+    --shadow-float:
+      0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
+      0px 2px 5px oklch(0% 0 0 / 15%);
     --shadow-track:
       0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
-      inset 0px 0.5px 0px oklch(100% 0 0 / 8%),
-      inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+      inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
   }
 }
 

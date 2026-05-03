@@ -46,9 +46,7 @@ describe("getUser", () => {
       modules,
     });
 
-    const user = await t.run(async (ctx) =>
-      ctx.db.get("invalid_id" as GenericId<"users">),
-    );
+    const user = await t.run(async (ctx) => ctx.db.get("invalid_id" as GenericId<"users">));
 
     expect(user).toBeNull();
   });

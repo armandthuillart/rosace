@@ -1,19 +1,7 @@
 import { convexTest } from "convex-test";
-import {
-  defineSchema,
-  defineTable,
-  GenericMutationCtx,
-  GenericQueryCtx,
-} from "convex/server";
+import { defineSchema, defineTable, GenericMutationCtx, GenericQueryCtx } from "convex/server";
 import { v } from "convex/values";
-import {
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vite-plus/test";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 type QueryHandler = (
   ctx: GenericQueryCtx<any>,
@@ -45,11 +33,7 @@ const schema = defineSchema({
 
   accounts: defineTable({
     userId: v.id("users"),
-    provider: v.union(
-      v.literal("apple"),
-      v.literal("credentials"),
-      v.literal("google"),
-    ),
+    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
     accountId: v.string(),
     password: v.optional(v.string()),
   })
@@ -72,36 +56,29 @@ const schema = defineSchema({
     .index("by_expires_at", ["expiresAt"]),
 });
 
-const {
-  internalMutationGenericMock,
-  internalQueryGenericMock,
-  requireEnvMock,
-} = vi.hoisted(() => ({
-  internalMutationGenericMock: vi.fn(
-    (definition: { handler: MutationHandler }) => definition,
-  ),
-  internalQueryGenericMock: vi.fn(
-    (definition: { handler: QueryHandler }) => definition,
-  ),
-  requireEnvMock: vi.fn((key: string) => {
-    const env: Record<string, string> = {
-      PUBLIC_JWKS: JSON.stringify({
-        kid: "kid-1",
-        privateJwk: { kty: "RSA", n: "n", e: "AQAB", d: "d" },
-        publicJwks: { keys: [{ kty: "RSA", n: "n", e: "AQAB", kid: "kid-1" }] },
-      }),
-      AUTH_SECRET: "auth-secret",
-      CONVEX_SITE_URL: "https://app.example",
-    };
-    const value = env[key];
-    if (!value) throw new Error(`Missing env: ${key}`);
-    return value;
+const { internalMutationGenericMock, internalQueryGenericMock, requireEnvMock } = vi.hoisted(
+  () => ({
+    internalMutationGenericMock: vi.fn((definition: { handler: MutationHandler }) => definition),
+    internalQueryGenericMock: vi.fn((definition: { handler: QueryHandler }) => definition),
+    requireEnvMock: vi.fn((key: string) => {
+      const env: Record<string, string> = {
+        PUBLIC_JWKS: JSON.stringify({
+          kid: "kid-1",
+          privateJwk: { kty: "RSA", n: "n", e: "AQAB", d: "d" },
+          publicJwks: { keys: [{ kty: "RSA", n: "n", e: "AQAB", kid: "kid-1" }] },
+        }),
+        AUTH_SECRET: "auth-secret",
+        CONVEX_SITE_URL: "https://app.example",
+      };
+      const value = env[key];
+      if (!value) throw new Error(`Missing env: ${key}`);
+      return value;
+    }),
   }),
-}));
+);
 
 vi.mock("convex/server", async () => {
-  const actual =
-    await vi.importActual<typeof import("convex/server")>("convex/server");
+  const actual = await vi.importActual<typeof import("convex/server")>("convex/server");
   return {
     ...actual,
     internalMutationGeneric: internalMutationGenericMock,
@@ -492,9 +469,7 @@ describe("convex store security/regression", () => {
       }),
     );
 
-    const sessions = await t.run(async (ctx) =>
-      ctx.db.query("sessions").collect(),
-    );
+    const sessions = await t.run(async (ctx) => ctx.db.query("sessions").collect());
 
     expect(sessions).toHaveLength(1);
     expect(sessions[0]?.token).toBe(otherToken);

@@ -6,10 +6,11 @@ import Icon from "@components/Icon.astro";
   <h2 class="sr-only">Demo</h2>
 
   <div
-    class="relative flex h-155 w-full justify-between rounded-[2.5rem] bg-gray-300 p-5 dark:bg-gray-900"
+    class="relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-[2.5rem] bg-gray-300 p-5 dark:bg-gray-900"
   >
     <div
-      class="shadow-panel flex h-full w-3xs shrink-0 flex-col rounded-[1.25rem] bg-white max-2xl:hidden dark:bg-gray-800"
+      class="2xl:shadow-panel shadow-float absolute left-5 z-50 flex h-145 w-3xs shrink-0 origin-left flex-col rounded-[1.25rem] bg-white 2xl:static 2xl:h-full dark:bg-gray-800"
+      id="demo-left-panel"
     >
     </div>
 
@@ -58,7 +59,7 @@ import Icon from "@components/Icon.astro";
           class="shadow-track relative flex h-18 flex-col rounded-[.875rem] bg-white dark:bg-gray-800"
         >
           <div
-            class="shadow-track absolute inset-2 right-auto z-30 flex w-10 items-center justify-center -space-x-1 rounded-md bg-white text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center -space-x-1 rounded-md bg-white text-gray-400 dark:bg-gray-800 dark:text-gray-500"
           >
             <Icon class="size-3.5" name="play" />
             <Icon class="size-3.5" name="pause" />
@@ -68,7 +69,8 @@ import Icon from "@components/Icon.astro";
     </div>
 
     <div
-      class="shadow-panel flex h-full w-3xs shrink-0 flex-col rounded-[1.25rem] bg-white max-2xl:hidden dark:bg-gray-800"
+      class="2xl:shadow-panel shadow-float absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col rounded-[1.25rem] bg-white 2xl:static 2xl:h-full dark:bg-gray-800"
+      id="demo-right-panel"
     >
     </div>
   </div>
@@ -86,3 +88,44 @@ import Icon from "@components/Icon.astro";
       data-content="Psst... it’s interactive!"></span>
   </div>
 </section>
+
+<script>
+  import waapi from "@motion/waapi";
+
+  let mm = waapi.matchMedia();
+  let breakpoint = 1280;
+
+  mm.add(
+    {
+      largeScreen: `(min-width: ${breakpoint}px)`,
+      smallScreen: `(max-width: ${breakpoint - 1}px)`,
+    },
+    (context) => {
+      let { largeScreen, smallScreen } = context.conditions;
+
+      let leftPanel = document.getElementById("demo-left-panel")!;
+      let rightPanel = document.getElementById("demo-right-panel")!;
+
+      let tl = waapi.timeline();
+
+      tl.set(leftPanel, {
+        autoAlpha: largeScreen ? 1 : 0,
+        x: largeScreen ? 0 : "-100%",
+      });
+
+      tl.set(rightPanel, {
+        autoAlpha: largeScreen ? 1 : 1,
+        scale: largeScreen ? 1 : 0.85,
+        x: largeScreen ? 0 : "75%",
+      });
+
+      tl.to(rightPanel, {
+        autoAlpha: 1,
+        scale: 1,
+        x: 0,
+      });
+
+      return () => {};
+    },
+  );
+</script>

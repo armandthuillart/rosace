@@ -51,19 +51,17 @@ export function OTP({ otp, type }: OTPProps) {
             </Heading>
 
             <Text className="mb-7.5 text-xl">
-              Your confirmation code is below - enter it in your open browser
-              window and we'll help you {ACTION_BY_TYPE[type]}.
+              Your confirmation code is below - enter it in your open browser window and we'll help
+              you {ACTION_BY_TYPE[type]}.
             </Text>
 
             <Section className="mb-[30px] rounded bg-[rgb(245,244,245)] px-[10px] py-10">
-              <Text className="text-center align-middle text-3xl leading-[24px]">
-                {otp}
-              </Text>
+              <Text className="text-center align-middle text-3xl leading-[24px]">{otp}</Text>
             </Section>
 
             <Text className="text-sm leading-6 text-black">
-              If you didn't request this email, there's nothing to worry about,
-              you can safely ignore it.
+              If you didn't request this email, there's nothing to worry about, you can safely
+              ignore it.
             </Text>
 
             <Section>

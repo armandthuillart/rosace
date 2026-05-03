@@ -1,44 +1,38 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
-const {
-  createRemoteJWKSetMock,
-  jwtVerifyMock,
-  requireEnvMock,
-  env,
-  googlePayload,
-  applePayload,
-} = vi.hoisted(() => ({
-  createRemoteJWKSetMock: vi.fn((url: URL) => ({ url: url.toString() })),
-  jwtVerifyMock: vi.fn(),
-  env: {
-    APPLE_CLIENT_ID: "apple-client-id",
-    APPLE_CLIENT_SECRET: "apple-client-secret",
-    CONVEX_SITE_URL: "https://app.example",
-    GOOGLE_CLIENT_ID: "google-client-id",
-    GOOGLE_CLIENT_SECRET: "google-client-secret",
-  } as Record<string, string>,
-  requireEnvMock: vi.fn((key: string) => {
-    const value = env[key];
-    if (!value) {
-      throw new Error(`Missing env: ${key}`);
-    }
-    return value;
-  }),
-  googlePayload: {
-    email: "USER@EXAMPLE.COM",
-    email_verified: true,
-    family_name: "Doe",
-    given_name: "Jane",
-    nonce: "nonce-123",
-    sub: "google-subject",
-  },
-  applePayload: {
-    email: "APPLE@EXAMPLE.COM",
-    email_verified: "true",
-    nonce: "nonce-apple",
-    sub: "apple-subject",
-  },
-}));
+const { createRemoteJWKSetMock, jwtVerifyMock, requireEnvMock, env, googlePayload, applePayload } =
+  vi.hoisted(() => ({
+    createRemoteJWKSetMock: vi.fn((url: URL) => ({ url: url.toString() })),
+    jwtVerifyMock: vi.fn(),
+    env: {
+      APPLE_CLIENT_ID: "apple-client-id",
+      APPLE_CLIENT_SECRET: "apple-client-secret",
+      CONVEX_SITE_URL: "https://app.example",
+      GOOGLE_CLIENT_ID: "google-client-id",
+      GOOGLE_CLIENT_SECRET: "google-client-secret",
+    } as Record<string, string>,
+    requireEnvMock: vi.fn((key: string) => {
+      const value = env[key];
+      if (!value) {
+        throw new Error(`Missing env: ${key}`);
+      }
+      return value;
+    }),
+    googlePayload: {
+      email: "USER@EXAMPLE.COM",
+      email_verified: true,
+      family_name: "Doe",
+      given_name: "Jane",
+      nonce: "nonce-123",
+      sub: "google-subject",
+    },
+    applePayload: {
+      email: "APPLE@EXAMPLE.COM",
+      email_verified: "true",
+      nonce: "nonce-apple",
+      sub: "apple-subject",
+    },
+  }));
 
 vi.mock("@repo/helpers", () => ({
   requireEnv: requireEnvMock,
@@ -49,11 +43,7 @@ vi.mock("jose", () => ({
   jwtVerify: jwtVerifyMock,
 }));
 
-import {
-  createPKCE,
-  exchangeCodeForProfile,
-  getAuthorizationUrl,
-} from "./providers";
+import { createPKCE, exchangeCodeForProfile, getAuthorizationUrl } from "./providers";
 
 describe("oauth providers", () => {
   beforeEach(() => {
@@ -65,30 +55,22 @@ describe("oauth providers", () => {
     it("should build Google authorization URL with required params", () => {
       const url = getAuthorizationUrl("google");
 
-      expect(url.origin + url.pathname).toBe(
-        "https://accounts.google.com/o/oauth2/v2/auth",
-      );
+      expect(url.origin + url.pathname).toBe("https://accounts.google.com/o/oauth2/v2/auth");
       expect(url.searchParams.get("response_type")).toBe("code");
       expect(url.searchParams.get("client_id")).toBe(env.GOOGLE_CLIENT_ID);
       expect(url.searchParams.get("scope")).toBe("openid email profile");
-      expect(url.searchParams.get("redirect_uri")).toBe(
-        "https://app.example/auth/callback/google",
-      );
+      expect(url.searchParams.get("redirect_uri")).toBe("https://app.example/auth/callback/google");
     });
 
     it("should build Apple authorization URL with form_post mode", () => {
       const url = getAuthorizationUrl("apple");
 
-      expect(url.origin + url.pathname).toBe(
-        "https://appleid.apple.com/auth/authorize",
-      );
+      expect(url.origin + url.pathname).toBe("https://appleid.apple.com/auth/authorize");
       expect(url.searchParams.get("response_type")).toBe("code");
       expect(url.searchParams.get("client_id")).toBe(env.APPLE_CLIENT_ID);
       expect(url.searchParams.get("scope")).toBe("name email");
       expect(url.searchParams.get("response_mode")).toBe("form_post");
-      expect(url.searchParams.get("redirect_uri")).toBe(
-        "https://app.example/auth/callback/apple",
-      );
+      expect(url.searchParams.get("redirect_uri")).toBe("https://app.example/auth/callback/apple");
     });
   });
 
@@ -126,31 +108,21 @@ describe("oauth providers", () => {
 
       const [, request] = fetchMock.mock.calls[0] ?? [];
       expect(request?.body).toBeInstanceOf(URLSearchParams);
-      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(
-        env.GOOGLE_CLIENT_ID,
-      );
+      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(env.GOOGLE_CLIENT_ID);
       expect((request?.body as URLSearchParams)?.get("client_secret")).toBe(
         env.GOOGLE_CLIENT_SECRET,
       );
       expect((request?.body as URLSearchParams)?.get("code")).toBe("auth-code");
-      expect((request?.body as URLSearchParams)?.get("code_verifier")).toBe(
-        "pkce-verifier",
-      );
-      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe(
-        "authorization_code",
-      );
+      expect((request?.body as URLSearchParams)?.get("code_verifier")).toBe("pkce-verifier");
+      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe("authorization_code");
       expect((request?.body as URLSearchParams)?.get("redirect_uri")).toBe(
         "https://app.example/auth/callback/google",
       );
 
-      expect(jwtVerifyMock).toHaveBeenCalledWith(
-        "google-token",
-        expect.anything(),
-        {
-          audience: env.GOOGLE_CLIENT_ID,
-          issuer: ["https://accounts.google.com", "accounts.google.com"],
-        },
-      );
+      expect(jwtVerifyMock).toHaveBeenCalledWith("google-token", expect.anything(), {
+        audience: env.GOOGLE_CLIENT_ID,
+        issuer: ["https://accounts.google.com", "accounts.google.com"],
+      });
     });
 
     it("should throw when Google token exchange fails", async () => {
@@ -336,28 +308,20 @@ describe("oauth providers", () => {
 
       const [, request] = fetchMock.mock.calls[0] ?? [];
       expect(request?.body).toBeInstanceOf(URLSearchParams);
-      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(
-        env.APPLE_CLIENT_ID,
-      );
+      expect((request?.body as URLSearchParams)?.get("client_id")).toBe(env.APPLE_CLIENT_ID);
       expect((request?.body as URLSearchParams)?.get("client_secret")).toBe(
         env.APPLE_CLIENT_SECRET,
       );
       expect((request?.body as URLSearchParams)?.get("code")).toBe("auth-code");
-      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe(
-        "authorization_code",
-      );
+      expect((request?.body as URLSearchParams)?.get("grant_type")).toBe("authorization_code");
       expect((request?.body as URLSearchParams)?.get("redirect_uri")).toBe(
         "https://app.example/auth/callback/apple",
       );
 
-      expect(jwtVerifyMock).toHaveBeenCalledWith(
-        "apple-token",
-        expect.anything(),
-        {
-          audience: env.APPLE_CLIENT_ID,
-          issuer: "https://appleid.apple.com",
-        },
-      );
+      expect(jwtVerifyMock).toHaveBeenCalledWith("apple-token", expect.anything(), {
+        audience: env.APPLE_CLIENT_ID,
+        issuer: "https://appleid.apple.com",
+      });
     });
 
     it("should throw when Apple token exchange fails", async () => {
@@ -529,23 +493,15 @@ describe("oauth providers", () => {
 
   describe("createPkce", () => {
     it("should derive deterministic verifier/challenge values from crypto primitives", async () => {
-      const randomBytes = Uint8Array.from(
-        { length: 32 },
-        (_, index) => index + 1,
-      );
-      const digestBytes = Uint8Array.from(
-        { length: 32 },
-        (_, index) => 255 - index,
-      );
+      const randomBytes = Uint8Array.from({ length: 32 }, (_, index) => index + 1);
+      const digestBytes = Uint8Array.from({ length: 32 }, (_, index) => 255 - index);
 
-      const randomValuesMock = vi
-        .spyOn(crypto, "getRandomValues")
-        .mockImplementation((array) => {
-          if (array instanceof Uint8Array) {
-            array.set(randomBytes);
-          }
-          return array;
-        });
+      const randomValuesMock = vi.spyOn(crypto, "getRandomValues").mockImplementation((array) => {
+        if (array instanceof Uint8Array) {
+          array.set(randomBytes);
+        }
+        return array;
+      });
 
       const digestMock = vi
         .spyOn(crypto.subtle, "digest")
@@ -555,8 +511,7 @@ describe("oauth providers", () => {
               ? new Uint8Array(data)
               : new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
 
-          const expectedVerifier =
-            Buffer.from(randomBytes).toString("base64url");
+          const expectedVerifier = Buffer.from(randomBytes).toString("base64url");
           expect(new TextDecoder().decode(input)).toBe(expectedVerifier);
 
           return digestBytes.buffer;
@@ -565,10 +520,7 @@ describe("oauth providers", () => {
       const pkce = await createPKCE();
 
       expect(randomValuesMock).toHaveBeenCalledOnce();
-      expect(digestMock).toHaveBeenCalledWith(
-        "SHA-256",
-        expect.any(Uint8Array),
-      );
+      expect(digestMock).toHaveBeenCalledWith("SHA-256", expect.any(Uint8Array));
       expect(pkce).toEqual({
         method: "S256",
         verifier: Buffer.from(randomBytes).toString("base64url"),

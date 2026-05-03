@@ -35,8 +35,7 @@ function verifyPassword(password: string, stored: string): boolean {
   const m = Number(parts[1]);
   const t = Number(parts[2]);
   const p = Number(parts[3]);
-  if (!Number.isFinite(m) || !Number.isFinite(t) || !Number.isFinite(p))
-    return false;
+  if (!Number.isFinite(m) || !Number.isFinite(t) || !Number.isFinite(p)) return false;
 
   const salt = hexToBytes(parts[4]);
   const expected = hexToBytes(parts[5]);
@@ -77,9 +76,7 @@ const internalAction = internalActionGeneric({
       }
       default: {
         const _never: never = payload;
-        throw new Error(
-          `Unsupported password action op: ${JSON.stringify(_never)}`,
-        );
+        throw new Error(`Unsupported password action op: ${JSON.stringify(_never)}`);
       }
     }
   },

@@ -42,17 +42,13 @@ const SECTION_TITLES: Record<Section, string> = {
 
 const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
 
-const sectionLines = new Map<Section, string[]>(
-  SECTION_ORDER.map((s) => [s, []]),
-);
+const sectionLines = new Map<Section, string[]>(SECTION_ORDER.map((s) => [s, []]));
 
 const sectionHasContent = new Set<Section>();
 
 const APP_SERVICE_ORDER: ServiceName[] = ["astro", "svelte"];
 
-const appLines = new Map<ServiceName, string[]>(
-  APP_SERVICE_ORDER.map((s) => [s, []]),
-);
+const appLines = new Map<ServiceName, string[]>(APP_SERVICE_ORDER.map((s) => [s, []]));
 
 const appHasContent = new Set<ServiceName>();
 
@@ -172,18 +168,12 @@ function logGlobalSuccess(message: string) {
   pushLine("scripts", paint(SUCCESS_GREEN, `✓ ${timestamp()} ${message}`));
 }
 
-function logLine(
-  kind: "info" | "success" | "error",
-  service: ServiceName,
-  message: string,
-) {
+function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
   const section: Section = service === "convex" ? "convex" : "apps";
   const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
 
   const isInfo = kind === "info";
-  const serviceTag = isInfo
-    ? paint(SERVICE_COLORS[service], `[${service}]`)
-    : `[${service}]`;
+  const serviceTag = isInfo ? paint(SERVICE_COLORS[service], `[${service}]`) : `[${service}]`;
 
   const formattedLine = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
 
@@ -278,18 +268,14 @@ function stripAnsi(input: string) {
   return out;
 }
 
-function extractUrl(
-  text: string,
-): { url: string; type: "Local" | "Network" } | null {
+function extractUrl(text: string): { url: string; type: "Local" | "Network" } | null {
   const patterns = [
     {
-      regex:
-        /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
+      regex: /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
       type: "Local" as const,
     },
     {
-      regex:
-        /(?:➜\s+)?Network:?\s+(https?:\/\/\S+)|┃\s*Network\s+(https?:\/\/\S+)/i,
+      regex: /(?:➜\s+)?Network:?\s+(https?:\/\/\S+)|┃\s*Network\s+(https?:\/\/\S+)/i,
       type: "Network" as const,
     },
     { regex: /local[^\n]*?(https?:\/\/\S+)/i, type: "Local" as const },
@@ -311,11 +297,7 @@ function extractUrl(
   return null;
 }
 
-function toFriendlyMessage(
-  service: ServiceName,
-  rawLine: string,
-  stream: "stdout" | "stderr",
-) {
+function toFriendlyMessage(service: ServiceName, rawLine: string, stream: "stdout" | "stderr") {
   const text = stripAnsi(rawLine).trim();
   if (!text) return null;
 
@@ -349,9 +331,7 @@ function toFriendlyMessage(
 
 function isOverlayNoiseLine(line: string) {
   return (
-    /^Click outside, press Esc key, or fix the code to dismiss\.?$/i.test(
-      line,
-    ) ||
+    /^Click outside, press Esc key, or fix the code to dismiss\.?$/i.test(line) ||
     /^You can also disable this overlay by setting .*vite\.config\./i.test(line)
   );
 }
@@ -382,10 +362,7 @@ function enrichWorkspaceSpecifiers(input: string): string {
 
 function stripLinePrefix(line: string): string {
   return line
-    .replace(
-      /^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i,
-      "",
-    )
+    .replace(/^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i, "")
     .replaceAll(WORKSPACE_ROOT, "");
 }
 
@@ -403,9 +380,7 @@ function normalizeCause(lines: string[]) {
   const preferred =
     candidates.find((l) => /Cannot find module|Module not found/i.test(l)) ??
     candidates.find((l) =>
-      /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(
-        l,
-      ),
+      /(TypeError|ReferenceError|SyntaxError|RangeError|ERR_[A-Z0-9_]+)/.test(l),
     ) ??
     candidates[0];
 
@@ -423,9 +398,7 @@ function normalizeCause(lines: string[]) {
 
 function getOriginFromLines(lines: string[]) {
   for (const line of lines) {
-    const match = line.match(
-      /\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/,
-    );
+    const match = line.match(/\bat\s+(?:.+?\s+\()?((?:\/|[A-Za-z]:\\)[^():]+):(\d+):(\d+)\)?$/);
     if (!match) continue;
 
     const file = match[1];
@@ -436,13 +409,9 @@ function getOriginFromLines(lines: string[]) {
   }
 
   for (const line of lines) {
-    const importedFromMatch = line.match(
-      /\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i,
-    );
+    const importedFromMatch = line.match(/\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i);
     if (importedFromMatch) {
-      return formatPathForDisplay(
-        importedFromMatch[1].replace(/[)\],.;]+$/, ""),
-      );
+      return formatPathForDisplay(importedFromMatch[1].replace(/[)\],.;]+$/, ""));
     }
   }
 
@@ -475,11 +444,7 @@ function flushErrorIncident(service: ServiceName) {
   const now = Date.now();
 
   const last = lastErrorSignatures.get(service);
-  if (
-    last &&
-    last.signature === signature &&
-    now - last.atMs < ERROR_DUPLICATE_WINDOW_MS
-  ) {
+  if (last && last.signature === signature && now - last.atMs < ERROR_DUPLICATE_WINDOW_MS) {
     return;
   }
 
@@ -512,10 +477,7 @@ function queueErrorLine(service: ServiceName, line: string) {
   }, ERROR_INCIDENT_DEBOUNCE_MS);
 }
 
-function startService(
-  service: Service,
-  children: Set<ReturnType<typeof spawn>>,
-) {
+function startService(service: Service, children: Set<ReturnType<typeof spawn>>) {
   const startedAt = Date.now();
 
   let isReadyShown = false;
@@ -570,9 +532,7 @@ function startService(
         if (!isConvexBootstrapped) {
           isConvexBootstrapped = true;
 
-          const convexReadyMatch = cleanedLine.match(
-            /Convex functions ready!\s*\(([\d.]+)s\)/i,
-          );
+          const convexReadyMatch = cleanedLine.match(/Convex functions ready!\s*\(([\d.]+)s\)/i);
 
           if (convexReadyMatch) {
             const ms = Math.round(Number(convexReadyMatch[1]) * 1000);
@@ -610,11 +570,7 @@ function startService(
 
     logLine(event.kind, service.name, event.message);
 
-    if (
-      service.name === "astro" &&
-      event.message.startsWith("- Local:") &&
-      !hasSeenNetwork
-    ) {
+    if (service.name === "astro" && event.message.startsWith("- Local:") && !hasSeenNetwork) {
       const fallbackNetworkUrl = buildNetworkUrlFromLocal(event.message);
       if (fallbackNetworkUrl) {
         hasSeenNetwork = true;
@@ -625,8 +581,7 @@ function startService(
     const canEmitReady =
       service.name !== "convex" &&
       !isReadyShown &&
-      ((hasSeenReadySignal && hasSeenLocal) ||
-        (hasSeenLocal && hasSeenNetwork));
+      ((hasSeenReadySignal && hasSeenLocal) || (hasSeenLocal && hasSeenNetwork));
 
     if (canEmitReady) {
       isReadyShown = true;
@@ -669,21 +624,14 @@ async function runPrepare() {
   logGlobalSuccess(".env.* files were prepared successfully.");
 }
 
-function resolveServices(opts: {
-  astro: boolean;
-  svelte: boolean;
-  convex: boolean;
-}) {
+function resolveServices(opts: { astro: boolean; svelte: boolean; convex: boolean }) {
   const selected: ServiceName[] = [];
 
   if (opts.astro) selected.push("astro");
   if (opts.svelte) selected.push("svelte");
   if (opts.convex) selected.push("convex");
 
-  const base =
-    selected.length > 0
-      ? selected
-      : (["astro", "svelte", "convex"] as ServiceName[]);
+  const base = selected.length > 0 ? selected : (["astro", "svelte", "convex"] as ServiceName[]);
 
   const withDependencies = new Set<ServiceName>(base);
   if (withDependencies.has("svelte")) withDependencies.add("convex");

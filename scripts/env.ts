@@ -62,9 +62,7 @@ const targets: Array<{
 
 for (const { file, from, keys, prefix } of targets) {
   const content =
-    keys
-      .map((key) => `${prefix[key] ?? ""}${key}=${envs[from][key] ?? ""}`)
-      .join("\n") + "\n";
+    keys.map((key) => `${prefix[key] ?? ""}${key}=${envs[from][key] ?? ""}`).join("\n") + "\n";
 
   writeFileSync(join(root, file), content, "utf8");
 }

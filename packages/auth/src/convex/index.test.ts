@@ -27,9 +27,7 @@ const {
     verifier: "pkce-verifier",
   })),
   exchangeCodeForProfileMock: vi.fn(),
-  getAuthorizationUrlMock: vi.fn(
-    () => new URL("https://accounts.google.com/o/oauth2/v2/auth"),
-  ),
+  getAuthorizationUrlMock: vi.fn(() => new URL("https://accounts.google.com/o/oauth2/v2/auth")),
   httpActionGenericMock: vi.fn((handler: unknown) => handler),
   limitMock: vi.fn(async () => ({ ok: true, retryAfter: Date.now() + 1_000 })),
   requireEnvMock: vi.fn((key: string) => {
@@ -44,8 +42,7 @@ const {
 }));
 
 vi.mock("convex/server", async () => {
-  const actual =
-    await vi.importActual<typeof import("convex/server")>("convex/server");
+  const actual = await vi.importActual<typeof import("convex/server")>("convex/server");
   return {
     ...actual,
     httpActionGeneric: httpActionGenericMock,
@@ -204,9 +201,7 @@ describe("convex auth routes security/regression", () => {
       );
 
       expect(response.status).toBe(429);
-      expect(
-        Number(response.headers.get("X-Retry-After")),
-      ).toBeGreaterThanOrEqual(1);
+      expect(Number(response.headers.get("X-Retry-After"))).toBeGreaterThanOrEqual(1);
       expect(ctx.runMutation).not.toHaveBeenCalled();
     });
   });
@@ -218,9 +213,7 @@ describe("convex auth routes security/regression", () => {
 
       const response = await routes.handler("GET", "/auth/callback/")(
         ctx,
-        new Request(
-          "https://convex.example/auth/callback/google?state=only-state",
-        ),
+        new Request("https://convex.example/auth/callback/google?state=only-state"),
       );
 
       expect(response.status).toBe(400);
@@ -236,9 +229,7 @@ describe("convex auth routes security/regression", () => {
 
       const response = await routes.handler("GET", "/auth/callback/")(
         ctx,
-        new Request(
-          "https://convex.example/auth/callback/google?code=auth-code&state=bad-state",
-        ),
+        new Request("https://convex.example/auth/callback/google?code=auth-code&state=bad-state"),
       );
 
       expect(response.status).toBe(400);
@@ -265,9 +256,7 @@ describe("convex auth routes security/regression", () => {
       );
 
       expect(response.status).toBe(400);
-      await expect(response.text()).resolves.toBe(
-        "Credentials is not supported.",
-      );
+      await expect(response.text()).resolves.toBe("Credentials is not supported.");
       expect(ctx.runMutation).not.toHaveBeenCalled();
       expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
@@ -302,9 +291,7 @@ describe("convex auth routes security/regression", () => {
 
       expect(first.status).toBe(302);
       expect(first.headers.get("location")).toBe("/");
-      expect(first.headers.get("set-cookie")).toContain(
-        "session:token=session-1",
-      );
+      expect(first.headers.get("set-cookie")).toContain("session:token=session-1");
 
       expect(replay.status).toBe(400);
       await expect(replay.text()).resolves.toBe("Invalid or expired handoff.");
