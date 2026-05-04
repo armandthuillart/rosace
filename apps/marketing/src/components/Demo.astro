@@ -1,5 +1,68 @@
 ---
 import Icon from "@components/Icon.astro";
+
+import songCoverImage from "@images/song-cover.webp";
+import vinylSleeveImage from "@images/vinyl-sleeve.webp";
+import vinylRecordImage from "@images/vinyl-record.webp";
+import vinylTextureImage from "@images/vinyl-texture.webp";
+
+const cols = 8;
+const rows = 8;
+
+const filled = new Set([
+  "0,2",
+  "0,3",
+  "0,4",
+  "0,5",
+  "1,1",
+  "1,2",
+  "1,3",
+  "1,4",
+  "1,5",
+  "1,6",
+  "2,0",
+  "2,1",
+  "2,2",
+  "2,3",
+  "2,4",
+  "2,5",
+  "2,6",
+  "2,7",
+  "3,0",
+  "3,1",
+  "3,2",
+  "3,3",
+  "3,4",
+  "3,5",
+  "3,6",
+  "3,7",
+  "4,0",
+  "4,1",
+  "4,2",
+  "4,3",
+  "4,4",
+  "4,5",
+  "4,6",
+  "4,7",
+  "5,0",
+  "5,1",
+  "5,2",
+  "5,3",
+  "5,4",
+  "5,5",
+  "5,6",
+  "5,7",
+  "6,1",
+  "6,2",
+  "6,3",
+  "6,4",
+  "6,5",
+  "6,6",
+  "7,2",
+  "7,3",
+  "7,4",
+  "7,5",
+]);
 ---
 
 <section class="flex flex-col items-center gap-4 lg:px-8">
@@ -134,16 +197,44 @@ import Icon from "@components/Icon.astro";
       class="shadow-float xl:shadow-panel absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
       id="demo-right-panel"
     >
+      <div class="p-3 pl-4">
+        <span class="text-[0.8125rem]/[1.375rem] font-[550]">Music</span>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700" />
+
+      <div class="flex gap-2 p-3 pl-4">
+        <button class="flex size-6 shrink-0 items-center justify-center"
+          ><svg><use href="/sprites.svg#mute"></use></svg></button
+        >
+
+        <div class="w-full"></div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700" />
+
       <div class="p-4">
         <div class="relative h-25 rounded-sm bg-gray-100 dark:bg-gray-700">
-          <div class="absolute inset-2.5 right-auto aspect-square">
+          <a
+            class="absolute inset-2.5 right-auto aspect-square duration-200 hover:opacity-80"
+            href="https://www.youtube.com/watch?v=OqTpNnSnwxQ"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             <div
-              class="shadow-cover absolute inset-0 z-10 overflow-hidden rounded-xs bg-[url(https://i.scdn.co/image/ab67616d0000b273e74e15fe75e80ea69f38a680)] bg-size-[100%_100%] before:absolute before:z-20 before:size-full before:rounded-xs before:bg-[url('http://i.imgur.com/i0fMWpe.jpg')] before:bg-size-[100%_100%] before:opacity-50 before:mix-blend-screen after:absolute after:inset-0 after:z-30 after:rounded-xs after:bg-[url(https://orig06.deviantart.net/0124/f/2013/136/6/7/texture_326_by_sirius_sdz-d65gs3s.jpg)] after:opacity-20 after:mix-blend-screen"
+              class="shadow-cover absolute inset-0 z-10 overflow-hidden rounded-xs bg-size-[100%_100%] before:absolute before:z-20 before:size-full before:rounded-xs before:[background-image:var(--before)] before:bg-size-[100%_100%] before:opacity-50 before:mix-blend-screen after:absolute after:inset-0 after:z-30 after:rounded-xs after:[background-image:var(--after)] after:opacity-20 after:mix-blend-screen"
+              ,
+              style={{
+                "--after": `url(${vinylSleeveImage.src})`,
+                "--before": `url(${vinylTextureImage.src})`,
+                backgroundImage: `url(${songCoverImage.src})`,
+              }}
             >
             </div>
 
             <div
-              class="shadow-vinyl absolute inset-1 right-auto aspect-square size-18 rounded-full bg-[url(https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Music-PNG/Gramophone_Vinyl_LP_Record_PNG_Transparent_Clip_Art_Image.png?m=1462983196)] bg-size-[105%_105%] bg-center"
+              class="shadow-vinyl absolute inset-1 right-auto aspect-square size-18 translate-x-1/2 rounded-full bg-size-[105%_105%] bg-center"
+              style={{ backgroundImage: `url(${vinylRecordImage.src})` }}
               id="demo-vinyl"
             >
               <div
@@ -151,8 +242,33 @@ import Icon from "@components/Icon.astro";
               >
               </div>
             </div>
+          </a>
+
+          <div
+            class="absolute top-1/2 right-7.25 grid size-11.25 -translate-y-1/2 grid-cols-8 gap-0.5"
+          >
+            {
+              Array.from({ length: rows * cols }, (_, i) => {
+                const row = Math.floor(i / cols);
+                const col = i % cols;
+                return (
+                  <div
+                    class:list={[
+                      "size-0.75 shrink-0 rounded-full bg-linear-to-b from-gray-800 to-gray-400",
+                      !filled.has(`${row},${col}`) && "invisible",
+                    ]}
+                  />
+                );
+              })
+            }
           </div>
         </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700" />
+
+      <div class="p-3 pl-4">
+        <span class="text-[0.8125rem]/[1.375rem] font-[550]">Animation</span>
       </div>
 
       <hr class="border-gray-200 dark:border-gray-700" />
@@ -174,9 +290,9 @@ import Icon from "@components/Icon.astro";
 </section>
 
 <script>
-  import waapi from "@motion/waapi";
+  import gsap from "gsap";
 
-  let mm = waapi.matchMedia();
+  let mm = gsap.matchMedia();
 
   let sm = 640;
   let xl = 1280;
@@ -188,7 +304,7 @@ import Icon from "@components/Icon.astro";
       mobile: `(max-width: ${sm - 1}px)`,
     },
     (context) => {
-      let { tablet } = context.conditions;
+      let { tablet } = context.conditions as { tablet: boolean };
 
       let box = document.getElementById("demo-box")!;
       let vinyl = document.getElementById("demo-vinyl")!;
@@ -198,42 +314,27 @@ import Icon from "@components/Icon.astro";
 
       if (tablet) {
         const handleMouseEnter = () => {
-          waapi.to(
-            [leftPanel, rightPanel],
-            {
-              scale: 1,
-              x: "0%",
-            },
-            {
-              duration: 0.5,
-              ease: "cubic-bezier(.32, .72, 0, 1)",
-            },
-          );
+          gsap.to([leftPanel, rightPanel], {
+            duration: 0.5,
+            ease: "power3",
+            scale: 1,
+            x: "0%",
+          });
         };
 
         const handleMouseLeave = () => {
-          waapi.to(
-            leftPanel,
-            {
-              scale: tablet ? 0.85 : 1,
-              x: tablet ? "-75%" : "0%",
-            },
-            {
-              duration: 0.5,
-              ease: "cubic-bezier(.32, .72, 0, 1)",
-            },
-          );
-          waapi.to(
-            rightPanel,
-            {
-              scale: tablet ? 0.85 : 1,
-              x: tablet ? "75%" : "0%",
-            },
-            {
-              duration: 0.5,
-              ease: "cubic-bezier(.32, .72, 0, 1)",
-            },
-          );
+          gsap.to(leftPanel, {
+            duration: 0.5,
+            ease: "power4.out",
+            scale: tablet ? 0.85 : 1,
+            x: tablet ? "-75%" : "0%",
+          });
+          gsap.to(rightPanel, {
+            duration: 0.5,
+            ease: "power4.out",
+            scale: tablet ? 0.85 : 1,
+            x: tablet ? "75%" : "0%",
+          });
         };
 
         box.addEventListener("mouseenter", handleMouseEnter);
@@ -245,9 +346,29 @@ import Icon from "@components/Icon.astro";
         };
       }
 
-      let tl = waapi.timeline();
+      let tl = gsap.timeline();
 
-      return () => {};
+      tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
+
+      tl.pause();
+
+      let isPlaying = false;
+
+      const handlePlayClick = () => {
+        if (isPlaying) {
+          tl.pause();
+        } else {
+          tl.play();
+        }
+        isPlaying = !isPlaying;
+      };
+
+      playButton.addEventListener("click", handlePlayClick);
+
+      return () => {
+        playButton.removeEventListener("click", handlePlayClick);
+        tl.kill();
+      };
     },
   );
 </script>
