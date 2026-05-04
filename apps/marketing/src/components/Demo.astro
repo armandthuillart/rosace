@@ -71,7 +71,7 @@ const filled = new Set([
   <audio id="demo-audio" src="/song.ogg"></audio>
 
   <div
-    class="relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-4xl bg-gray-300 p-5 sm:rounded-[2.5rem] dark:bg-gray-900"
+    class="group/box relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-4xl bg-gray-300 p-5 sm:rounded-[2.5rem] dark:bg-gray-900"
     id="demo-box"
   >
     <div
@@ -103,7 +103,7 @@ const filled = new Set([
             </a>
 
             <button
-              class="group relative flex size-5 cursor-pointer items-center justify-center gap-0.5 brightness-150 before:absolute before:-inset-4"
+              class="group relative flex size-5 cursor-pointer items-center justify-center gap-0.5 brightness-150 not-group-data-playing/box:pointer-events-none before:absolute before:-inset-4"
               data-play-button
             >
               {
@@ -242,7 +242,7 @@ const filled = new Set([
 
       <div class="flex gap-2 p-3 pl-4">
         <button
-          class="group relative flex size-6 shrink-0 cursor-pointer items-center justify-center transition-opacity duration-200 before:absolute before:-inset-1.5 hover:opacity-80"
+          class="group relative flex size-6 shrink-0 cursor-pointer items-center justify-center transition-opacity duration-200 not-group-data-playing/box:pointer-events-none before:absolute before:-inset-1.5 hover:opacity-80"
           id="demo-volume-button"
         >
           <svg
@@ -358,110 +358,124 @@ const filled = new Set([
   let sm = 640;
   let xl = 1280;
 
+  let tl: gsap.core.Timeline | null = null;
+  let playing = false;
+
   mm.add(
     {
-      desktop: `(min-width: ${xl}px)`,
       tablet: `(min-width: ${sm}px) and (max-width: ${xl - 1}px)`,
       mobile: `(max-width: ${sm - 1}px)`,
+      desktop: `(min-width: ${xl}px)`,
     },
     (context) => {
-      let { tablet } = context.conditions as { tablet: boolean };
+      let ctx = gsap.context(() => {
+        let { tablet } = context.conditions as { tablet: boolean };
 
-      let box = document.getElementById("demo-box")!;
-      let song = document.getElementById("demo-audio") as HTMLAudioElement;
-      let vinyl = document.getElementById("demo-vinyl")!;
-      let leftPanel = document.getElementById("demo-left-panel")!;
-      let rightPanel = document.getElementById("demo-right-panel")!;
-      let volumeButton = document.getElementById("demo-volume-button")!;
-      let allPlayButtons = document.querySelectorAll("[data-play-button]")!;
+        let box = document.getElementById("demo-box")!;
+        let song = document.getElementById("demo-audio") as HTMLAudioElement;
+        let vinyl = document.getElementById("demo-vinyl")!;
+        let leftPanel = document.getElementById("demo-left-panel")!;
+        let rightPanel = document.getElementById("demo-right-panel")!;
+        let playButtons = document.querySelectorAll("[data-play-button]")!;
+        let volumeButton = document.getElementById("demo-volume-button")!;
 
-      if (tablet) {
-        const handleMouseEnter = () => {
-          gsap.to([leftPanel, rightPanel], {
-            duration: 0.5,
-            ease: "power3",
+        if (!tablet) {
+          gsap.set([leftPanel, rightPanel], {
             scale: 1,
             x: "0%",
+            clearProps: "all",
           });
-        };
+        }
 
-        const handleMouseLeave = () => {
-          gsap.to(leftPanel, {
-            duration: 0.5,
-            ease: "power4.out",
-            scale: tablet ? 0.85 : 1,
-            x: tablet ? "-75%" : "0%",
-          });
-          gsap.to(rightPanel, {
-            duration: 0.5,
-            ease: "power4.out",
-            scale: tablet ? 0.85 : 1,
-            x: tablet ? "75%" : "0%",
-          });
-        };
+        if (tablet) {
+          const handleMouseEnter = () => {
+            gsap.to([leftPanel, rightPanel], {
+              duration: 0.5,
+              ease: "power3",
+              scale: 1,
+              x: "0%",
+            });
+          };
 
-        box.addEventListener("mouseenter", handleMouseEnter);
-        box.addEventListener("mouseleave", handleMouseLeave);
+          const handleMouseLeave = () => {
+            gsap.to(leftPanel, {
+              duration: 0.5,
+              ease: "power4.out",
+              scale: 0.85,
+              x: "-75%",
+            });
+            gsap.to(rightPanel, {
+              duration: 0.5,
+              ease: "power4.out",
+              scale: 0.85,
+              x: "75%",
+            });
+          };
 
-        return () => {
-          box.removeEventListener("mouseenter", handleMouseEnter);
-          box.removeEventListener("mouseleave", handleMouseLeave);
-        };
-      }
+          box.addEventListener("mouseenter", handleMouseEnter);
+          box.addEventListener("mouseleave", handleMouseLeave);
+        }
 
-      let tl = gsap.timeline();
+        if (tl) {
+          tl.kill();
+        }
 
-      tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
+        tl = gsap.timeline();
 
-      tl.pause();
+        tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
 
-      let isPlaying = false;
-
-      const handlePlayClick = () => {
-        const traces = document.querySelectorAll("[data-play-button] span");
-
-        if (isPlaying) {
-          tl.pause();
-          song.pause();
-          traces.forEach((span) => span.classList.remove("animate-playing"));
-        } else {
+        if (playing) {
           tl.play();
-          song.volume = 0.3;
-          song.play();
-          traces.forEach((span) => span.classList.add("animate-playing"));
-        }
-        isPlaying = !isPlaying;
-      };
-
-      const handleVolumeClick = () => {
-        if (song.volume === 0) {
-          volumeButton.removeAttribute("data-muted");
-          song.volume = 0.3;
         } else {
-          volumeButton.setAttribute("data-muted", "");
-          song.volume = 0;
+          tl.pause();
         }
-      };
 
-      song.addEventListener("timeupdate", function () {
-        const buffer = 0.44;
-        if (this.currentTime > this.duration - buffer) {
-          this.currentTime = 0;
-          this.play();
-        }
-      });
+        const handlePlayClick = () => {
+          const traces = document.querySelectorAll("[data-play-button] span");
 
-      allPlayButtons.forEach((button) => {
-        button.addEventListener("click", handlePlayClick);
+          if (playing) {
+            tl!.pause();
+            box.removeAttribute("data-playing");
+            song.pause();
+            traces.forEach((span) => span.classList.remove("animate-playing"));
+          } else {
+            tl!.play();
+            box.setAttribute("data-playing", "");
+            song.play();
+            song.volume = 0.3;
+            traces.forEach((span) => span.classList.add("animate-playing"));
+          }
+          playing = !playing;
+        };
+
+        const handleVolumeClick = () => {
+          if (song.volume === 0) {
+            volumeButton.removeAttribute("data-muted");
+            song.volume = 0.3;
+          } else {
+            volumeButton.setAttribute("data-muted", "");
+            song.volume = 0;
+          }
+        };
+
+        const handleTimeUpdate = () => {
+          const buffer = 0.44;
+          if (song.currentTime > song.duration - buffer) {
+            song.currentTime = 0;
+            song.play();
+          }
+        };
+
+        song.addEventListener("timeupdate", handleTimeUpdate);
+
+        playButtons.forEach((button) => {
+          button.addEventListener("click", handlePlayClick);
+        });
+        volumeButton.addEventListener("click", handleVolumeClick);
       });
-      volumeButton.addEventListener("click", handleVolumeClick);
 
       return () => {
-        allPlayButtons.forEach((button) => {
-          button.removeEventListener("click", handlePlayClick);
-        });
-        volumeButton.removeEventListener("click", handleVolumeClick);
-        tl.kill();
+        ctx.revert();
       };
     },
   );
