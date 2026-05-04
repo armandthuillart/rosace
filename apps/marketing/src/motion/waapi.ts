@@ -1,15 +1,15 @@
 import matchMedia from "./matchMedia";
 
-export type Target = HTMLElement | Array<HTMLElement>;
+type Target = HTMLElement | Array<HTMLElement>;
 
-export interface AnimateOptions {
+interface AnimateOptions {
   delay?: number;
   duration?: number;
   ease?: string;
   repeat?: number;
 }
 
-export interface AnimatableProperties {
+interface AnimatableProperties {
   x?: string | number;
   y?: string | number;
   rotate?: number;
@@ -23,7 +23,7 @@ export interface AnimatableProperties {
   filter?: string;
 }
 
-export interface TimelineControls {
+interface TimelineControls {
   from: (
     target: Target,
     keyframes: AnimatableProperties | AnimatableProperties[],
