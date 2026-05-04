@@ -3,8 +3,6 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   fmt: {
     ignorePatterns: ["**/.agents/**", "**/*generated/**"],
-    sortImports: true,
-    sortPackageJson: { sortScripts: true },
   },
   lint: {
     ignorePatterns: ["**/.agents/**", "**/*generated/**"],
