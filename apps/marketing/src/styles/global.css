@@ -15,9 +15,14 @@
   --color-gray-800: oklch(29.3% 0 0);
   --color-gray-900: oklch(23.5% 0 0);
   --color-gray-1000: oklch(17.8% 0 0);
+  --shadow-cover:
+    5px 0 20px 0 oklch(0% 0 0 / 0.6), inset 0 0 10px 5px oklch(100% 0 0 / 0.2),
+    inset 0 0 4px 2px oklch(0% 0 0 / 0.2);
   --shadow-panel: var(--shadow-panel);
   --shadow-float: var(--shadow-float);
   --shadow-track: var(--shadow-track);
+  --shadow-vinyl: 0 0 20px 4px oklch(0% 0 0 / 0.6);
+  --shadow-label: inset 0 0 0 5px oklch(76.7% 0 0 / 0.5);
 }
 
 :root {
