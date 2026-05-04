@@ -81,17 +81,52 @@ const filled = new Set([
     </div>
 
     <div class="flex w-full justify-center">
-      <div class="flex flex-col gap-3 max-sm:w-full">
-        <div class="flex h-7 justify-between">
+      <div class="flex flex-col gap-4 max-sm:w-full sm:gap-3">
+        <div class="flex h-10 items-center justify-between sm:h-7">
           <div
-            class="flex items-center rounded-lg bg-gray-100 px-2.5 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+            class="flex h-7 items-center rounded-lg bg-gray-100 px-2.5 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
           >
             <Icon class="size-4" name="plus-sign" />
           </div>
 
-          <div class="flex gap-2">
+          <div
+            class="shadow-panel mx-auto flex h-full w-48 items-center justify-between rounded-xl bg-gray-900 p-2 sm:hidden dark:bg-gray-800"
+          >
+            <a
+              aria-label="iloveitiloveit by Bella Kay"
+              class="size-6 rounded-sm bg-cover transition-opacity duration-200 hover:opacity-80"
+              href="https://www.youtube.com/watch?v=OqTpNnSnwxQ"
+              rel="noopener noreferrer"
+              style={{ backgroundImage: `url(${songCoverImage.src})` }}
+              target="_blank"
+            >
+            </a>
+
+            <button
+              class="group relative flex size-5 cursor-pointer items-center justify-center gap-0.5 brightness-150 before:absolute before:-inset-4"
+              data-play-button
+            >
+              {
+                [0.95, 1.45, 0.85, 1.25].map((scale) => (
+                  <span
+                    class="h-0.5 w-0.5 rounded-xs bg-linear-to-b from-gray-500 to-gray-400 transition-[filter] duration-200 group-hover:blur-xs dark:from-gray-400 dark:to-gray-500"
+                    style={{ animationDuration: `${scale}s` }}
+                  />
+                ))
+              }
+
+              <Icon
+                class="absolute top-1/2 left-1/2 size-4 -translate-1/2 text-gray-200 transition-opacity duration-200 not-group-hover:opacity-0"
+                name="pause"
+              >
+                <use href="/sprites.svg#pause"></use>
+              </Icon>
+            </button>
+          </div>
+
+          <div class="flex sm:gap-2">
             <div
-              class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+              class="hidden items-center gap-1.5 rounded-lg bg-gray-100 px-2 text-gray-500 sm:flex dark:bg-gray-800 dark:text-gray-400"
             >
               <Icon class="size-4" name="rectangle" />
               <Icon class="size-4" name="checkerboard" />
@@ -132,7 +167,7 @@ const filled = new Set([
         >
           <button
             class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center rounded-md bg-white transition-colors duration-200 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-            id="demo-play-button"
+            data-play-button
           >
             <svg
               class="h-3.5 w-6 [--fill:var(--color-gray-400)] [--shimmer:var(--color-gray-500)] dark:[--fill:var(--color-gray-500)] dark:[--shimmer:var(--color-gray-400)]"
@@ -248,7 +283,7 @@ const filled = new Set([
             target="_blank"
           >
             <div
-              class="shadow-cover absolute inset-0 z-10 overflow-hidden rounded-xs bg-size-[100%_100%] before:absolute before:z-20 before:size-full before:rounded-xs before:[background-image:var(--before)] before:bg-size-[100%_100%] before:opacity-50 before:mix-blend-screen after:absolute after:inset-0 after:z-30 after:rounded-xs after:[background-image:var(--after)] after:opacity-20 after:mix-blend-screen"
+              class="shadow-cover absolute inset-0 z-10 overflow-hidden rounded-xs bg-cover before:absolute before:z-20 before:size-full before:rounded-xs before:[background-image:var(--before)] before:bg-size-[100%_100%] before:opacity-50 before:mix-blend-screen after:absolute after:inset-0 after:z-30 after:rounded-xs after:[background-image:var(--after)] after:opacity-20 after:mix-blend-screen"
               ,
               style={{
                 "--after": `url(${vinylSleeveImage.src})`,
@@ -337,8 +372,8 @@ const filled = new Set([
       let vinyl = document.getElementById("demo-vinyl")!;
       let leftPanel = document.getElementById("demo-left-panel")!;
       let rightPanel = document.getElementById("demo-right-panel")!;
-      let playButton = document.getElementById("demo-play-button")!;
       let volumeButton = document.getElementById("demo-volume-button")!;
+      let allPlayButtons = document.querySelectorAll("[data-play-button]")!;
 
       if (tablet) {
         const handleMouseEnter = () => {
@@ -383,13 +418,17 @@ const filled = new Set([
       let isPlaying = false;
 
       const handlePlayClick = () => {
+        const traces = document.querySelectorAll("[data-play-button] span");
+
         if (isPlaying) {
           tl.pause();
           song.pause();
+          traces.forEach((span) => span.classList.remove("animate-playing"));
         } else {
           tl.play();
           song.volume = 0.3;
           song.play();
+          traces.forEach((span) => span.classList.add("animate-playing"));
         }
         isPlaying = !isPlaying;
       };
@@ -412,11 +451,15 @@ const filled = new Set([
         }
       });
 
-      playButton.addEventListener("click", handlePlayClick);
+      allPlayButtons.forEach((button) => {
+        button.addEventListener("click", handlePlayClick);
+      });
       volumeButton.addEventListener("click", handleVolumeClick);
 
       return () => {
-        playButton.removeEventListener("click", handlePlayClick);
+        allPlayButtons.forEach((button) => {
+          button.removeEventListener("click", handlePlayClick);
+        });
         volumeButton.removeEventListener("click", handleVolumeClick);
         tl.kill();
       };
