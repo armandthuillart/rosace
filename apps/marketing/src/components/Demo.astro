@@ -66,20 +66,64 @@ import Icon from "@components/Icon.astro";
           class="shadow-track relative flex h-18 flex-col rounded-[.875rem] bg-white dark:bg-gray-800"
         >
           <div
-            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center -space-x-1 rounded-md bg-white dark:bg-gray-800"
+            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center rounded-md bg-white dark:bg-gray-800"
           >
-            <div class="animate-shimmer relative flex -space-x-1">
-              <Icon
-                class="size-3.5 text-transparent"
-                name="play"
-                style="mask-image: url('/sprites.svg#play'); mask-mode: alpha;"
-              />
-              <Icon
-                class="size-3.5 text-transparent"
-                name="pause"
-                style="mask-image: url('/sprites.svg#pause'); mask-mode: alpha;"
-              />
-            </div>
+            <svg
+              class="h-3.5 w-6 [--fill:var(--color-gray-400)] [--shimmer:var(--color-gray-500)] dark:[--fill:var(--color-gray-500)] dark:[--shimmer:var(--color-gray-400)]"
+              viewBox="0 0 24 14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient
+                  gradientUnits="userSpaceOnUse"
+                  id="shimmer"
+                  x1="0"
+                  x2="24"
+                  y1="0"
+                  y2="0"
+                >
+                  <stop offset="0%" stop-color="var(--fill)" stop-opacity="1"
+                  ></stop>
+
+                  <stop
+                    offset="40%"
+                    stop-color="var(--shimmer)"
+                    stop-opacity=".8"></stop>
+
+                  <stop
+                    offset="60%"
+                    stop-color="var(--shimmer)"
+                    stop-opacity=".8"></stop>
+
+                  <stop offset="100%" stop-color="var(--fill)" stop-opacity="1"
+                  ></stop>
+
+                  <animateTransform
+                    attributeName="gradientTransform"
+                    dur="2s"
+                    from="-24 0"
+                    repeatCount="indefinite"
+                    to="48 0"
+                    type="translate"></animateTransform>
+                </linearGradient>
+              </defs>
+
+              <path
+                clip-rule="evenodd"
+                d="M3.0625 3.37742C3.0625 2.57881 3.9382 2.08947 4.61835 2.50802L10.5053 6.13077C11.1531 6.52942 11.1531 7.47098 10.5053 7.86957L4.61835 11.4923C3.9382 11.9109 3.0625 11.4215 3.0625 10.6229V3.37742Z"
+                fill="url(#shimmer)"
+                fill-rule="evenodd"></path>
+              <path
+                clip-rule="evenodd"
+                d="M11.8958 2.91671C11.8958 2.35292 12.3528 1.89587 12.9166 1.89587H15.2499C15.8137 1.89587 16.2708 2.35292 16.2708 2.91671V11.0834C16.2708 11.6472 15.8137 12.1042 15.2499 12.1042H12.9166C12.3528 12.1042 11.8958 11.6472 11.8958 11.0834V2.91671Z"
+                fill="url(#shimmer)"
+                fill-rule="evenodd"></path>
+              <path
+                clip-rule="evenodd"
+                d="M17.7292 2.91671C17.7292 2.35292 18.1863 1.89587 18.7501 1.89587H21.0834C21.6472 1.89587 22.1042 2.35292 22.1042 2.91671V11.0834C22.1042 11.6472 21.6472 12.1042 21.0834 12.1042H18.7501C18.1863 12.1042 17.7292 11.6472 17.7292 11.0834V2.91671Z"
+                fill="url(#shimmer)"
+                fill-rule="evenodd"></path>
+            </svg>
           </div>
         </div>
       </div>
