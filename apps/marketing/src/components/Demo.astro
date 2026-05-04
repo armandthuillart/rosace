@@ -68,6 +68,8 @@ const filled = new Set([
 <section class="flex flex-col items-center gap-4 lg:px-8">
   <h2 class="sr-only">Demo</h2>
 
+  <audio id="demo-audio" src="/song.ogg"></audio>
+
   <div
     class="relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-4xl bg-gray-300 p-5 sm:rounded-[2.5rem] dark:bg-gray-900"
     id="demo-box"
@@ -204,9 +206,33 @@ const filled = new Set([
       <hr class="border-gray-200 dark:border-gray-700" />
 
       <div class="flex gap-2 p-3 pl-4">
-        <button class="flex size-6 shrink-0 items-center justify-center"
-          ><svg><use href="/sprites.svg#mute"></use></svg></button
+        <button
+          class="group relative flex size-6 shrink-0 cursor-pointer items-center justify-center transition-opacity duration-200 before:absolute before:-inset-1.5 hover:opacity-80"
+          id="demo-volume-button"
         >
+          <svg
+            class="size-5"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11 4q1-1 2.4-.6 1.1.7 1.2 2.1.3 1.3.2 3.6V15q0 2.2-.2 3.6 0 1.4-1.2 2.1Q12 21 11 20l-2.7-2.5-1.2-1-1.6-.2H3.8q-.8 0-1.3-.5-1-.8-1.2-2v-3.7q0-1 1.2-2l1.3-.4h1.7l1.6-.2 1.2-1z"
+            ></path>
+
+            <path
+              class="group-data-muted:opacity-0"
+              clip-rule="evenodd"
+              d="M16.4 8.2a1 1 0 0 1 1.4.2 6 6 0 0 1 0 7.2 1 1 0 1 1-1.6-1.2A4 4 0 0 0 17 12a4 4 0 0 0-.8-2.4 1 1 0 0 1 .2-1.4"
+              fill-rule="evenodd"></path>
+
+            <path
+              class="group-data-muted:opacity-0"
+              clip-rule="evenodd"
+              d="M19.3 6.3a1 1 0 0 1 1.4 0A8 8 0 0 1 23 12q-.1 3.3-2.3 5.7a1 1 0 0 1-1.4-1.4A6 6 0 0 0 21 12q0-2.4-1.7-4.3a1 1 0 0 1 0-1.4"
+              fill-rule="evenodd"></path>
+          </svg>
+        </button>
 
         <div class="w-full"></div>
       </div>
@@ -216,7 +242,7 @@ const filled = new Set([
       <div class="p-4">
         <div class="relative h-25 rounded-sm bg-gray-100 dark:bg-gray-700">
           <a
-            class="absolute inset-2.5 right-auto aspect-square duration-200 hover:opacity-80"
+            class="absolute inset-2.5 right-auto aspect-square transition-opacity duration-200 hover:opacity-80 focus-visible:outline-2"
             href="https://www.youtube.com/watch?v=OqTpNnSnwxQ"
             rel="noopener noreferrer"
             target="_blank"
@@ -307,10 +333,12 @@ const filled = new Set([
       let { tablet } = context.conditions as { tablet: boolean };
 
       let box = document.getElementById("demo-box")!;
+      let song = document.getElementById("demo-audio") as HTMLAudioElement;
       let vinyl = document.getElementById("demo-vinyl")!;
       let leftPanel = document.getElementById("demo-left-panel")!;
       let rightPanel = document.getElementById("demo-right-panel")!;
       let playButton = document.getElementById("demo-play-button")!;
+      let volumeButton = document.getElementById("demo-volume-button")!;
 
       if (tablet) {
         const handleMouseEnter = () => {
@@ -357,16 +385,39 @@ const filled = new Set([
       const handlePlayClick = () => {
         if (isPlaying) {
           tl.pause();
+          song.pause();
         } else {
           tl.play();
+          song.volume = 0.3;
+          song.play();
         }
         isPlaying = !isPlaying;
       };
 
+      const handleVolumeClick = () => {
+        if (song.volume === 0) {
+          volumeButton.removeAttribute("data-muted");
+          song.volume = 0.3;
+        } else {
+          volumeButton.setAttribute("data-muted", "");
+          song.volume = 0;
+        }
+      };
+
+      song.addEventListener("timeupdate", function () {
+        const buffer = 0.44;
+        if (this.currentTime > this.duration - buffer) {
+          this.currentTime = 0;
+          this.play();
+        }
+      });
+
       playButton.addEventListener("click", handlePlayClick);
+      volumeButton.addEventListener("click", handleVolumeClick);
 
       return () => {
         playButton.removeEventListener("click", handlePlayClick);
+        volumeButton.removeEventListener("click", handleVolumeClick);
         tl.kill();
       };
     },
