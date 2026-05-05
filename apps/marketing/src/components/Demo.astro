@@ -166,11 +166,11 @@ const filled = new Set([
           class="shadow-track relative flex h-18 shrink-0 flex-col rounded-[.875rem] bg-white dark:bg-gray-800"
         >
           <button
-            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center rounded-md bg-white transition-colors duration-200 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+            class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center rounded-md bg-white transition-colors duration-200 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
             data-play-button
           >
             <svg
-              class="h-3.5 w-6 [--fill:var(--color-gray-500)] [--shimmer:var(--color-gray-800)] dark:[--fill:var(--color-gray-500)] dark:[--shimmer:var(--color-gray-200)]"
+              class="h-3.5 w-6 [--fill:var(--color-gray-500)] [--shimmer:var(--color-gray-200)] dark:[--fill:var(--color-gray-500)]"
               viewBox="0 0 24 14"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -182,6 +182,7 @@ const filled = new Set([
                   x2="24"
                   y1="0"
                   y2="0"
+                  class="animate-shimmer rotate-15 not-group-data-playing/box:[animation-play-state:running] group-data-playing/box:[animation-play-state:paused]"
                 >
                   <stop offset="0%" stop-color="var(--fill)" stop-opacity="1"
                   ></stop>
@@ -198,14 +199,6 @@ const filled = new Set([
 
                   <stop offset="100%" stop-color="var(--fill)" stop-opacity="1"
                   ></stop>
-
-                  <animateTransform
-                    attributeName="gradientTransform"
-                    dur="2s"
-                    from="-24 0"
-                    repeatCount="indefinite"
-                    to="48 0"
-                    type="translate"></animateTransform>
                 </linearGradient>
               </defs>
 

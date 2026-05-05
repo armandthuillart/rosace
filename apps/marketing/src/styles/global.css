@@ -18,6 +18,7 @@
     format-expand 0.8s ease-in-out 0.2s both, format-shrink 0.3s ease-in-out 1.5s forwards;
   --animate-scribble-draw:
     scribble-draw 0.8s ease-in-out 2.5s both, scribble-erase 0.8s ease-in-out 3.3s forwards;
+  --animate-shimmer: shimmer 2s infinite;
   --animate-shocked-bounce:
     shocked-jump-in 0.7s ease-in-out 0s both, shocked-jump-out 0.6s ease-in 1.1s forwards;
   --animate-shock-left:
@@ -81,6 +82,15 @@
     --shadow-track:
       0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
       inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 30%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translate(-24px);
+  }
+  100% {
+    transform: translate(48px);
   }
 }
 
