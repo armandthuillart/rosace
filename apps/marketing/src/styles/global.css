@@ -13,6 +13,28 @@
   --animate-note-rotate:
     note-rightward 0.5s ease-in-out 0.1s both, note-leftward 0.5s ease-in-out 0.9s forwards;
   --animate-note-y: note-jump 0.7s ease-in-out 0s both, note-jump 0.7s ease-in-out 0.8s forwards;
+  --animate-format-resize:
+    format-expand 0.8s ease-in-out 0.2s both, format-shrink 0.3s ease-in-out 1.5s forwards;
+  --animate-arrow-drop: download-arrow 1s ease-in-out 0s both;
+  --animate-base-pulse: download-base 1s ease-in-out 0s both;
+  --animate-slider-left:
+    slider-left-out 0.3s ease-in-out 0.2s both, slider-left-back 0.6s ease-in-out 0.6s forwards;
+  --animate-slider-right:
+    slider-right-out 0.3s ease-in-out 0.2s both, slider-right-back 0.6s ease-in-out 0.6s forwards;
+  --animate-scribble-draw:
+    scribble-draw 0.8s ease-in-out 2.5s both, scribble-erase 0.8s ease-in-out 3.3s forwards;
+  --animate-signature-draw:
+    signature-draw 1.2s ease-in-out 0s both, signature-animate 1.2s ease-in-out 1.3s forwards,
+    signature-hold 0.001s linear 4.1s forwards, signature-draw 1.2s ease-in-out 4.101s forwards;
+  --animate-shock-left:
+    shock-left-out 0.2s ease-in-out 0.35s both, shock-left-back 0.35s ease-in-out 0.6s forwards;
+  --animate-shock-right:
+    shock-right-out 0.2s ease-in-out 0.35s both, shock-right-back 0.35s ease-in-out 0.6s forwards;
+  --animate-smile-flip:
+    smile-enter 1s ease-in-out 1.3s both, smile-exit 1s ease-in-out 3.6s forwards,
+    smile-return 1s ease-in-out 4.3s forwards;
+  --animate-shocked-bounce:
+    shocked-jump-in 0.7s ease-in-out 0s both, shocked-jump-out 0.6s ease-in 1.1s forwards;
   --color-blue-400: oklch(67% 0.183 249);
   --color-blue-500: oklch(62.7% 0.17 249);
   --color-gray-50: oklch(98.5% 0 0);
@@ -222,7 +244,7 @@
   }
 }
 
-@keyframes resize-1 {
+@keyframes format-expand {
   0% {
     width: 44%;
     height: 78%;
@@ -243,7 +265,7 @@
   }
 }
 
-@keyframes resize-2 {
+@keyframes format-shrink {
   from {
     width: 100%;
     height: 100%;
@@ -254,7 +276,7 @@
   }
 }
 
-@keyframes scribble-1 {
+@keyframes scribble-draw {
   from {
     opacity: 0;
   }
@@ -272,7 +294,7 @@
   }
 }
 
-@keyframes scribble-2 {
+@keyframes scribble-erase {
   from,
   90% {
     opacity: 1;
@@ -288,7 +310,7 @@
   }
 }
 
-@keyframes signature-1 {
+@keyframes signature-draw {
   from {
     opacity: 0;
   }
@@ -306,7 +328,7 @@
   }
 }
 
-@keyframes signature-2 {
+@keyframes signature-animate {
   from,
   90% {
     opacity: 1;
@@ -322,7 +344,7 @@
   }
 }
 
-@keyframes signature-3 {
+@keyframes signature-hold {
   from {
     opacity: 0;
     stroke-dasharray: 0 122px;
@@ -337,7 +359,7 @@
   }
 }
 
-@keyframes shock-1 {
+@keyframes shock-left-out {
   from {
     opacity: 0;
   }
@@ -353,7 +375,7 @@
   }
 }
 
-@keyframes shock-2 {
+@keyframes shock-left-back {
   from {
     opacity: 0;
   }
@@ -369,7 +391,7 @@
   }
 }
 
-@keyframes shock-3 {
+@keyframes shock-right-out {
   from {
     opacity: 0;
   }
@@ -385,7 +407,7 @@
   }
 }
 
-@keyframes shock-4 {
+@keyframes shock-right-back {
   from {
     opacity: 0;
   }
@@ -401,7 +423,7 @@
   }
 }
 
-@keyframes smile-1 {
+@keyframes smile-enter {
   0% {
     transform: translateX(170%) rotate(220deg);
   }
@@ -410,7 +432,7 @@
   }
 }
 
-@keyframes smile-2 {
+@keyframes smile-exit {
   from {
     transform: translateX(0%) rotate(0deg);
   }
@@ -419,7 +441,7 @@
   }
 }
 
-@keyframes smile-3 {
+@keyframes smile-return {
   from {
     transform: translateX(170%) rotate(220deg);
   }
@@ -428,7 +450,7 @@
   }
 }
 
-@keyframes shocked-1 {
+@keyframes shocked-jump-in {
   from {
     opacity: 0;
   }
@@ -456,7 +478,7 @@
   }
 }
 
-@keyframes shocked-2 {
+@keyframes shocked-jump-out {
   from {
     transform: translateY(0%);
     transform-origin: top;
@@ -531,7 +553,7 @@
   }
 }
 
-@keyframes slider-1 {
+@keyframes slider-left-out {
   from {
     transform: translateX(0);
   }
@@ -540,7 +562,7 @@
   }
 }
 
-@keyframes slider-2 {
+@keyframes slider-left-back {
   from {
     transform: translateX(232%);
   }
@@ -555,7 +577,7 @@
   }
 }
 
-@keyframes slider-3 {
+@keyframes slider-right-out {
   from {
     transform: translateX(0);
   }
@@ -564,7 +586,7 @@
   }
 }
 
-@keyframes slider-4 {
+@keyframes slider-right-back {
   from {
     transform: translateX(-232%);
   }
