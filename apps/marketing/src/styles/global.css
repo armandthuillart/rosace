@@ -1,7 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --animate-playing: playing 1s ease infinite;
+  --animate-waveform: waveform 1s ease infinite;
+  --animate-play:
+    play-exit 0.64s cubic-bezier(0.8, 0.25, 0.19, 1.37) 0.2s forwards,
+    play-enter 0.64s cubic-bezier(0.8, 0.25, 0.19, 1.37) 1.74s forwards;
+  --animate-pause: pause 0.5s cubic-bezier(0.8, 0.25, 0.19, 1.37) 0s 2 alternate;
+  --animate-headset-rotate:
+    headset-leftward 0.5s ease-in-out 0.1s both, headset-rightward 0.5s ease-in-out 0.9s forwards;
+  --animate-headset-y:
+    headset-jump 0.7s ease-in-out 0s both, headset-jump 0.7s ease-in-out 0.8s forwards;
+  --animate-note-rotate:
+    note-rightward 0.5s ease-in-out 0.1s both, note-leftward 0.5s ease-in-out 0.9s forwards;
+  --animate-note-y: note-jump 0.7s ease-in-out 0s both, note-jump 0.7s ease-in-out 0.8s forwards;
   --color-blue-400: oklch(67% 0.183 249);
   --color-blue-500: oklch(62.7% 0.17 249);
   --color-gray-50: oklch(98.5% 0 0);
@@ -49,7 +60,7 @@
   }
 }
 
-@keyframes playing {
+@keyframes waveform {
   0%,
   100% {
     height: 0.1875rem;
@@ -59,36 +70,34 @@
   }
 }
 
-@keyframes music-headset-1 {
-  0%,
-  20% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -30%;
-  }
-  80%,
-  100% {
-    translate: 0 0;
-  }
+@keyframes play-exit {
   0% {
-    scale: 1 1;
-  }
-  20% {
-    scale: 1.08 0.9;
-  }
-  50% {
-    scale: 1 1.1;
-  }
-  80% {
-    scale: 1.08 0.9;
+    transform: translateX(0%) rotate(0deg);
   }
   100% {
-    scale: 1 1;
+    transform: translateX(-96%) rotate(-90deg);
   }
 }
 
-@keyframes music-headset-2 {
+@keyframes play-enter {
+  0% {
+    transform: translateX(-96%) rotate(-90deg);
+  }
+  100% {
+    transform: translateX(0%) rotate(0deg);
+  }
+}
+
+@keyframes pause {
+  0% {
+    height: 0%;
+  }
+  100% {
+    height: 100%;
+  }
+}
+
+@keyframes headset-leftward {
   from {
     transform: rotate(0);
   }
@@ -97,7 +106,7 @@
   }
 }
 
-@keyframes music-headset-3 {
+@keyframes headset-rightward {
   from {
     transform: rotate(-20deg);
   }
@@ -106,7 +115,7 @@
   }
 }
 
-@keyframes music-note-1 {
+@keyframes headset-jump {
   0%,
   20% {
     translate: 0 0;
@@ -135,7 +144,7 @@
   }
 }
 
-@keyframes music-note-2 {
+@keyframes note-rightward {
   from {
     transform: rotate(0deg);
   }
@@ -144,7 +153,7 @@
   }
 }
 
-@keyframes music-note-3 {
+@keyframes note-leftward {
   from {
     transform: rotate(20deg);
   }
@@ -152,6 +161,37 @@
     transform: rotate(0deg);
   }
 }
+
+@keyframes note-jump {
+  0%,
+  20% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -30%;
+  }
+  80%,
+  100% {
+    translate: 0 0;
+  }
+  0% {
+    scale: 1 1;
+  }
+  20% {
+    scale: 1.08 0.9;
+  }
+  50% {
+    scale: 1 1.1;
+  }
+  80% {
+    scale: 1.08 0.9;
+  }
+  100% {
+    scale: 1 1;
+  }
+}
+
+/* 🫑 */
 
 @keyframes download-arrow {
   0%,
@@ -211,33 +251,6 @@
   to {
     width: 44%;
     height: 78%;
-  }
-}
-
-@keyframes pause {
-  0% {
-    height: 0%;
-  }
-  100% {
-    height: 100%;
-  }
-}
-
-@keyframes play-1 {
-  0% {
-    transform: translateX(0%) rotate(0deg);
-  }
-  100% {
-    transform: translateX(-96%) rotate(-90deg);
-  }
-}
-
-@keyframes play-2 {
-  0% {
-    transform: translateX(-96%) rotate(-90deg);
-  }
-  100% {
-    transform: translateX(0%) rotate(0deg);
   }
 }
 

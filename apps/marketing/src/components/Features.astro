@@ -10,18 +10,18 @@ import Icon from "@components/Icon.astro";
       <div class="relative size-18 overflow-hidden">
         <div class="absolute top-1/2 left-1/2 size-12 -translate-1/2">
           <div
-            class="absolute top-1/2 left-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.64s] dark:bg-gray-400"
+            class="group-hover:animate-pause absolute top-1/2 left-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:[animation-delay:0.64s] dark:bg-gray-400"
           >
           </div>
 
           <div
-            class="absolute top-1/2 right-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:animate-[pause_0.5s_cubic-bezier(0.8,0.25,0.19,1.37)_0s_2_alternate] group-hover:[animation-delay:0.74s] dark:bg-gray-400"
+            class="group-hover:animate-pause absolute top-1/2 right-0 w-4.5 -translate-y-1/2 rounded-xs bg-gray-500 group-hover:[animation-delay:0.74s] dark:bg-gray-400"
           >
           </div>
         </div>
 
         <Icon
-          class="absolute top-0 left-0 size-20 text-gray-400 group-hover:animate-[play-1_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_0.2s_forwards,play-2_0.64s_cubic-bezier(0.8,0.25,0.19,1.37)_1.74s_forwards] dark:text-gray-500"
+          class="group-hover:animate-play absolute top-0 left-0 size-20 text-gray-400 dark:text-gray-500"
           name="play"
         />
       </div>
@@ -37,11 +37,9 @@ import Icon from "@components/Icon.astro";
       class="group flex flex-col items-center justify-center gap-5 text-center"
     >
       <div class="flex h-18">
-        <div
-          class="size-18 origin-bottom group-hover:animate-[music-headset-2_0.5s_ease-in-out_0.1s_both,music-headset-3_0.5s_ease-in-out_0.9s_forwards]"
-        >
+        <div class="group-hover:animate-headset-rotate size-18 origin-bottom">
           <svg
-            class="size-18 origin-bottom text-gray-500 group-hover:animate-[music-headset-1_0.7s_ease-in-out_0s_both,music-headset-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-400"
+            class="group-hover:animate-headset-y size-18 origin-bottom text-gray-500 dark:text-gray-400"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -52,11 +50,9 @@ import Icon from "@components/Icon.astro";
           </svg>
         </div>
 
-        <div
-          class="size-18 origin-bottom group-hover:animate-[music-note-2_0.5s_ease-in-out_0.1s_both,music-note-3_0.5s_ease-in-out_0.9s_forwards]"
-        >
+        <div class="group-hover:animate-note-rotate size-18 origin-bottom">
           <svg
-            class="size-18 origin-bottom text-gray-400 group-hover:animate-[music-note-1_0.7s_ease-in-out_0s_both,music-note-1_0.7s_ease-in-out_0.8s_forwards] dark:text-gray-500"
+            class="group-hover:animate-note-y size-18 origin-bottom text-gray-400 dark:text-gray-500"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
