@@ -499,15 +499,69 @@ const filled = new Set([
 <script>
   import gsap from "gsap";
 
-  let mm = gsap.matchMedia();
-
-  let sm = 640;
-  let xl = 1280;
+  const sm = 640;
+  const xl = 1280;
 
   let tl: gsap.core.Timeline | null = null;
   let playing = false;
 
   const DEFAULT_VOLUME = 0.1;
+
+  const box = document.getElementById("demo-box")!;
+  const song = document.getElementById("demo-audio") as HTMLAudioElement;
+  const vinyl = document.getElementById("demo-vinyl")!;
+  const leftPanel = document.getElementById("demo-left-panel")!;
+  const rightPanel = document.getElementById("demo-right-panel")!;
+  const playButtons = document.querySelectorAll("[data-play-button]");
+  const volumeButton = document.getElementById("demo-volume-button")!;
+  const volumeSlider = document.getElementById(
+    "demo-volume-slider",
+  ) as HTMLInputElement;
+
+  song.volume = DEFAULT_VOLUME;
+
+  const handlePlayClick = () => {
+    const traces = document.querySelectorAll("[data-play-button] span");
+    if (playing) {
+      tl?.pause();
+      box.removeAttribute("data-playing");
+      song.pause();
+      traces.forEach((span) => span.classList.remove("animate-playing"));
+    } else {
+      tl?.play();
+      box.setAttribute("data-playing", "");
+      song.play();
+      song.volume = DEFAULT_VOLUME;
+      traces.forEach((span) => span.classList.add("animate-playing"));
+    }
+    playing = !playing;
+  };
+
+  const handleVolumeClick = () => {
+    if (song.volume === 0) {
+      volumeButton.removeAttribute("data-muted");
+      song.volume = DEFAULT_VOLUME;
+    } else {
+      volumeButton.setAttribute("data-muted", "");
+      song.volume = 0;
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (song.currentTime > song.duration - 0.44) {
+      song.currentTime = 0;
+      song.play();
+    }
+  };
+
+  song.addEventListener("timeupdate", handleTimeUpdate);
+  playButtons.forEach((btn) => btn.addEventListener("click", handlePlayClick));
+  volumeButton.addEventListener("click", handleVolumeClick);
+  volumeSlider.addEventListener("input", (e) => {
+    song.volume = parseInt((e.target as HTMLInputElement).value) / 100;
+  });
+
+  const mm = gsap.matchMedia();
 
   mm.add(
     {
@@ -516,128 +570,56 @@ const filled = new Set([
       desktop: `(min-width: ${xl}px)`,
     },
     (context) => {
-      let ctx = gsap.context(() => {
-        let { tablet } = context.conditions as { tablet: boolean };
+      const { tablet } = context.conditions as { tablet: boolean };
 
-        let box = document.getElementById("demo-box")!;
-        let song = document.getElementById("demo-audio") as HTMLAudioElement;
-        song.volume = DEFAULT_VOLUME;
-        let vinyl = document.getElementById("demo-vinyl")!;
-        let leftPanel = document.getElementById("demo-left-panel")!;
-        let rightPanel = document.getElementById("demo-right-panel")!;
-        let playButtons = document.querySelectorAll("[data-play-button]")!;
-        let volumeButton = document.getElementById("demo-volume-button")!;
-        let volumeSlider = document.getElementById(
-          "demo-volume-slider",
-        ) as HTMLInputElement;
+      tl = gsap.timeline();
 
-        if (!tablet) {
-          gsap.set([leftPanel, rightPanel], {
-            scale: 1,
-            x: "0%",
-            clearProps: "all",
-          });
-        }
+      tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
 
-        if (tablet) {
-          gsap.set([leftPanel, rightPanel], {
-            scale: 1,
-            x: "0%",
-            clearProps: "all",
-          });
+      if (playing) {
+        tl.play();
+      } else {
+        tl.pause();
+      }
 
-          const handleMouseEnter = () => {
-            gsap.to([leftPanel, rightPanel], {
-              duration: 0.5,
-              ease: "power3",
-              scale: 1,
-              x: "0%",
-            });
-          };
+      if (!tablet) {
+        return;
+      }
 
-          const handleMouseLeave = () => {
-            gsap.to(leftPanel, {
-              duration: 0.5,
-              ease: "power4.out",
-              scale: 0.85,
-              x: "-75%",
-            });
-            gsap.to(rightPanel, {
-              duration: 0.5,
-              ease: "power4.out",
-              scale: 0.85,
-              x: "75%",
-            });
-          };
+      gsap.set([leftPanel, rightPanel], { clearProps: "all" });
 
-          box.addEventListener("mouseenter", handleMouseEnter);
-          box.addEventListener("mouseleave", handleMouseLeave);
-        }
-
-        if (tl) {
-          tl.kill();
-        }
-
-        tl = gsap.timeline();
-
-        tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
-
-        if (playing) {
-          tl.play();
-        } else {
-          tl.pause();
-        }
-
-        const handlePlayClick = () => {
-          const traces = document.querySelectorAll("[data-play-button] span");
-
-          if (playing) {
-            tl!.pause();
-            box.removeAttribute("data-playing");
-            song.pause();
-            traces.forEach((span) => span.classList.remove("animate-playing"));
-          } else {
-            tl!.play();
-            box.setAttribute("data-playing", "");
-            song.play();
-            song.volume = DEFAULT_VOLUME;
-            traces.forEach((span) => span.classList.add("animate-playing"));
-          }
-          playing = !playing;
-        };
-
-        const handleVolumeClick = () => {
-          if (song.volume === 0) {
-            volumeButton.removeAttribute("data-muted");
-            song.volume = DEFAULT_VOLUME;
-          } else {
-            volumeButton.setAttribute("data-muted", "");
-            song.volume = 0;
-          }
-        };
-
-        const handleTimeUpdate = () => {
-          if (song.currentTime > song.duration - 0.44) {
-            song.currentTime = 0;
-            song.play();
-          }
-        };
-
-        song.addEventListener("timeupdate", handleTimeUpdate);
-
-        playButtons.forEach((button) => {
-          button.addEventListener("click", handlePlayClick);
+      const handleMouseEnter = () => {
+        gsap.to([leftPanel, rightPanel], {
+          duration: 0.5,
+          ease: "power3",
+          scale: 1,
+          x: "0%",
         });
+      };
 
-        volumeButton.addEventListener("click", handleVolumeClick);
-
-        volumeSlider.addEventListener("input", (e) => {
-          song.volume = parseInt((e.target as HTMLInputElement).value) / 100;
+      const handleMouseLeave = () => {
+        gsap.to(leftPanel, {
+          duration: 0.5,
+          ease: "power4.out",
+          scale: 0.85,
+          x: "-75%",
         });
-      });
+        gsap.to(rightPanel, {
+          duration: 0.5,
+          ease: "power4.out",
+          scale: 0.85,
+          x: "75%",
+        });
+      };
+
+      box.addEventListener("mouseenter", handleMouseEnter);
+      box.addEventListener("mouseleave", handleMouseLeave);
 
       return () => {
-        ctx.revert();
+        box.removeEventListener("mouseenter", handleMouseEnter);
+        box.removeEventListener("mouseleave", handleMouseLeave);
+        gsap.killTweensOf([leftPanel, rightPanel]);
+        gsap.set([leftPanel, rightPanel], { clearProps: "all" });
       };
     },
   );
