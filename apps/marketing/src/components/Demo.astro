@@ -420,6 +420,12 @@ const filled = new Set([
         }
 
         if (tablet) {
+          gsap.set([leftPanel, rightPanel], {
+            scale: 1,
+            x: "0%",
+            clearProps: "all",
+          });
+
           const handleMouseEnter = () => {
             gsap.to([leftPanel, rightPanel], {
               duration: 0.5,
@@ -503,7 +509,9 @@ const filled = new Set([
         playButtons.forEach((button) => {
           button.addEventListener("click", handlePlayClick);
         });
+
         volumeButton.addEventListener("click", handleVolumeClick);
+
         volumeSlider.addEventListener("input", (e) => {
           song.volume = parseInt((e.target as HTMLInputElement).value) / 100;
         });
