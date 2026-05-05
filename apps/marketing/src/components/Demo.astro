@@ -178,8 +178,8 @@ const filled = new Set([
                 <linearGradient
                   gradientUnits="userSpaceOnUse"
                   id="shimmer"
-                  x1="0"
-                  x2="24"
+                  x1="-24"
+                  x2="0"
                   y1="0"
                   y2="0"
                   class="animate-shimmer rotate-15 not-group-data-playing/box:[animation-play-state:running] group-data-playing/box:[animation-play-state:paused]"
@@ -224,7 +224,7 @@ const filled = new Set([
     </div>
 
     <div
-      class="shadow-float xl:shadow-panel absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
+      class="shadow-float xl:shadow-panel absolute right-5 z-50 flex h-145 w-3xs shrink-0 origin-right flex-col overflow-hidden rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
       id="demo-right-panel"
     >
       <div class="flex items-center justify-between p-3 pl-4">
@@ -290,7 +290,7 @@ const filled = new Set([
 
         <div class="flex gap-2">
           <button
-            class="group relative flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-200 not-group-data-playing/box:pointer-events-none before:absolute before:-inset-1.5 hover:bg-gray-200 data-muted:bg-red-400/10 data-muted:text-red-400 dark:hover:bg-gray-700 dark:data-muted:bg-red-500/20 dark:data-muted:text-red-500"
+            class="group relative flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-200 before:absolute before:-inset-1.5 hover:bg-gray-200 data-muted:bg-red-400/10 data-muted:text-red-400 dark:hover:bg-gray-700 dark:data-muted:bg-red-500/20 dark:data-muted:text-red-500"
             id="demo-volume-button"
           >
             <svg
@@ -336,24 +336,149 @@ const filled = new Set([
             </svg>
           </button>
 
-          <input
-            class="[&::-webkit-slider-thumb]:-webkit-appearance-none w-full cursor-grab appearance-none overflow-hidden rounded-sm [-webkit-appearance:none] active:cursor-grabbing [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-0.5 [&::-moz-range-thumb]:translate-y-1.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:bg-blue-400 [&::-moz-range-thumb]:shadow-[-400px_0_0_405px_rgba(96,165,250,0.2)] dark:[&::-moz-range-thumb]:bg-blue-500 dark:[&::-moz-range-thumb]:shadow-[-400px_0_0_406px_rgba(59,130,246,0.15)] [&::-moz-range-track]:h-6 [&::-moz-range-track]:rounded-sm [&::-moz-range-track]:bg-gray-100 [&::-moz-range-track]:px-1.5 dark:[&::-moz-range-track]:bg-gray-700 [&::-webkit-slider-runnable-track]:h-6 [&::-webkit-slider-runnable-track]:rounded-sm [&::-webkit-slider-runnable-track]:bg-gray-100 [&::-webkit-slider-runnable-track]:px-1.5 dark:[&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-0.5 [&::-webkit-slider-thumb]:translate-y-1.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:bg-blue-400 [&::-webkit-slider-thumb]:shadow-[-400px_0_0_405px_rgba(96,165,250,0.2)] dark:[&::-webkit-slider-thumb]:bg-blue-500 dark:[&::-webkit-slider-thumb]:shadow-[-400px_0_0_406px_rgba(59,130,246,0.15)]"
-            id="demo-volume-slider"
-            min="0"
-            max="100"
-            type="range"
-            value="10"
+          <div class="relative h-6 w-full">
+            <span
+              class="pointer-events-none absolute top-1/2 left-1/10 z-10 size-0.75 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-2/10 z-10 size-0.75 -translate-x-px -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-3/10 z-10 size-0.75 -translate-x-px -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-4/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-5/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-6/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-7/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-8/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <span
+              class="pointer-events-none absolute top-1/2 left-9/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+            ></span>
+
+            <input
+              class="w-full cursor-grab appearance-none overflow-hidden rounded-sm [-webkit-appearance:none] active:cursor-grabbing [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-0.5 [&::-moz-range-thumb]:translate-y-1.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:bg-gray-200 [&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] dark:[&::-moz-range-thumb]:bg-gray-200 dark:[&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)] [&::-moz-range-track]:h-6 [&::-moz-range-track]:rounded-sm [&::-moz-range-track]:bg-gray-100 dark:[&::-moz-range-track]:bg-gray-700 [&::-webkit-slider-runnable-track]:h-6 [&::-webkit-slider-runnable-track]:rounded-sm [&::-webkit-slider-runnable-track]:bg-gray-100 dark:[&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-0.5 [&::-webkit-slider-thumb]:translate-y-1.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:bg-gray-200 [&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] [&::-webkit-slider-thumb]:[-webkit-appearance:none] dark:[&::-webkit-slider-thumb]:bg-gray-600 dark:[&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)]"
+              id="demo-volume-slider"
+              min="0"
+              max="100"
+              step="10"
+              type="range"
+              value="10"
+            />
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700" />
+
+      <div class="flex items-center justify-between p-3 pl-4">
+        <span class="text-[0.8125rem]/6 font-[550]">Motion</span>
+
+        <div class="flex size-6 items-center justify-center">
+          <Icon class="size-4" name="more-horizontal" />
+        </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-gray-700" />
+
+      <div class="flex flex-col gap-3 p-4">
+        <div class="flex h-25 w-full gap-2">
+          <div
+            class="relative size-full rounded-sm bg-gray-100 dark:bg-gray-700"
+          >
+          </div>
+
+          <div
+            class="relative size-full rounded-sm bg-gray-100 dark:bg-gray-700"
+          >
+          </div>
+        </div>
+
+        <div
+          class="relative h-8 w-full overflow-hidden rounded-md bg-gray-100 before:absolute before:h-full before:w-1/2 before:bg-gray-200 dark:bg-gray-700 dark:before:bg-gray-600"
+        >
+          <Icon
+            class="pointer-events-none absolute top-1/2 left-3 z-10 size-5 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            name="rabbit"
+          />
+
+          <span
+            class="pointer-events-none absolute top-1/2 left-1/4 z-10 size-1 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+          ></span>
+
+          <span
+            class="pointer-events-none absolute top-1/2 left-1/2 z-10 size-1 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+          ></span>
+
+          <span
+            class="pointer-events-none absolute top-1/2 right-1/4 z-10 size-1 translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+          ></span>
+
+          <Icon
+            class="pointer-events-none absolute top-1/2 right-3 z-10 size-5 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            name="turtle"
           />
         </div>
       </div>
 
       <hr class="border-gray-200 dark:border-gray-700" />
 
-      <div class="p-3 pl-4">
-        <span class="text-[0.8125rem]/[1.375rem] font-[550]">Animation</span>
+      <div class="flex items-center justify-between p-3 pl-4">
+        <span class="text-[0.8125rem]/6 font-[550]">Camera</span>
+
+        <div class="flex size-6 items-center justify-center">
+          <Icon class="size-4" name="more-horizontal" />
+        </div>
       </div>
 
       <hr class="border-gray-200 dark:border-gray-700" />
+
+      <div class="flex flex-col gap-2 p-4">
+        <div class="grid grid-cols-2 gap-2">
+          <div
+            class="relative flex h-6 w-full rounded-sm bg-gray-100 pl-5.5 text-[0.6875rem]/6 font-[450] text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <span class="absolute top-1/2 left-2 -translate-y-1/2">X</span>
+            <span>1025</span>
+          </div>
+
+          <div
+            class="relative flex h-6 w-full rounded-sm bg-gray-100 pl-5.5 text-[0.6875rem]/6 font-[450] text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <span class="absolute top-1/2 left-2 -translate-y-1/2">Y</span>
+            <span>520</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="h-14 w-full rounded-sm bg-gray-100 p-1 dark:bg-gray-700">
+          </div>
+
+          <div
+            class="relative flex h-6 w-full rounded-sm bg-gray-100 pl-5.5 text-[0.6875rem]/6 font-[450] text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <span class="absolute top-1/2 left-2 -translate-y-1/2">Z</span>
+            <span>100</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -492,8 +617,7 @@ const filled = new Set([
         };
 
         const handleTimeUpdate = () => {
-          const buffer = 0.44;
-          if (song.currentTime > song.duration - buffer) {
+          if (song.currentTime > song.duration - 0.44) {
             song.currentTime = 0;
             song.play();
           }
