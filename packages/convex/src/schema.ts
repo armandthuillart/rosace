@@ -36,7 +36,7 @@ export default defineSchema({
     expiresAt: v.number(),
   })
     .index("by_identifier", ["identifier"])
-    .index("by_expires", ["expiresAt"]),
+    .index("by_expires_at", ["expiresAt"]),
 
   customers: defineTable({
     userId: v.id("users"),

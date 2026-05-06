@@ -247,7 +247,7 @@ export type DataModel = {
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
-      by_expires: ["expiresAt", "_creationTime"];
+      by_expires_at: ["expiresAt", "_creationTime"];
       by_identifier: ["identifier", "_creationTime"];
     };
     searchIndexes: {};
