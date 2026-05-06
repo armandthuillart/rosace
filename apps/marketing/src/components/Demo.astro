@@ -73,7 +73,7 @@ const filled = new Set([
 
   <div
     class="group/box relative flex h-155 w-full max-w-294 justify-between gap-6 overflow-hidden rounded-4xl bg-gray-300 p-5 sm:rounded-[2.5rem] dark:bg-gray-900"
-    id="demo-box"
+    id="demo"
   >
     <div
       class="shadow-float xl:shadow-panel absolute left-5 z-50 flex h-145 w-3xs shrink-0 origin-left flex-col rounded-[1.25rem] bg-white max-sm:hidden xl:static xl:h-full dark:bg-gray-800"
@@ -313,7 +313,7 @@ const filled = new Set([
           <button
             aria-label="Play or pause track"
             class="shadow-track absolute inset-2 right-auto flex w-10 items-center justify-center rounded-md bg-white transition-colors duration-200 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
-            data-play-button
+            data-demo-toggle
           >
             <svg
               class="h-3.5 w-6 [--fill:var(--color-gray-500)] [--shimmer:var(--color-gray-200)] dark:[--fill:var(--color-gray-500)]"
@@ -717,58 +717,62 @@ const filled = new Set([
 <script>
   import gsap from "gsap";
 
-  const sm = 640;
-  const xl = 1280;
+  let sm = 640;
+  let xl = 1280;
+  let tl = gsap.timeline({ paused: true });
 
-  let tl: gsap.core.Timeline | null = null;
-  let playing = false;
+  let DEFAULT_VOLUME = 0.1;
 
-  const DEFAULT_VOLUME = 0.1;
+  let demo = document.getElementById("demo")!;
+  let song = document.getElementById("demo-audio") as HTMLAudioElement;
+  let vinyl = document.getElementById("demo-vinyl")!;
+  let toggles = document.querySelectorAll("[data-demo-toggle]")!;
 
-  const box = document.getElementById("demo-box")!;
-  const song = document.getElementById("demo-audio") as HTMLAudioElement;
-  const vinyl = document.getElementById("demo-vinyl")!;
-  const leftPanel = document.getElementById("demo-left-panel")!;
-  const rightPanel = document.getElementById("demo-right-panel")!;
-  const playButtons = document.querySelectorAll("[data-play-button]");
-  const volumeButton = document.getElementById("demo-volume-button")!;
-  const volumeSlider = document.getElementById(
-    "demo-volume-slider",
-  ) as HTMLInputElement;
+  tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
+
+  let panel = {
+    left: document.getElementById("demo-left-panel")!,
+    right: document.getElementById("demo-right-panel")!,
+  };
+
+  let volume = {
+    button: document.getElementById("demo-volume-button")!,
+    slider: document.getElementById("demo-volume-slider") as HTMLInputElement,
+  };
 
   song.volume = DEFAULT_VOLUME;
 
-  const updateMutedState = () => {
+  const maybeMute = () => {
     if (song.volume === 0) {
-      volumeButton.setAttribute("data-muted", "");
+      volume.button.setAttribute("data-muted", "");
     } else {
-      volumeButton.removeAttribute("data-muted");
+      volume.button.removeAttribute("data-muted");
     }
   };
 
   const handlePlayClick = () => {
-    const traces = document.querySelectorAll("[data-play-button] span");
-    if (playing) {
-      tl?.pause();
-      box.removeAttribute("data-playing");
+    const traces = document.querySelectorAll("[data-demo-toggle] span");
+
+    if (tl.isActive()) {
+      tl.pause();
+      demo.removeAttribute("data-playing");
       song.pause();
       traces.forEach((span) => span.classList.remove("animate-waveform"));
     } else {
-      tl?.play();
-      box.setAttribute("data-playing", "");
+      tl.play();
+      demo.setAttribute("data-playing", "");
       song.play();
       traces.forEach((span) => span.classList.add("animate-waveform"));
     }
-    playing = !playing;
   };
 
   const handleVolumeClick = () => {
     if (song.volume === 0) {
-      song.volume = parseInt(volumeSlider.value) / 100;
+      song.volume = parseInt(volume.slider.value) / 100;
     } else {
       song.volume = 0;
     }
-    updateMutedState();
+    maybeMute();
   };
 
   const handleTimeUpdate = () => {
@@ -779,14 +783,17 @@ const filled = new Set([
   };
 
   song.addEventListener("timeupdate", handleTimeUpdate);
-  playButtons.forEach((btn) => btn.addEventListener("click", handlePlayClick));
-  volumeButton.addEventListener("click", handleVolumeClick);
-  volumeSlider.addEventListener("input", (e) => {
-    song.volume = parseInt((e.target as HTMLInputElement).value) / 100;
-    updateMutedState();
+
+  volume.slider.addEventListener("input", ({ target }) => {
+    song.volume = parseInt((target as HTMLInputElement).value) / 100;
+    maybeMute();
   });
 
-  const mm = gsap.matchMedia();
+  volume.button.addEventListener("click", handleVolumeClick);
+
+  toggles.forEach((btn) => btn.addEventListener("click", handlePlayClick));
+
+  let mm = gsap.matchMedia();
 
   mm.add(
     {
@@ -797,24 +804,14 @@ const filled = new Set([
     (context) => {
       const { tablet } = context.conditions as { tablet: boolean };
 
-      tl = gsap.timeline();
-
-      tl.to(vinyl, { duration: 5, ease: "linear", repeat: -1, rotate: 360 });
-
-      if (playing) {
-        tl.play();
-      } else {
-        tl.pause();
-      }
-
       if (!tablet) {
         return;
       }
 
-      gsap.set([leftPanel, rightPanel], { clearProps: "all" });
+      gsap.set([panel.left, panel.right], { clearProps: "all" });
 
       const handleMouseEnter = () => {
-        gsap.to([leftPanel, rightPanel], {
+        gsap.to([panel.left, panel.right], {
           duration: 0.5,
           ease: "power3",
           scale: 1,
@@ -823,13 +820,13 @@ const filled = new Set([
       };
 
       const handleMouseLeave = () => {
-        gsap.to(leftPanel, {
+        gsap.to(panel.left, {
           duration: 0.5,
           ease: "power4.out",
           scale: 0.85,
           x: "-75%",
         });
-        gsap.to(rightPanel, {
+        gsap.to(panel.right, {
           duration: 0.5,
           ease: "power4.out",
           scale: 0.85,
@@ -837,14 +834,14 @@ const filled = new Set([
         });
       };
 
-      box.addEventListener("mouseenter", handleMouseEnter);
-      box.addEventListener("mouseleave", handleMouseLeave);
+      demo.addEventListener("mouseenter", handleMouseEnter);
+      demo.addEventListener("mouseleave", handleMouseLeave);
 
       return () => {
-        box.removeEventListener("mouseenter", handleMouseEnter);
-        box.removeEventListener("mouseleave", handleMouseLeave);
-        gsap.killTweensOf([leftPanel, rightPanel]);
-        gsap.set([leftPanel, rightPanel], { clearProps: "all" });
+        demo.removeEventListener("mouseenter", handleMouseEnter);
+        demo.removeEventListener("mouseleave", handleMouseLeave);
+        gsap.killTweensOf([panel.left, panel.right]);
+        gsap.set([panel.left, panel.right], { clearProps: "all" });
       };
     },
   );
