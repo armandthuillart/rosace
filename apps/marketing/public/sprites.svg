@@ -314,4 +314,22 @@
       stroke-width="2"
     />
   </symbol>
+
+  <symbol id="caret-right">
+    <path
+      d="M8.5 5.5q.5-.5 1 0l6 6q.4.5 0 1l-6 6a.7.7 0 1 1-1-1l5.4-5.5-5.4-5.5a1 1 0 0 1 0-1"
+    />
+  </symbol>
+
+  <symbol id="caret-left">
+    <path
+      d="M14.47 5.47a.75.75 0 1 1 1.06 1.06L10.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06l-6-6a.75.75 0 0 1 0-1.06z"
+    />
+  </symbol>
+
+  <symbol id="caret-down">
+    <path
+      d="M17.5 8.5a.7.7 0 0 1 1 1l-6 6q-.5.4-1 0l-6-6a.7.7 0 1 1 1-1l5.5 5.4z"
+    />
+  </symbol>
 </svg>

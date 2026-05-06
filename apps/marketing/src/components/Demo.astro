@@ -544,17 +544,69 @@ const filled = new Set([
       <hr class="border-gray-200 dark:border-gray-700" />
 
       <div class="flex flex-col gap-3 p-4">
-        <div
-          class="relative flex size-full h-25 w-full gap-2 rounded-sm bg-gray-100 dark:bg-gray-700"
-        >
+        <div class="flex h-6 gap-2">
+          <div
+            class="flex aspect-square h-full shrink-0 items-center justify-center rounded-sm bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <Icon class="size-3.5" name="caret-left" />
+          </div>
+
+          <div
+            class="relative flex size-full items-center rounded-sm border border-gray-100 px-1.5 dark:border-gray-700"
+          >
+            <span class="text-[0.6875rem] font-[450]">Anticipate</span>
+
+            <Icon
+              class="absolute top-1/2 right-1.5 size-3.5 -translate-y-1/2"
+              name="caret-down"
+            />
+          </div>
+
+          <div
+            class="flex aspect-square h-full shrink-0 items-center justify-center rounded-sm bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <Icon class="size-3.5" name="caret-right" />
+          </div>
         </div>
 
         <div
-          class="relative h-8 w-full overflow-hidden rounded-md bg-gray-100 before:absolute before:h-full before:w-1/2 before:bg-gray-200 dark:bg-gray-700 dark:before:bg-gray-600"
+          class="relative flex size-full h-25 w-full flex-col items-center justify-between gap-2 rounded-sm bg-gray-100 px-8 py-2.5 dark:bg-gray-700"
+        >
+          <div class="relative flex w-full items-center justify-between">
+            <div
+              class="absolute top-1/2 w-full -translate-y-1/2 border border-dashed border-gray-400 dark:border-gray-500"
+            >
+            </div>
+
+            <div
+              class="relative size-4 rounded-full bg-gray-500 dark:bg-gray-500"
+            >
+            </div>
+
+            <div class="relative size-4.5 rounded-xs bg-current"></div>
+          </div>
+
+          <div class="relative flex w-full items-center justify-between">
+            <div
+              class="absolute top-1/2 w-full -translate-y-1/2 border border-dashed border-gray-400 dark:border-gray-500"
+            >
+            </div>
+
+            <div class="relative size-4.5 rounded-xs bg-current"></div>
+
+            <div
+              class="relative size-4 rounded-full bg-gray-500 dark:bg-gray-500"
+            >
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative h-6 w-full overflow-hidden rounded-sm bg-gray-100 before:absolute before:h-full before:w-1/2 before:bg-gray-200 dark:bg-gray-700 dark:before:bg-gray-600"
         >
           <Icon
-            class="pointer-events-none absolute top-1/2 left-3 z-10 size-5 -translate-y-1/2 text-gray-500 dark:text-gray-400"
-            name="rabbit"
+            class="pointer-events-none absolute top-1/2 left-2 z-10 size-4 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            name="turtle"
           />
 
           <span
@@ -570,8 +622,8 @@ const filled = new Set([
           ></span>
 
           <Icon
-            class="pointer-events-none absolute top-1/2 right-3 z-10 size-5 -translate-y-1/2 text-gray-500 dark:text-gray-400"
-            name="turtle"
+            class="pointer-events-none absolute top-1/2 right-2 z-10 size-4 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            name="rabbit"
           />
         </div>
       </div>
