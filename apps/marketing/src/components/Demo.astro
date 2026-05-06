@@ -493,15 +493,15 @@ const filled = new Set([
 
           <div class="relative h-6 w-full">
             <span
-              class="pointer-events-none absolute top-1/2 left-1/10 z-10 size-0.75 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+              class="pointer-events-none absolute top-1/2 left-1/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
             ></span>
 
             <span
-              class="pointer-events-none absolute top-1/2 left-2/10 z-10 size-0.75 -translate-x-px -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+              class="pointer-events-none absolute top-1/2 left-2/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
             ></span>
 
             <span
-              class="pointer-events-none absolute top-1/2 left-3/10 z-10 size-0.75 -translate-x-px -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
+              class="pointer-events-none absolute top-1/2 left-3/10 z-10 size-0.75 -translate-x-0.5 -translate-y-1/2 rounded-full bg-gray-400 dark:bg-gray-500"
             ></span>
 
             <span
@@ -532,7 +532,7 @@ const filled = new Set([
 
             <input
               aria-label="Volume"
-              class="w-full cursor-grab appearance-none overflow-hidden rounded-sm [-webkit-appearance:none] active:cursor-grabbing [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-0.5 [&::-moz-range-thumb]:translate-y-1.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:bg-gray-200 [&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] dark:[&::-moz-range-thumb]:bg-gray-200 dark:[&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)] [&::-moz-range-track]:h-6 [&::-moz-range-track]:rounded-sm [&::-moz-range-track]:bg-gray-100 dark:[&::-moz-range-track]:bg-gray-700 [&::-webkit-slider-runnable-track]:h-6 [&::-webkit-slider-runnable-track]:rounded-sm [&::-webkit-slider-runnable-track]:bg-gray-100 dark:[&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-0.5 [&::-webkit-slider-thumb]:translate-y-1.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:bg-gray-200 [&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] [&::-webkit-slider-thumb]:[-webkit-appearance:none] dark:[&::-webkit-slider-thumb]:bg-gray-600 dark:[&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)]"
+              class="w-full cursor-grab appearance-none overflow-hidden rounded-sm [-webkit-appearance:none] active:cursor-grabbing [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-0.5 [&::-moz-range-thumb]:translate-y-1.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:bg-gray-200 [&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] dark:[&::-moz-range-thumb]:bg-gray-200 dark:[&::-moz-range-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)] [&::-moz-range-track]:h-6 [&::-moz-range-track]:rounded-sm [&::-moz-range-track]:bg-gray-100 dark:[&::-moz-range-track]:bg-gray-700 [&::-webkit-slider-runnable-track]:h-6 [&::-webkit-slider-runnable-track]:rounded-sm [&::-webkit-slider-runnable-track]:bg-gray-100 dark:[&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:translate-y-1.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:bg-gray-200 [&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-200)] [&::-webkit-slider-thumb]:[-webkit-appearance:none] dark:[&::-webkit-slider-thumb]:bg-gray-600 dark:[&::-webkit-slider-thumb]:shadow-[-400px_0_0_400px_var(--color-gray-600)]"
               id="demo-volume-slider"
               min="0"
               max="100"
@@ -741,6 +741,14 @@ const filled = new Set([
 
   song.volume = DEFAULT_VOLUME;
 
+  const updateMutedState = () => {
+    if (song.volume === 0) {
+      volumeButton.setAttribute("data-muted", "");
+    } else {
+      volumeButton.removeAttribute("data-muted");
+    }
+  };
+
   const handlePlayClick = () => {
     const traces = document.querySelectorAll("[data-play-button] span");
     if (playing) {
@@ -752,7 +760,6 @@ const filled = new Set([
       tl?.play();
       box.setAttribute("data-playing", "");
       song.play();
-      song.volume = DEFAULT_VOLUME;
       traces.forEach((span) => span.classList.add("animate-waveform"));
     }
     playing = !playing;
@@ -760,12 +767,11 @@ const filled = new Set([
 
   const handleVolumeClick = () => {
     if (song.volume === 0) {
-      volumeButton.removeAttribute("data-muted");
-      song.volume = DEFAULT_VOLUME;
+      song.volume = parseInt(volumeSlider.value) / 100;
     } else {
-      volumeButton.setAttribute("data-muted", "");
       song.volume = 0;
     }
+    updateMutedState();
   };
 
   const handleTimeUpdate = () => {
@@ -780,6 +786,7 @@ const filled = new Set([
   volumeButton.addEventListener("click", handleVolumeClick);
   volumeSlider.addEventListener("input", (e) => {
     song.volume = parseInt((e.target as HTMLInputElement).value) / 100;
+    updateMutedState();
   });
 
   const mm = gsap.matchMedia();
