@@ -1,0 +1,13 @@
+---
+interface Props {
+  variant: "scene" | "render";
+}
+
+let { variant } = Astro.props;
+---
+
+<div class="absolute inset-0 perspective-[1000px]">
+  <div class="relative size-full transform-3d" data-demo-camera>
+    <div class="flex size-full flex-col"></div>
+  </div>
+</div>

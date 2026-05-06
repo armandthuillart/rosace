@@ -1,5 +1,6 @@
 ---
 import Icon from "@components/Icon.astro";
+import Edit from "@components/Edit.astro";
 
 import songCoverImage from "@images/song-cover.webp";
 import vinylSleeveImage from "@images/vinyl-sleeve.webp";
@@ -296,17 +297,13 @@ const filled = new Set([
           <div
             class="aspect-9/16 shrink-0 overflow-hidden rounded-[.875rem] bg-[conic-gradient(var(--a)_25%,var(--b)_0_50%,var(--a)_0_75%,var(--b)_0)] bg-size-[1rem_1rem] bg-center [--a:var(--color-gray-200)] [--b:var(--color-gray-100)] max-sm:hidden dark:[--a:var(--color-gray-700)] dark:[--b:var(--color-gray-800)]"
           >
-            <div class="" id="layout-camera"></div>
+            <Edit variant="scene" />
           </div>
 
           <div
             class="shadow-panel relative shrink-0 rounded-[.875rem] bg-white max-sm:size-full sm:aspect-9/16 dark:bg-gray-800"
           >
-            <div class="absolute inset-0 perspective-[1000px]">
-              <div class="relative size-full transform-3d" id="scene-camera">
-                <div class="flex size-full flex-col"></div>
-              </div>
-            </div>
+            <Edit variant="render" />
           </div>
         </div>
 
