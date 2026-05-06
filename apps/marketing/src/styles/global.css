@@ -35,6 +35,8 @@
   --animate-smile-flip:
     smile-enter 1s ease-in-out 1.3s both, smile-exit 1s ease-in-out 3.6s forwards,
     smile-return 1s ease-in-out 4.3s forwards;
+  --animate-toggle-track: toggle-fill 0.3s ease-in-out 0.15s both;
+  --animate-toggle-thumb: toggle-on 0.75s ease-in-out 0.15s both;
   --animate-waveform: waveform 1s ease infinite;
   --color-blue-400: oklch(67% 0.183 249);
   --color-blue-500: oklch(62.7% 0.17 249);
@@ -545,5 +547,42 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes toggle-fill {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes toggle-on {
+  0% {
+    left: 0;
+    right: auto;
+    width: var(--size);
+  }
+  40% {
+    left: 0;
+    right: auto;
+    width: calc(var(--size) * 2);
+  }
+  60% {
+    left: calc(var(--size) + var(--diff));
+    right: auto;
+    width: calc(var(--size) - var(--diff));
+  }
+  80% {
+    left: calc(var(--size) - var(--diff));
+    right: auto;
+    width: calc(var(--size) + var(--diff));
+  }
+  100% {
+    left: calc(var(--size));
+    right: auto;
+    width: calc(var(--size));
   }
 }
