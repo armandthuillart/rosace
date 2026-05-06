@@ -47,7 +47,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "stripe": "^22.1.0",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
