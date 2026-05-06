@@ -7,7 +7,14 @@ let { variant } = Astro.props;
 ---
 
 <div class="absolute inset-0 perspective-[1000px]">
-  <div class="relative size-full transform-3d" data-demo-camera>
+  <div
+    class:list={[
+      "relative size-full transform-3d",
+      variant === "scene" &&
+        "outline-2 outline-orange-400 dark:outline-orange-500",
+    ]}
+    data-demo-camera
+  >
     <div class="flex size-full flex-col"></div>
   </div>
 </div>

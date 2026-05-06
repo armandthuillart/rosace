@@ -295,7 +295,7 @@ const filled = new Set([
 
         <div class="flex h-108 gap-4 sm:h-114 sm:w-132.5">
           <div
-            class="aspect-9/16 shrink-0 overflow-hidden rounded-[.875rem] bg-[conic-gradient(var(--a)_25%,var(--b)_0_50%,var(--a)_0_75%,var(--b)_0)] bg-size-[1rem_1rem] bg-center [--a:var(--color-gray-200)] [--b:var(--color-gray-100)] max-sm:hidden dark:[--a:var(--color-gray-700)] dark:[--b:var(--color-gray-800)]"
+            class="relative aspect-9/16 shrink-0 overflow-hidden rounded-[.875rem] bg-[conic-gradient(var(--a)_25%,var(--b)_0_50%,var(--a)_0_75%,var(--b)_0)] bg-size-[1rem_1rem] bg-center [--a:var(--color-gray-200)] [--b:var(--color-gray-100)] max-sm:hidden dark:[--a:var(--color-gray-700)] dark:[--b:var(--color-gray-800)]"
           >
             <Edit variant="scene" />
           </div>
@@ -735,6 +735,10 @@ const filled = new Set([
     right: document.getElementById("demo-right-panel")!,
   };
 
+  let scene = {
+    camera: document.querySelectorAll("[data-demo-camera]")!,
+  };
+
   let volume = {
     button: document.getElementById("demo-volume-button")!,
     slider: document.getElementById("demo-volume-slider") as HTMLInputElement,
@@ -754,13 +758,14 @@ const filled = new Set([
     const traces = document.querySelectorAll("[data-demo-toggle] span");
 
     if (tl.isActive()) {
-      tl.pause();
       demo.removeAttribute("data-playing");
+      gsap.to(tl, { timeScale: 0 });
       song.pause();
       traces.forEach((span) => span.classList.remove("animate-waveform"));
     } else {
       tl.play();
       demo.setAttribute("data-playing", "");
+      gsap.to(tl, { timeScale: 1 });
       song.play();
       traces.forEach((span) => span.classList.add("animate-waveform"));
     }
