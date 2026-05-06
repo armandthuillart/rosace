@@ -24,7 +24,7 @@ const envs = {
 };
 
 const KEYS = {
-  dashboard: ["CONVEX_SITE_URL", "CONVEX_URL", "MARKETING_URL"],
+  dashboard: ["CONVEX_SITE_URL", "CONVEX_URL", "DASHBOARD_URL", "MARKETING_URL"],
   marketing: ["DASHBOARD_URL", "MARKETING_URL"],
 } as const;
 
