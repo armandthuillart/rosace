@@ -47,7 +47,6 @@ const schema = defineSchema({
   }).index("by_token", ["token"]),
 
   verifications: defineTable({
-    type: v.string(),
     identifier: v.string(),
     value: v.string(),
     expiresAt: v.number(),
@@ -221,7 +220,6 @@ describe("convex store security/regression", () => {
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
-        type: "oauth:state",
         identifier: "state-1",
         value: JSON.stringify({
           provider: "google",
@@ -253,14 +251,12 @@ describe("convex store security/regression", () => {
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
-        type: "oauth:state",
         identifier: "state-bad",
         value: "{not-json",
         expiresAt: Date.now() + 1000,
       });
 
       await ctx.db.insert("verifications", {
-        type: "oauth:state",
         identifier: "state-expired",
         value: JSON.stringify({
           provider: "google",
@@ -413,7 +409,6 @@ describe("convex store security/regression", () => {
 
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
-        type: "oauth:handoff",
         identifier: "handoff-bad-json",
         value: "{not-json",
         expiresAt: Date.now() + 1000,

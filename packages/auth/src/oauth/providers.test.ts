@@ -7,7 +7,7 @@ const { createRemoteJWKSetMock, jwtVerifyMock, requireEnvMock, env, googlePayloa
     env: {
       APPLE_CLIENT_ID: "apple-client-id",
       APPLE_CLIENT_SECRET: "apple-client-secret",
-      CONVEX_SITE_URL: "https://app.example",
+      DASHBOARD_URL: "https://app.example",
       GOOGLE_CLIENT_ID: "google-client-id",
       GOOGLE_CLIENT_SECRET: "google-client-secret",
     } as Record<string, string>,

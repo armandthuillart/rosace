@@ -33,6 +33,7 @@ describe("convexClient security/regression guarantees", () => {
     vi.doMock("$env/dynamic/public", () => ({
       env: { PUBLIC_CONVEX_URL: "https://convex.example" },
     }));
+    vi.doMock("$app/environment", () => ({ browser: true }));
     vi.doMock("convex/browser", () => ({
       ConvexHttpClient: ConvexHttpClientMock,
     }));
@@ -71,7 +72,7 @@ describe("convexClient security/regression guarantees", () => {
 
     await flushAsyncWork();
 
-    expect(fetchMock).toHaveBeenCalledWith("https://convex.example/auth/session", {
+    expect(fetchMock).toHaveBeenCalledWith("/auth/session", {
       credentials: "include",
     });
     expect(clientInstance.clearAuth).toHaveBeenCalledTimes(1);
