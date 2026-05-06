@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { db } from "$lib/db";
   import { liveQuery } from "dexie";
+  import { db } from "$lib/db";
 
   let { data } = $props();
-  let projects = $derived(liveQuery(() => db.projects.toArray()));
+  let projects = liveQuery(() => db.projects.toArray());
 </script>
 
 <div>
-  Logged in as {data.user.email}. You have {projects.subscribe((p) => p.length)} projects.
+  Logged in as {data.user.email}. You have {($projects || []).length} projects.
 </div>
 
 <form method="POST">
