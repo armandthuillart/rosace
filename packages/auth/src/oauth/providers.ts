@@ -17,7 +17,7 @@ const AUTHORIZATION_ENDPOINT_BY_PROVIDER = {
 } satisfies Record<SocialProvider, string>;
 
 function getAuthorizationUrl(provider: SocialProvider): URL {
-  const redirectUri = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
+  const redirectUri = `${requireEnv("DASHBOARD_URL")}/auth/callback/${provider}`;
   const url = new URL(AUTHORIZATION_ENDPOINT_BY_PROVIDER[provider]);
 
   url.searchParams.set("response_type", "code");
@@ -42,7 +42,7 @@ async function exchangeCodeForProfile(
   provider: SocialProvider,
   options: ExchangeOptions,
 ): Promise<OAuthProfile> {
-  const redirectURI = `${requireEnv("CONVEX_SITE_URL")}/auth/callback/${provider}`;
+  const redirectURI = `${requireEnv("DASHBOARD_URL")}/auth/callback/${provider}`;
 
   if (provider === "google") {
     if (!options.verifier) {

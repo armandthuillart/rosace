@@ -1,5 +1,7 @@
 // @ts-ignore
 import { env } from "$env/dynamic/public";
+// @ts-ignore
+import { browser } from "$app/environment";
 import { ConvexHttpClient } from "convex/browser";
 
 import { Session } from "./index.types";
@@ -25,12 +27,16 @@ export function convexClient() {
       const convex = getClient();
 
       void (async () => {
+        if (!browser) {
+          return;
+        }
+
         if (!shouldFetch()) {
           convex.clearAuth();
           return;
         }
 
-        const res = await globalThis.fetch(`${CONVEX_URL}/auth/session`, {
+        const res = await globalThis.fetch("/auth/session", {
           credentials: "include",
         });
 

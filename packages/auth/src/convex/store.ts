@@ -250,7 +250,6 @@ const internalMutation = internalMutationGeneric({
 
       case "oauth:authorize": {
         await ctx.db.insert("verifications", {
-          type: "oauth:state",
           identifier: payload.state,
           value: JSON.stringify({
             provider: payload.provider,
@@ -330,7 +329,6 @@ const internalMutation = internalMutationGeneric({
         const code = randomToken();
 
         await ctx.db.insert("verifications", {
-          type: "oauth:handoff",
           identifier: code,
           value: JSON.stringify({
             sessionToken: session.sessionToken,
