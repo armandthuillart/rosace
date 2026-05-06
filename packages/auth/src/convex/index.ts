@@ -440,9 +440,9 @@ const registerRoutes = (http: HttpRouter) => {
     let userForm: string | null = null;
 
     if (contentType.startsWith("application/x-www-form-urlencoded")) {
-      const formData = await request.formData();
-      for (const [key, value] of Object.entries(formData)) {
-        if (typeof value === "string") params.set(key, value);
+      const body = new URLSearchParams(await request.text());
+      for (const [key, value] of body.entries()) {
+        params.set(key, value);
       }
       userForm = params.get("user");
     }
