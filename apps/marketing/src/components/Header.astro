@@ -95,15 +95,15 @@ const animate = Astro.url.pathname !== "/";
       </a>
     </div>
   </nav>
+
+  <script>
+    const header = document.querySelector("header");
+
+    const toggleShadow = () => {
+      header!.classList.toggle("not-dark:shadow-2xl", window.scrollY > 0);
+    };
+
+    toggleShadow();
+    window.addEventListener("scroll", toggleShadow, { passive: true });
+  </script>
 </header>
-
-<script>
-  const header = document.querySelector("header");
-
-  const toggleShadow = () => {
-    header!.classList.toggle("not-dark:shadow-2xl", window.scrollY > 0);
-  };
-
-  toggleShadow();
-  window.addEventListener("scroll", toggleShadow, { passive: true });
-</script>
