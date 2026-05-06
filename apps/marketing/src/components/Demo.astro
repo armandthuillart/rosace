@@ -747,13 +747,13 @@ const filled = new Set([
       tl?.pause();
       box.removeAttribute("data-playing");
       song.pause();
-      traces.forEach((span) => span.classList.remove("animate-playing"));
+      traces.forEach((span) => span.classList.remove("animate-waveform"));
     } else {
       tl?.play();
       box.setAttribute("data-playing", "");
       song.play();
       song.volume = DEFAULT_VOLUME;
-      traces.forEach((span) => span.classList.add("animate-playing"));
+      traces.forEach((span) => span.classList.add("animate-waveform"));
     }
     playing = !playing;
   };
