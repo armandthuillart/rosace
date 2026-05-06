@@ -5,7 +5,7 @@ import { createInterface } from "node:readline";
 
 import { Command } from "commander";
 
-type ServiceName = "astro" | "svelte" | "convex";
+type ServiceName = "astro" | "svelte" | "convex" | "ngrok";
 
 type Service = {
   name: ServiceName;
@@ -27,7 +27,7 @@ type BunColorApi = {
   color: (input: string, outputFormat?: "ansi") => string | null;
 };
 
-type Section = "scripts" | "apps" | "convex";
+type Section = "scripts" | "apps" | "convex" | "proxies";
 
 const bunColor = (globalThis as { Bun?: BunColorApi }).Bun?.color;
 
@@ -38,9 +38,10 @@ const SECTION_TITLES: Record<Section, string> = {
   scripts: "1. Scripts.",
   apps: "2. Clients.",
   convex: "3. Servers.",
+  proxies: "4. Proxies.",
 };
 
-const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
+const SECTION_ORDER: Section[] = ["scripts", "apps", "convex", "proxies"];
 
 const sectionLines = new Map<Section, string[]>(SECTION_ORDER.map((s) => [s, []]));
 
@@ -58,6 +59,7 @@ const SERVICE_COLORS: Record<ServiceName, string> = {
   astro: "#3D4FF5",
   svelte: "#FE3F01",
   convex: "#8D2676",
+  ngrok: "#00AEB3",
 };
 
 const ERROR_INCIDENT_DEBOUNCE_MS = 250;
@@ -79,6 +81,7 @@ const SERVICES: readonly Service[] = [
     command: ["vp", "exec", "convex", "dev"],
     cwd: "packages/convex",
   },
+  { name: "ngrok", command: ["ngrok", "http", "5173", "--log=stdout"] },
 ];
 
 function paint(color: string, text: string) {
@@ -169,7 +172,8 @@ function logGlobalSuccess(message: string) {
 }
 
 function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
-  const section: Section = service === "convex" ? "convex" : "apps";
+  const section: Section =
+    service === "convex" ? "convex" : service === "ngrok" ? "proxies" : "apps";
   const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
 
   const isInfo = kind === "info";
@@ -487,7 +491,9 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
   let serviceReadyMs: number | null = null;
   let isConvexBootstrapped = false;
 
-  if (service.name !== "convex") {
+  if (service.name === "ngrok") {
+    logLine("info", service.name, "Setting up proxy...");
+  } else if (service.name !== "convex") {
     logLine("info", service.name, "Starting the development server...");
   }
 
@@ -500,6 +506,14 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
 
   const onLine = (line: string, stream: "stdout" | "stderr") => {
     const cleanedLine = stripAnsi(line).trim();
+
+    if (service.name === "ngrok") {
+      if (!isReadyShown) {
+        isReadyShown = true;
+        logLine("success", service.name, `Ready in ${formatDuration(Date.now() - startedAt)}.`);
+      }
+      return;
+    }
 
     if (service.name === "convex") {
       const convexHttpError = cleanedLine.match(
@@ -624,17 +638,27 @@ async function runPrepare() {
   logGlobalSuccess(".env.* files were prepared successfully.");
 }
 
-function resolveServices(opts: { astro: boolean; svelte: boolean; convex: boolean }) {
+function resolveServices(opts: {
+  astro: boolean;
+  svelte: boolean;
+  convex: boolean;
+  ngrok: boolean;
+}) {
   const selected: ServiceName[] = [];
 
   if (opts.astro) selected.push("astro");
   if (opts.svelte) selected.push("svelte");
   if (opts.convex) selected.push("convex");
+  if (opts.ngrok) selected.push("ngrok");
 
-  const base = selected.length > 0 ? selected : (["astro", "svelte", "convex"] as ServiceName[]);
+  const base =
+    selected.length > 0 ? selected : (["astro", "svelte", "convex", "ngrok"] as ServiceName[]);
 
   const withDependencies = new Set<ServiceName>(base);
-  if (withDependencies.has("svelte")) withDependencies.add("convex");
+  if (withDependencies.has("svelte")) {
+    withDependencies.add("convex");
+    withDependencies.add("ngrok");
+  }
 
   return [...withDependencies].map((name) => findServiceByName(name));
 }
@@ -647,6 +671,7 @@ async function main() {
     .option("--astro", "Start astro")
     .option("--svelte", "Start svelte")
     .option("--convex", "Start convex")
+    .option("--ngrok", "Start ngrok tunnel")
     .allowExcessArguments(false)
     .parse(process.argv);
 
@@ -655,6 +680,7 @@ async function main() {
     astro: boolean;
     svelte: boolean;
     convex: boolean;
+    ngrok: boolean;
   }>();
 
   if (!opts.skipPrepare) await runPrepare();
