@@ -1,10 +1,13 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite-plus";
+import { defineConfig, loadEnv } from "vite-plus";
 
-export default defineConfig({
-  server: {
-    allowedHosts: [process.env.DASHBOARD_URL!.replace(/^https?:\/\//, "")],
-  },
-  plugins: [tailwindcss(), sveltekit()],
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  return {
+    server: {
+      allowedHosts: [env.DASHBOARD_URL.replace(/^https?:\/\//, "")],
+    },
+    plugins: [tailwindcss(), sveltekit()],
+  };
 });
