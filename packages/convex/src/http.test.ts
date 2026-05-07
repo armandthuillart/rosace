@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from "vite-plus/test";
 const { HttpRouterMock, registerRoutesMock, routerInstance } = vi.hoisted(() => {
   const routerInstance = { __type: "http-router" };
   return {
-    HttpRouterMock: vi.fn().mockImplementation(() => routerInstance),
+    HttpRouterMock: vi.fn().mockImplementation(function () {
+      return routerInstance;
+    }),
     registerRoutesMock: vi.fn(),
     routerInstance,
   };

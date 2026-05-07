@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from "vite-plus/test";
 const { RateLimiterMock, throttlerInstance } = vi.hoisted(() => {
   const throttlerInstance = { __type: "throttler-instance" };
   return {
-    RateLimiterMock: vi.fn().mockImplementation(() => throttlerInstance),
+    RateLimiterMock: vi.fn().mockImplementation(function () {
+      return throttlerInstance;
+    }),
     throttlerInstance,
   };
 });

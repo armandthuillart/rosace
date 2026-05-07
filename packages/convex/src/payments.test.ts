@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 
 const { StripeMock } = vi.hoisted(() => ({
-  StripeMock: vi.fn().mockImplementation(() => ({ __type: "stripe-client" })),
+  StripeMock: vi.fn().mockImplementation(function () {
+    return { __type: "stripe-client" };
+  }),
 }));
 
 vi.mock("stripe", () => ({
@@ -25,6 +27,7 @@ describe("payments module", () => {
 
   it("should only initialize once per module cache lifecycle", async () => {
     vi.resetModules();
+    StripeMock.mockClear();
     await import("./payments");
     await import("./payments");
 
