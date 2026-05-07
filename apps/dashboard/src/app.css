@@ -5,6 +5,10 @@
   --color-border: var(--border);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
 }
 
 :root {
@@ -12,13 +16,21 @@
   --border: oklch(92.5% 0 0);
   --foreground: oklch(29.3% 0 0);
   --muted: oklch(97% 0 0);
+  --muted-foreground: oklch(56.2% 0 0);
+  --primary: oklch(23.5% 0 0);
+  --primary-foreground: oklch(92.5% 0 0);
+  --secondary: oklch(92.5% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: oklch(29.3% 0 0);
-    --border: oklch(29.3% 0 0);
+    --background: oklch(23.5% 0 0);
+    --border: oklch(34.1% 0 0);
     --foreground: oklch(92.5% 0 0);
-    --muted: oklch(23.5% 0 0);
+    --muted: oklch(29.3% 0 0);
+    --muted-foreground: oklch(76.7% 0 0);
+    --primary: oklch(92.5% 0 0);
+    --primary-foreground: oklch(23.5% 0 0);
+    --secondary: oklch(34.1% 0 0);
   }
 }

@@ -1,7 +1,13 @@
 <script lang="ts">
   import type { SVGAttributes } from "svelte/elements";
 
-  const spriteNames = ["apple", "google", "rosace"] as const;
+  const spriteNames = [
+    "apple",
+    "google",
+    "rosace",
+    "view-off-slash",
+    "view",
+  ] as const;
 
   type IconName = (typeof spriteNames)[number];
 
