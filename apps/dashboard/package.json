@@ -9,7 +9,6 @@
     "preview": "vp preview"
   },
   "dependencies": {
-    "@fontsource/inter": "catalog:",
     "@repo/auth": "workspace:*",
     "@repo/helpers": "workspace:*",
     "convex": "catalog:",

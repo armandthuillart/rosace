@@ -510,6 +510,8 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
     if (service.name === "ngrok") {
       if (!isReadyShown) {
         isReadyShown = true;
+        const dashboardUrl = process.env.DASHBOARD_URL;
+        if (dashboardUrl) logLine("info", service.name, `- Tunnel: ${dashboardUrl}`);
         logLine("success", service.name, `Ready in ${formatDuration(Date.now() - startedAt)}.`);
       }
       return;
