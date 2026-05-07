@@ -1,26 +1,22 @@
 @import "tailwindcss";
-@import "@fontsource/inter/latin-400.css";
-@import "@fontsource/inter/latin-500.css";
-@import "@fontsource/inter/latin-600.css";
 
 @theme {
   --color-background: var(--background);
   --color-border: var(--border);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
-  --font-sans: "Inter";
 }
 
 :root {
   --background: oklch(100% 0 0);
   --border: oklch(92.5% 0 0);
-  --foreground: oklch(23.5% 0 0);
+  --foreground: oklch(29.3% 0 0);
   --muted: oklch(97% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: oklch(17.8% 0 0);
+    --background: oklch(29.3% 0 0);
     --border: oklch(29.3% 0 0);
     --foreground: oklch(92.5% 0 0);
     --muted: oklch(23.5% 0 0);
