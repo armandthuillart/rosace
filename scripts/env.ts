@@ -1,6 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { file, write } from "bun";
 
 function parseEnv(content: string) {
   const env: Record<string, string> = {};
@@ -16,11 +14,11 @@ function parseEnv(content: string) {
   return env;
 }
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = new URL("../", import.meta.url);
 
 const envs = {
-  dev: parseEnv(readFileSync(join(root, ".env.development"), "utf8")),
-  prod: parseEnv(readFileSync(join(root, ".env.production"), "utf8")),
+  dev: parseEnv(await file(new URL(".env.development", root)).text()),
+  prod: parseEnv(await file(new URL(".env.production", root)).text()),
 };
 
 const KEYS = {
@@ -64,7 +62,7 @@ for (const { file, from, keys, prefix } of targets) {
   const content =
     keys.map((key) => `${prefix[key] ?? ""}${key}=${envs[from][key] ?? ""}`).join("\n") + "\n";
 
-  writeFileSync(join(root, file), content, "utf8");
+  await write(new URL(file, root), content);
 }
 
 const files = targets.map((t) => t.file);
