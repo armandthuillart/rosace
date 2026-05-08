@@ -1,21 +1,23 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 
-const { actionMock, mutationMock, queryMock, registerRoutesMock, convexAuthMock } = vi.hoisted(() => {
-  const actionMock = vi.fn();
-  const mutationMock = vi.fn();
-  const queryMock = vi.fn();
-  const registerRoutesMock = vi.fn();
-  const convexAuthMock = vi.fn(() => ({
-    authStore: {
-      action: actionMock,
-      mutation: mutationMock,
-      query: queryMock,
-    },
-    registerRoutes: registerRoutesMock,
-  }));
+const { actionMock, mutationMock, queryMock, registerRoutesMock, convexAuthMock } = vi.hoisted(
+  () => {
+    const actionMock = vi.fn();
+    const mutationMock = vi.fn();
+    const queryMock = vi.fn();
+    const registerRoutesMock = vi.fn();
+    const convexAuthMock = vi.fn(() => ({
+      authStore: {
+        action: actionMock,
+        mutation: mutationMock,
+        query: queryMock,
+      },
+      registerRoutes: registerRoutesMock,
+    }));
 
-  return { actionMock, mutationMock, queryMock, registerRoutesMock, convexAuthMock };
-});
+    return { actionMock, mutationMock, queryMock, registerRoutesMock, convexAuthMock };
+  },
+);
 
 vi.mock("@repo/auth/convex", () => ({
   convexAuth: convexAuthMock,

@@ -27,7 +27,7 @@ type BunColorApi = {
   color: (input: string, outputFormat?: "ansi") => string | null;
 };
 
-type Section = "scripts" | "apps" | "convex" | "proxies";
+type Section = "scripts" | "apps" | "convex";
 
 const bunColor = (globalThis as { Bun?: BunColorApi }).Bun?.color;
 
@@ -38,10 +38,9 @@ const SECTION_TITLES: Record<Section, string> = {
   scripts: "1. Scripts.",
   apps: "2. Clients.",
   convex: "3. Servers.",
-  proxies: "4. Proxies.",
 };
 
-const SECTION_ORDER: Section[] = ["scripts", "apps", "convex", "proxies"];
+const SECTION_ORDER: Section[] = ["scripts", "apps", "convex"];
 
 const sectionLines = new Map<Section, string[]>(SECTION_ORDER.map((s) => [s, []]));
 
@@ -55,11 +54,10 @@ const appHasContent = new Set<ServiceName>();
 
 const MAX_LOGS_PER_BUCKET = 10;
 
-const SERVICE_COLORS: Record<ServiceName, string> = {
+const SERVICE_COLORS: Partial<Record<ServiceName, string>> = {
   astro: "#3D4FF5",
-  svelte: "#FE3F01",
-  convex: "#8D2676",
-  ngrok: "#00AEB3",
+  svelte: "#FF3E00",
+  convex: "#A855F7",
 };
 
 const ERROR_INCIDENT_DEBOUNCE_MS = 250;
@@ -72,6 +70,7 @@ const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
 const errorStates = new Map<ServiceName, ErrorIncident>();
 const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
 const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
+let svelteHasSeenPublic = false;
 
 const SERVICES: readonly Service[] = [
   { name: "svelte", command: ["vp", "run", "dashboard#dev"] },
@@ -172,12 +171,11 @@ function logGlobalSuccess(message: string) {
 }
 
 function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
-  const section: Section =
-    service === "convex" ? "convex" : service === "ngrok" ? "proxies" : "apps";
+  const section: Section = service === "convex" ? "convex" : "apps";
   const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "•";
 
   const isInfo = kind === "info";
-  const serviceTag = isInfo ? paint(SERVICE_COLORS[service], `[${service}]`) : `[${service}]`;
+  const serviceTag = isInfo ? paint(SERVICE_COLORS[service] ?? "", `[${service}]`) : `[${service}]`;
 
   const formattedLine = `${symbol} ${serviceTag} ${timestamp()} ${message}`;
 
@@ -491,9 +489,7 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
   let serviceReadyMs: number | null = null;
   let isConvexBootstrapped = false;
 
-  if (service.name === "ngrok") {
-    logLine("info", service.name, "Setting up proxy...");
-  } else if (service.name !== "convex") {
+  if (service.name !== "convex" && service.name !== "ngrok") {
     logLine("info", service.name, "Starting the development server...");
   }
 
@@ -511,8 +507,10 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
       if (!isReadyShown) {
         isReadyShown = true;
         const dashboardUrl = process.env.DASHBOARD_URL;
-        if (dashboardUrl) logLine("info", service.name, `- Tunnel: ${dashboardUrl}`);
-        logLine("success", service.name, `Ready in ${formatDuration(Date.now() - startedAt)}.`);
+        if (dashboardUrl && !svelteHasSeenPublic) {
+          svelteHasSeenPublic = true;
+          logLine("info", "svelte", `- Public: ${dashboardUrl}`);
+        }
       }
       return;
     }
@@ -572,6 +570,18 @@ function startService(service: Service, children: Set<ReturnType<typeof spawn>>)
 
     if (event.kind === "error") {
       queueErrorLine(service.name, event.message);
+      return;
+    }
+
+    if (
+      service.name === "svelte" &&
+      (event.message.startsWith("- Local:") || event.message.startsWith("- Network:"))
+    ) {
+      if (event.message.startsWith("- Local:")) hasSeenLocal = true;
+      if (event.message.startsWith("- Network:")) {
+        if (hasSeenNetwork) return;
+        hasSeenNetwork = true;
+      }
       return;
     }
 
