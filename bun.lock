@@ -28,6 +28,7 @@
         "@sveltejs/adapter-cloudflare": "catalog:",
         "@sveltejs/kit": "catalog:",
         "@tailwindcss/vite": "catalog:",
+        "@types/node": "catalog:",
         "@types/three": "catalog:",
         "svelte": "catalog:",
         "svelte-check": "catalog:",
@@ -67,6 +68,7 @@
       "devDependencies": {
         "@sveltejs/kit": "catalog:",
         "@types/node": "catalog:",
+        "convex-test": "catalog:",
       },
       "peerDependencies": {
         "convex": "catalog:",
