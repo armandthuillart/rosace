@@ -36,7 +36,7 @@
     "@types/three": "^0.184.1",
     "astro": "^6.3.1",
     "commander": "^14.0.3",
-    "convex": "^1.37.0",
+    "convex": "^1.38.0",
     "convex-test": "^0.0.51",
     "dexie": "^4.4.2",
     "gsap": "^3.12.5",
