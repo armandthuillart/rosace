@@ -8,6 +8,7 @@
   "dependencies": {
     "@convex-dev/rate-limiter": "catalog:",
     "@convex-dev/resend": "catalog:",
+    "@posthog/convex": "catalog:",
     "@react-email/components": "catalog:",
     "@react-email/render": "catalog:",
     "@repo/auth": "workspace:*",

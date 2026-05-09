@@ -103,5 +103,6 @@ export const internal: {
 
 export const components = componentsGeneric() as unknown as {
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+  posthog: import("@posthog/convex/_generated/component.js").ComponentApi<"posthog">;
   resend: import("@convex-dev/resend/_generated/component.js").ComponentApi<"resend">;
 };
