@@ -14,9 +14,6 @@ export default defineSchema({
     userId: v.id("users"),
     provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
     accountId: v.string(),
-    accessToken: v.optional(v.string()),
-    accessTokenExpiresAt: v.optional(v.number()),
-    refreshToken: v.optional(v.string()),
     password: v.optional(v.string()),
   })
     .index("by_provider_account", ["provider", "accountId"])

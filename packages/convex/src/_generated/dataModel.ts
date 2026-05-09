@@ -29,12 +29,9 @@ import type { GenericId } from "convex/values";
 export type DataModel = {
   accounts: {
     document: {
-      accessToken?: string;
-      accessTokenExpiresAt?: number;
       accountId: string;
       password?: string;
       provider: "apple" | "credentials" | "google";
-      refreshToken?: string;
       userId: Id<"users">;
       _id: Id<"accounts">;
       _creationTime: number;
@@ -42,12 +39,9 @@ export type DataModel = {
     fieldPaths:
       | "_creationTime"
       | "_id"
-      | "accessToken"
-      | "accessTokenExpiresAt"
       | "accountId"
       | "password"
       | "provider"
-      | "refreshToken"
       | "userId";
     indexes: {
       by_id: ["_id"];
