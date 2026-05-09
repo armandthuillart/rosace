@@ -1,6 +1,7 @@
 <script lang="ts">
   import { liveQuery } from "dexie";
   import { db } from "$lib/db";
+  import posthog from "posthog-js";
 
   let { data } = $props();
   let projects = liveQuery(() => db.projects.toArray());
@@ -14,6 +15,6 @@
   </div>
 {/if}
 
-<form method="POST">
+<form method="POST" onsubmit={() => posthog.reset()}>
   <button type="submit">Sign out</button>
 </form>

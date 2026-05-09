@@ -1,1 +1,1 @@
-/// <reference types="@repo/auth/svelte" />
+/// <reference types="@repo/auth/svelte/server" />

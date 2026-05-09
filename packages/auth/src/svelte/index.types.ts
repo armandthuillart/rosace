@@ -1,4 +1,4 @@
-import { GenericId } from "convex/values";
+import type { GenericId } from "convex/values";
 
 declare global {
   namespace App {
