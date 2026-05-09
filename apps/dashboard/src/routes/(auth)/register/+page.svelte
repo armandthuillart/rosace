@@ -13,22 +13,22 @@
 
   <div class="grid grid-cols-2 gap-3">
     <input
-      autocomplete="email"
+      autocomplete="given-name"
       class="bg-muted placeholder:text-muted-foreground/70 h-15 rounded-2xl px-5 font-semibold"
-      name="email"
+      name="firstName"
       placeholder="First name"
       required
-      type="email"
+      type="text"
       value={form?.firstName ?? ""}
     />
 
     <input
-      autocomplete="email"
+      autocomplete="family-name"
       class="bg-muted placeholder:text-muted-foreground/70 h-15 rounded-2xl px-5 font-semibold"
-      name="email"
+      name="lastName"
       placeholder="Last name"
       required
-      type="email"
+      type="text"
       value={form?.lastName ?? ""}
     />
   </div>
