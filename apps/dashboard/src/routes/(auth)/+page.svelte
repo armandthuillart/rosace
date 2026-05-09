@@ -1,12 +1,7 @@
 <script lang="ts">
   import { capitalize } from "@repo/helpers";
-  import type { LayoutProps } from "./$types";
-  import { page } from "$app/state";
-  import { resolve } from "$app/paths";
   import { PUBLIC_MARKETING_URL } from "$env/static/public";
   import Icon from "$lib/components/Icon.svelte";
-
-  let { children }: LayoutProps = $props();
 
   let providers = ["google", "apple"] as const;
 </script>
@@ -22,20 +17,7 @@
       <span class="text-2xl/10 font-bold">Rosace</span>
     </a>
 
-    <h1 class="text-center text-3xl font-bold">Login or sign up</h1>
-
-    <p class="mb-9 text-xl">
-      {page.url.pathname === "/register"
-        ? "Already have an account?"
-        : "Don't have an account yet?"}
-
-      <a
-        class="relative font-medium whitespace-nowrap outline-hidden transition duration-200 after:pointer-events-none after:absolute after:right-0 after:bottom-0 after:left-0 after:h-0.5 after:translate-y-px after:rounded-xs after:bg-blue-400 after:transition after:duration-200 after:content-[''] hover:text-blue-400 dark:after:bg-blue-500 dark:hover:text-blue-500"
-        href={page.url.pathname === "/register" ? "/login" : "/register"}
-      >
-        {page.url.pathname === "/register" ? "Sign in" : "Sign up"}
-      </a>.
-    </p>
+    <h1 class="mb-9 text-center text-3xl font-bold">Sign in</h1>
 
     {#each providers as provider}
       <a
@@ -49,14 +31,6 @@
         Continue with {capitalize(provider)}
       </a>
     {/each}
-
-    <div class="my-2 flex w-full items-center gap-6">
-      <hr class="border-border w-full border" />
-      <div class="font-semibold uppercase">Or</div>
-      <hr class="border-border w-full border" />
-    </div>
-
-    {@render children()}
 
     <div class="text-center">
       By continuing, you agree to our <a

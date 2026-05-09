@@ -1,4 +1,4 @@
-export type SocialProvider = "apple" | "google";
+export type OAuthProvider = "apple" | "google";
 
 export type OAuthProfile = {
   accountId: string;

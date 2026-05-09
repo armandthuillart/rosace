@@ -3,7 +3,7 @@ import { GenericId } from "convex/values";
 declare global {
   namespace App {
     interface Locals {
-      auth: () => Promise<Session>;
+      auth: () => Promise<Auth>;
     }
     interface PageData {
       user: User | null;
@@ -21,10 +21,10 @@ type User = {
   plan: "free" | "pro";
 };
 
-type Session = {
+type Auth = {
   user: User;
   token: string;
   expiresAt: number;
 } | null;
 
-export type { Session, User };
+export type { Auth, User };

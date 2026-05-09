@@ -56,30 +56,6 @@ export const internal: {
       "internal",
       {
         payload:
-          | {
-              email: string;
-              firstName: string;
-              lastName: string;
-              password: string;
-              type: "credentials:register";
-            }
-          | { email: string; type: "credentials:login" }
-          | { email: string; password: string; type: "credentials:login" }
-          | {
-              code: string;
-              email: string;
-              firstName?: string;
-              lastName?: string;
-              password: string;
-              type: "credentials:verify-email";
-            }
-          | { email: string; type: "credentials:request-password-reset" }
-          | {
-              code: string;
-              email: string;
-              newPassword: string;
-              type: "credentials:reset-password";
-            }
           | { token: string; type: "session:revoke" }
           | {
               expiresAt: number;

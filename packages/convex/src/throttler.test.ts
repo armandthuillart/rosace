@@ -28,11 +28,6 @@ describe("throttler", () => {
   it("should construct the RateLimiter with all throttle rules", () => {
     expect(RateLimiterMock).toHaveBeenCalledTimes(1);
     expect(RateLimiterMock).toHaveBeenCalledWith("rate-limiter-component", {
-      login: {
-        kind: "fixed window",
-        period: 10,
-        rate: 3,
-      },
       logout: {
         kind: "fixed window",
         period: 60,

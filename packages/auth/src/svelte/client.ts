@@ -4,7 +4,7 @@ import { env } from "$env/dynamic/public";
 import { browser } from "$app/environment";
 import { ConvexHttpClient } from "convex/browser";
 
-import { Session } from "./index.types";
+import { Auth } from "./index.types";
 
 const CONVEX_URL = env.PUBLIC_CONVEX_URL!;
 
@@ -45,7 +45,7 @@ export function convexClient() {
           return;
         }
 
-        const session = (await res.json()) as Session;
+        const session = (await res.json()) as Auth;
 
         if (session && session.token) {
           convex.setAuth(session.token);

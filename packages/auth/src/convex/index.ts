@@ -1,47 +1,25 @@
-// TODO: a working but vibe-coded mess to rewrite
-
 import { throttler } from "@repo/convex/throttler";
 import { requireEnv } from "@repo/helpers";
 import { httpActionGeneric, type HttpRouter } from "convex/server";
-import * as v from "valibot";
 
 import {
   createPKCE,
   exchangeCodeForProfile,
   getAuthorizationUrl,
-  type SocialProvider,
+  type OAuthProvider,
 } from "../oauth/providers";
 import { authStore, getPublicJwks } from "./store";
 
 const STORE_QUERY = "auth:query" as const;
-const STORE_ACTION = "auth:action" as const;
 const STORE_MUTATION = "auth:mutation" as const;
 
 const OAUTH_STATE_TTL_MS = 15 * 60_000;
-
-type Provider = "credentials" | SocialProvider;
 
 type SessionPayload = {
   accessToken: string;
   expiresAt: number;
   sessionToken: string;
 };
-
-type ProviderCheck = { blocked: Response; provider: null } | { blocked: null; provider: Provider };
-
-const LoginSchema = v.pipe(
-  v.object({
-    email: v.pipe(v.string(), v.trim(), v.email()),
-    password: v.pipe(v.string(), v.minLength(8)),
-    firstName: v.optional(v.pipe(v.string(), v.trim(), v.minLength(1))),
-    lastName: v.optional(v.pipe(v.string(), v.trim(), v.minLength(1))),
-  }),
-  v.transform((input) => ({
-    ...input,
-    email: input.email.toLowerCase(),
-    flow: input.firstName && input.lastName ? ("register" as const) : ("login" as const),
-  })),
-);
 
 function readCookies(request: Request): Record<string, string> {
   const header = request.headers.get("cookie") ?? "";
@@ -73,6 +51,7 @@ function verifyCsrf(request: Request): Response | null {
 
   let requestOrigin: string;
   let trustedOrigin: string;
+
   try {
     trustedOrigin = new URL(requireEnv("DASHBOARD_URL")).origin;
     requestOrigin = new URL(origin).origin;
@@ -95,28 +74,17 @@ function getClientIp(request: Request): string {
   );
 }
 
-function requireAllowedProvider(request: Request, allowed: readonly Provider[]): ProviderCheck {
-  const provider = new URL(request.url).pathname.replace(/\/+$/, "").split("/").at(-1);
+function requireAllowedProvider(request: Request, allowed: readonly OAuthProvider[]) {
+  const provider = new URL(request.url).pathname.replace(/\/+$/, "").split("/").at(-1) as
+    | OAuthProvider
+    | undefined;
 
-  if (!provider) {
-    return {
-      provider: null,
-      blocked: new Response("Pick a provider.", { status: 400 }),
-    };
+  if (!provider || !allowed.includes(provider)) {
+    const label = provider ? provider.charAt(0).toUpperCase() + provider.slice(1) : "Provider";
+    return new Response(`${label} is not supported.`, { status: 400 });
   }
 
-  if (!allowed.includes(provider as Provider)) {
-    const label = provider.charAt(0).toUpperCase() + provider.slice(1);
-    return {
-      provider: null,
-      blocked: new Response(`${label} is not supported.`, { status: 400 }),
-    };
-  }
-
-  return {
-    provider: provider as Provider,
-    blocked: null,
-  };
+  return provider;
 }
 
 function sessionCookies(payload: SessionPayload) {
@@ -261,8 +229,8 @@ const registerRoutes = (http: HttpRouter) => {
     pathPrefix: "/auth/login/",
     method: "GET",
     handler: httpActionGeneric(async (ctx, request) => {
-      const checked = requireAllowedProvider(request, ["apple", "google"]);
-      if (checked.blocked) return checked.blocked;
+      const provider = requireAllowedProvider(request, ["apple", "google"]);
+      if (provider instanceof Response) return provider;
 
       const ipAddress = getClientIp(request);
 
@@ -278,8 +246,6 @@ const registerRoutes = (http: HttpRouter) => {
           },
         });
       }
-
-      const provider = checked.provider as SocialProvider;
       const url = getAuthorizationUrl(provider);
 
       const state = crypto.randomUUID().replace(/-/g, "");
@@ -315,123 +281,9 @@ const registerRoutes = (http: HttpRouter) => {
     }),
   });
 
-  http.route({
-    pathPrefix: "/auth/login/",
-    method: "POST",
-    handler: httpActionGeneric(async (ctx, request) => {
-      const checked = requireAllowedProvider(request, ["credentials"]);
-      if (checked.blocked) return checked.blocked;
-
-      const blocked = verifyCsrf(request);
-      if (blocked) return blocked;
-
-      const ipAddress = getClientIp(request);
-
-      const { ok, retryAfter } = await throttler.limit(ctx, "login", {
-        key: ipAddress,
-      });
-
-      if (!ok) {
-        return new Response(null, {
-          status: 429,
-          headers: {
-            "X-Retry-After": String(Math.ceil((retryAfter! - Date.now()) / 1000)),
-          },
-        });
-      }
-
-      let payload: v.InferOutput<typeof LoginSchema>;
-      try {
-        payload = v.parse(LoginSchema, await request.json());
-      } catch {
-        return new Response(null, { status: 400 });
-      }
-
-      let session: SessionPayload;
-      try {
-        if (payload.flow === "register") {
-          const firstName = payload.firstName;
-          const lastName = payload.lastName;
-          if (!firstName || !lastName) return new Response(null, { status: 400 });
-
-          const { hash } = (await ctx.runAction(
-            STORE_ACTION as unknown as never,
-            {
-              payload: {
-                type: "password:hash",
-                password: payload.password,
-              },
-            } as never,
-          )) as { hash: string };
-
-          session = (await ctx.runMutation(
-            STORE_MUTATION as unknown as never,
-            {
-              payload: {
-                type: "credentials:register",
-                email: payload.email,
-                password: hash,
-                firstName,
-                lastName,
-              },
-            } as never,
-          )) as SessionPayload;
-        } else {
-          const account = (await ctx.runMutation(
-            STORE_MUTATION as unknown as never,
-            {
-              payload: {
-                type: "credentials:login",
-                email: payload.email,
-              },
-            } as never,
-          )) as { userId: string; password: string } | null;
-
-          if (!account) return new Response(null, { status: 401 });
-
-          const { ok } = (await ctx.runAction(
-            STORE_ACTION as unknown as never,
-            {
-              payload: {
-                type: "password:verify",
-                password: payload.password,
-                hash: account.password,
-              },
-            } as never,
-          )) as { ok: boolean };
-
-          if (!ok) return new Response(null, { status: 401 });
-
-          session = (await ctx.runMutation(
-            STORE_MUTATION as unknown as never,
-            {
-              payload: {
-                type: "credentials:login",
-                email: payload.email,
-                password: account.password,
-              },
-            } as never,
-          )) as SessionPayload;
-        }
-      } catch {
-        return new Response(null, { status: 401 });
-      }
-
-      const headers = new Headers({ "content-type": "application/json" });
-      for (const cookie of sessionCookies(session)) headers.append("Set-Cookie", cookie);
-
-      return new Response(JSON.stringify({ ok: true }), {
-        headers,
-        status: 200,
-      });
-    }),
-  });
-
   const callbackAction = httpActionGeneric(async (ctx, request) => {
-    const checked = requireAllowedProvider(request, ["apple", "google"]);
-    if (checked.blocked) return checked.blocked;
-
-    const provider = checked.provider as SocialProvider;
+    const provider = requireAllowedProvider(request, ["apple", "google"]);
+    if (provider instanceof Response) return provider;
 
     const url = new URL(request.url);
     const params = new URLSearchParams(url.search);

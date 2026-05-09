@@ -4,6 +4,6 @@ import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ parent }) => {
   const data = await parent();
-  if (!data.user) throw redirect(302, "/login");
+  if (!data.user) throw redirect(302, "/");
   return { user: data.user };
 };

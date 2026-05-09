@@ -8,7 +8,7 @@ import {
 import { GenericId, v } from "convex/values";
 import { SignJWT, importJWK, type JWK } from "jose";
 
-import { Session, User } from "../svelte/index.types";
+import { Auth, User } from "../svelte/index.types";
 import { internalAction } from "./crypto";
 import { Account, Verification } from "./index.types";
 
@@ -115,29 +115,13 @@ const internalQuery = internalQueryGeneric({
       user,
       token: await signJWT(user._id),
       expiresAt: session.expiresAt,
-    } satisfies Session;
+    } satisfies Auth;
   },
 });
 
 const internalMutation = internalMutationGeneric({
   args: {
     payload: v.union(
-      v.object({
-        type: v.literal("credentials:register"),
-        email: v.string(),
-        firstName: v.string(),
-        lastName: v.string(),
-        password: v.string(),
-      }),
-      v.object({
-        type: v.literal("credentials:login"),
-        email: v.string(),
-      }),
-      v.object({
-        type: v.literal("credentials:login"),
-        email: v.string(),
-        password: v.string(),
-      }),
       v.object({
         type: v.literal("session:revoke"),
         token: v.string(),
@@ -172,65 +156,6 @@ const internalMutation = internalMutationGeneric({
   },
   handler: async (ctx, { payload }) => {
     switch (payload.type) {
-      case "credentials:register": {
-        const alreadyExists = (await ctx.db
-          .query("users")
-          .withIndex("by_email", (q) => q.eq("email", payload.email))
-          .first()) as User | null;
-
-        if (alreadyExists) {
-          throw new Error("Account already exists.");
-        }
-
-        const userId = await ctx.db.insert("users", {
-          email: payload.email,
-          emailVerified: false,
-          firstName: payload.firstName,
-          lastName: payload.lastName,
-          plan: "free",
-        });
-
-        await ctx.db.insert("accounts", {
-          accountId: payload.email,
-          password: payload.password,
-          provider: "credentials",
-          userId,
-        });
-
-        return createSession(ctx, userId);
-      }
-
-      case "credentials:login": {
-        const user = (await ctx.db
-          .query("users")
-          .withIndex("by_email", (q) => q.eq("email", payload.email))
-          .first()) as User | null;
-
-        if (!user) {
-          throw new Error("Account does not exist.");
-        }
-
-        const account = (await ctx.db
-          .query("accounts")
-          .withIndex("by_user", (q) => q.eq("userId", user._id))
-          .filter((q) => q.eq(q.field("provider"), "credentials"))
-          .first()) as Account | null;
-
-        if (!account || !account.password) {
-          throw new Error("Account not found.");
-        }
-
-        if (!("password" in payload)) {
-          return { password: account.password, userId: user._id };
-        }
-
-        if (account.password !== payload.password) {
-          throw new Error("Invalid credentials.");
-        }
-
-        return createSession(ctx, user._id);
-      }
-
       case "session:revoke": {
         const session = (await ctx.db
           .query("sessions")
@@ -264,10 +189,7 @@ const internalMutation = internalMutationGeneric({
 
       case "oauth:verify": {
         const entry = await findAndSweepVerification(ctx, payload.state);
-
-        if (!entry) {
-          return null;
-        }
+        if (!entry) return null;
 
         await ctx.db.delete(entry._id);
 
@@ -343,10 +265,7 @@ const internalMutation = internalMutationGeneric({
 
       case "oauth:claim": {
         const entry = await findAndSweepVerification(ctx, payload.code);
-
-        if (!entry) {
-          return null;
-        }
+        if (!entry) return null;
 
         await ctx.db.delete(entry._id);
 

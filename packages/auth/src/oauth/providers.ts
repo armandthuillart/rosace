@@ -7,16 +7,16 @@ import type {
   ExchangeOptions,
   GoogleIdToken,
   OAuthProfile,
-  SocialProvider,
+  OAuthProvider,
 } from "./providers.types";
-export type { SocialProvider } from "./providers.types";
+export type { OAuthProvider } from "./providers.types";
 
 const AUTHORIZATION_ENDPOINT_BY_PROVIDER = {
   apple: "https://appleid.apple.com/auth/authorize",
   google: "https://accounts.google.com/o/oauth2/v2/auth",
-} satisfies Record<SocialProvider, string>;
+} satisfies Record<OAuthProvider, string>;
 
-function getAuthorizationUrl(provider: SocialProvider): URL {
+function getAuthorizationUrl(provider: OAuthProvider): URL {
   const redirectUri = `${requireEnv("DASHBOARD_URL")}/auth/callback/${provider}`;
   const url = new URL(AUTHORIZATION_ENDPOINT_BY_PROVIDER[provider]);
 
@@ -39,7 +39,7 @@ const APPLE_JWKS = createRemoteJWKSet(new URL("https://appleid.apple.com/auth/ke
 const GOOGLE_JWKS = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 
 async function exchangeCodeForProfile(
-  provider: SocialProvider,
+  provider: OAuthProvider,
   options: ExchangeOptions,
 ): Promise<OAuthProfile> {
   const redirectURI = `${requireEnv("DASHBOARD_URL")}/auth/callback/${provider}`;
