@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --color-accent: var(--accent);
   --color-background: var(--background);
   --color-border: var(--border);
   --color-foreground: var(--foreground);
@@ -9,9 +10,11 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
 }
 
 :root {
+  --accent: oklch(67% 0.183 249);
   --background: oklch(100% 0 0);
   --border: oklch(92.5% 0 0);
   --foreground: oklch(29.3% 0 0);
@@ -24,6 +27,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --accent: oklch(62.7% 0.17 249);
     --background: oklch(23.5% 0 0);
     --border: oklch(34.1% 0 0);
     --foreground: oklch(92.5% 0 0);
