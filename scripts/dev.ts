@@ -50,6 +50,8 @@ const WORKSPACE_ROOT = process.cwd();
 
 const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
 
+let verbose = false;
+
 const errorStates = new Map<ServiceName, ErrorIncident>();
 const lastErrorSignatures = new Map<ServiceName, LastErrorSignature>();
 const suppressErrorIncidentsUntilMs = new Map<ServiceName, number>();
@@ -113,11 +115,11 @@ function timestamp() {
 }
 
 function logGlobalInfo(message: string) {
-  writeLine(`[${timestamp()}] · ${message}`);
+  writeLine(verbose ? `[${timestamp()}] · ${message}` : `· ${message}`);
 }
 
 function logGlobalSuccess(message: string) {
-  writeLine(paint(SUCCESS_GREEN, `[${timestamp()}] ✓ ${message}`));
+  writeLine(paint(SUCCESS_GREEN, verbose ? `[${timestamp()}] ✓ ${message}` : `✓ ${message}`));
 }
 
 function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
@@ -126,7 +128,9 @@ function logLine(kind: "info" | "success" | "error", service: ServiceName, messa
   const isInfo = kind === "info";
   const serviceTag = isInfo ? paint(SERVICE_COLORS[service] ?? "", `[${service}]`) : `[${service}]`;
 
-  const formattedLine = `[${timestamp()}] ${symbol} ${serviceTag} ${message}`;
+  const formattedLine = verbose
+    ? `[${timestamp()}] ${symbol} ${serviceTag} ${message}`
+    : `${symbol} ${serviceTag} ${message}`;
 
   const outputLine =
     kind === "success"
@@ -139,8 +143,9 @@ function logLine(kind: "info" | "success" | "error", service: ServiceName, messa
 }
 
 function logConvexHttpError(method: string, path: string, cause: string) {
-  const line1 = `[${timestamp()}] ✖ [convex] ${method.toUpperCase()} / 500`;
-  const line2 = `[${timestamp()}] ✖ [convex] ↳ route ${path} (${cause})`;
+  const ts = verbose ? `[${timestamp()}] ` : "";
+  const line1 = `${ts}✖ [convex] ${method.toUpperCase()} / 500`;
+  const line2 = `${ts}✖ [convex] ↳ route ${path} (${cause})`;
 
   writeLine(`\x1b[1;31m${line1}${RESET}`);
   writeLine(`\x1b[1;31m${line2}${RESET}`);
@@ -245,20 +250,37 @@ function toFriendlyMessage(
     return { kind: "info" as const, message: "Preparing functions..." };
   }
 
-  if (service === "convex" && /Convex functions ready!/i.test(text)) {
-    return { kind: "success" as const, message: "Ready in 0ms." };
+  if (
+    /^VITE\+\s+v[\d.]+$/i.test(text) ||
+    /^[➜┃│]\s+Network/i.test(text) ||
+    (service !== "convex" && /^.+watching for file changes/i.test(text)) ||
+    /cache disabled$/i.test(text) ||
+    /^\$\s/.test(text) ||
+    /ready in\s+\d+\s*ms/i.test(text)
+  ) {
+    return null;
   }
 
-  const isNoise =
-    /^\[vite\]\s+connected\.?$/i.test(text) ||
-    /^VITE\+\s+v[\d.]+$/i.test(text) ||
-    /^➜\s+Network:/i.test(text) ||
-    /^\d{1,2}:\d{2}:\d{2}\s+\[(types|content)\]/i.test(text) ||
-    /^.+watching for file changes/i.test(text) ||
-    /cache disabled$/i.test(text) ||
-    /^\$\s/.test(text);
+  if (service === "convex" && /Filesystem changed during push/i.test(text)) {
+    return { kind: "info" as const, message: text };
+  }
 
-  if (isNoise) return null;
+  if (verbose) {
+    if (/^\[vite\]\s+connected\.?$/i.test(text)) {
+      return { kind: "info" as const, message: "Vite is connected." };
+    }
+    if (/^\d{1,2}:\d{2}:\d{2}\s+\[types\] Generated/i.test(text)) {
+      return { kind: "success" as const, message: "Successfully generated types." };
+    }
+    if (/^\d{1,2}:\d{2}:\d{2}\s+\[content\] Syncing content/i.test(text)) {
+      return { kind: "info" as const, message: "Syncing content collection..." };
+    }
+    if (/^\d{1,2}:\d{2}:\d{2}\s+\[content\] Synced content/i.test(text)) {
+      return { kind: "success" as const, message: "Content collection synced." };
+    }
+    return { kind: "info" as const, message: stripLinePrefix(text) };
+  }
+
   if (stream === "stderr") return { kind: "error" as const, message: text };
 
   return null;
@@ -330,6 +352,17 @@ function handleServiceLine(
 ) {
   const cleanedLine = stripAnsi(line).trim();
 
+  const portInUseMatch = cleanedLine.match(/Port\s+(\d+)\s+is in use/i);
+  if (portInUseMatch) {
+    const port = portInUseMatch[1];
+    const result = Bun.spawnSync(["lsof", "-ti", `:${port}`]);
+    if (result.exitCode === 0 && result.stdout.length > 0) {
+      const pids = result.stdout.toString().trim().split("\n").filter(Boolean);
+      if (pids.length > 0) Bun.spawnSync(["kill", "-9", ...pids]);
+    }
+    return;
+  }
+
   if (service.name === "convex") {
     const convexHttpError = cleanedLine.match(
       /\[CONVEX H\((GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+([^)]+)\)\]\s+Uncaught Error:\s+(.+)$/i,
@@ -358,17 +391,16 @@ function handleServiceLine(
     }
 
     if (/Convex functions ready!/i.test(cleanedLine)) {
+      const convexReadyMatch = cleanedLine.match(/Convex functions ready!\s*\(([\d.]+)s\)/i);
+      const duration = convexReadyMatch
+        ? formatDuration(Math.round(Number(convexReadyMatch[1]) * 1000))
+        : "0ms";
+
       if (!state.isConvexBootstrapped) {
         state.isConvexBootstrapped = true;
-
-        const convexReadyMatch = cleanedLine.match(/Convex functions ready!\s*\(([\d.]+)s\)/i);
-
-        if (convexReadyMatch) {
-          const ms = Math.round(Number(convexReadyMatch[1]) * 1000);
-          logLine("success", service.name, `Ready in ${formatDuration(ms)}.`);
-        } else {
-          logLine("success", service.name, `Ready in ${formatDuration(0)}.`);
-        }
+        logLine("success", service.name, `Ready in ${duration}.`);
+      } else {
+        logLine("success", service.name, `Push complete in ${duration}.`);
       }
       return;
     }
@@ -667,6 +699,7 @@ async function main() {
     .option("--astro", "Start astro")
     .option("--svelte", "Start svelte")
     .option("--convex", "Start convex")
+    .option("--verbose", "Show timestamps in output")
     .allowExcessArguments(false)
     .parse(process.argv);
 
@@ -675,7 +708,10 @@ async function main() {
     astro: boolean;
     svelte: boolean;
     convex: boolean;
+    verbose: boolean;
   }>();
+
+  verbose = opts.verbose;
 
   if (!opts.skipPrepare) await runPrepare();
 
