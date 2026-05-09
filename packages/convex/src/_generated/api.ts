@@ -41,16 +41,6 @@ export const api: {
  */
 export const internal: {
   auth: {
-    action: FunctionReference<
-      "action",
-      "internal",
-      {
-        payload:
-          | { password: string; type: "password:hash" }
-          | { hash: string; password: string; type: "password:verify" };
-      },
-      any
-    >;
     mutation: FunctionReference<
       "mutation",
       "internal",

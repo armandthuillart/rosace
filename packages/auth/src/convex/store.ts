@@ -9,7 +9,6 @@ import { GenericId, v } from "convex/values";
 import { SignJWT, importJWK, type JWK } from "jose";
 
 import { Auth, User } from "../svelte/index.types";
-import { internalAction } from "./crypto";
 import { Account, Verification } from "./index.types";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30;
@@ -294,7 +293,6 @@ const internalMutation = internalMutationGeneric({
 
 const authStore = {
   mutation: internalMutation,
-  action: internalAction,
   query: internalQuery,
 };
 

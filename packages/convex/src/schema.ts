@@ -12,9 +12,8 @@ export default defineSchema({
 
   accounts: defineTable({
     userId: v.id("users"),
-    provider: v.union(v.literal("apple"), v.literal("credentials"), v.literal("google")),
+    provider: v.union(v.literal("apple"), v.literal("google")),
     accountId: v.string(),
-    password: v.optional(v.string()),
   })
     .index("by_provider_account", ["provider", "accountId"])
     .index("by_user", ["userId"]),

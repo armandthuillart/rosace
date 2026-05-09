@@ -30,19 +30,12 @@ export type DataModel = {
   accounts: {
     document: {
       accountId: string;
-      password?: string;
-      provider: "apple" | "credentials" | "google";
+      provider: "apple" | "google";
       userId: Id<"users">;
       _id: Id<"accounts">;
       _creationTime: number;
     };
-    fieldPaths:
-      | "_creationTime"
-      | "_id"
-      | "accountId"
-      | "password"
-      | "provider"
-      | "userId";
+    fieldPaths: "_creationTime" | "_id" | "accountId" | "provider" | "userId";
     indexes: {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];

@@ -243,23 +243,6 @@ describe("convex auth routes security/regression", () => {
       });
       expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
     });
-
-    it("should reject unsupported providers in callback", async () => {
-      const routes = setupRoutes();
-      const ctx = createCtx();
-
-      const response = await routes.handler("GET", "/auth/callback/")(
-        ctx,
-        new Request(
-          "https://convex.example/auth/callback/credentials?code=auth-code&state=valid-state",
-        ),
-      );
-
-      expect(response.status).toBe(400);
-      await expect(response.text()).resolves.toBe("Credentials is not supported.");
-      expect(ctx.runMutation).not.toHaveBeenCalled();
-      expect(exchangeCodeForProfileMock).not.toHaveBeenCalled();
-    });
   });
 
   describe("one-time handoff token guarantees", () => {

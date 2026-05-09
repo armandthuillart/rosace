@@ -15,7 +15,7 @@ This package gives that control by keeping auth-critical behavior in-house:
 
 - session lifecycle in first-party cookies (`session:token`)
 - short-lived Convex JWT issuance from server session state
-- explicit credentials and OAuth flows in typed Convex functions
+- explicit OAuth flows in typed Convex functions
 - explicit persistence model (`users`, `accounts`, `sessions`, `verifications`)
 
 ## Integration contract
@@ -74,13 +74,6 @@ Only starts authenticated Convex fetches when `data.user` exists. Prevents unaut
   Revokes the current refresh session when present. Clears `session:token`. Returns `204`.
   Rate limit: 100 requests / 60 seconds per IP.
 
-- `POST /auth/login/credentials`:
-
-  Handles email/password auth.
-  - Register path hashes password, creates account, then creates session.
-  - Login path verifies password, then creates session.
-  - Rate limit: 3 requests / 10 seconds per IP.
-
 - `GET /auth/login/apple`, `GET /auth/login/google`:
 
   Starts OAuth login. Creates state and nonce. Also creates PKCE values for Google. Stores values, then redirects to provider.
@@ -106,12 +99,6 @@ Dispatch keys:
 
   Runs auth writes. This includes create, update, and delete operations.
 
-- `store:action`:
-
-  Runs auth side-effect and compute work. For example, password hash and verify operations.
-
-Operation keys:
-
 - `session:get`:
 
   Reads a session by refresh token hash. Returns the session user payload or `null`.
@@ -119,16 +106,6 @@ Operation keys:
 - `session:revoke`:
 
   Deletes a session by refresh token hash.
-
-- `credentials:register`:
-
-  Creates a credentials user and account with the provided password hash. Then creates a session.
-
-- `credentials:login`:
-
-  Handles two paths.
-  - With `{ email }`, it returns the credentials account password hash lookup payload.
-  - With `{ email, passwordHash }`, it validates the hash match and creates a session.
 
 - `oauth:authorize`:
 
@@ -145,14 +122,6 @@ Operation keys:
 - `oauth:claim`:
 
   Consumes the handoff code and returns the stored session payload one time.
-
-- `password:hash`:
-
-  Returns an Argon2 password hash from a plain password.
-
-- `password:verify`:
-
-  Verifies a plain password against a stored Argon2 hash and returns `{ ok }`.
 
 ## Required environment
 
@@ -171,5 +140,5 @@ OAuth provider credentials (if enabled):
 - Cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax`.
 - Rate limiting uses `cf-connecting-ip` first, then `x-forwarded-for`.
 - Rate-limited responses return `429` with `X-Retry-After`.
-- Credential/logout POST routes enforce `Origin === DASHBOARD_URL origin`.
+- Logout POST routes enforce `Origin === DASHBOARD_URL origin`.
 - Authenticated `/auth/session` responses are `Cache-Control: no-store`.
