@@ -1,223 +1,89 @@
 # `@repo/convex`
 
-Backend package for the project.
+Convex backend for Rosace.
 
-It contains the Convex schema, queries/mutations/actions, auth middleware, HTTP routes, and backend integrations (throttler, email, PostHog, Stripe).
+This package owns the project’s backend source of truth:
 
-## Purpose
+- schema, indexes, and generated types
+- authenticated queries, mutations, and actions
+- HTTP routes and auth route registration
+- integrations for rate limiting, email, PostHog, and Stripe
 
-- Own all backend business logic in one place.
-- Expose typed Convex APIs to the rest of the monorepo.
-- Keep auth, validation, and middleware patterns consistent across functions.
+## Why
 
-## Tech and conventions
+Rosace keeps backend logic in one place so the rest of the monorepo can stay thin.
 
-- **Runtime:** Convex (`convex` package)
-- **Validation:** Convex validators (`convex/values`) and valibot (`env.ts`)
-- **Auth integration:** `@repo/auth/convex`
-- **Component integrations:** `@convex-dev/rate-limiter`, `@convex-dev/resend`, `@posthog/convex`
-- **Email rendering:** `@react-email/components` and `@react-email/render`
-- **Testing:** `convex-test` with Vitest (`vite-plus/test`)
-- **Monorepo toolchain:** Vite+ (`vp` commands)
+That gives us:
 
-## Project structure
+- typed Convex APIs everywhere
+- consistent auth and error handling
+- one place for validation, middleware, and external service clients
+- a clear boundary between domain logic and the UI
 
-```txt
-packages/convex/
-  src/
-    _generated/         # Convex generated API and data model types (auto-generated)
-    auth.config.ts      # Convex Auth configuration (providers, domain)
-    auth.ts             # Auth store + route registration (re-exported from @repo/auth/convex)
-    auth.test.ts        # Auth module tests
-    builder.ts          # Custom chain-based procedure builder
-    builder.types.ts    # Builder type system (middleware, context, validators)
-    builder.test.ts     # Builder unit tests
-    convex.config.ts    # Convex app components (rate limiter, PostHog, resend)
-    email.tsx           # Email sending actions (reset-password, change-email, sign-in OTP)
-    email.code.tsx      # OTP email template (React Email component)
-    env.ts              # Environment variable access with valibot schema validation
-    env.test.ts         # Env validation tests
-    errors.ts           # Shared typed ConvexError class
-    errors.test.ts      # Error tests
-    http.ts             # HTTP router registration
-    http.test.ts        # HTTP module tests
-    middleware.ts       # Auth middleware + pre-configured authQuery/authMutation/authAction builders
-    middleware.test.ts  # Middleware tests
-    payments.ts         # Stripe client initialization
-    payments.test.ts    # Stripe initialization tests
-    posthog.ts          # PostHog client initialization
-    schema.ts           # Database schema, tables, and indexes
-    throttler.ts        # Throttler (rate limiter) policies
-    throttler.test.ts   # Throttler tests
-    user.ts             # Example domain function (getUser)
-    user.test.ts        # User function tests
-    tsconfig.json       # TypeScript configuration
-  convex.json           # Convex package config (functions root set to src)
-```
+## What lives here
 
-## Quick start
+- `src/schema.ts` — database schema for auth, billing, and user data
+- `src/middleware.ts` — auth middleware plus preconfigured `authQuery`, `authMutation`, and `authAction`
+- `src/builder.ts` — custom chain-based procedure builder
+- `src/http.ts` — Convex HTTP router entrypoint
+- `src/auth.ts` / `src/auth.config.ts` — auth integration and route registration
+- `src/env.ts` — environment variable parsing and validation
+- `src/errors.ts` — typed `ConvexError`
+- `src/email.tsx` / `src/email.code.tsx` — email actions and templates
+- `src/payments.ts` — Stripe client setup
+- `src/posthog.ts` — PostHog client setup
+- `src/throttler.ts` — rate-limit policies
+
+## Conventions
+
+- Use `convex/values` for procedure inputs and outputs.
+- Use `authQuery`, `authMutation`, and `authAction` for protected functions.
+- Put shared middleware on the builder instead of duplicating checks inside handlers.
+- Validate environment variables in `src/env.ts` at module load time.
+- Throw typed `ConvexError` values for predictable failures.
+
+## Development
 
 From the repository root:
 
 ```bash
 vp install
+vp check
+vp test
 ```
 
-From `packages/convex`:
+To work on this package directly:
 
 ```bash
 vp exec convex dev
 ```
 
-Useful checks (from repo root):
-
-```bash
-vp check
-vp test
-```
-
-## How backend functions are built here
-
-This package uses a chain-based builder (`src/builder.ts`) for consistent function definitions. The builder supports `.use()`, `.input()`, `.returns()`, `.handler()`, and finalizes with `.public()` or `.internal()`.
-
-Typical flow:
-
-1. Import `convex` (the builder instance) from `./middleware`.
-2. Call `.query()`, `.mutation()`, or `.action()` to start a chain.
-3. Add middleware with `.use(...)` (for example auth).
-4. Add input validation with `.input(...)`.
-5. Add return validation with `.returns(...)`.
-6. Add implementation with `.handler(...)`.
-7. Register visibility with `.public()` or `.internal()`.
-
-Example:
-
-```ts
-import { v } from "convex/values";
-
-import { ConvexError } from "./errors";
-import { authQuery } from "./middleware";
-
-export const getUser = authQuery
-  .returns(
-    v.object({
-      email: v.string(),
-      firstName: v.string(),
-      lastName: v.string(),
-    }),
-  )
-  .handler(async (ctx) => {
-    const user = await ctx.db.get(ctx.userId);
-    if (!user) throw new ConvexError({ code: "INTERNAL_SERVER_ERROR" });
-    return {
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
-  })
-  .public();
-```
-
-## Builder features
-
-- **Middleware onion model** — middlewares run in declared order, wrapping the handler inside-out (first middleware runs first, handler runs after all before-middleware, then after-middleware unwinds in reverse).
-- **Fail-closed** — if a middleware never calls `next`, the handler never runs and an error is thrown.
-- **Middleware after handler** — `.use()` can be called after `.handler()`. Middleware added after the handler still executes before the handler at runtime.
-- **No handler reassignment** — once `.handler()` is called, the `handler` property is not exposed on the resulting object.
-- **Callable** — the builder's intermediate states are callable functions that produce a result, enabling direct invocation in tests.
-
-## Authentication model
-
-- `src/middleware.ts` defines the builder instance (`convex`) and `authMiddleware`.
-- `authMiddleware` resolves identity via `ctx.auth.getUserIdentity()`.
-- If no identity exists, it throws a `ConvexError` with code `UNAUTHORIZED`.
-- Authenticated context includes `ctx.userId` (`Id<"users">`).
-- Three pre-configured builders are exported: `authQuery`, `authMutation`, and `authAction` — each starts with `authMiddleware` already `.use()`'d.
-
-## Schema overview
-
-`src/schema.ts` defines:
-
-- Core auth/user tables: `users` (with `email`, `firstName`, `lastName`, `plan`, `verified`), `accounts`, `sessions`, `verifications`
-- Billing tables: `customers`, `subscriptions`, `invoices`, `payments`
-- `users.plan` is a union of `"free"` and `"pro"`.
-- `users.verified` is a boolean.
-- Indexed access patterns for email, provider/account, user relations, subscription identifiers, and billing identifiers.
-
-When changing schema:
-
-1. Update `src/schema.ts`.
-2. Run `vp exec convex dev` to regenerate types in `src/_generated`.
-3. Update dependent functions if types changed.
-
-## HTTP routes
-
-- `src/http.ts` creates a Convex `HttpRouter`.
-- `registerRoutes(http)` from `src/auth.ts` mounts auth HTTP endpoints on the router.
-- `src/http.ts` is the default export consumed by Convex as the HTTP router.
-
-## Throttling (rate limiting)
-
-`src/throttler.ts` configures `@convex-dev/rate-limiter` with fixed-window policies:
-
-- `oauth`: 20 requests per 60 seconds
-- `logout`: 100 requests per 60 seconds
-
-The throttler is instantiated with the `rateLimiter` component declared in `convex.config.ts`. The throttler instance is exported from the package (`@repo/convex/throttler`).
-
-## Email
-
-`src/email.tsx` provides a single internal action using `@convex-dev/resend` and `@react-email/render`:
-
-- `sendWelcomeEmail` — sends a welcome email after user sign-up
-
-It accepts `{ to: string, firstName: string }` and returns the Resend email ID. In non-production environments, emails are sent to `delivery@resend.dev` (Resend test mode). The welcome template (`src/email.code.tsx`) is a React Email component rendered with Tailwind CSS.
-
-## PostHog
-
-`src/posthog.ts` initializes a `PostHog` client from `@posthog/convex` using the `posthog` component declared in `convex.config.ts`.
-
-## Environment variables
-
-`src/env.ts` validates all required environment variables at module load time using a valibot schema. The parsed, typed `env` object is exported for use across the package. Required variables include:
-
-- Apple and Google OAuth credentials
-- Auth secret, JWKS public key
-- Dashboard and marketing URLs
-- Deploy environment (`"development"` | `"production"`)
-- Resend API key
-- Stripe secret and webhook secret keys
-
-## Errors
-
-`src/errors.ts` exports a `ConvexError` class that wraps Convex's `ConvexError` with a typed error code system. Error codes include standard HTTP-semantic codes such as `UNAUTHORIZED`, `NOT_FOUND`, `BAD_REQUEST`, `INTERNAL_SERVER_ERROR`, `TOO_MANY_REQUESTS`, and others. The error message defaults to the code name when not explicitly provided.
-
 ## Testing
 
-Tests use `convex-test` for integration tests (with a real Convex runtime) and Vitest (via `vite-plus/test`) for unit tests with mocked dependencies. Import test utilities from `vite-plus/test`:
+Use:
+
+- `convex-test` for integration tests against a real Convex runtime
+- `vite-plus/test` for unit tests and mocks
+
+Example imports:
 
 ```ts
 import { describe, expect, it, vi } from "vite-plus/test";
 ```
 
-For integration tests against a real Convex backend, use `convexTest`:
+## Schema changes
 
-```ts
-import { convexTest } from "convex-test";
-const t = convexTest({ schema, modules });
-const result = await t.run(async (ctx) => {
-  /* ... */
-});
-```
+When you change `src/schema.ts`:
 
-## How to add a new backend function
+1. update the schema
+2. run `vp exec convex dev` to regenerate `src/_generated`
+3. update any affected functions and tests
 
-1. Pick or create a domain file under `src/` (for example `billing.ts`).
-2. Choose the right wrapper:
-   - `authQuery` / `authMutation` / `authAction` for protected endpoints (from `./middleware`)
-   - `convex.query()` / `convex.mutation()` / `convex.action()` for custom chains (from `./middleware`)
-3. Define `.input(...)` and `.returns(...)` validators as needed.
-4. Implement `.handler(...)` with business logic.
+## Adding a new function
+
+1. Pick a domain file under `src/`.
+2. Choose `authQuery` / `authMutation` / `authAction` for protected endpoints, or the base builder for custom chains.
+3. Add input and return validators as needed.
+4. Implement the handler.
 5. End with `.public()` or `.internal()`.
-6. Run `vp exec convex dev` and ensure generated types are updated.
-7. Run `vp check` and `vp test` before opening a PR.
+6. Run `vp check` and `vp test`.

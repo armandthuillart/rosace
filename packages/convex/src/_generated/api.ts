@@ -80,22 +80,10 @@ export const internal: {
     >;
   };
   email: {
-    changeEmail: FunctionReference<
+    sendWelcomeEmail: FunctionReference<
       "action",
       "internal",
-      { otp: string; to: string },
-      string
-    >;
-    resetPassword: FunctionReference<
-      "action",
-      "internal",
-      { otp: string; to: string },
-      string
-    >;
-    sendOtp: FunctionReference<
-      "action",
-      "internal",
-      { otp: string; to: string },
+      { firstName: string; to: string },
       string
     >;
   };
