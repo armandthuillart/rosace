@@ -10,12 +10,10 @@
     "./svelte/client": "./src/svelte/client.ts"
   },
   "dependencies": {
-    "@noble/hashes": "catalog:",
     "@repo/convex": "workspace:*",
     "@repo/helpers": "workspace:*",
     "commander": "catalog:",
-    "jose": "catalog:",
-    "valibot": "catalog:"
+    "jose": "catalog:"
   },
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
