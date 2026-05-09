@@ -50,10 +50,10 @@ export function convexClient() {
 
         if (session && session.token) {
           convex.setAuth(session.token);
-          const { _id, _creationTime, ...profile } = session.user;
+          const { _id, _creationTime, firstName, lastName, ...profile } = session.user;
           posthog.identify(_id, {
             ...profile,
-            name: `${profile.firstName} ${profile.lastName}`,
+            name: `${firstName} ${lastName}`,
           });
         } else {
           convex.clearAuth();
