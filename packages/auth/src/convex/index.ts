@@ -340,7 +340,6 @@ const registerRoutes = (http: HttpRouter) => {
         provider,
         accountId: profile.accountId,
         email: profile.email,
-        emailVerified: profile.emailVerified,
         firstName: profile.firstName,
         lastName: profile.lastName,
       } as never,

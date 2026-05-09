@@ -143,7 +143,6 @@ const internalMutation = internalMutationGeneric({
         provider: v.union(v.literal("apple"), v.literal("google")),
         accountId: v.string(),
         email: v.string(),
-        emailVerified: v.boolean(),
         firstName: v.string(),
         lastName: v.string(),
       }),
@@ -233,7 +232,6 @@ const internalMutation = internalMutationGeneric({
             ? existingUser._id
             : await ctx.db.insert("users", {
                 email: payload.email,
-                emailVerified: payload.emailVerified,
                 firstName: payload.firstName,
                 lastName: payload.lastName,
                 plan: "free",

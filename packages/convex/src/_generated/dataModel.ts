@@ -199,7 +199,6 @@ export type DataModel = {
   users: {
     document: {
       email: string;
-      emailVerified: boolean;
       firstName: string;
       lastName: string;
       plan: "free" | "pro";
@@ -210,7 +209,6 @@ export type DataModel = {
       | "_creationTime"
       | "_id"
       | "email"
-      | "emailVerified"
       | "firstName"
       | "lastName"
       | "plan";

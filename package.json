@@ -43,6 +43,8 @@
     "jose": "^6.2.3",
     "knip": "^6.12.2",
     "prettier": "^3.8.3",
+    "posthog-js": "^1.372.10",
+    "posthog-node": "^5.33.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-svelte": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.8.0",

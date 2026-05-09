@@ -105,7 +105,6 @@ describe("convexClient security/regression guarantees", () => {
           _id: "user_1",
           _creationTime: 0,
           email: "user@example.com",
-          emailVerified: true,
           firstName: "Ada",
           lastName: "Lovelace",
           plan: "pro",

@@ -6,9 +6,13 @@
   let projects = liveQuery(() => db.projects.toArray());
 </script>
 
-<div>
-  Logged in as {data.user.email}. You have {($projects || []).length} projects.
-</div>
+{#if data.waitlist}
+  <div>We'll let you know when you get early access.</div>
+{:else}
+  <div>
+    Logged in as {data.user.email} and have {($projects || []).length} projects.
+  </div>
+{/if}
 
 <form method="POST">
   <button type="submit">Sign out</button>

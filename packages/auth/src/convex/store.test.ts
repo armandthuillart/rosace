@@ -25,7 +25,6 @@ const modules = import.meta.glob("../../../convex/src/**/*.ts");
 const schema = defineSchema({
   users: defineTable({
     email: v.string(),
-    emailVerified: v.boolean(),
     firstName: v.string(),
     lastName: v.string(),
     plan: v.union(v.literal("free"), v.literal("pro")),
@@ -227,7 +226,6 @@ describe("convex store security/regression", () => {
     const userId = await t.run(async (ctx) => {
       const created = await ctx.db.insert("users", {
         email: "existing@example.com",
-        emailVerified: true,
         firstName: "Ex",
         lastName: "Isting",
         plan: "free",
@@ -249,7 +247,6 @@ describe("convex store security/regression", () => {
           provider: "google",
           accountId: "subject-1",
           email: "attacker@example.com",
-          emailVerified: false,
           firstName: "Attacker",
           lastName: "Name",
         },
@@ -282,7 +279,6 @@ describe("convex store security/regression", () => {
           provider: "google",
           accountId: "subject-1",
           email: "user@example.com",
-          emailVerified: true,
           firstName: "User",
           lastName: "Test",
         },
@@ -310,7 +306,6 @@ describe("convex store security/regression", () => {
           provider: "google",
           accountId: "subject-exp",
           email: "exp@example.com",
-          emailVerified: true,
           firstName: "Exp",
           lastName: "Iring",
         },
@@ -363,7 +358,6 @@ describe("convex store security/regression", () => {
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "session@example.com",
-        emailVerified: false,
         firstName: "Sess",
         lastName: "Ion",
         plan: "free",
@@ -408,7 +402,6 @@ describe("convex store security/regression", () => {
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "john@example.com",
-        emailVerified: false,
         firstName: "John",
         lastName: "Doe",
         plan: "free",
@@ -436,7 +429,6 @@ describe("convex store security/regression", () => {
     await t.run(async (ctx) => {
       const userId = await ctx.db.insert("users", {
         email: "ghost@example.com",
-        emailVerified: false,
         firstName: "Ghost",
         lastName: "User",
         plan: "free",

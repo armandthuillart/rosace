@@ -63,7 +63,6 @@ export const internal: {
           | {
               accountId: string;
               email: string;
-              emailVerified: boolean;
               firstName: string;
               lastName: string;
               provider: "apple" | "google";

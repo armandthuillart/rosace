@@ -3,6 +3,7 @@ import { env } from "$env/dynamic/public";
 // @ts-ignore
 import { browser } from "$app/environment";
 import { ConvexHttpClient } from "convex/browser";
+import posthog from "posthog-js";
 
 import { Auth } from "./index.types";
 
@@ -49,6 +50,11 @@ export function convexClient() {
 
         if (session && session.token) {
           convex.setAuth(session.token);
+          const { _id, _creationTime, ...profile } = session.user;
+          posthog.identify(_id, {
+            ...profile,
+            name: `${profile.firstName} ${profile.lastName}`,
+          });
         } else {
           convex.clearAuth();
         }

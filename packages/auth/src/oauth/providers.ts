@@ -89,7 +89,6 @@ async function exchangeCodeForProfile(
     return {
       accountId: googlePayload.sub,
       email: googlePayload.email.toLowerCase(),
-      emailVerified: googlePayload.email_verified ?? false,
       firstName: googlePayload.given_name ?? "",
       lastName: googlePayload.family_name ?? "",
     };
@@ -148,7 +147,6 @@ async function exchangeCodeForProfile(
   return {
     accountId: applePayload.sub,
     email: applePayload.email.toLowerCase(),
-    emailVerified: applePayload.email_verified === true || applePayload.email_verified === "true",
     firstName,
     lastName,
   };

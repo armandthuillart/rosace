@@ -15,7 +15,6 @@ type User = {
   _id: GenericId<"users">;
   _creationTime: number;
   email: string;
-  emailVerified: boolean;
   firstName: string;
   lastName: string;
   plan: "free" | "pro";

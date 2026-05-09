@@ -22,6 +22,7 @@
   },
   "peerDependencies": {
     "convex": "catalog:",
+    "posthog-js": "catalog:",
     "svelte": "catalog:"
   }
 }

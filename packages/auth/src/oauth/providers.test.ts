@@ -92,7 +92,6 @@ describe("oauth providers", () => {
       expect(profile).toEqual({
         accountId: "google-subject",
         email: "user@example.com",
-        emailVerified: true,
         firstName: "Jane",
         lastName: "Doe",
       });
@@ -292,7 +291,6 @@ describe("oauth providers", () => {
       expect(profile).toEqual({
         accountId: "apple-subject",
         email: "apple@example.com",
-        emailVerified: true,
         firstName: "Ada",
         lastName: "Lovelace",
       });
@@ -487,7 +485,7 @@ describe("oauth providers", () => {
         nonce: "nonce-apple",
       });
 
-      expect(profile.emailVerified).toBe(false);
+      expect(profile.email).toBe("apple@example.com");
     });
   });
 

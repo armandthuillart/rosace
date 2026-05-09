@@ -22,7 +22,7 @@ const envs = {
 };
 
 const KEYS = {
-  dashboard: ["CONVEX_SITE_URL", "CONVEX_URL", "DASHBOARD_URL", "MARKETING_URL"],
+  dashboard: ["CONVEX_SITE_URL", "CONVEX_URL", "DASHBOARD_URL", "MARKETING_URL", "POSTHOG_KEY"],
   marketing: ["DASHBOARD_URL", "MARKETING_URL"],
 } as const;
 
@@ -36,13 +36,13 @@ const targets: Array<{
     file: "apps/dashboard/.env.development",
     from: "dev",
     keys: KEYS.dashboard,
-    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_" },
+    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_", POSTHOG_KEY: "PUBLIC_" },
   },
   {
     file: "apps/dashboard/.env.production",
     from: "prod",
     keys: KEYS.dashboard,
-    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_" },
+    prefix: { CONVEX_URL: "PUBLIC_", MARKETING_URL: "PUBLIC_", POSTHOG_KEY: "PUBLIC_" },
   },
   {
     file: "apps/marketing/.env.development",
