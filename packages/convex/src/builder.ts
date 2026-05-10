@@ -114,7 +114,7 @@ type RegisteredReturnType<
   ? Promise<ExpectedReturnType<TReturnsValidator>>
   : Promise<THandlerReturn>;
 
-class ConvexBuilderWithFunction<
+export class ConvexBuilderWithFunction<
   TDataModel extends GenericDataModel = GenericDataModel,
   TFunctionType extends FunctionType = FunctionType,
   TCurrentContext extends Context = EmptyObject,
@@ -264,7 +264,7 @@ class ConvexBuilderWithFunction<
   }
 }
 
-class ConvexBuilderWithHandler<
+export class ConvexBuilderWithHandler<
   TDataModel extends GenericDataModel = GenericDataModel,
   TFunctionType extends FunctionType = FunctionType,
   TCurrentContext extends Context = EmptyObject,
