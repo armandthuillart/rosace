@@ -2,9 +2,9 @@
   "name": "@repo/svelte",
   "type": "module",
   "exports": {
+    ".": "./src/index.ts",
     "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    ".": "./src/index.ts"
+    "./server": "./src/server.ts"
   },
   "devDependencies": {
     "@sveltejs/kit": "catalog:",
