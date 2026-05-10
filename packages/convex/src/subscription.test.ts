@@ -2,11 +2,10 @@ import { describe, expect, it } from "vite-plus/test";
 import { convexTest } from "convex-test";
 
 import schema from "./schema";
-import { handleSubscriptionCreated } from "./subscription";
+import { internal } from "./_generated/api";
 
-const modules = {
-  "./_generated/api.ts": () => Promise.resolve({}),
-};
+// @ts-expect-error - modules are loaded dynamically
+const modules = import.meta.glob("./**/*.ts");
 
 describe("handleSubscriptionCreated", () => {
   it("should insert a new subscription", async () => {
@@ -20,7 +19,7 @@ describe("handleSubscriptionCreated", () => {
       });
     });
 
-    await t.mutation(handleSubscriptionCreated as any, {
+    await t.mutation(internal.subscription.handleSubscriptionCreated, {
       customerId: "cus_abc",
       subscriptionId: "sub_123",
       productId: "prod_x",
@@ -61,7 +60,7 @@ describe("handleSubscriptionCreated", () => {
       });
     });
 
-    await t.mutation(handleSubscriptionCreated as any, {
+    await t.mutation(internal.subscription.handleSubscriptionCreated, {
       customerId: "cus_def",
       subscriptionId: "sub_456",
       productId: "prod_a",
@@ -106,7 +105,7 @@ describe("handleSubscriptionCreated", () => {
       });
     });
 
-    await t.mutation(handleSubscriptionCreated as any, {
+    await t.mutation(internal.subscription.handleSubscriptionCreated, {
       subscriptionId: "sub_dup",
       customerId: "cus_dup",
       status: "active",
@@ -158,7 +157,7 @@ describe("handleSubscriptionCreated", () => {
       });
     });
 
-    await t.mutation(handleSubscriptionCreated as any, {
+    await t.mutation(internal.subscription.handleSubscriptionCreated, {
       subscriptionId: "sub_patch",
       customerId: "cus_patch",
       productId: "prod_p",
@@ -190,7 +189,7 @@ describe("handleSubscriptionCreated", () => {
       });
     });
 
-    const result = await t.mutation(handleSubscriptionCreated as any, {
+    const result = await t.mutation(internal.subscription.handleSubscriptionCreated, {
       subscriptionId: "sub_null",
       customerId: "cus_null",
       productId: "prod_n",

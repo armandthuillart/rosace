@@ -3,11 +3,10 @@ import { convexTest } from "convex-test";
 import { exportJWK, generateKeyPair } from "jose";
 
 import schema from "./schema";
-import { deleteSession, getSession } from "./session";
+import { internal } from "./_generated/api";
 
-const modules = {
-  "./_generated/api.ts": () => Promise.resolve({}),
-};
+// @ts-expect-error - modules are loaded dynamically
+const modules = import.meta.glob("./**/*.ts");
 
 let kid: string;
 
@@ -62,7 +61,7 @@ describe("getSession", () => {
       });
     });
 
-    const result = await t.query(getSession as any, { token: "valid-token" });
+    const result = await t.query(internal.session.getSession, { token: "valid-token" });
 
     expect(result).not.toBeNull();
     expect(result!.user.email).toBe("alice@example.com");
@@ -79,7 +78,7 @@ describe("getSession", () => {
   it("should return null when session token is not found", async () => {
     const t = convexTest({ schema, modules });
 
-    const result = await t.query(getSession as any, {
+    const result = await t.query(internal.session.getSession, {
       token: "non-existent-token",
     });
 
@@ -104,7 +103,7 @@ describe("getSession", () => {
       });
     });
 
-    const result = await t.query(getSession as any, { token: "expired-token" });
+    const result = await t.query(internal.session.getSession, { token: "expired-token" });
 
     expect(result).toBeNull();
   });
@@ -130,7 +129,7 @@ describe("getSession", () => {
       await ctx.db.delete(userId);
     });
 
-    const result = await t.query(getSession as any, { token: "orphaned-session" });
+    const result = await t.query(internal.session.getSession, { token: "orphaned-session" });
 
     expect(result).toBeNull();
   });
@@ -155,7 +154,7 @@ describe("deleteSession", () => {
       });
     });
 
-    const result = await t.mutation(deleteSession as any, { token: "delete-me" });
+    const result = await t.mutation(internal.session.deleteSession, { token: "delete-me" });
 
     expect(result).toBeNull();
     const session = await t.run(async (ctx) => {
@@ -170,7 +169,7 @@ describe("deleteSession", () => {
   it("should be a no-op for a non-existent session", async () => {
     const t = convexTest({ schema, modules });
 
-    const result = await t.mutation(deleteSession as any, {
+    const result = await t.mutation(internal.session.deleteSession, {
       token: "does-not-exist",
     });
 

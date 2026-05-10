@@ -2,11 +2,10 @@ import { describe, expect, it } from "vite-plus/test";
 import { convexTest } from "convex-test";
 
 import schema from "./schema";
-import { createOrUpdateCustomer, handleCustomerCreatedOrUpdated } from "./customer";
+import { internal } from "./_generated/api";
 
-const modules = {
-  "./_generated/api.ts": () => Promise.resolve({}),
-};
+// @ts-expect-error - modules are loaded dynamically
+const modules = import.meta.glob("./**/*.ts");
 
 describe("handleCustomerCreatedOrUpdated", () => {
   it("should insert a new customer when one does not exist", async () => {
@@ -20,7 +19,7 @@ describe("handleCustomerCreatedOrUpdated", () => {
       });
     });
 
-    await t.mutation(handleCustomerCreatedOrUpdated as any, {
+    await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
       customerId: "cus_abc123",
       email: "alice@example.com",
       metadata: { userId },
@@ -56,7 +55,7 @@ describe("handleCustomerCreatedOrUpdated", () => {
       });
     });
 
-    await t.mutation(handleCustomerCreatedOrUpdated as any, {
+    await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
       customerId: "cus_existing",
       email: "new@example.com",
       metadata: { userId },
@@ -83,7 +82,7 @@ describe("handleCustomerCreatedOrUpdated", () => {
       });
     });
 
-    const result = await t.mutation(handleCustomerCreatedOrUpdated as any, {
+    const result = await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
       customerId: "cus_null",
       email: "carol@example.com",
       metadata: { userId },
@@ -105,7 +104,7 @@ describe("createOrUpdateCustomer", () => {
       });
     });
 
-    const result = await t.mutation(createOrUpdateCustomer as any, {
+    const result = await t.mutation(internal.customer.createOrUpdateCustomer, {
       customerId: "cus_new",
       email: "dave@example.com",
       metadata: { userId },
@@ -140,7 +139,7 @@ describe("createOrUpdateCustomer", () => {
       });
     });
 
-    const result = await t.mutation(createOrUpdateCustomer as any, {
+    const result = await t.mutation(internal.customer.createOrUpdateCustomer, {
       customerId: "cus_update",
       email: "updated@example.com",
       metadata: { userId },
