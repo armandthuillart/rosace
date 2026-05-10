@@ -74,6 +74,12 @@ afterAll(() => {
 
 beforeEach(async () => {
   vi.clearAllMocks();
+  (vi.mocked(Stripe) as any).mockImplementation(function () {
+    return {
+      webhooks: { constructEventAsync: vi.fn() },
+      customers: { create: vi.fn().mockResolvedValue({ id: "cus_mock" }) },
+    };
+  });
   const { throttler: t } = await import("./throttler");
   (t.limit as any).mockResolvedValue({ ok: true, retryAfter: undefined });
 });
@@ -367,6 +373,7 @@ describe("GET /auth/handoff", () => {
 
 describe("GET and POST /auth/callback/:provider", () => {
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
   });
 
@@ -387,6 +394,7 @@ describe("GET and POST /auth/callback/:provider", () => {
   });
 
   it("should complete Google OAuth flow via GET and redirect with handoff cookie", async () => {
+    vi.useFakeTimers();
     const t = convexTest({ schema, modules });
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
@@ -452,9 +460,12 @@ describe("GET and POST /auth/callback/:provider", () => {
     expect(user!.firstName).toBe("Alice");
     expect(user!.lastName).toBe("Smith");
     expect(user!.plan).toBe("free");
+
+    await t.finishAllScheduledFunctions(() => vi.runAllTimers());
   });
 
   it("should complete Apple OAuth flow via POST form_post and redirect with handoff cookie", async () => {
+    vi.useFakeTimers();
     const t = convexTest({ schema, modules });
     await t.run(async (ctx) => {
       await ctx.db.insert("verifications", {
@@ -524,6 +535,8 @@ describe("GET and POST /auth/callback/:provider", () => {
     expect(user!.firstName).toBe("Bob");
     expect(user!.lastName).toBe("Jones");
     expect(user!.plan).toBe("free");
+
+    await t.finishAllScheduledFunctions(() => vi.runAllTimers());
   });
 });
 
