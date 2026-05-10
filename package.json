@@ -8,6 +8,7 @@
     "dev": "bun ./scripts/dev.ts",
     "env": "bun ./scripts/env.ts"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/bun": "catalog:",
     "commander": "catalog:",
@@ -28,6 +29,9 @@
     "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@sveltejs/kit": "^2.59.1",
     "@tailwindcss/vite": "^4.3.0",
+    "@threlte/core": "^8.5.14",
+    "@threlte/extras": "^9.16.0",
+    "@threlte/rapier": "^3.4.2",
     "@types/node": "^25.6.2",
     "@types/bun": "^1.3.13",
     "@types/three": "^0.184.1",
@@ -37,6 +41,7 @@
     "convex-test": "^0.0.51",
     "dexie": "^4.4.2",
     "gsap": "^3.12.5",
+    "meshline": "^3.3.1",
     "jose": "^6.2.3",
     "knip": "^6.12.2",
     "prettier": "^3.8.3",
@@ -49,7 +54,6 @@
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "tailwindcss": "^4.3.0",
-    "three": "^0.184.0",
     "typescript": "6.0.3",
     "valibot": "^1.4.0",
     "vite-plus": "^0.1.20",

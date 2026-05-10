@@ -11,12 +11,15 @@
   "dependencies": {
     "@repo/svelte": "workspace:*",
     "@repo/utils": "workspace:*",
+    "@threlte/core": "catalog:",
+    "@threlte/extras": "catalog:",
+    "@threlte/rapier": "catalog:",
     "convex": "catalog:",
     "dexie": "catalog:",
     "gsap": "catalog:",
+    "meshline": "catalog:",
     "posthog-js": "catalog:",
-    "posthog-node": "catalog:",
-    "three": "catalog:"
+    "posthog-node": "catalog:"
   },
   "devDependencies": {
     "@sveltejs/adapter-cloudflare": "catalog:",
