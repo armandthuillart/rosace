@@ -201,9 +201,10 @@ export const completeAuthorizationSession = mutation
     });
 
     const expiresAt = Date.now() + 1000 * 60 * 60 * 24 * 30;
+    const sessionToken = randomToken();
 
     await ctx.db.insert("sessions", {
-      token: randomToken(),
+      token: sessionToken,
       userId,
       expiresAt,
     });
@@ -213,7 +214,7 @@ export const completeAuthorizationSession = mutation
     await ctx.db.insert("verifications", {
       identifier: handoff,
       value: JSON.stringify({
-        sessionToken: randomToken(),
+        sessionToken,
         accessToken: await signJWT(userId),
         expiresAt,
       }),
