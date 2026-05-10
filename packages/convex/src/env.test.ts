@@ -6,16 +6,14 @@ const { requireEnv } = vi.hoisted(() => ({
     const env: Record<string, string> = {
       APPLE_CLIENT_ID: "apple-id",
       APPLE_CLIENT_SECRET: "apple-secret",
-      PUBLIC_JWKS: "jwks",
-      AUTH_SECRET: "secret",
       CONVEX_URL: "https://convex.example",
       CONVEX_SITE_URL: "https://site.example",
       DASHBOARD_URL: "https://dashboard.example",
       DEPLOY_ENV: "development",
       GOOGLE_CLIENT_ID: "google-id",
       GOOGLE_CLIENT_SECRET: "google-secret",
+      JWKS: "jwks",
       MARKETING_URL: "https://marketing.example",
-      RESEND_API_KEY: "resend-key",
       STRIPE_SECRET_KEY: "stripe-secret",
       STRIPE_WEBHOOK_SECRET: "stripe-webhook-secret",
     };
@@ -36,7 +34,6 @@ describe("env validation", () => {
     const env = await loadEnv();
 
     expect(env.DEPLOY_ENV).toBe("development");
-    expect(env.RESEND_API_KEY).toBe("resend-key");
   });
 
   it("should throw when a required variable is missing", async () => {
@@ -62,16 +59,14 @@ describe("env validation", () => {
       const env: Record<string, string> = {
         APPLE_CLIENT_ID: "apple-id",
         APPLE_CLIENT_SECRET: "apple-secret",
-        PUBLIC_JWKS: "jwks",
-        AUTH_SECRET: "secret",
         CONVEX_URL: "https://convex.example",
         CONVEX_SITE_URL: "https://site.example",
         DASHBOARD_URL: "https://dashboard.example",
         DEPLOY_ENV: "production",
         GOOGLE_CLIENT_ID: "google-id",
         GOOGLE_CLIENT_SECRET: "google-secret",
+        JWKS: "jwks",
         MARKETING_URL: "https://marketing.example",
-        RESEND_API_KEY: "resend-key",
         STRIPE_SECRET_KEY: "stripe-secret",
         STRIPE_WEBHOOK_SECRET: "stripe-webhook-secret",
       };

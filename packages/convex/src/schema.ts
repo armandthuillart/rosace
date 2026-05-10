@@ -8,7 +8,6 @@ export default defineSchema({
     lastName: v.string(),
     plan: v.union(v.literal("free"), v.literal("pro")),
   }).index("by_email", ["email"]),
-
   accounts: defineTable({
     userId: v.id("users"),
     provider: v.union(v.literal("apple"), v.literal("google")),
@@ -16,7 +15,6 @@ export default defineSchema({
   })
     .index("by_provider_account", ["provider", "accountId"])
     .index("by_user", ["userId"]),
-
   sessions: defineTable({
     userId: v.id("users"),
     token: v.string(),
@@ -24,7 +22,6 @@ export default defineSchema({
   })
     .index("by_token", ["token"])
     .index("by_user", ["userId"]),
-
   verifications: defineTable({
     identifier: v.string(),
     value: v.string(),
@@ -32,7 +29,6 @@ export default defineSchema({
   })
     .index("by_identifier", ["identifier"])
     .index("by_expires_at", ["expiresAt"]),
-
   customers: defineTable({
     userId: v.id("users"),
     customerId: v.string(),
@@ -41,7 +37,6 @@ export default defineSchema({
     .index("by_customer", ["customerId"])
     .index("by_email", ["email"])
     .index("by_user", ["userId"]),
-
   subscriptions: defineTable({
     userId: v.id("users"),
     customerId: v.string(),
@@ -59,13 +54,12 @@ export default defineSchema({
       v.literal("paused"),
     ),
     currentPeriodEndsAt: v.number(),
-    cancelAtPeriodEnd: v.boolean(),
-    cancelAt: v.optional(v.number()),
+    cancelsAtPeriodEnd: v.boolean(),
+    cancelsAt: v.optional(v.number()),
   })
     .index("by_subscription", ["subscriptionId"])
     .index("by_customer", ["customerId"])
     .index("by_user", ["userId"]),
-
   invoices: defineTable({
     userId: v.id("users"),
     customerId: v.string(),
@@ -82,9 +76,9 @@ export default defineSchema({
     ),
     issuedAt: v.number(),
   })
+    .index("by_subscription", ["subscriptionId"])
     .index("by_invoice", ["invoiceId"])
     .index("by_user", ["userId"]),
-
   payments: defineTable({
     userId: v.id("users"),
     customerId: v.string(),

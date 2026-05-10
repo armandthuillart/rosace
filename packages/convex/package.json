@@ -7,20 +7,16 @@
   },
   "dependencies": {
     "@convex-dev/rate-limiter": "catalog:",
-    "@convex-dev/resend": "catalog:",
     "@posthog/convex": "catalog:",
-    "@react-email/components": "catalog:",
-    "@react-email/render": "catalog:",
     "@repo/auth": "workspace:*",
+    "jose": "catalog:",
     "@repo/helpers": "workspace:*",
     "convex": "catalog:",
-    "react": "catalog:",
     "stripe": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
     "convex-test": "catalog:",
     "typescript": "catalog:"
   }

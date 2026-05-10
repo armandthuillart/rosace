@@ -79,12 +79,57 @@ export const internal: {
       any
     >;
   };
-  email: {
-    sendWelcomeEmail: FunctionReference<
-      "action",
+  customer: {
+    handleCustomerCreatedOrUpdated: FunctionReference<
+      "mutation",
       "internal",
-      { firstName: string; to: string },
-      string
+      { customerId: string; email: string; metadata: { userId: Id<"users"> } },
+      null
+    >;
+  };
+  session: {
+    getSession: FunctionReference<
+      "query",
+      "internal",
+      { token: string },
+      {
+        expiresAt: number;
+        token: string;
+        user: {
+          _creationTime: number;
+          _id: Id<"users">;
+          email: string;
+          firstName: string;
+          lastName: string;
+          plan: "free" | "pro";
+        };
+      } | null
+    >;
+  };
+  subscription: {
+    handleSubscriptionCreated: FunctionReference<
+      "mutation",
+      "internal",
+      {
+        cancelsAt?: number;
+        cancelsAtPeriodEnd: boolean;
+        currentPeriodEndsAt: number;
+        customerId: string;
+        metadata: { userId: Id<"users"> };
+        priceId: string;
+        productId: string;
+        status:
+          | "active"
+          | "canceled"
+          | "incomplete"
+          | "incomplete_expired"
+          | "past_due"
+          | "trialing"
+          | "unpaid"
+          | "paused";
+        subscriptionId: string;
+      },
+      null
     >;
   };
 } = anyApi as any;
@@ -92,5 +137,4 @@ export const internal: {
 export const components = componentsGeneric() as unknown as {
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
   posthog: import("@posthog/convex/_generated/component.js").ComponentApi<"posthog">;
-  resend: import("@convex-dev/resend/_generated/component.js").ComponentApi<"resend">;
 };

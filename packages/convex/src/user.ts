@@ -1,6 +1,6 @@
 import { v } from "convex/values";
+import { ConvexError } from "convex/values";
 
-import { ConvexError } from "./errors";
 import { authQuery } from "./middleware";
 
 export const getUser = authQuery
@@ -15,7 +15,7 @@ export const getUser = authQuery
     const user = await ctx.db.get(ctx.userId);
 
     if (!user) {
-      throw new ConvexError({ code: "INTERNAL_SERVER_ERROR" });
+      throw new ConvexError("User not found.");
     }
 
     return {
