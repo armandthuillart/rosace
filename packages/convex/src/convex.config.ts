@@ -1,9 +1,9 @@
 import { defineApp } from "convex/server";
-import rateLimiter from "@convex-dev/rate-limiter/convex.config";
 import posthog from "@posthog/convex/convex.config.js";
+import rateLimiter from "@convex-dev/rate-limiter/convex.config";
 
 const app = defineApp();
-app.use(rateLimiter);
 app.use(posthog);
+app.use(rateLimiter);
 
 export default app;

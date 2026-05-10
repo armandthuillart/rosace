@@ -181,7 +181,7 @@ http.route({
     if (token) await ctx.runMutation(internal.session.deleteSession, { token });
 
     const headers = new Headers();
-    for (const cookie of clear("session")) headers.append("Set-Cookie", cookie);
+    headers.append("Set-Cookie", clear("session"));
     return new Response(null, { headers, status: 204 });
   }),
 });
