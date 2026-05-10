@@ -5,7 +5,7 @@ export function list(type: "handoff", args: HandoffArgs): string;
 export function list(type: "session", args: SessionArgs): string;
 export function list(type: "handoff" | "session", args: HandoffArgs | SessionArgs): string {
   if ("code" in args) {
-    return `session:handoff=${args.code}; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+    return `session:handoff=${args.code}; Path=/auth/; HttpOnly; Secure; SameSite=Lax; Max-Age=60`;
   }
   const maxAgeSession = Math.max(1, Math.floor((args.expiresAt - Date.now()) / 1000));
   return `session:token=${args.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`;
@@ -13,7 +13,7 @@ export function list(type: "handoff" | "session", args: HandoffArgs | SessionArg
 
 export function clear(type: "handoff" | "session") {
   if (type === "handoff") {
-    return "session:handoff=; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
+    return "session:handoff=; Path=/auth/; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
   }
   return "session:token=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
 }

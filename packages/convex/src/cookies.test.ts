@@ -7,7 +7,7 @@ describe("list", () => {
     const result = list("handoff", { code: "abc123" });
 
     expect(result).toBe(
-      "session:handoff=abc123; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+      "session:handoff=abc123; Path=/auth/; HttpOnly; Secure; SameSite=Lax; Max-Age=60",
     );
   });
 
@@ -44,9 +44,7 @@ describe("clear", () => {
   it("should return handoff clearing cookie", () => {
     const result = clear("handoff");
 
-    expect(result).toBe(
-      "session:handoff=; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
-    );
+    expect(result).toBe("session:handoff=; Path=/auth/; HttpOnly; Secure; SameSite=Lax; Max-Age=0");
   });
 
   it("should return session clearing cookie", () => {
