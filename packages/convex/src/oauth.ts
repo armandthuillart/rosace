@@ -178,14 +178,21 @@ export const completeAuthorizationSession = mutation
         .withIndex("by_email", (q) => q.eq("email", args.email))
         .first();
 
-      userId = !existingUser
-        ? await ctx.db.insert("users", {
-            plan: "free",
-            email: args.email,
-            lastName: args.lastName,
-            firstName: args.firstName,
-          })
-        : existingUser._id;
+      if (!existingUser) {
+        userId = await ctx.db.insert("users", {
+          plan: "free",
+          email: args.email,
+          lastName: args.lastName,
+          firstName: args.firstName,
+        });
+        await ctx.scheduler.runAfter(0, internal.customer.createCustomer, {
+          name: `${args.firstName} ${args.lastName}`,
+          email: args.email,
+          userId,
+        });
+      } else {
+        userId = existingUser._id;
+      }
 
       await ctx.db.insert("accounts", {
         userId,
