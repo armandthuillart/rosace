@@ -11,7 +11,6 @@ export const authMiddleware = convex
   .createMiddleware(async (ctx, next) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError("Sign in to continue.");
-
     return next({ ...ctx, userId: identity.subject as Id<"users"> });
   });
 

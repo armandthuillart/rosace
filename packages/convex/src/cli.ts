@@ -1,3 +1,5 @@
+"use node";
+
 import { execFileSync } from "node:child_process";
 import { randomBytes, randomUUID } from "node:crypto";
 
@@ -68,10 +70,8 @@ async function createJwks() {
 
   return JSON.stringify({
     kid,
-    publicJwks: {
-      keys: [{ ...publicJwk, kid, use: "sig", alg: "RS256" }],
-    },
-    privateJwk: { ...privateJwk, kid, use: "sig", alg: "RS256" },
+    public: { keys: [{ ...publicJwk, kid, use: "sig", alg: "RS256" }] },
+    private: { ...privateJwk, kid, use: "sig", alg: "RS256" },
   });
 }
 
@@ -96,38 +96,28 @@ function buildProgram(deps: Deps): Command {
 
   program
     .command("set")
-    .description("Set AUTH_SECRET and PUBLIC_JWKS if they are missing.")
-    .option("--prod", "Set variables in production deployment.")
+    .description("Set JWKS if missing.")
+    .option("--prod", "Set in production deployment.")
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
 
-      if (deps.getEnv("AUTH_SECRET", isProd) === "") {
-        deps.setEnv("AUTH_SECRET", deps.randomSecret(), isProd);
-        console.info(`✔ Set "AUTH_SECRET"`);
+      if (deps.getEnv("JWKS", isProd) === "") {
+        deps.setEnv("JWKS", await deps.createJwks(), isProd);
+        console.info(`✔ Set JWKS.`);
       } else {
-        console.info(`✔ "AUTH_SECRET" already set`);
-      }
-
-      if (deps.getEnv("PUBLIC_JWKS", isProd) === "") {
-        deps.setEnv("PUBLIC_JWKS", await deps.createJwks(), isProd);
-        console.info(`✔ Set "PUBLIC_JWKS"`);
-      } else {
-        console.info(`✔ "PUBLIC_JWKS" already set`);
+        console.info(`✔ JWKS already set.`);
       }
     });
 
   program
     .command("rotate")
-    .description("Rotate AUTH_SECRET and PUBLIC_JWKS.")
-    .option("--prod", "Rotate variables in production deployment.")
+    .description("Rotate JWKS.")
+    .option("--prod", "Rotate in production deployment.")
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
 
-      deps.setEnv("AUTH_SECRET", deps.randomSecret(), isProd);
-      console.info(`✔ Rotated "AUTH_SECRET"`);
-
-      deps.setEnv("PUBLIC_JWKS", await deps.createJwks(), isProd);
-      console.info(`✔ Rotated "PUBLIC_JWKS"`);
+      deps.setEnv("JWKS", await deps.createJwks(), isProd);
+      console.info(`✔ Rotated JWKS.`);
     });
 
   return program;

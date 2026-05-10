@@ -1,6 +1,6 @@
 import { Id } from "./_generated/dataModel";
 import { SignJWT, importJWK, type JWK } from "jose";
-import { requireEnv } from "@repo/helpers";
+import { requireEnv } from "@repo/utils";
 
 export type JWKS = {
   kid: string;
@@ -20,4 +20,10 @@ export async function signJWT(userId: Id<"users">) {
     .setIssuedAt()
     .setExpirationTime("15m")
     .sign(jwk);
+}
+
+export function randomToken() {
+  const buffer = new Uint8Array(32);
+  crypto.getRandomValues(buffer);
+  return Array.from(buffer, (b) => b.toString(16).padStart(2, "0")).join("");
 }

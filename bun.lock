@@ -17,8 +17,8 @@
     "apps/dashboard": {
       "name": "dashboard",
       "dependencies": {
-        "@repo/auth": "workspace:*",
-        "@repo/helpers": "workspace:*",
+        "@repo/svelte": "workspace:*",
+        "@repo/utils": "workspace:*",
         "convex": "catalog:",
         "dexie": "catalog:",
         "gsap": "catalog:",
@@ -54,35 +54,16 @@
         "wrangler": "catalog:",
       },
     },
-    "packages/auth": {
-      "name": "@repo/auth",
+    "packages/convex": {
+      "name": "@repo/backend",
       "bin": {
         "auth": "./src/cli.ts",
       },
       "dependencies": {
-        "@repo/convex": "workspace:*",
-        "@repo/helpers": "workspace:*",
-        "commander": "catalog:",
-        "jose": "catalog:",
-      },
-      "devDependencies": {
-        "@sveltejs/kit": "catalog:",
-        "@types/node": "catalog:",
-        "convex-test": "catalog:",
-      },
-      "peerDependencies": {
-        "convex": "catalog:",
-        "posthog-js": "catalog:",
-        "svelte": "catalog:",
-      },
-    },
-    "packages/convex": {
-      "name": "@repo/convex",
-      "dependencies": {
         "@convex-dev/rate-limiter": "catalog:",
         "@posthog/convex": "catalog:",
-        "@repo/auth": "workspace:*",
-        "@repo/helpers": "workspace:*",
+        "@repo/utils": "workspace:*",
+        "commander": "catalog:",
         "convex": "catalog:",
         "jose": "catalog:",
         "stripe": "catalog:",
@@ -90,12 +71,22 @@
       },
       "devDependencies": {
         "@types/node": "catalog:",
-        "convex-test": "catalog:",
         "typescript": "catalog:",
       },
     },
-    "packages/helpers": {
-      "name": "@repo/helpers",
+    "packages/svelte": {
+      "name": "@repo/svelte",
+      "devDependencies": {
+        "@sveltejs/kit": "catalog:",
+        "@types/node": "catalog:",
+      },
+      "peerDependencies": {
+        "convex": "catalog:",
+        "posthog-js": "catalog:",
+      },
+    },
+    "packages/utils": {
+      "name": "@repo/utils",
       "devDependencies": {
         "@types/node": "catalog:",
       },
@@ -560,11 +551,11 @@
 
     "@protobufjs/utf8": ["@protobufjs/utf8@1.1.1", "", {}, "sha512-oOAWABowe8EAbMyWKM0tYDKi8Yaox52D+HWZhAIJqQXbqe0xI/GV7FhLWqlEKreMkfDjshR5FKgi3mnle0h6Eg=="],
 
-    "@repo/auth": ["@repo/auth@workspace:packages/auth"],
+    "@repo/backend": ["@repo/backend@workspace:packages/convex"],
 
-    "@repo/convex": ["@repo/convex@workspace:packages/convex"],
+    "@repo/svelte": ["@repo/svelte@workspace:packages/svelte"],
 
-    "@repo/helpers": ["@repo/helpers@workspace:packages/helpers"],
+    "@repo/utils": ["@repo/utils@workspace:packages/utils"],
 
     "@rollup/pluginutils": ["@rollup/pluginutils@5.3.0", "", { "dependencies": { "@types/estree": "^1.0.0", "estree-walker": "^2.0.2", "picomatch": "^4.0.2" }, "peerDependencies": { "rollup": "^1.20.0||^2.0.0||^3.0.0||^4.0.0" }, "optionalPeers": ["rollup"] }, "sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q=="],
 
@@ -827,8 +818,6 @@
     "common-ancestor-path": ["common-ancestor-path@2.0.0", "", {}, "sha512-dnN3ibLeoRf2HNC+OlCiNc5d2zxbLJXOtiZUudNFSXZrNSydxcCsSpRzXwfu7BBWCIfHPw+xTayeBvJCP/D8Ng=="],
 
     "convex": ["convex@1.38.0", "", { "dependencies": { "esbuild": "0.27.0", "prettier": "^3.0.0", "ws": "8.18.0" }, "peerDependencies": { "@auth0/auth0-react": "^2.0.1", "@clerk/clerk-react": "^4.12.8 || ^5.0.0", "@clerk/react": "^6.4.3", "react": "^18.0.0 || ^19.0.0-0 || ^19.0.0" }, "optionalPeers": ["@auth0/auth0-react", "@clerk/clerk-react", "@clerk/react", "react"], "bin": { "convex": "bin/main.js" } }, "sha512-122AC6y5lUS7mr39cluLw9+TOtRX5d/XxeivHhHObs/NTXoVvOnIgDzexVcxaz6Rk0oLFSoydSR1rDCltEz/0A=="],
-
-    "convex-test": ["convex-test@0.0.51", "", { "peerDependencies": { "convex": "^1.32.0" } }, "sha512-J+4YRpKGXJDfnQqiWUUT+ylNmNO36MpkuwqG3JG4ld+7QtroZGF8HqO4qzMmfv5ltm71rPbkBvi//MoMHjnVvQ=="],
 
     "cookie": ["cookie@0.6.0", "", {}, "sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw=="],
 

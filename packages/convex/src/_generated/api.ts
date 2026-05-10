@@ -20,16 +20,7 @@ import { anyApi, componentsGeneric } from "convex/server";
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export const api: {
-  user: {
-    getUser: FunctionReference<
-      "query",
-      "public",
-      {},
-      { email: string; firstName: string; lastName: string }
-    >;
-  };
-} = anyApi as any;
+export const api: {} = anyApi as any;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -40,46 +31,19 @@ export const api: {
  * ```
  */
 export const internal: {
-  auth: {
-    mutation: FunctionReference<
+  customer: {
+    createCustomer: FunctionReference<
+      "action",
+      "internal",
+      { email: string; name: string; userId: Id<"users"> },
+      { customerId: string }
+    >;
+    createOrUpdateCustomer: FunctionReference<
       "mutation",
       "internal",
-      {
-        payload:
-          | { token: string; type: "session:revoke" }
-          | {
-              expiresAt: number;
-              nonce: string;
-              provider: "apple" | "google";
-              state: string;
-              type: "oauth:authorize";
-              verifier?: string;
-            }
-          | {
-              provider: "apple" | "google";
-              state: string;
-              type: "oauth:verify";
-            }
-          | {
-              accountId: string;
-              email: string;
-              firstName: string;
-              lastName: string;
-              provider: "apple" | "google";
-              type: "oauth:finalize";
-            }
-          | { code: string; type: "oauth:claim" };
-      },
-      any
+      { customerId: string; email: string; metadata: { userId: Id<"users"> } },
+      string
     >;
-    query: FunctionReference<
-      "query",
-      "internal",
-      { payload: { token: string; type: "session:get" } },
-      any
-    >;
-  };
-  customer: {
     handleCustomerCreatedOrUpdated: FunctionReference<
       "mutation",
       "internal",
@@ -87,7 +51,51 @@ export const internal: {
       null
     >;
   };
+  oauth: {
+    completeAuthorizationSession: FunctionReference<
+      "mutation",
+      "internal",
+      {
+        accountId: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        provider: "apple" | "google";
+      },
+      { handoff: string }
+    >;
+    consumeAuthorizationSession: FunctionReference<
+      "mutation",
+      "internal",
+      { code: string },
+      null | { accessToken: string; expiresAt: number; sessionToken: string }
+    >;
+    createAuthorizationSession: FunctionReference<
+      "mutation",
+      "internal",
+      {
+        expiresAt: number;
+        nonce: string;
+        provider: "apple" | "google";
+        state: string;
+        verifier?: string;
+      },
+      null
+    >;
+    verifyAuthorizationSession: FunctionReference<
+      "mutation",
+      "internal",
+      { provider: "apple" | "google"; state: string },
+      null | { nonce: string; verifier?: string }
+    >;
+  };
   session: {
+    deleteSession: FunctionReference<
+      "mutation",
+      "internal",
+      { token: string },
+      null
+    >;
     getSession: FunctionReference<
       "query",
       "internal",

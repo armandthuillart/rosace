@@ -1,3 +1,16 @@
+type HandoffArgs = { code: string };
+type SessionArgs = { sessionToken: string; expiresAt: number };
+
+export function list(type: "handoff", args: HandoffArgs): string;
+export function list(type: "session", args: SessionArgs): string;
+export function list(type: "handoff" | "session", args: HandoffArgs | SessionArgs): string {
+  if ("code" in args) {
+    return `session:handoff=${args.code}; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+  }
+  const maxAgeSession = Math.max(1, Math.floor((args.expiresAt - Date.now()) / 1000));
+  return `session:token=${args.sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSession}`;
+}
+
 export function clear(type: "handoff" | "session") {
   if (type === "handoff") {
     return "session:handoff=; Path=/auth/session/claim; HttpOnly; Secure; SameSite=Lax; Max-Age=0";

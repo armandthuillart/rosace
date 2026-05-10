@@ -22,7 +22,7 @@ vi.mock("@sveltejs/kit", async () => {
   return { ...actual, redirect };
 });
 
-import { svelteAuth } from ".";
+import { svelteAuth } from "./server";
 
 function makeEvent(input: {
   url: string;

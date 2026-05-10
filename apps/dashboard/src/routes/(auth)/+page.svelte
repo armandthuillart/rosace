@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { capitalize } from "@repo/helpers";
+  import { capitalize } from "@repo/utils";
   import { PUBLIC_MARKETING_URL } from "$env/static/public";
   import Icon from "$lib/components/Icon.svelte";
 

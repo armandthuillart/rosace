@@ -1,0 +1,17 @@
+{
+  "name": "@repo/svelte",
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "catalog:",
+    "@types/node": "catalog:"
+  },
+  "peerDependencies": {
+    "convex": "catalog:",
+    "posthog-js": "catalog:"
+  }
+}

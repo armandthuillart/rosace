@@ -1,4 +1,4 @@
-import { query } from "./middleware";
+import { mutation, query } from "./middleware";
 import { v } from "convex/values";
 import { signJWT } from "./crypto";
 
@@ -41,5 +41,19 @@ export const getSession = query
       token: await signJWT(user._id),
       expiresAt: session.expiresAt,
     };
+  })
+  .internal();
+
+export const deleteSession = mutation
+  .input(v.object({ token: v.string() }))
+  .returns(v.null())
+  .handler(async (ctx, args) => {
+    const session = await ctx.db
+      .query("sessions")
+      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .first();
+
+    if (session) await ctx.db.delete(session._id);
+    return null;
   })
   .internal();

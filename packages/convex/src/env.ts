@@ -1,4 +1,4 @@
-import { requireEnv } from "@repo/helpers";
+import { requireEnv } from "@repo/utils";
 import * as v from "valibot";
 
 const EnvSchema = v.object({

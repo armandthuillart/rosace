@@ -62,41 +62,43 @@ vp run dev
 ### Diagram
 
 ```mermaid
-flowchart TD
+flowchart LR
   subgraph Frontend
     direction TB
     dashboard["Dashboard<br/>(Svelte 5)"]
     marketing["Marketing<br/>(Astro 6)"]
   end
 
-  subgraph "Backend"
+  subgraph "Packages"
     direction TB
-    convex["BaaS<br/>(@repo/convex)"]
-    auth["Auth<br/>(@repo/auth)"]
+    svelte["Svelte<br/>(@repo/svelte)"]
+    convex["Backend<br/>(@repo/convex)"]
+    utils["Utilities<br/>(@repo/utils)"]
   end
 
   subgraph "Integrations"
     direction TB
     stripe["Stripe"]
-    email["Resend"]
     posthog["PostHog"]
   end
 
-  dashboard --- convex
-  marketing --- convex
-  auth -.- dashboard
-  auth -.- convex
+  dashboard --- svelte
+  svelte --- convex
   convex -.- stripe
-  convex -.- email
+  convex -.- posthog
   dashboard -.- posthog
+  convex --- utils
+  svelte --- utils
+  dashboard --- utils
 
-  linkStyle 0 stroke:#a3c9e2,stroke-width:1px
-  linkStyle 1 stroke:#ceb6e2,stroke-width:1px,stroke-dasharray:5
-  linkStyle 2 stroke:#b9e6c2,stroke-width:1px,stroke-dasharray:6,stroke:#b9e6c2
-  linkStyle 3 stroke:#b9e6c2,stroke-width:1px,stroke-dasharray:6,stroke:#b9e6c2
-  linkStyle 4 stroke:#aee9e1,stroke-width:1px,stroke-dasharray:5
-  linkStyle 5 stroke:#ffd8b6,stroke-width:1px,stroke-dasharray:5
-  linkStyle 6 stroke:#f6aec7,stroke-width:1px,stroke-dasharray:4
+  linkStyle 0 stroke:#2563eb,stroke-width:1px,stroke-dasharray:8,4
+  linkStyle 1 stroke:#2563eb,stroke-width:1px,stroke-dasharray:8,4
+  linkStyle 2 stroke:#0d9488,stroke-width:1px,stroke-dasharray:2,4
+  linkStyle 3 stroke:#db2777,stroke-width:1px,stroke-dasharray:2,4
+  linkStyle 4 stroke:#db2777,stroke-width:1px,stroke-dasharray:2,4
+  linkStyle 5 stroke:#16a34a,stroke-width:1px,stroke-dasharray:4,4
+  linkStyle 6 stroke:#16a34a,stroke-width:1px,stroke-dasharray:4,4
+  linkStyle 7 stroke:#16a34a,stroke-width:1px,stroke-dasharray:4,4
 ```
 
 ### How it works
@@ -109,10 +111,11 @@ This repo has two main apps:
 Supporting packages:
 
 - `packages/convex`: All business logic, including queries, mutations, and actions.
-- `packages/auth`: Shared authentication primitives used by both the dashboard and the backend.
+- `packages/svelte`: Bridge layer between the dashboard and Convex — Svelte runes, stores, and utilities consumed by the dashboard.
+- `packages/utils`: Shared utilities consumed by convex, svelte, and the dashboard apps.
 
 ## References
 
 - `AGENTS.md`: Repository tooling rules and review checklist.
-- `packages/auth/README.md`: In-depth explanation of how authentication works.
-- `packages/convex/README.md`: Our custom conventions and patterns for writing code.
+- `packages/convex/README.md`: Backend conventions, auth patterns, and coding standards.
+- `packages/svelte/README.md`: How the Svelte bridge layer works.

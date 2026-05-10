@@ -1,89 +1,128 @@
 # `@repo/convex`
 
-Convex backend for Rosace.
+Convex backend for Rosace. Schema, authenticated functions, HTTP routes, and integrations — rate limiting, PostHog, Stripe.
 
-This package owns the project’s backend source of truth:
+## Why custom auth
+
+As of April 2026, [`get-convex/better-auth`](https://github.com/get-convex/better-auth) has bad performance by design.
+
+This package gives that control by keeping the auth source of truth in-house:
 
 - schema, indexes, and generated types
 - authenticated queries, mutations, and actions
 - HTTP routes and auth route registration
-- integrations for rate limiting, email, PostHog, and Stripe
+- First-class rate limiting, PostHog, and Stripe integrations
 
-## Why
+## Endpoint contract
 
-Rosace keeps backend logic in one place so the rest of the monorepo can stay thin.
+- `GET /.well-known/openid-configuration`:
 
-That gives us:
+  Returns OIDC discovery metadata for Convex. It includes `issuer`, `authorization_endpoint`, and `jwks_uri`.
 
-- typed Convex APIs everywhere
-- consistent auth and error handling
-- one place for validation, middleware, and external service clients
-- a clear boundary between domain logic and the UI
+- `GET /.well-known/jwks.json`:
 
-## What lives here
+  Returns public keys used to verify RS256-signed JWT access tokens. Convex uses these keys to validate JWT signature, `iss`, and `aud` claims.
 
-- `src/schema.ts` — database schema for auth, billing, and user data
-- `src/middleware.ts` — auth middleware plus preconfigured `authQuery`, `authMutation`, and `authAction`
-- `src/builder.ts` — custom chain-based procedure builder
-- `src/http.ts` — Convex HTTP router entrypoint
-- `src/auth.ts` / `src/auth.config.ts` — auth integration and route registration
-- `src/env.ts` — environment variable parsing and validation
-- `src/errors.ts` — typed `ConvexError`
-- `src/email.tsx` / `src/email.code.tsx` — email actions and templates
-- `src/payments.ts` — Stripe client setup
-- `src/posthog.ts` — PostHog client setup
-- `src/throttler.ts` — rate-limit policies
+- `GET /auth/session`:
 
-## Conventions
+  Returns current auth state.
+  - Returns `null` when no valid session exists.
+  - Returns `{ user, token, expiresAt }` when a valid session exists.
 
-- Use `convex/values` for procedure inputs and outputs.
-- Use `authQuery`, `authMutation`, and `authAction` for protected functions.
-- Put shared middleware on the builder instead of duplicating checks inside handlers.
-- Validate environment variables in `src/env.ts` at module load time.
-- Throw typed `ConvexError` values for predictable failures.
+- `POST /auth/logout`:
 
-## Development
+  Revokes the current refresh session when present. Clears `session:token`. Returns `204`.
+  Rate limit: 100 requests / 60 seconds per IP.
 
-From the repository root:
+- `GET /auth/login/apple`, `GET /auth/login/google`:
 
-```bash
-vp install
-vp check
-vp test
-```
+  Starts OAuth login. Creates state and nonce. Also creates PKCE values for Google. Stores values, then redirects to provider.
+  Rate limit: 20 requests / 60 seconds per IP.
 
-To work on this package directly:
+- `GET|POST /auth/callback/{provider}`:
 
-```bash
-vp exec convex dev
-```
+  Completes OAuth login. Validates state, exchanges code, creates or links account, creates session, then issues handoff code.
 
-## Testing
+- `GET /auth/handoff`:
 
-Use:
+  Consumes handoff code, sets `session:token` cookie, then redirects to `/`.
 
-- `convex-test` for integration tests against a real Convex runtime
-- `vite-plus/test` for unit tests and mocks
+- `POST /stripe/webhook`:
 
-Example imports:
+  Stripe webhook receiver. Verifies signature, dispatches events for customer, subscription, invoice, and payment changes.
 
-```ts
-import { describe, expect, it, vi } from "vite-plus/test";
-```
+## Key namespace
 
-## Schema changes
+Dispatch keys:
 
-When you change `src/schema.ts`:
+- `internal.session.getSession`:
 
-1. update the schema
-2. run `vp exec convex dev` to regenerate `src/_generated`
-3. update any affected functions and tests
+  Reads a session by token hash. Returns the session user payload or `null`.
 
-## Adding a new function
+- `internal.session.deleteSession`:
 
-1. Pick a domain file under `src/`.
-2. Choose `authQuery` / `authMutation` / `authAction` for protected endpoints, or the base builder for custom chains.
-3. Add input and return validators as needed.
-4. Implement the handler.
-5. End with `.public()` or `.internal()`.
-6. Run `vp check` and `vp test`.
+  Deletes a session by token hash.
+
+- `internal.oauth.createAuthorizationSession`:
+
+  Stores OAuth state, nonce, and verifier with expiry.
+
+- `internal.oauth.verifyAuthorizationSession`:
+
+  Consumes stored OAuth state one time and checks expiry.
+
+- `internal.oauth.completeAuthorizationSession`:
+
+  Resolves OAuth identity by linking or creating account and user records. Creates session and issues one-time handoff code.
+
+- `internal.oauth.consumeAuthorizationSession`:
+
+  Consumes the handoff code and returns the stored session payload one time.
+
+- `internal.customer.createCustomer`:
+
+  Creates a Stripe customer with idempotency key.
+
+- `internal.customer.createOrUpdateCustomer`:
+
+  Inserts or updates a customer record.
+
+- `internal.subscription.handleSubscriptionCreated`:
+
+  Inserts a new subscription record and patches orphaned invoices.
+
+## Required environment
+
+- `CONVEX_SITE_URL`
+- `DASHBOARD_URL`
+- `DEPLOY_ENV` (`development` or `production`)
+- `JWKS`
+- `MARKETING_URL`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
+OAuth provider credentials (if enabled):
+
+- Google: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- Apple: `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`
+
+## CLI
+
+- `vp exec --filter ./packages/convex -- tsx src/cli.ts set`:
+
+  Idempotently creates `JWKS` environment variables on the Convex deployment if they are missing.
+
+- `vp exec --filter ./packages/convex -- tsx src/cli.ts rotate`:
+
+  Overwrites `JWKS` with a new value.
+
+  Add `--prod` to target the production deployment.
+
+## Operational notes
+
+- Cookie flags: `HttpOnly`, `Secure`, `SameSite=Lax`.
+- Rate limiting uses `cf-connecting-ip` first, then `x-forwarded-for`.
+- Rate-limited responses return `429` with `X-Retry-After`.
+- Logout POST routes enforce `Origin === DASHBOARD_URL origin`.
+- Authenticated `/auth/session` responses are `Cache-Control: no-store`.
+- OIDC and JWKS endpoints: `Cache-Control: public, max-age=3600`.

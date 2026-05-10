@@ -1,3 +1,3 @@
-import { convexClient } from "@repo/auth/svelte/client";
+import { convexClient } from "@repo/svelte/server";
 
 export const { useConvex } = convexClient();
