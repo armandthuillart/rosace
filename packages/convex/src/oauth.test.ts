@@ -4,8 +4,8 @@ import { createPKCE, getAuthorizationURL } from "./oauth";
 
 beforeEach(() => {
   vi.stubEnv("DASHBOARD_URL", "https://app.example");
-  vi.stubEnv("APPLE_CLIENT_ID", "apple-client-id");
   vi.stubEnv("GOOGLE_CLIENT_ID", "google-client-id");
+  vi.stubEnv("APPLE_CLIENT_ID", "apple-client-id");
 });
 
 afterEach(() => {
@@ -40,7 +40,9 @@ describe("getAuthorizationURL", () => {
   it("should throw when DASHBOARD_URL is missing", () => {
     vi.stubEnv("DASHBOARD_URL", "");
 
-    expect(() => getAuthorizationURL("google")).toThrow("DASHBOARD_URL is missing and must be set");
+    const act = () => getAuthorizationURL("google");
+
+    expect(act).toThrow("DASHBOARD_URL is missing and must be set");
   });
 });
 

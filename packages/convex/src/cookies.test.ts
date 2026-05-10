@@ -23,7 +23,6 @@ describe("list", () => {
     expect(result).toBe(
       "session:token=tok-abc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2000",
     );
-
     vi.useRealTimers();
   });
 
@@ -37,7 +36,6 @@ describe("list", () => {
     });
 
     expect(result).toContain("Max-Age=1");
-
     vi.useRealTimers();
   });
 });

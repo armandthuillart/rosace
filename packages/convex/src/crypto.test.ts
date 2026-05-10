@@ -71,16 +71,13 @@ describe("signJWT", () => {
     const jwt = await signJWT("user_1" as any);
 
     const { payload } = await jwtVerify(jwt, await importJWK(publicJwk, "RS256"));
-
     expect(payload.iat).toBe(1_700_000_000);
     expect(payload.exp).toBe(1_700_000_900);
-
     vi.useRealTimers();
   });
 
   it("should produce a signature verifiable with the public key", async () => {
-    const userId = "user_test" as any;
-    const jwt = await signJWT(userId);
+    const jwt = await signJWT("user_test" as any);
 
     const { payload } = await jwtVerify(jwt, await importJWK(publicJwk, "RS256"));
 
