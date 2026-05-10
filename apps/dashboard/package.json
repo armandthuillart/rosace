@@ -9,8 +9,8 @@
     "preview": "vp preview"
   },
   "dependencies": {
-    "@repo/auth": "workspace:*",
-    "@repo/helpers": "workspace:*",
+    "@repo/svelte": "workspace:*",
+    "@repo/utils": "workspace:*",
     "convex": "catalog:",
     "dexie": "catalog:",
     "gsap": "catalog:",

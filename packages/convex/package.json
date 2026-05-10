@@ -1,5 +1,8 @@
 {
-  "name": "@repo/convex",
+  "name": "@repo/backend",
+  "bin": {
+    "auth": "./src/cli.ts"
+  },
   "type": "module",
   "exports": {
     "./api": "./src/_generated/api.ts",
@@ -7,20 +10,16 @@
   },
   "dependencies": {
     "@convex-dev/rate-limiter": "catalog:",
-    "@convex-dev/resend": "catalog:",
     "@posthog/convex": "catalog:",
-    "@react-email/components": "catalog:",
-    "@react-email/render": "catalog:",
-    "@repo/auth": "workspace:*",
-    "@repo/helpers": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "commander": "catalog:",
     "convex": "catalog:",
-    "react": "catalog:",
+    "jose": "catalog:",
     "stripe": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
     "convex-test": "catalog:",
     "typescript": "catalog:"
   }

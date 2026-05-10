@@ -1,3 +1,3 @@
-import { svelteAuth } from "@repo/auth/svelte/server";
+import { svelteAuth } from "@repo/svelte/server";
 
 export const { handle, logout } = svelteAuth();

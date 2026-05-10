@@ -92,6 +92,7 @@ export type DataModel = {
       by_id: ["_id"];
       by_creation_time: ["_creationTime"];
       by_invoice: ["invoiceId", "_creationTime"];
+      by_subscription: ["subscriptionId", "_creationTime"];
       by_user: ["userId", "_creationTime"];
     };
     searchIndexes: {};
@@ -154,8 +155,8 @@ export type DataModel = {
   };
   subscriptions: {
     document: {
-      cancelAt?: number;
-      cancelAtPeriodEnd: boolean;
+      cancelsAt?: number;
+      cancelsAtPeriodEnd: boolean;
       currentPeriodEndsAt: number;
       customerId: string;
       priceId: string;
@@ -177,8 +178,8 @@ export type DataModel = {
     fieldPaths:
       | "_creationTime"
       | "_id"
-      | "cancelAt"
-      | "cancelAtPeriodEnd"
+      | "cancelsAt"
+      | "cancelsAtPeriodEnd"
       | "currentPeriodEndsAt"
       | "customerId"
       | "priceId"

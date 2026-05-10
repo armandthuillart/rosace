@@ -3,7 +3,7 @@ import { env } from "$env/dynamic/private";
 import { redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
 
 import { convexClient } from "./client";
-import type { Auth } from "./index.types";
+import type { Auth } from "./index";
 
 const handle: Handle = async ({ event, resolve }) => {
   const target = env.CONVEX_SITE_URL;

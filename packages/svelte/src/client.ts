@@ -5,7 +5,7 @@ import { browser } from "$app/environment";
 import { ConvexHttpClient } from "convex/browser";
 import posthog from "posthog-js";
 
-import type { Auth } from "./index.types";
+import type { Auth } from "./index";
 
 const CONVEX_URL = env.PUBLIC_CONVEX_URL!;
 
