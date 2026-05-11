@@ -20,7 +20,7 @@
   <Canvas>
     <Scene />
     <World gravity={[0, -40, 0]}>
-      <Lanyard {theme} />
+      <Lanyard />
     </World>
   </Canvas>
 </div>

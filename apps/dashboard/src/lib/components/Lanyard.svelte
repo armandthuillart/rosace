@@ -1,6 +1,6 @@
 <script lang="ts">
   import { T, useThrelte } from "@threlte/core";
-  import { useGltf, useTexture } from "@threlte/extras";
+  import { useGltf, useTexture, interactivity } from "@threlte/extras";
   import { MeshLineGeometry, MeshLineMaterial } from "meshline";
   import {
     RigidBody,
@@ -11,12 +11,11 @@
   } from "@threlte/rapier";
   import * as THREE from "three";
 
-  let { theme = "dark" }: { theme: "light" | "dark" } = $props();
+  interactivity();
 
   const { camera, size } = useThrelte();
 
-  let band: any = $state(),
-    fixed: any = $state(),
+  let fixed: any = $state(),
     j1: any = $state(),
     j2: any = $state(),
     j3: any = $state(),
@@ -96,29 +95,27 @@
         z: vec.z - drag.z,
       });
     }
-    if (fixed) {
-      // Fix most of the jitter when over pulling the card.
-      const lerps = [j1Lerp, j2Lerp];
-      for (let i = 0; i < [j1, j2].length; i++) {
-        const j = [j1, j2][i];
-        const lerp = lerps[i];
-        if (!j) continue;
-        const t = j.translation();
-        const distance = lerp.distanceTo(t);
-        const clamped = Math.max(0.1, Math.min(1, distance));
-        lerp.lerp(vec.set(t.x, t.y, t.z), delta * (10 + clamped * 40));
-      }
-      // Calculate catmul curve.
-      curve.points[0].copy(j3.translation());
-      curve.points[1].copy(j2Lerp);
-      curve.points[2].copy(j1Lerp);
-      curve.points[3].copy(fixed.translation());
-      geometry.setPoints(curve.getPoints(32));
-      // Tilt it back towards the screen.
-      ang.copy(card.angvel());
-      rot.copy(card.rotation());
-      card.setAngvel({ x: ang.x, y: ang.y - ang.y * 0.25, z: ang.z });
+    // Fix most of the jitter when over pulling the card.
+    const lerps = [j1Lerp, j2Lerp];
+    for (let i = 0; i < [j1, j2].length; i++) {
+      const j = [j1, j2][i];
+      const lerp = lerps[i];
+      if (!j) continue;
+      const t = j.translation();
+      const distance = lerp.distanceTo(t);
+      const clamped = Math.max(0.1, Math.min(1, distance));
+      lerp.lerp(vec.set(t.x, t.y, t.z), delta * (10 + clamped * 40));
     }
+    // Calculate catmul curve.
+    curve.points[0].copy(j3.translation());
+    curve.points[1].copy(j2Lerp);
+    curve.points[2].copy(j1Lerp);
+    curve.points[3].copy(fixed.translation());
+    geometry.setPoints(curve.getPoints(32));
+    // Tilt it back towards the screen.
+    ang.copy(card.angvel());
+    rot.copy(card.rotation());
+    card.setAngvel({ x: ang.x, y: ang.y - flip * rot.y * 0.25, z: ang.z });
   });
 
   curve.curveType = "chordal";
@@ -134,10 +131,33 @@
   $effect.pre(() => {
     const t = $texture;
     if (!t) return;
-    material.map = t;
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    material.map = t;
+    material.lineWidth = 1;
   });
+
+  let type: "dynamic" | "kinematicPosition" = $state("dynamic");
+  let flip = $state(1);
+
+  function handlePointerMove(e: PointerEvent) {
+    const canvas = (e.target as HTMLElement)?.closest("canvas");
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  }
+
+  function handlePointerUp() {
+    dragged = false;
+    type = "dynamic";
+    flip = Math.random() > 0.5 ? 1 : -1;
+  }
 </script>
+
+<svelte:window
+  on:pointermove={handlePointerMove}
+  on:pointerup={handlePointerUp}
+/>
 
 <T.PerspectiveCamera makeDefault position={[0, 0, 13]} fov={25} />
 
@@ -169,7 +189,7 @@
 
   <T.Group position={[2, 0, 0]}>
     <RigidBody
-      type={dragged ? "kinematicPosition" : "dynamic"}
+      {type}
       linearDamping={2}
       angularDamping={2}
       bind:rigidBody={card}
@@ -177,8 +197,21 @@
       <Collider shape="cuboid" args={[0.8, 1.125, 0.01]} />
 
       {#if $gltf}
-        <T.Group scale={2.25} position={[0, -1.2, -0.05]}>
-          <T.Mesh geometry={$gltf.nodes.card.geometry}>
+        <T.Group
+          scale={2.25}
+          position={[0, -1.2, -0.05]}
+          onpointerenter={() => (hovered = true)}
+          onpointerleave={() => (hovered = false)}
+        >
+          <T.Mesh
+            geometry={$gltf.nodes.card.geometry}
+            onpointerdown={(e: any) => {
+              dragged = true;
+              type = "kinematicPosition";
+              const pos = card.translation();
+              drag.set(e.point.x - pos.x, e.point.y - pos.y, e.point.z - pos.z);
+            }}
+          >
             <T.MeshPhysicalMaterial
               map={$gltf.materials.base.map}
               map-anisotropy={16}
