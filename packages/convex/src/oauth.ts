@@ -13,13 +13,14 @@ export function getAuthorizationURL(provider: "apple" | "google"): URL {
   const uri = `${requireEnv("DASHBOARD_URL")}/auth/callback/${provider}`;
   const url = new URL(AUTHORIZATION_ENDPOINTS[provider]);
 
-  url.searchParams.set("response_type", "code");
   url.searchParams.set("redirect_uri", uri);
 
   if (provider === "google") {
+    url.searchParams.set("response_type", "code");
     url.searchParams.set("client_id", requireEnv("GOOGLE_CLIENT_ID"));
     url.searchParams.set("scope", "openid email profile");
   } else {
+    url.searchParams.set("response_type", "code id_token");
     url.searchParams.set("client_id", requireEnv("APPLE_CLIENT_ID"));
     url.searchParams.set("scope", "name email");
     url.searchParams.set("response_mode", "form_post");
