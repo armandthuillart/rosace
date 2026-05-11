@@ -30,7 +30,7 @@ describe("getAuthorizationURL", () => {
 
     expect(url.origin).toBe("https://appleid.apple.com");
     expect(url.pathname).toBe("/auth/authorize");
-    expect(url.searchParams.get("response_type")).toBe("code");
+    expect(url.searchParams.get("response_type")).toBe("code id_token");
     expect(url.searchParams.get("client_id")).toBe("apple-client-id");
     expect(url.searchParams.get("scope")).toBe("name email");
     expect(url.searchParams.get("response_mode")).toBe("form_post");

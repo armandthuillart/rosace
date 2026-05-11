@@ -216,7 +216,7 @@ describe("GET /auth/login/:provider", () => {
     const location = new URL(response.headers.get("Location")!);
     expect(location.origin).toBe("https://appleid.apple.com");
     expect(location.pathname).toBe("/auth/authorize");
-    expect(location.searchParams.get("response_type")).toBe("code");
+    expect(location.searchParams.get("response_type")).toBe("code id_token");
     expect(location.searchParams.get("client_id")).toBe("apple-client-id");
     expect(location.searchParams.get("scope")).toBe("name email");
     expect(location.searchParams.get("response_mode")).toBe("form_post");
