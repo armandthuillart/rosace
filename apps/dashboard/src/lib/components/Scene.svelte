@@ -7,7 +7,6 @@
   $effect.pre(() => {
     const hdr = new THREE.Scene();
     hdr.background = new THREE.Color("black");
-
     const geometry = new THREE.PlaneGeometry(1, 1);
 
     const lightformers = [
