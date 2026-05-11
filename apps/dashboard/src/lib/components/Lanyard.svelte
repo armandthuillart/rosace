@@ -142,9 +142,8 @@
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     material.map = t;
     material.lineWidth = 1;
-    material.polygonOffset = true;
-    material.polygonOffsetUnits = -1;
-    material.polygonOffsetFactor = -1;
+    material.depthTest = false;
+    material.resolution.set(size.current.width, size.current.height);
   });
 
   let type: "dynamic" | "kinematicPosition" = $state("dynamic");
