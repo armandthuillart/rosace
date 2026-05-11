@@ -22,6 +22,7 @@
     "posthog-node": "catalog:"
   },
   "devDependencies": {
+    "@dimforge/rapier3d-compat": "catalog:",
     "@sveltejs/adapter-cloudflare": "catalog:",
     "@sveltejs/kit": "catalog:",
     "@tailwindcss/vite": "catalog:",

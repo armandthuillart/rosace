@@ -10,20 +10,20 @@
     usePhysicsTask,
   } from "@threlte/rapier";
   import * as THREE from "three";
+  import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
 
   interactivity();
 
   const { camera, size } = useThrelte();
 
-  let fixed: any = $state(),
-    j1: any = $state(),
-    j2: any = $state(),
-    j3: any = $state(),
-    card: any = $state();
+  let fixed: RapierRigidBody | undefined = $state(),
+    j1: RapierRigidBody | undefined = $state(),
+    j2: RapierRigidBody | undefined = $state(),
+    j3: RapierRigidBody | undefined = $state(),
+    card: RapierRigidBody | undefined = $state();
 
   let vec = new THREE.Vector3(),
     ang = new THREE.Vector3(),
-    rot = new THREE.Vector3(),
     dir = new THREE.Vector3(),
     ndc = new THREE.Vector2(),
     drag = new THREE.Vector3();
@@ -85,11 +85,13 @@
   const geometry = new MeshLineGeometry();
 
   usePhysicsTask((delta) => {
+    if (!card || !j1 || !j3 || !fixed) return;
+
     if (dragged) {
       vec.set(ndc.x, ndc.y, 0.5).unproject(camera.current);
       dir.copy(vec).sub(camera.current.position).normalize();
       vec.add(dir.multiplyScalar(camera.current.position.length()));
-      card.setNextKinematicTranslation({
+      card?.setNextKinematicTranslation({
         x: vec.x - drag.x,
         y: vec.y - drag.y,
         z: vec.z - drag.z,
@@ -114,8 +116,14 @@
     geometry.setPoints(curve.getPoints(32));
     // Tilt it back towards the screen.
     ang.copy(card.angvel());
-    rot.copy(card.rotation());
-    card.setAngvel({ x: ang.x, y: ang.y - flip * rot.y * 0.25, z: ang.z });
+    const r = card.rotation();
+    const euler = new THREE.Euler().setFromQuaternion(
+      new THREE.Quaternion(r.x, r.y, r.z, r.w),
+    );
+    card.setAngvel(
+      { x: ang.x, y: ang.y - next * euler.y * 0.25, z: ang.z },
+      true,
+    );
   });
 
   curve.curveType = "chordal";
@@ -134,10 +142,14 @@
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     material.map = t;
     material.lineWidth = 1;
+    material.polygonOffset = true;
+    material.polygonOffsetUnits = -1;
+    material.polygonOffsetFactor = -1;
   });
 
   let type: "dynamic" | "kinematicPosition" = $state("dynamic");
-  let flip = $state(1);
+  let next = $state(1);
+  let last = $state(1);
 
   function handlePointerMove(e: PointerEvent) {
     const canvas = (e.target as HTMLElement)?.closest("canvas");
@@ -150,7 +162,8 @@
   function handlePointerUp() {
     dragged = false;
     type = "dynamic";
-    flip = Math.random() > 0.5 ? 1 : -1;
+    next = -last;
+    last = next;
   }
 </script>
 
@@ -208,6 +221,7 @@
             onpointerdown={(e: any) => {
               dragged = true;
               type = "kinematicPosition";
+              if (!card) return;
               const pos = card.translation();
               drag.set(e.point.x - pos.x, e.point.y - pos.y, e.point.z - pos.z);
             }}
