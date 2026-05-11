@@ -11,10 +11,15 @@
   } from "@threlte/rapier";
   import * as THREE from "three";
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
+  import { page } from "$app/state";
 
   interactivity();
 
-  let { theme = "dark" }: { theme: "light" | "dark" } = $props();
+  let { user } = page.data;
+
+  // always defined!
+  const lastName = user!.lastName;
+  const firstName = user!.firstName;
 
   const { camera, size } = useThrelte();
 
@@ -31,7 +36,7 @@
     drag = new THREE.Vector3();
 
   const gltf = useGltf("/tag.glb");
-  const texture = useTexture("/band-dark.jpg");
+  const band = useTexture("/band.jpg");
 
   const curve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(),
@@ -42,6 +47,38 @@
 
   let dragged = $state(false);
   let hovered = $state(false);
+
+  let texture = $state<THREE.CanvasTexture | null>(null);
+
+  function dynamic(base: THREE.Texture) {
+    const size = 1024;
+    const c = document.createElement("canvas");
+    c.width = size;
+    c.height = size;
+    const ctx = c.getContext("2d")!;
+    ctx.drawImage(base.image as CanvasImageSource, 0, 0, size, size);
+
+    ctx.font = "600 43px system-ui, -apple-system, sans-serif";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(firstName, 31, 523);
+    ctx.fillText(lastName, 31, 567);
+
+    const t = new THREE.CanvasTexture(c);
+    t.flipY = false;
+    t.anisotropy = 16;
+    t.colorSpace = base.colorSpace;
+    t.needsUpdate = true;
+    return t;
+  }
+
+  $effect(() => {
+    const map = $gltf?.materials?.base?.map;
+    if (!map || !map.image) return;
+    if (texture) return;
+    texture = dynamic(map);
+  });
 
   let joint = useSphericalJoint([0, 0, 0], [0, 1.475, 0]),
     r1 = useRopeJoint([0, 0, 0], [0, 0, 0], 1),
@@ -87,8 +124,6 @@
   const geometry = new MeshLineGeometry();
 
   usePhysicsTask((delta) => {
-    if (!card || !j1 || !j3 || !fixed) return;
-
     if (dragged) {
       vec.set(ndc.x, ndc.y, 0.5).unproject(camera.current);
       dir.copy(vec).sub(camera.current.position).normalize();
@@ -111,6 +146,7 @@
       lerp.lerp(vec.set(t.x, t.y, t.z), delta * (10 + clamped * 40));
     }
     // Calculate catmul curve.
+    if (!card || !j1 || !j3 || !fixed) return;
     curve.points[0].copy(j3.translation());
     curve.points[1].copy(j2Lerp);
     curve.points[2].copy(j1Lerp);
@@ -139,10 +175,10 @@
   });
 
   $effect.pre(() => {
-    const t = $texture;
-    if (!t) return;
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    material.map = t;
+    const b = $band;
+    if (!b) return;
+    b.wrapS = b.wrapT = THREE.RepeatWrapping;
+    material.map = b;
     material.lineWidth = 1;
     material.depthTest = false;
     material.resolution.set(size.current.width, size.current.height);
@@ -210,7 +246,7 @@
     >
       <Collider shape="cuboid" args={[0.8, 1.125, 0.01]} />
 
-      {#if $gltf}
+      {#if $gltf && texture}
         <T.Group
           scale={2.25}
           position={[0, -1.2, -0.05]}
@@ -228,12 +264,15 @@
             }}
           >
             <T.MeshPhysicalMaterial
-              map={$gltf.materials.base.map}
-              map-anisotropy={16}
+              map={texture}
               clearcoat={1}
-              clearcoatRoughness={0.15}
               roughness={0.3}
               metalness={0.5}
+              iridescence={1}
+              iridescenceIOR={1}
+              map-anisotropy={16}
+              clearcoatRoughness={0.15}
+              iridescenceThicknessRange={[0, 2400]}
             />
           </T.Mesh>
 

@@ -2,40 +2,34 @@
   import { Canvas, T, useThrelte } from "@threlte/core";
   import * as THREE from "three";
 
-  let { theme = "dark" }: { theme: "light" | "dark" } = $props();
-
   const { scene, renderer } = useThrelte();
 
   $effect.pre(() => {
-    const dark = theme === "dark";
-
     const hdr = new THREE.Scene();
-    hdr.background = new THREE.Color(dark ? "black" : "white");
+    hdr.background = new THREE.Color(0x111111);
     const geometry = new THREE.PlaneGeometry(1, 1);
-
-    const i = dark ? 1 : 0.15;
 
     const lightformers = [
       {
-        intensity: 2 * i,
+        intensity: 2,
         pos: [0, -1, 5],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 3 * i,
+        intensity: 3,
         pos: [-1, -1, 1],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 3 * i,
+        intensity: 3,
         pos: [1, 1, 1],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 10 * i,
+        intensity: 10,
         pos: [-25, 5, 30],
         rot: [0, Math.PI / 2, Math.PI / 3],
         scale: [100, 15, 1],
