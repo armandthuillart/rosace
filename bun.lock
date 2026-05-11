@@ -106,7 +106,7 @@
     "@sveltejs/kit": "^2.59.1",
     "@tailwindcss/vite": "^4.3.0",
     "@threlte/core": "^8.5.14",
-    "@threlte/extras": "^9.16.0",
+    "@threlte/extras": "^9.17.0",
     "@threlte/rapier": "^3.4.2",
     "@types/bun": "^1.3.13",
     "@types/node": "^25.6.2",
@@ -124,7 +124,7 @@
     "posthog-node": "^5.33.4",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-svelte": "^3.5.1",
+    "prettier-plugin-svelte": "^3.5.2",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "stripe": "^22.1.1",
     "svelte": "^5.55.5",
@@ -680,7 +680,7 @@
 
     "@threlte/core": ["@threlte/core@8.5.14", "", { "peerDependencies": { "svelte": ">=5", "three": ">=0.160" } }, "sha512-9UPW8zgkXPk6zEaJSvNuL9mDa0fHqCBzDXioUDt6flRUEvhh+nR8Q6XMjea6s+frReFw7WnKcDobPsGNPbtdLg=="],
 
-    "@threlte/extras": ["@threlte/extras@9.16.0", "", { "dependencies": { "@threejs-kit/instanced-sprite-mesh": "^2.5.1", "camera-controls": "^3.1.2", "three-mesh-bvh": "^0.9.1", "three-perf": "^1.0.11", "three-viewport-gizmo": "^2.2.0", "troika-three-text": "^0.52.4" }, "peerDependencies": { "svelte": ">=5", "three": ">=0.160" } }, "sha512-qE95CCB8yA4m/W3/gpX9jHniWDQTpice6bB56b8spIMcfznHqJ5YVD8SjSfDrrkNQsGdj10cwNGJOxJzxkk24g=="],
+    "@threlte/extras": ["@threlte/extras@9.17.0", "", { "dependencies": { "@threejs-kit/instanced-sprite-mesh": "^2.5.1", "camera-controls": "^3.1.2", "three-mesh-bvh": "^0.9.1", "three-perf": "^1.0.11", "three-viewport-gizmo": "^2.2.0", "troika-three-text": "^0.52.4" }, "peerDependencies": { "svelte": ">=5", "three": ">=0.160" } }, "sha512-IOhXBU6fiac4jzEkCVdHIX0bwRdxfOgCd8QSeISAKv/qAks8xb3xIxS5P346oWXnL66isYuy1ockPJIL1geDmw=="],
 
     "@threlte/rapier": ["@threlte/rapier@3.4.2", "", { "peerDependencies": { "@dimforge/rapier3d-compat": ">=0.16", "svelte": ">=5", "three": ">=0.152" } }, "sha512-dBTqFZlEBQ0BQNUooeRBu1QR26zuBn42EQVthMz90Oz88Hc+sYMjb4adyK2dJeG0Q+kR/owNPzjH3QSfRuEr4A=="],
 
@@ -1288,7 +1288,7 @@
 
     "prettier-plugin-astro": ["prettier-plugin-astro@0.14.1", "", { "dependencies": { "@astrojs/compiler": "^2.9.1", "prettier": "^3.0.0", "sass-formatter": "^0.7.6" } }, "sha512-RiBETaaP9veVstE4vUwSIcdATj6dKmXljouXc/DDNwBSPTp8FRkLGDSGFClKsAFeeg+13SB0Z1JZvbD76bigJw=="],
 
-    "prettier-plugin-svelte": ["prettier-plugin-svelte@3.5.1", "", { "peerDependencies": { "prettier": "^3.0.0", "svelte": "^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0" } }, "sha512-65+fr5+cgIKWKiqM1Doum4uX6bY8iFCdztvvp2RcF+AJoieaw9kJOFMNcJo/bkmKYsxFaM9OsVZK/gWauG/5mg=="],
+    "prettier-plugin-svelte": ["prettier-plugin-svelte@3.5.2", "", { "peerDependencies": { "prettier": "^3.0.0", "svelte": "^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0" } }, "sha512-ItFouLvzSFE3ulNl4DKoWM3BGcbDCNVpIyy/Y3F2gC3aNiGLxtFUdffVqO5Z5hhYG+DFT5KULWaxmeFFpdbvaQ=="],
 
     "prettier-plugin-tailwindcss": ["prettier-plugin-tailwindcss@0.8.0", "", { "peerDependencies": { "@ianvs/prettier-plugin-sort-imports": "*", "@prettier/plugin-hermes": "*", "@prettier/plugin-oxc": "*", "@prettier/plugin-pug": "*", "@shopify/prettier-plugin-liquid": "*", "@trivago/prettier-plugin-sort-imports": "*", "@zackad/prettier-plugin-twig": "*", "prettier": "^3.0", "prettier-plugin-astro": "*", "prettier-plugin-css-order": "*", "prettier-plugin-jsdoc": "*", "prettier-plugin-marko": "*", "prettier-plugin-multiline-arrays": "*", "prettier-plugin-organize-attributes": "*", "prettier-plugin-organize-imports": "*", "prettier-plugin-sort-imports": "*", "prettier-plugin-svelte": "*" }, "optionalPeers": ["@ianvs/prettier-plugin-sort-imports", "@prettier/plugin-hermes", "@prettier/plugin-oxc", "@prettier/plugin-pug", "@shopify/prettier-plugin-liquid", "@trivago/prettier-plugin-sort-imports", "@zackad/prettier-plugin-twig", "prettier-plugin-astro", "prettier-plugin-css-order", "prettier-plugin-jsdoc", "prettier-plugin-marko", "prettier-plugin-multiline-arrays", "prettier-plugin-organize-attributes", "prettier-plugin-organize-imports", "prettier-plugin-sort-imports", "prettier-plugin-svelte"] }, "sha512-V8ITGH87yuBDF6JpEZTOVlUz/saAwqb8f3HRgUj8Lh+tGCcrmorhsLpYqzygwFwK0PE2Ib6Mv3M7T/uE2tZV1g=="],
 

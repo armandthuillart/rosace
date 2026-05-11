@@ -2,14 +2,14 @@
   import { liveQuery } from "dexie";
   import { db } from "$lib/db";
   import posthog from "posthog-js";
-  import EarlyAccess from "$lib/components/EarlyAccess.svelte";
+  import Stage from "$lib/components/Stage.svelte";
 
   let { data } = $props();
   let projects = liveQuery(() => db.projects.toArray());
 </script>
 
 {#if data.waitlist}
-  <EarlyAccess />
+  <Stage />
 {:else}
   <div>
     Logged in as {data.user.email} and have {($projects || []).length} projects.
