@@ -83,6 +83,8 @@
         : "auto";
   });
 
+  const geometry = new MeshLineGeometry();
+
   usePhysicsTask((delta) => {
     if (dragged) {
       vec.set(ndc.x, ndc.y, 0.5).unproject(camera.current);
@@ -111,7 +113,7 @@
       curve.points[1].copy(j2Lerp);
       curve.points[2].copy(j1Lerp);
       curve.points[3].copy(fixed.translation());
-      band.current.geometry.setPoints(curve.getPoints(32));
+      geometry.setPoints(curve.getPoints(32));
       // Tilt it back towards the screen.
       ang.copy(card.angvel());
       rot.copy(card.rotation());
@@ -121,22 +123,19 @@
 
   curve.curveType = "chordal";
 
-  const mat = new MeshLineMaterial({
+  const material = new MeshLineMaterial({
     color: new THREE.Color("white"),
-    repeat: new THREE.Vector2(-3, 1),
     useMap: 1,
+    repeat: new THREE.Vector2(-3, 1),
     lineWidth: 1,
     resolution: new THREE.Vector2(size.current.width, size.current.height),
   });
 
-  const geo = new MeshLineGeometry();
-
   $effect.pre(() => {
     const t = $texture;
     if (!t) return;
-    mat.map = t;
+    material.map = t;
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    mat.depthTest = false;
   });
 </script>
 
@@ -206,4 +205,4 @@
   </T.Group>
 </T.Group>
 
-<T.Mesh geometry={geo} material={mat} />
+<T.Mesh {geometry} {material} />

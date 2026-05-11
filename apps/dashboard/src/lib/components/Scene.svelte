@@ -53,7 +53,7 @@
     geometry.dispose();
 
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const map = pmrem.fromScene(hdr, 0.75).texture;
+    const map = pmrem.fromScene(hdr, 0.01).texture;
     pmrem.dispose();
 
     scene.background = map;
