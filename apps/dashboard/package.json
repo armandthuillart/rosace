@@ -19,7 +19,8 @@
     "gsap": "catalog:",
     "meshline": "catalog:",
     "posthog-js": "catalog:",
-    "posthog-node": "catalog:"
+    "posthog-node": "catalog:",
+    "three": "catalog:"
   },
   "devDependencies": {
     "@dimforge/rapier3d-compat": "catalog:",

@@ -28,6 +28,7 @@
         "meshline": "catalog:",
         "posthog-js": "catalog:",
         "posthog-node": "catalog:",
+        "three": "catalog:",
       },
       "devDependencies": {
         "@dimforge/rapier3d-compat": "catalog:",
@@ -132,6 +133,7 @@
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "tailwindcss": "^4.3.0",
+    "three": "^0.184.0",
     "typescript": "6.0.3",
     "valibot": "^1.4.0",
     "vite-plus": "^0.1.20",

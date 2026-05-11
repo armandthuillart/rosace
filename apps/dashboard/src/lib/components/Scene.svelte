@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { Canvas, T, useThrelte } from "@threlte/core";
+  import { T, useThrelte } from "@threlte/core";
   import * as THREE from "three";
 
   const { scene, renderer } = useThrelte();
 
   $effect.pre(() => {
     const hdr = new THREE.Scene();
-    hdr.background = new THREE.Color(0x111111);
+    hdr.background = new THREE.Color("black");
     const geometry = new THREE.PlaneGeometry(1, 1);
 
     const lightformers = [

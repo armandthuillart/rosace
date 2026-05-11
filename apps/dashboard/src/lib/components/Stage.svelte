@@ -6,9 +6,9 @@
 </script>
 
 <div class="flex h-screen w-full items-center justify-center">
-  <Canvas>
+  <Canvas dpr={[1, 2]}>
     <Scene />
-    <World gravity={[0, -40, 0]}>
+    <World gravity={[0, -40, 0]} framerate={60}>
       <Lanyard />
     </World>
   </Canvas>

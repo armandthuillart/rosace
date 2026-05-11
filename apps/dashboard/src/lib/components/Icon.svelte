@@ -1,18 +1,16 @@
 <script lang="ts">
   import type { SVGAttributes } from "svelte/elements";
 
-  const spriteNames = [
+  const names = [
+    "view",
     "apple",
     "google",
     "rosace",
     "view-off-slash",
-    "view",
   ] as const;
 
-  type IconName = (typeof spriteNames)[number];
-
   interface Props extends SVGAttributes<SVGSVGElement> {
-    name: IconName;
+    name: (typeof names)[number];
   }
 
   let { name, ...props }: Props = $props();

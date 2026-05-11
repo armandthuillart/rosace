@@ -33,7 +33,9 @@
     ang = new THREE.Vector3(),
     dir = new THREE.Vector3(),
     ndc = new THREE.Vector2(),
-    drag = new THREE.Vector3();
+    drag = new THREE.Vector3(),
+    quat = new THREE.Quaternion(),
+    euler = new THREE.Euler();
 
   const gltf = useGltf("/tag.glb");
   const band = useTexture("/band.jpg");
@@ -47,7 +49,6 @@
 
   let dragged = $state(false);
   let hovered = $state(false);
-
   let texture = $state<THREE.CanvasTexture | null>(null);
 
   function dynamic(base: THREE.Texture) {
@@ -62,8 +63,8 @@
     ctx.fillStyle = "white";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(firstName, 31, 523);
     ctx.fillText(lastName, 31, 567);
+    ctx.fillText(firstName, 31, 523);
 
     const t = new THREE.CanvasTexture(c);
     t.flipY = false;
@@ -124,26 +125,27 @@
   const geometry = new MeshLineGeometry();
 
   usePhysicsTask((delta) => {
+    material.resolution.set(size.current.width, size.current.height);
+    // Makes the drag point three dimensional.
     if (dragged) {
       vec.set(ndc.x, ndc.y, 0.5).unproject(camera.current);
       dir.copy(vec).sub(camera.current.position).normalize();
       vec.add(dir.multiplyScalar(camera.current.position.length()));
-      card?.setNextKinematicTranslation({
-        x: vec.x - drag.x,
-        y: vec.y - drag.y,
-        z: vec.z - drag.z,
-      });
+      const t = { x: vec.x - drag.x, y: vec.y - drag.y, z: vec.z - drag.z };
+      card?.setNextKinematicTranslation(t);
     }
     // Fix most of the jitter when over pulling the card.
-    const lerps = [j1Lerp, j2Lerp];
-    for (let i = 0; i < [j1, j2].length; i++) {
-      const j = [j1, j2][i];
-      const lerp = lerps[i];
-      if (!j) continue;
-      const t = j.translation();
-      const distance = lerp.distanceTo(t);
-      const clamped = Math.max(0.1, Math.min(1, distance));
-      lerp.lerp(vec.set(t.x, t.y, t.z), delta * (10 + clamped * 40));
+    if (j1) {
+      const t = j1.translation();
+      const d = j1Lerp.distanceTo(vec.set(t.x, t.y, t.z));
+      const c = Math.max(0.1, Math.min(1, d));
+      j1Lerp.lerp(vec, delta * (10 + c * 40));
+    }
+    if (j2) {
+      const t = j2.translation();
+      const d = j2Lerp.distanceTo(vec.set(t.x, t.y, t.z));
+      const c = Math.max(0.1, Math.min(1, d));
+      j2Lerp.lerp(vec, delta * (10 + c * 40));
     }
     // Calculate catmul curve.
     if (!card || !j1 || !j3 || !fixed) return;
@@ -155,13 +157,9 @@
     // Tilt it back towards the screen.
     ang.copy(card.angvel());
     const r = card.rotation();
-    const euler = new THREE.Euler().setFromQuaternion(
-      new THREE.Quaternion(r.x, r.y, r.z, r.w),
-    );
-    card.setAngvel(
-      { x: ang.x, y: ang.y - next * euler.y * 0.25, z: ang.z },
-      true,
-    );
+    euler.setFromQuaternion(quat.set(r.x, r.y, r.z, r.w));
+    const vel = { x: ang.x, y: ang.y - next * euler.y * 0.25, z: ang.z };
+    card.setAngvel(vel, true);
   });
 
   curve.curveType = "chordal";
@@ -209,7 +207,7 @@
   on:pointerup={handlePointerUp}
 />
 
-<T.PerspectiveCamera makeDefault position={[0, 0, 13]} fov={25} />
+<T.PerspectiveCamera fov={25} position={[0, 0, 13]} makeDefault />
 
 <T.Group position={[0, 4, 0]}>
   <RigidBody
