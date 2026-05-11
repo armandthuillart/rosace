@@ -14,6 +14,8 @@
 
   interactivity();
 
+  let { theme = "dark" }: { theme: "light" | "dark" } = $props();
+
   const { camera, size } = useThrelte();
 
   let fixed: RapierRigidBody | undefined = $state(),
@@ -29,7 +31,7 @@
     drag = new THREE.Vector3();
 
   const gltf = useGltf("/tag.glb");
-  const texture = useTexture("/band.jpg");
+  const texture = useTexture("/band-dark.jpg");
 
   const curve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(),

@@ -18,9 +18,9 @@
 
 <div class="flex h-screen w-full items-center justify-center">
   <Canvas>
-    <Scene />
+    <Scene {theme} />
     <World gravity={[0, -40, 0]}>
-      <Lanyard />
+      <Lanyard {theme} />
     </World>
   </Canvas>
 </div>
