@@ -1,17 +1,17 @@
 // @ts-ignore
-import { env } from "$env/dynamic/private";
-import { redirect, type RequestEvent, type Handle } from "@sveltejs/kit";
+import { env } from '$env/dynamic/private';
+import { redirect, type RequestEvent, type Handle } from '@sveltejs/kit';
 
-import { convexClient } from "./client";
-import type { Auth } from "./index";
+import { convexClient } from './client';
+import type { Auth } from './index';
 
 const handle: Handle = async ({ event, resolve }) => {
   const target = env.CONVEX_SITE_URL;
   const source = new URL(event.request.url);
 
-  if (source.pathname.startsWith("/auth/")) {
+  if (source.pathname.startsWith('/auth/')) {
     const body =
-      event.request.method === "GET" || event.request.method === "HEAD"
+      event.request.method === 'GET' || event.request.method === 'HEAD'
         ? undefined
         : await event.request.text();
 
@@ -19,12 +19,12 @@ const handle: Handle = async ({ event, resolve }) => {
       method: event.request.method,
       headers: event.request.headers,
       body,
-      redirect: "manual",
+      redirect: 'manual',
     });
 
     const headers = new Headers(upstream.headers);
-    headers.delete("content-encoding");
-    headers.delete("content-length");
+    headers.delete('content-encoding');
+    headers.delete('content-length');
 
     return new Response(upstream.body, {
       status: upstream.status,
@@ -33,11 +33,11 @@ const handle: Handle = async ({ event, resolve }) => {
   }
 
   event.locals.auth = async (): Promise<Auth> => {
-    const cookie = event.request.headers.get("cookie") ?? "";
+    const cookie = event.request.headers.get('cookie') ?? '';
     if (!cookie) return null;
 
     const response = await fetch(`${target}/auth/session`, {
-      method: "GET",
+      method: 'GET',
       headers: { cookie },
     });
 
@@ -50,18 +50,18 @@ const handle: Handle = async ({ event, resolve }) => {
 
 const logout = async (event: RequestEvent) => {
   const headers = new Headers();
-  const origin = event.request.headers.get("origin");
+  const origin = event.request.headers.get('origin');
 
   if (origin) {
-    headers.set("origin", origin);
+    headers.set('origin', origin);
   }
 
-  await event.fetch("/auth/logout", {
-    method: "POST",
+  await event.fetch('/auth/logout', {
+    method: 'POST',
     headers,
   });
 
-  redirect(303, "/");
+  redirect(303, '/');
 };
 
 function svelteAuth() {

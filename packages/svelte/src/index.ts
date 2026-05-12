@@ -1,4 +1,4 @@
-import type { GenericId } from "convex/values";
+import type { GenericId } from 'convex/values';
 
 declare global {
   namespace App {
@@ -12,12 +12,12 @@ declare global {
 }
 
 type User = {
-  _id: GenericId<"users">;
+  _id: GenericId<'users'>;
   _creationTime: number;
   email: string;
   firstName: string;
   lastName: string;
-  plan: "free" | "pro";
+  plan: 'free' | 'pro';
 };
 
 type Auth = {

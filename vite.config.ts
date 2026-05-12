@@ -1,17 +1,19 @@
-import { defineConfig } from "vite-plus";
+import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   fmt: {
-    ignorePatterns: ["**/.agents/**", "**/*generated/**"],
+    ignorePatterns: ['**/.agents/**', '**/*generated/**'],
+    singleQuote: true,
+    sortImports: true,
   },
   lint: {
-    ignorePatterns: ["**/.agents/**", "**/*generated/**"],
+    ignorePatterns: ['**/.agents/**', '**/*generated/**'],
     options: {
       typeAware: true,
       typeCheck: true,
     },
   },
   staged: {
-    "*": "vp check --fix",
+    '*': 'vp check --fix',
   },
 });

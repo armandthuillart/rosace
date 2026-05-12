@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "convex-test": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

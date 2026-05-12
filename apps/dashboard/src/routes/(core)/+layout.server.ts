@@ -1,14 +1,14 @@
-import { redirect } from "@sveltejs/kit";
-import { PostHog } from "posthog-node";
-import { PUBLIC_POSTHOG_KEY } from "$env/static/public";
+import { PUBLIC_POSTHOG_KEY } from '$env/static/public';
+import { redirect } from '@sveltejs/kit';
+import { PostHog } from 'posthog-node';
 
-import type { LayoutServerLoad } from "./$types";
+import type { LayoutServerLoad } from './$types';
 
 const posthog = new PostHog(PUBLIC_POSTHOG_KEY);
 
 export const load: LayoutServerLoad = async ({ parent }) => {
   const data = await parent();
-  if (!data.user) throw redirect(302, "/");
+  if (!data.user) throw redirect(302, '/');
   const flags = await posthog.evaluateFlags(data.user._id);
-  return { user: data.user, waitlist: !flags.isEnabled("early-access") };
+  return { user: data.user, waitlist: !flags.isEnabled('early-access') };
 };

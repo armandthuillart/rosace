@@ -1,6 +1,7 @@
-import { mutation, query } from "./middleware";
-import { v } from "convex/values";
-import { signJWT } from "./crypto";
+import { v } from 'convex/values';
+
+import { signJWT } from './crypto';
+import { mutation, query } from './middleware';
 
 export const getSession = query
   .input(v.object({ token: v.string() }))
@@ -12,11 +13,11 @@ export const getSession = query
           token: v.string(),
           user: v.object({
             _creationTime: v.number(),
-            _id: v.id("users"),
+            _id: v.id('users'),
             email: v.string(),
             firstName: v.string(),
             lastName: v.string(),
-            plan: v.union(v.literal("free"), v.literal("pro")),
+            plan: v.union(v.literal('free'), v.literal('pro')),
           }),
         }),
         v.null(),
@@ -25,8 +26,8 @@ export const getSession = query
   )
   .handler(async (ctx, args) => {
     const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .query('sessions')
+      .withIndex('by_token', (q) => q.eq('token', args.token))
       .first();
 
     if (!session || session.expiresAt <= Date.now()) {
@@ -49,8 +50,8 @@ export const deleteSession = mutation
   .returns(v.null())
   .handler(async (ctx, args) => {
     const session = await ctx.db
-      .query("sessions")
-      .withIndex("by_token", (q) => q.eq("token", args.token))
+      .query('sessions')
+      .withIndex('by_token', (q) => q.eq('token', args.token))
       .first();
 
     if (session) await ctx.db.delete(session._id);

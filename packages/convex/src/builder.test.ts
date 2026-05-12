@@ -1,61 +1,62 @@
-import { describe, it, assertType, expect } from "vite-plus/test";
-import { v } from "convex/values";
-import { defineSchema, defineTable, type DataModelFromSchemaDefinition } from "convex/server";
-import { createBuilder, ConvexBuilderWithHandler, ConvexBuilderWithFunction } from "./builder";
+import { defineSchema, defineTable, type DataModelFromSchemaDefinition } from 'convex/server';
+import { v } from 'convex/values';
+import { describe, it, assertType, expect } from 'vite-plus/test';
+
+import { createBuilder, ConvexBuilderWithHandler, ConvexBuilderWithFunction } from './builder';
 
 const schema = defineSchema({ numbers: defineTable({ value: v.number() }) });
 const convex = createBuilder<DataModelFromSchemaDefinition<typeof schema>>();
 
-describe("function kind selection", () => {
-  it("should prevent .input() before selecting function kind", () => {
+describe('function kind selection', () => {
+  it('should prevent .input() before selecting function kind', () => {
     // @ts-expect-error - ConvexBuilder does not have .input(). Call .query(), .mutation(), or .action() first.
     expect(() => convex.input({ id: v.string() })).toThrow();
   });
 
-  it("should prevent .handler() before selecting function kind", () => {
+  it('should prevent .handler() before selecting function kind', () => {
     // @ts-expect-error - ConvexBuilder does not have .handler(). Call .query(), .mutation(), or .action() first.
     expect(() => convex.handler(async () => ({ success: true }))).toThrow();
   });
 
-  it("should prevent .use() before selecting function kind", () => {
+  it('should prevent .use() before selecting function kind', () => {
     const authMiddleware = convex.query().createMiddleware(async (context, next) => next(context));
 
     // @ts-expect-error - ConvexBuilder does not have .use().
     expect(() => convex.use(authMiddleware)).toThrow();
   });
 
-  it("should allow .query() to be called first", () => {
+  it('should allow .query() to be called first', () => {
     const builder = convex.query();
     assertType<typeof builder>(builder);
   });
 
-  it("should allow .mutation() to be called first", () => {
+  it('should allow .mutation() to be called first', () => {
     const builder = convex.mutation();
     assertType<typeof builder>(builder);
   });
 
-  it("should allow .action() to be called first", () => {
+  it('should allow .action() to be called first', () => {
     const builder = convex.action();
     assertType<typeof builder>(builder);
   });
 });
 
-describe("order of operations", () => {
-  it("should prevent .public() before .handler()", () => {
+describe('order of operations', () => {
+  it('should prevent .public() before .handler()', () => {
     const builder = convex.query().input({ id: v.string() });
 
     // @ts-expect-error - ConvexBuilderWithFunction does not have .public(). Call .handler() first.
     expect(() => builder.public()).toThrow();
   });
 
-  it("should prevent .internal() before .handler()", () => {
+  it('should prevent .internal() before .handler()', () => {
     const builder = convex.mutation().input({ name: v.string() });
 
     // @ts-expect-error - ConvexBuilderWithFunction does not have .internal(). Call .handler() first.
     expect(() => builder.internal()).toThrow();
   });
 
-  it("should allow .public() after .handler()", () => {
+  it('should allow .public() after .handler()', () => {
     convex
       .query()
       .input({ id: v.string() })
@@ -63,7 +64,7 @@ describe("order of operations", () => {
       .public();
   });
 
-  it("should allow .internal() after .handler()", () => {
+  it('should allow .internal() after .handler()', () => {
     convex
       .query()
       .input({ id: v.string() })
@@ -71,7 +72,7 @@ describe("order of operations", () => {
       .internal();
   });
 
-  it("should allow .returns() before .handler()", () => {
+  it('should allow .returns() before .handler()', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -79,7 +80,7 @@ describe("order of operations", () => {
       .handler(async () => ({ numbers: [1, 2, 3] }));
   });
 
-  it("should prevent .returns() after .handler()", () => {
+  it('should prevent .returns() after .handler()', () => {
     const builder = convex
       .query()
       .input({ count: v.number() })
@@ -90,38 +91,38 @@ describe("order of operations", () => {
   });
 });
 
-describe("handler uniqueness", () => {
-  it("should prevent .handler() twice on query", () => {
+describe('handler uniqueness', () => {
+  it('should prevent .handler() twice on query', () => {
     const builder = convex
       .query()
       .input({ id: v.string() })
       .handler(async (context, input) => ({ id: input.id }));
 
     // @ts-expect-error - ConvexBuilderWithHandler does not have .handler()
-    expect(() => builder.handler(async () => ({ error: "should not be called" }))).toThrow();
+    expect(() => builder.handler(async () => ({ error: 'should not be called' }))).toThrow();
   });
 
-  it("should prevent .handler() twice on mutation", () => {
+  it('should prevent .handler() twice on mutation', () => {
     const builder = convex
       .mutation()
       .input({ name: v.string() })
       .handler(async (context, input) => ({ name: input.name }));
 
     // @ts-expect-error - ConvexBuilderWithHandler does not have .handler()
-    expect(() => builder.handler(async () => ({ error: "should not be called" }))).toThrow();
+    expect(() => builder.handler(async () => ({ error: 'should not be called' }))).toThrow();
   });
 
-  it("should prevent .handler() twice on action", () => {
+  it('should prevent .handler() twice on action', () => {
     const builder = convex
       .action()
       .input({ url: v.string() })
       .handler(async (context, input) => ({ url: input.url }));
 
     // @ts-expect-error - ConvexBuilderWithHandler does not have .handler().
-    expect(() => builder.handler(async () => ({ error: "should not be called" }))).toThrow();
+    expect(() => builder.handler(async () => ({ error: 'should not be called' }))).toThrow();
   });
 
-  it("should prevent .handler() twice even with middleware in between", () => {
+  it('should prevent .handler() twice even with middleware in between', () => {
     const authMiddleware = convex.query().createMiddleware(async (context, next) => next(context));
 
     const builder = convex
@@ -131,10 +132,10 @@ describe("handler uniqueness", () => {
       .use(authMiddleware);
 
     // @ts-expect-error - ConvexBuilderWithHandler does not have .handler().
-    expect(() => builder.handler(async () => ({ error: "should not be called" }))).toThrow();
+    expect(() => builder.handler(async () => ({ error: 'should not be called' }))).toThrow();
   });
 
-  it("should prevent .handler() twice even with returns validator", () => {
+  it('should prevent .handler() twice even with returns validator', () => {
     const builder = convex
       .query()
       .input({ count: v.number() })
@@ -145,7 +146,7 @@ describe("handler uniqueness", () => {
     expect(() => builder.handler(async () => ({ numbers: [] }))).toThrow();
   });
 
-  it("should allow chaining .use() after .handler()", () => {
+  it('should allow chaining .use() after .handler()', () => {
     const authMiddleware = convex.query().createMiddleware(async (context, next) => next(context));
 
     const builder = convex
@@ -158,8 +159,8 @@ describe("handler uniqueness", () => {
   });
 });
 
-describe("callable builder", () => {
-  it("should make ConvexBuilderWithHandler callable", () => {
+describe('callable builder', () => {
+  it('should make ConvexBuilderWithHandler callable', () => {
     const nonRegisteredQuery = convex
       .query()
       .input({ count: v.number() })
@@ -168,7 +169,7 @@ describe("callable builder", () => {
     assertType<(context: any, args: { count: number }) => Promise<string>>(nonRegisteredQuery);
   });
 
-  it("should make registered queries non-callable", () => {
+  it('should make registered queries non-callable', () => {
     const nonRegisteredQuery = convex
       .query()
       .input({ count: v.number() })
@@ -180,7 +181,7 @@ describe("callable builder", () => {
     expect((registeredQuery as any).handler).toBeUndefined();
   });
 
-  it("should make registered mutations non-callable", () => {
+  it('should make registered mutations non-callable', () => {
     const nonRegisteredMutation = convex
       .mutation()
       .input({ value: v.number() })
@@ -192,7 +193,7 @@ describe("callable builder", () => {
     expect((registeredMutation as any).handler).toBeUndefined();
   });
 
-  it("should make registered actions non-callable", () => {
+  it('should make registered actions non-callable', () => {
     const nonRegisteredAction = convex
       .action()
       .input({ url: v.string() })
@@ -204,7 +205,7 @@ describe("callable builder", () => {
     expect((registeredAction as any).handler).toBeUndefined();
   });
 
-  it("should make internal registered queries non-callable", () => {
+  it('should make internal registered queries non-callable', () => {
     const nonRegisteredQuery = convex
       .query()
       .input({ count: v.number() })
@@ -216,10 +217,10 @@ describe("callable builder", () => {
     expect((registeredQuery as any).handler).toBeUndefined();
   });
 
-  it("should preserve callability through middleware chain", () => {
+  it('should preserve callability through middleware chain', () => {
     const authMiddleware = convex
       .query()
-      .createMiddleware(async (context, next) => next({ ...context, userId: "user-123" }));
+      .createMiddleware(async (context, next) => next({ ...context, userId: 'user-123' }));
 
     const callableQuery = convex
       .query()
@@ -235,14 +236,14 @@ describe("callable builder", () => {
     >(callableQuery);
   });
 
-  it("should preserve callability after multiple middleware", () => {
+  it('should preserve callability after multiple middleware', () => {
     const authMiddleware = convex
       .query()
-      .createMiddleware(async (context, next) => next({ ...context, userId: "user-123" }));
+      .createMiddleware(async (context, next) => next({ ...context, userId: 'user-123' }));
 
     const loggingMiddleware = convex
       .query()
-      .createMiddleware(async (context, next) => next({ ...context, requestId: "req-123" }));
+      .createMiddleware(async (context, next) => next({ ...context, requestId: 'req-123' }));
 
     const callableQuery = convex
       .query()
@@ -258,7 +259,7 @@ describe("callable builder", () => {
     );
   });
 
-  it("should work with mutations", () => {
+  it('should work with mutations', () => {
     const callableMutation = convex
       .mutation()
       .input({ value: v.number() })
@@ -267,7 +268,7 @@ describe("callable builder", () => {
     assertType<(context: any, args: { value: number }) => Promise<string>>(callableMutation);
   });
 
-  it("should work with actions", () => {
+  it('should work with actions', () => {
     const callableAction = convex
       .action()
       .input({ url: v.string() })
@@ -276,11 +277,14 @@ describe("callable builder", () => {
     assertType<(context: any, args: { url: string }) => Promise<{ url: string }>>(callableAction);
   });
 
-  it("should work with optional input", () => {
+  it('should work with optional input', () => {
     const callableQuery = convex
       .query()
       .input({ name: v.optional(v.string()), count: v.optional(v.number()) })
-      .handler(async (context, input) => ({ name: input.name, count: input.count }));
+      .handler(async (context, input) => ({
+        name: input.name,
+        count: input.count,
+      }));
 
     assertType<
       (
@@ -290,7 +294,7 @@ describe("callable builder", () => {
     >(callableQuery);
   });
 
-  it("should work with return validators", () => {
+  it('should work with return validators', () => {
     const callableQuery = convex
       .query()
       .input({ count: v.number() })
@@ -306,7 +310,7 @@ describe("callable builder", () => {
     );
   });
 
-  it("should work with no input", () => {
+  it('should work with no input', () => {
     const callableQuery = convex.query().handler(async () => ({ success: true }));
 
     assertType<(context: any, args: Record<never, never>) => Promise<{ success: boolean }>>(
@@ -314,7 +318,7 @@ describe("callable builder", () => {
     );
   });
 
-  it("should infer one-arg handlers with empty input objects", () => {
+  it('should infer one-arg handlers with empty input objects', () => {
     const callableQuery = convex
       .query()
       .input({})
@@ -328,7 +332,7 @@ describe("callable builder", () => {
     );
   });
 
-  it("should lose callability after .public()", () => {
+  it('should lose callability after .public()', () => {
     const callableQuery = convex
       .query()
       .input({ count: v.number() })
@@ -344,7 +348,7 @@ describe("callable builder", () => {
     expect((registeredQuery as any).handler).toBeUndefined();
   });
 
-  it("should lose callability after .internal()", () => {
+  it('should lose callability after .internal()', () => {
     const callableMutation = convex
       .mutation()
       .input({ value: v.number() })
@@ -359,8 +363,8 @@ describe("callable builder", () => {
   });
 });
 
-describe("context types per function", () => {
-  it("queries should have db and auth", () => {
+describe('context types per function', () => {
+  it('queries should have db and auth', () => {
     convex
       .query()
       .input({ id: v.string() })
@@ -372,7 +376,7 @@ describe("context types per function", () => {
       .public();
   });
 
-  it("mutations should have db and auth", () => {
+  it('mutations should have db and auth', () => {
     convex
       .mutation()
       .input({ name: v.string() })
@@ -384,7 +388,7 @@ describe("context types per function", () => {
       .public();
   });
 
-  it("actions should have auth and scheduler", () => {
+  it('actions should have auth and scheduler', () => {
     convex
       .action()
       .input({ url: v.string() })
@@ -397,8 +401,8 @@ describe("context types per function", () => {
   });
 });
 
-describe("returns validation", () => {
-  it("should accept Convex return validators", () => {
+describe('returns validation', () => {
+  it('should accept Convex return validators', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -406,7 +410,7 @@ describe("returns validation", () => {
       .handler(async () => ({ numbers: [1, 2, 3] }));
   });
 
-  it("should reject incorrect return type when .returns() is specified", () => {
+  it('should reject incorrect return type when .returns() is specified', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -415,7 +419,7 @@ describe("returns validation", () => {
       .handler(async () => ({ count: 5 }));
   });
 
-  it("should reject return type with missing required property", () => {
+  it('should reject return type with missing required property', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -424,16 +428,16 @@ describe("returns validation", () => {
       .handler(async () => ({ numbers: [1, 2, 3] }));
   });
 
-  it("should reject return type with wrong property type", () => {
+  it('should reject return type with wrong property type', () => {
     convex
       .query()
       .input({ count: v.number() })
       .returns(v.object({ numbers: v.array(v.number()) }))
       // @ts-expect-error - Return type mismatch: 'numbers' should be number[] but is string[].
-      .handler(async () => ({ numbers: ["1", "2", "3"] }));
+      .handler(async () => ({ numbers: ['1', '2', '3'] }));
   });
 
-  it("should enforce array return types", () => {
+  it('should enforce array return types', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -441,16 +445,16 @@ describe("returns validation", () => {
       .handler(async () => [1, 2, 3]);
   });
 
-  it("should reject wrong array return type", () => {
+  it('should reject wrong array return type', () => {
     convex
       .query()
       .input({ count: v.number() })
       .returns(v.array(v.number()))
       // @ts-expect-error - Return type mismatch: handler returns string[] but .returns() expects number[].
-      .handler(async () => ["1", "2", "3"]);
+      .handler(async () => ['1', '2', '3']);
   });
 
-  it("should allow any return type when .returns() is not specified", () => {
+  it('should allow any return type when .returns() is not specified', () => {
     convex
       .query()
       .input({ count: v.number() })
@@ -465,24 +469,24 @@ describe("returns validation", () => {
       .handler(async () => 42);
   });
 
-  it("should enforce return type for mutations", () => {
+  it('should enforce return type for mutations', () => {
     convex
       .mutation()
       .input({ value: v.number() })
-      .returns(v.id("numbers"))
-      .handler(async (context, input) => context.db.insert("numbers", { value: input.value }));
+      .returns(v.id('numbers'))
+      .handler(async (context, input) => context.db.insert('numbers', { value: input.value }));
   });
 
-  it("should reject incorrect return type for mutations", () => {
+  it('should reject incorrect return type for mutations', () => {
     convex
       .mutation()
       .input({ value: v.number() })
-      .returns(v.id("numbers"))
+      .returns(v.id('numbers'))
       // @ts-expect-error - Return type mismatch: handler returns string but .returns() expects Id<"numbers">.
-      .handler(async () => "wrong-type");
+      .handler(async () => 'wrong-type');
   });
 
-  it("should enforce return type for actions", () => {
+  it('should enforce return type for actions', () => {
     convex
       .action()
       .input({ count: v.number() })
@@ -490,83 +494,83 @@ describe("returns validation", () => {
       .handler(async () => [1, 2, 3]);
   });
 
-  it("should reject incorrect return type for actions", () => {
+  it('should reject incorrect return type for actions', () => {
     convex
       .action()
       .input({ count: v.number() })
       .returns(v.array(v.number()))
       // @ts-expect-error - Return type mismatch: handler returns string but .returns() expects number[].
-      .handler(async () => "wrong");
+      .handler(async () => 'wrong');
   });
 });
 
-describe("runtime guards", () => {
-  it("should throw when .public() is called without .handler()", () => {
+describe('runtime guards', () => {
+  it('should throw when .public() is called without .handler()', () => {
     const handlerless = new (ConvexBuilderWithHandler as any)({
-      functionType: "query",
+      functionType: 'query',
       middlewares: [],
       argsValidator: undefined,
       returnsValidator: undefined,
       handler: undefined,
     });
 
-    expect(() => handlerless.public()).toThrow("Handler not set");
+    expect(() => handlerless.public()).toThrow('Handler not set');
   });
 
-  it("should throw when .internal() is called without .handler()", () => {
+  it('should throw when .internal() is called without .handler()', () => {
     const handlerless = new (ConvexBuilderWithHandler as any)({
-      functionType: "query",
+      functionType: 'query',
       middlewares: [],
       argsValidator: undefined,
       returnsValidator: undefined,
       handler: undefined,
     });
 
-    expect(() => handlerless.internal()).toThrow("Handler not set");
+    expect(() => handlerless.internal()).toThrow('Handler not set');
   });
 
-  it("should throw when .public() is called without function type", () => {
+  it('should throw when .public() is called without function type', () => {
     const noFunctionType = new (ConvexBuilderWithHandler as any)({
       functionType: undefined,
       middlewares: [],
       argsValidator: undefined,
       returnsValidator: undefined,
-      handler: async () => "test",
+      handler: async () => 'test',
     });
 
-    expect(() => noFunctionType.public()).toThrow("Function type not set");
+    expect(() => noFunctionType.public()).toThrow('Function type not set');
   });
 
-  it("should throw if handler is set twice via internal def", () => {
+  it('should throw if handler is set twice via internal def', () => {
     const withHandler = new (ConvexBuilderWithFunction as any)({
-      functionType: "query",
+      functionType: 'query',
       middlewares: [],
       argsValidator: undefined,
       returnsValidator: undefined,
-      handler: async () => "first",
+      handler: async () => 'first',
     });
 
-    expect(() => withHandler.handler(async () => "second")).toThrow("Handler already defined");
+    expect(() => withHandler.handler(async () => 'second')).toThrow('Handler already defined');
   });
 });
 
-describe("$context() consistency", () => {
-  it("$context() should return a middleware helper, not a builder", () => {
+describe('$context() consistency', () => {
+  it('$context() should return a middleware helper, not a builder', () => {
     const result = convex.query().$context<{ auth: unknown }>();
 
-    expect(result).toHaveProperty("createMiddleware");
-    expect(typeof result.createMiddleware).toBe("function");
+    expect(result).toHaveProperty('createMiddleware');
+    expect(typeof result.createMiddleware).toBe('function');
     expect((result as any).input).toBeUndefined();
     expect((result as any).handler).toBeUndefined();
     expect((result as any).use).toBeUndefined();
   });
 
-  it("middleware created via $context().createMiddleware() should be usable with .use()", async () => {
+  it('middleware created via $context().createMiddleware() should be usable with .use()', async () => {
     const authMiddleware = convex
       .query()
       .$context<{ auth: unknown }>()
       .createMiddleware(async (context, next) =>
-        next({ ...context, user: { id: "1", name: "Alice" } }),
+        next({ ...context, user: { id: '1', name: 'Alice' } }),
       );
 
     const fn = convex
@@ -577,23 +581,23 @@ describe("$context() consistency", () => {
 
     const result = await fn({} as any, {});
 
-    expect(result).toBe("Alice");
+    expect(result).toBe('Alice');
   });
 });
 
-describe("middleware execution", () => {
-  it("should pass args through with no middleware", async () => {
+describe('middleware execution', () => {
+  it('should pass args through with no middleware', async () => {
     const fn = convex
       .query()
       .input({ name: v.string(), count: v.number() })
       .handler(async (_ctx, args) => ({ name: args.name, count: args.count }));
 
-    const result = await fn({} as any, { name: "test", count: 42 });
+    const result = await fn({} as any, { name: 'test', count: 42 });
 
-    expect(result).toEqual({ name: "test", count: 42 });
+    expect(result).toEqual({ name: 'test', count: 42 });
   });
 
-  it("should enrich context through middleware chain", async () => {
+  it('should enrich context through middleware chain', async () => {
     const addA = convex.query().createMiddleware(async (ctx, next) => next({ ...ctx, a: 1 }));
     const addB = convex.query().createMiddleware(async (ctx, next) => next({ ...ctx, b: 2 }));
 
@@ -608,14 +612,14 @@ describe("middleware execution", () => {
     expect(result).toEqual({ a: 1, b: 2 });
   });
 
-  it("should execute middlewares in registration order", async () => {
+  it('should execute middlewares in registration order', async () => {
     const order: string[] = [];
     const first = convex.query().createMiddleware(async (ctx, next) => {
-      order.push("first");
+      order.push('first');
       return next(ctx);
     });
     const second = convex.query().createMiddleware(async (ctx, next) => {
-      order.push("second");
+      order.push('second');
       return next(ctx);
     });
 
@@ -624,58 +628,58 @@ describe("middleware execution", () => {
       .use(first)
       .use(second)
       .handler(async () => {
-        order.push("handler");
+        order.push('handler');
       });
 
     await fn({} as any, {});
 
-    expect(order).toEqual(["first", "second", "handler"]);
+    expect(order).toEqual(['first', 'second', 'handler']);
   });
 
-  it("should propagate errors thrown before next()", async () => {
+  it('should propagate errors thrown before next()', async () => {
     const failing = convex.query().createMiddleware(async (_ctx, _next) => {
-      throw new Error("middleware failed before next");
+      throw new Error('middleware failed before next');
     });
 
     const fn = convex
       .query()
       .use(failing)
-      .handler(async () => "should not reach");
+      .handler(async () => 'should not reach');
 
-    await expect(fn({} as any, {})).rejects.toThrow("middleware failed before next");
+    await expect(fn({} as any, {})).rejects.toThrow('middleware failed before next');
   });
 
-  it("should propagate errors thrown after next()", async () => {
+  it('should propagate errors thrown after next()', async () => {
     const failsAfter = convex.query().createMiddleware(async (ctx, next) => {
       await next(ctx);
-      throw new Error("middleware failed after next");
+      throw new Error('middleware failed after next');
     });
 
     const fn = convex
       .query()
       .use(failsAfter)
-      .handler(async () => "handler ran");
+      .handler(async () => 'handler ran');
 
-    await expect(fn({} as any, {})).rejects.toThrow("middleware failed after next");
+    await expect(fn({} as any, {})).rejects.toThrow('middleware failed after next');
   });
 
-  it("should propagate handler error through multiple middleware layers", async () => {
+  it('should propagate handler error through multiple middleware layers', async () => {
     const order: string[] = [];
     const outer = convex.query().createMiddleware(async (ctx, next) => {
-      order.push("outer-before");
+      order.push('outer-before');
       try {
         return await next(ctx);
       } catch (e: any) {
-        order.push("outer-catch");
+        order.push('outer-catch');
         throw e;
       }
     });
     const inner = convex.query().createMiddleware(async (ctx, next) => {
-      order.push("inner-before");
+      order.push('inner-before');
       try {
         return await next(ctx);
       } catch (e: any) {
-        order.push("inner-catch");
+        order.push('inner-catch');
         throw e;
       }
     });
@@ -685,18 +689,18 @@ describe("middleware execution", () => {
       .use(outer)
       .use(inner)
       .handler(async () => {
-        throw new Error("boom");
+        throw new Error('boom');
       });
 
-    await expect(fn({} as any, {})).rejects.toThrow("boom");
-    expect(order).toEqual(["outer-before", "inner-before", "inner-catch", "outer-catch"]);
+    await expect(fn({} as any, {})).rejects.toThrow('boom');
+    expect(order).toEqual(['outer-before', 'inner-before', 'inner-catch', 'outer-catch']);
   });
 
-  it("should work with no middleware at all", async () => {
-    const fn = convex.query().handler(async () => "no middleware");
+  it('should work with no middleware at all', async () => {
+    const fn = convex.query().handler(async () => 'no middleware');
 
     const result = await fn({} as any, {});
 
-    expect(result).toBe("no middleware");
+    expect(result).toBe('no middleware');
   });
 });

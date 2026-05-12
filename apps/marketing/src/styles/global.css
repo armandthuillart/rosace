@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --animate-arrow-drop: download-arrow 1s ease-in-out 0s both;

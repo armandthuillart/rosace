@@ -8,7 +8,6 @@
     "dev": "bun ./scripts/dev.ts",
     "env": "bun ./scripts/env.ts"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/bun": "catalog:",
     "commander": "catalog:",

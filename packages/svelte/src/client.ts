@@ -1,16 +1,16 @@
 // @ts-ignore
-import { env } from "$env/dynamic/public";
+import { browser } from '$app/environment';
 // @ts-ignore
-import { browser } from "$app/environment";
-import { ConvexHttpClient } from "convex/browser";
-import posthog from "posthog-js";
+import { env } from '$env/dynamic/public';
+import { ConvexHttpClient } from 'convex/browser';
+import posthog from 'posthog-js';
 
-import type { Auth } from "./index";
+import type { Auth } from './index';
 
 const CONVEX_URL = env.PUBLIC_CONVEX_URL!;
 
 if (!CONVEX_URL) {
-  throw new Error("CONVEX_URL is not set");
+  throw new Error('CONVEX_URL is not set');
 }
 
 let client: ConvexHttpClient | undefined;
@@ -37,8 +37,8 @@ export function convexClient() {
           return;
         }
 
-        const res = await globalThis.fetch("/auth/session", {
-          credentials: "include",
+        const res = await globalThis.fetch('/auth/session', {
+          credentials: 'include',
         });
 
         if (!res.ok) {

@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Rosace</title>
     <script>
-      let style = document.createElement("style");
-      style.textContent = "* { transition: none !important; }";
+      let style = document.createElement('style');
+      style.textContent = '* { transition: none !important; }';
 
-      let mm = matchMedia("(prefers-color-scheme: dark)");
+      let mm = matchMedia('(prefers-color-scheme: dark)');
 
-      mm.addEventListener("change", () => {
+      mm.addEventListener('change', () => {
         if (!style.isConnected) document.head.append(style);
         requestAnimationFrame(() => {
           requestAnimationFrame(() => style.remove());

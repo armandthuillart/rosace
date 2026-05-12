@@ -12,8 +12,8 @@ import {
   RegisteredAction,
   RegisteredMutation,
   RegisteredQuery,
-} from "convex/server";
-import type { GenericValidator, PropertyValidators } from "convex/values";
+} from 'convex/server';
+import type { GenericValidator, PropertyValidators } from 'convex/values';
 
 type EmptyObject = Record<never, never>;
 
@@ -25,8 +25,8 @@ type MutationCtx<DataModel extends GenericDataModel = GenericDataModel> =
 type ActionCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericActionCtx<DataModel>;
 
 type Context = object;
-type FunctionType = "query" | "mutation" | "action";
-type FunctionVisibility = "public" | "internal";
+type FunctionType = 'query' | 'mutation' | 'action';
+type FunctionVisibility = 'public' | 'internal';
 type ConvexArgsValidator = PropertyValidators | GenericValidator;
 type ConvexReturnsValidator = GenericValidator;
 
@@ -57,7 +57,7 @@ type AnyConvexMiddleware = ConvexMiddleware<any, any>;
 
 type OptionalKeys<T extends Record<PropertyKey, any>> = {
   [K in keyof T]: T[K] extends GenericValidator
-    ? T[K]["isOptional"] extends "optional"
+    ? T[K]['isOptional'] extends 'optional'
       ? K
       : never
     : never;
@@ -65,13 +65,13 @@ type OptionalKeys<T extends Record<PropertyKey, any>> = {
 
 type RequiredKeys<T extends Record<PropertyKey, any>> = {
   [K in keyof T]: T[K] extends GenericValidator
-    ? T[K]["isOptional"] extends "optional"
+    ? T[K]['isOptional'] extends 'optional'
       ? never
       : K
     : never;
 }[keyof T];
 
-type ValidatorType<T> = T extends GenericValidator ? T["type"] : never;
+type ValidatorType<T> = T extends GenericValidator ? T['type'] : never;
 
 type OptionalArgs<T extends Record<PropertyKey, any>> = {
   [K in OptionalKeys<T>]?: T[K] extends GenericValidator ? ValidatorType<T[K]> | undefined : never;
@@ -82,7 +82,7 @@ type RequiredArgs<T extends Record<PropertyKey, any>> = {
 };
 
 type InferArgs<T extends ConvexArgsValidator> = T extends GenericValidator
-  ? T["type"]
+  ? T['type']
   : RequiredArgs<T> & OptionalArgs<T>;
 
 type InferredArgs<T extends ConvexArgsValidator | undefined> = T extends ConvexArgsValidator
@@ -232,7 +232,7 @@ export class ConvexBuilderWithFunction<
       InferredHandlerReturn<TReturnsValidator, TReturn>
     > {
     if (this.def.handler) {
-      throw new Error("Handler already defined. Only one handler can be set per function chain.");
+      throw new Error('Handler already defined. Only one handler can be set per function chain.');
     }
 
     const rawHandler = async (transformedCtx: Context, baseArgs: InferredArgs<TArgsValidator>) => {
@@ -285,9 +285,9 @@ export class ConvexBuilderWithHandler<
     const props = Object.getOwnPropertyNames(proto);
 
     for (const prop of props) {
-      if (prop !== "constructor") {
+      if (prop !== 'constructor') {
         const value = (proto as any)[prop];
-        if (typeof value === "function") {
+        if (typeof value === 'function') {
           callable[prop] = value.bind(this);
         }
       }
@@ -305,7 +305,7 @@ export class ConvexBuilderWithHandler<
     const { handler, middlewares } = this.def;
 
     if (!handler) {
-      throw new Error("Handler not set.");
+      throw new Error('Handler not set.');
     }
 
     return this._executeWithMiddleware(middlewares, context as Context, handler, args);
@@ -341,7 +341,7 @@ export class ConvexBuilderWithHandler<
     await createNext(0)(initialContext);
 
     if (!handlerCalled) {
-      throw new Error("Middleware chain completed without calling the handler.");
+      throw new Error('Middleware chain completed without calling the handler.');
     }
 
     if (returnsTransform) {
@@ -383,59 +383,59 @@ export class ConvexBuilderWithHandler<
       CallableBuilder<TCurrentContext & UOutContext, TArgsValidator, THandlerReturn>;
   }
 
-  public(): TFunctionType extends "query"
+  public(): TFunctionType extends 'query'
     ? RegisteredQuery<
-        "public",
+        'public',
         InferredArgs<TArgsValidator>,
         RegisteredReturnType<TReturnsValidator, THandlerReturn>
       >
-    : TFunctionType extends "mutation"
+    : TFunctionType extends 'mutation'
       ? RegisteredMutation<
-          "public",
+          'public',
           InferredArgs<TArgsValidator>,
           RegisteredReturnType<TReturnsValidator, THandlerReturn>
         >
-      : TFunctionType extends "action"
+      : TFunctionType extends 'action'
         ? RegisteredAction<
-            "public",
+            'public',
             InferredArgs<TArgsValidator>,
             RegisteredReturnType<TReturnsValidator, THandlerReturn>
           >
         : never {
-    return this._register("public") as any;
+    return this._register('public') as any;
   }
 
-  internal(): TFunctionType extends "query"
+  internal(): TFunctionType extends 'query'
     ? RegisteredQuery<
-        "internal",
+        'internal',
         InferredArgs<TArgsValidator>,
         RegisteredReturnType<TReturnsValidator, THandlerReturn>
       >
-    : TFunctionType extends "mutation"
+    : TFunctionType extends 'mutation'
       ? RegisteredMutation<
-          "internal",
+          'internal',
           InferredArgs<TArgsValidator>,
           RegisteredReturnType<TReturnsValidator, THandlerReturn>
         >
-      : TFunctionType extends "action"
+      : TFunctionType extends 'action'
         ? RegisteredAction<
-            "internal",
+            'internal',
             InferredArgs<TArgsValidator>,
             RegisteredReturnType<TReturnsValidator, THandlerReturn>
           >
         : never {
-    return this._register("internal") as any;
+    return this._register('internal') as any;
   }
 
   private _register(visibility: FunctionVisibility): any {
     const { functionType, argsValidator, returnsValidator, handler, middlewares } = this.def;
 
     if (!functionType) {
-      throw new Error("Function type not set. Call .query(), .mutation(), or .action() first.");
+      throw new Error('Function type not set. Call .query(), .mutation(), or .action() first.');
     }
 
     if (!handler) {
-      throw new Error("Handler not set. Call .handler() before .public() or .internal().");
+      throw new Error('Handler not set. Call .handler() before .public() or .internal().');
     }
 
     const composedHandler = async (
@@ -451,7 +451,7 @@ export class ConvexBuilderWithHandler<
       handler: composedHandler,
     } as any;
 
-    const isPublic = visibility === "public";
+    const isPublic = visibility === 'public';
     const registrationFn = {
       query: isPublic ? queryGeneric : internalQueryGeneric,
       mutation: isPublic ? mutationGeneric : internalMutationGeneric,
@@ -469,24 +469,24 @@ class ConvexBuilder<TDataModel extends GenericDataModel = GenericDataModel> {
     this.def = def;
   }
 
-  query(): ConvexBuilderWithFunction<TDataModel, "query", QueryCtx<TDataModel>> {
-    return new ConvexBuilderWithFunction<TDataModel, "query", QueryCtx<TDataModel>>({
+  query(): ConvexBuilderWithFunction<TDataModel, 'query', QueryCtx<TDataModel>> {
+    return new ConvexBuilderWithFunction<TDataModel, 'query', QueryCtx<TDataModel>>({
       ...this.def,
-      functionType: "query",
+      functionType: 'query',
     });
   }
 
-  mutation(): ConvexBuilderWithFunction<TDataModel, "mutation", MutationCtx<TDataModel>> {
-    return new ConvexBuilderWithFunction<TDataModel, "mutation", MutationCtx<TDataModel>>({
+  mutation(): ConvexBuilderWithFunction<TDataModel, 'mutation', MutationCtx<TDataModel>> {
+    return new ConvexBuilderWithFunction<TDataModel, 'mutation', MutationCtx<TDataModel>>({
       ...this.def,
-      functionType: "mutation",
+      functionType: 'mutation',
     });
   }
 
-  action(): ConvexBuilderWithFunction<TDataModel, "action", ActionCtx<TDataModel>> {
-    return new ConvexBuilderWithFunction<TDataModel, "action", ActionCtx<TDataModel>>({
+  action(): ConvexBuilderWithFunction<TDataModel, 'action', ActionCtx<TDataModel>> {
+    return new ConvexBuilderWithFunction<TDataModel, 'action', ActionCtx<TDataModel>>({
       ...this.def,
-      functionType: "action",
+      functionType: 'action',
     });
   }
 

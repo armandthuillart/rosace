@@ -1,26 +1,27 @@
-import { requireEnv } from "@repo/utils";
-import { action, mutation } from "./middleware";
-import { v } from "convex/values";
-import { Stripe } from "stripe";
-import { internal } from "./_generated/api";
+import { requireEnv } from '@repo/utils';
+import { v } from 'convex/values';
+import { Stripe } from 'stripe';
+
+import { internal } from './_generated/api';
+import { action, mutation } from './middleware';
 
 export const handleCustomerCreatedOrUpdated = mutation
   .input(
     v.object({
       customerId: v.string(),
       email: v.string(),
-      metadata: v.object({ userId: v.id("users") }),
+      metadata: v.object({ userId: v.id('users') }),
     }),
   )
   .returns(v.null())
   .handler(async (ctx, args) => {
     const existingCustomer = await ctx.db
-      .query("customers")
-      .withIndex("by_customer", (q) => q.eq("customerId", args.customerId))
+      .query('customers')
+      .withIndex('by_customer', (q) => q.eq('customerId', args.customerId))
       .unique();
 
     if (!existingCustomer) {
-      await ctx.db.insert("customers", {
+      await ctx.db.insert('customers', {
         customerId: args.customerId,
         userId: args.metadata.userId,
         email: args.email,
@@ -42,18 +43,18 @@ export const createOrUpdateCustomer = mutation
     v.object({
       customerId: v.string(),
       email: v.string(),
-      metadata: v.object({ userId: v.id("users") }),
+      metadata: v.object({ userId: v.id('users') }),
     }),
   )
   .returns(v.string())
   .handler(async (ctx, args) => {
     const existingCustomer = await ctx.db
-      .query("customers")
-      .withIndex("by_customer", (q) => q.eq("customerId", args.customerId))
+      .query('customers')
+      .withIndex('by_customer', (q) => q.eq('customerId', args.customerId))
       .unique();
 
     if (!existingCustomer) {
-      await ctx.db.insert("customers", {
+      await ctx.db.insert('customers', {
         customerId: args.customerId,
         email: args.email,
         userId: args.metadata.userId,
@@ -74,12 +75,12 @@ export const createCustomer = action
     v.object({
       name: v.string(),
       email: v.string(),
-      userId: v.id("users"),
+      userId: v.id('users'),
     }),
   )
   .returns(v.object({ customerId: v.string() }))
   .handler(async (ctx, args) => {
-    const stripe = new Stripe(requireEnv("STRIPE_SECRET_KEY"));
+    const stripe = new Stripe(requireEnv('STRIPE_SECRET_KEY'));
 
     const customer = await stripe.customers.create(
       {

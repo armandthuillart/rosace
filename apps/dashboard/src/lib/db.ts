@@ -1,15 +1,15 @@
-import Dexie, { type EntityTable } from "dexie";
+import Dexie, { type EntityTable } from 'dexie';
 
 interface Project {
   id: string;
 }
 
-const db = new Dexie("ProjectsDatabase") as Dexie & {
-  projects: EntityTable<Project, "id">;
+const db = new Dexie('ProjectsDatabase') as Dexie & {
+  projects: EntityTable<Project, 'id'>;
 };
 
 db.version(1).stores({
-  projects: "++id",
+  projects: '++id',
 });
 
 export { db };

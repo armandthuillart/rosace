@@ -1,10 +1,10 @@
-"use node";
+'use node';
 
-import { execFileSync } from "node:child_process";
-import { randomBytes, randomUUID } from "node:crypto";
+import { execFileSync } from 'node:child_process';
+import { randomBytes, randomUUID } from 'node:crypto';
 
-import { Command } from "commander";
-import { generateKeyPair, exportJWK } from "jose";
+import { Command } from 'commander';
+import { generateKeyPair, exportJWK } from 'jose';
 
 type Options = { prod?: boolean };
 type Deps = {
@@ -17,52 +17,52 @@ type Deps = {
 function getEnv(name: string, prod = false): string {
   try {
     return execFileSync(
-      "vp",
+      'vp',
       [
-        "exec",
-        "--filter",
-        "./packages/convex",
-        "--",
-        "convex",
-        "env",
-        "get",
-        ...(prod ? ["--prod"] : []),
+        'exec',
+        '--filter',
+        './packages/convex',
+        '--',
+        'convex',
+        'env',
+        'get',
+        ...(prod ? ['--prod'] : []),
         name,
       ],
       {
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "pipe"],
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
       },
     ).trim();
   } catch {
-    return "";
+    return '';
   }
 }
 
 function setEnv(name: string, value: string, prod = false): void {
   execFileSync(
-    "vp",
+    'vp',
     [
-      "exec",
-      "--filter",
-      "./packages/convex",
-      "--",
-      "convex",
-      "env",
-      "set",
-      ...(prod ? ["--prod"] : []),
-      "--",
+      'exec',
+      '--filter',
+      './packages/convex',
+      '--',
+      'convex',
+      'env',
+      'set',
+      ...(prod ? ['--prod'] : []),
+      '--',
       name,
       value,
     ],
-    { stdio: "inherit" },
+    { stdio: 'inherit' },
   );
 }
 
 async function createJwks() {
   const kid = randomUUID();
 
-  const { publicKey, privateKey } = await generateKeyPair("RS256", {
+  const { publicKey, privateKey } = await generateKeyPair('RS256', {
     extractable: true,
   });
 
@@ -70,13 +70,13 @@ async function createJwks() {
 
   return JSON.stringify({
     kid,
-    public: { keys: [{ ...publicJwk, kid, use: "sig", alg: "RS256" }] },
-    private: { ...privateJwk, kid, use: "sig", alg: "RS256" },
+    public: { keys: [{ ...publicJwk, kid, use: 'sig', alg: 'RS256' }] },
+    private: { ...privateJwk, kid, use: 'sig', alg: 'RS256' },
   });
 }
 
 function randomSecret() {
-  return randomBytes(32).toString("hex");
+  return randomBytes(32).toString('hex');
 }
 
 function defaultDeps(): Deps {
@@ -90,19 +90,19 @@ function defaultDeps(): Deps {
 
 function buildProgram(deps: Deps): Command {
   const program = new Command()
-    .name("auth")
-    .description("Manage authentication environment variables.")
+    .name('auth')
+    .description('Manage authentication environment variables.')
     .showHelpAfterError();
 
   program
-    .command("set")
-    .description("Set JWKS if missing.")
-    .option("--prod", "Set in production deployment.")
+    .command('set')
+    .description('Set JWKS if missing.')
+    .option('--prod', 'Set in production deployment.')
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
 
-      if (deps.getEnv("JWKS", isProd) === "") {
-        deps.setEnv("JWKS", await deps.createJwks(), isProd);
+      if (deps.getEnv('JWKS', isProd) === '') {
+        deps.setEnv('JWKS', await deps.createJwks(), isProd);
         console.info(`✔ Set JWKS.`);
       } else {
         console.info(`✔ JWKS already set.`);
@@ -110,13 +110,13 @@ function buildProgram(deps: Deps): Command {
     });
 
   program
-    .command("rotate")
-    .description("Rotate JWKS.")
-    .option("--prod", "Rotate in production deployment.")
+    .command('rotate')
+    .description('Rotate JWKS.')
+    .option('--prod', 'Rotate in production deployment.')
     .action(async ({ prod }: Options) => {
       const isProd = Boolean(prod);
 
-      deps.setEnv("JWKS", await deps.createJwks(), isProd);
+      deps.setEnv('JWKS', await deps.createJwks(), isProd);
       console.info(`✔ Rotated JWKS.`);
     });
 

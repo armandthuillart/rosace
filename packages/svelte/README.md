@@ -24,7 +24,7 @@ This package gives that control by keeping the SvelteKit bindings in-house:
 
 ```ts
 // src/hooks.server.ts
-export { handle } from "$lib/auth";
+export { handle } from '$lib/auth';
 ```
 
 Enables auth on every server request. Proxies `/auth/*` routes to the Convex backend. Makes `locals.auth()` available.

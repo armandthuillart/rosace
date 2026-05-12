@@ -1,90 +1,90 @@
-import { describe, expect, it } from "vite-plus/test";
-import { convexTest } from "convex-test";
+/// <reference types="vite-plus/client" />
+import { convexTest } from 'convex-test';
+import { describe, expect, it } from 'vite-plus/test';
 
-import schema from "./schema";
-import { internal } from "./_generated/api";
+import { internal } from './_generated/api';
+import schema from './schema';
 
-// @ts-expect-error - modules are loaded dynamically
-const modules = import.meta.glob("./**/*.ts");
+const modules = import.meta.glob('./**/*.ts');
 
-describe("handleCustomerCreatedOrUpdated", () => {
-  it("should insert a new customer when one does not exist", async () => {
+describe('handleCustomerCreatedOrUpdated', () => {
+  it('should insert a new customer when one does not exist', async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
-      return await ctx.db.insert("users", {
-        email: "alice@example.com",
-        firstName: "Alice",
-        lastName: "Smith",
-        plan: "free",
+      return await ctx.db.insert('users', {
+        email: 'alice@example.com',
+        firstName: 'Alice',
+        lastName: 'Smith',
+        plan: 'free',
       });
     });
 
     await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
-      customerId: "cus_abc123",
-      email: "alice@example.com",
+      customerId: 'cus_abc123',
+      email: 'alice@example.com',
       metadata: { userId },
     });
 
     const customer = await t.run(async (ctx) => {
       return await ctx.db
-        .query("customers")
-        .withIndex("by_customer", (q) => q.eq("customerId", "cus_abc123"))
+        .query('customers')
+        .withIndex('by_customer', (q) => q.eq('customerId', 'cus_abc123'))
         .unique();
     });
     expect(customer).not.toBeNull();
-    expect(customer!.customerId).toBe("cus_abc123");
-    expect(customer!.email).toBe("alice@example.com");
+    expect(customer!.customerId).toBe('cus_abc123');
+    expect(customer!.email).toBe('alice@example.com');
     expect(customer!.userId).toBe(userId);
   });
 
-  it("should update the email of an existing customer", async () => {
+  it('should update the email of an existing customer', async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
-      return await ctx.db.insert("users", {
-        email: "bob@example.com",
-        firstName: "Bob",
-        lastName: "Jones",
-        plan: "pro",
+      return await ctx.db.insert('users', {
+        email: 'bob@example.com',
+        firstName: 'Bob',
+        lastName: 'Jones',
+        plan: 'pro',
       });
     });
     await t.run(async (ctx) => {
-      await ctx.db.insert("customers", {
-        customerId: "cus_existing",
-        email: "old@example.com",
+      await ctx.db.insert('customers', {
+        customerId: 'cus_existing',
+        email: 'old@example.com',
         userId,
       });
     });
 
     await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
-      customerId: "cus_existing",
-      email: "new@example.com",
+      customerId: 'cus_existing',
+      email: 'new@example.com',
       metadata: { userId },
     });
 
     const customer = await t.run(async (ctx) => {
       return await ctx.db
-        .query("customers")
-        .withIndex("by_customer", (q) => q.eq("customerId", "cus_existing"))
+        .query('customers')
+        .withIndex('by_customer', (q) => q.eq('customerId', 'cus_existing'))
         .unique();
     });
     expect(customer).not.toBeNull();
-    expect(customer!.email).toBe("new@example.com");
+    expect(customer!.email).toBe('new@example.com');
   });
 
-  it("should return null", async () => {
+  it('should return null', async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
-      return await ctx.db.insert("users", {
-        email: "carol@example.com",
-        firstName: "Carol",
-        lastName: "Brown",
-        plan: "free",
+      return await ctx.db.insert('users', {
+        email: 'carol@example.com',
+        firstName: 'Carol',
+        lastName: 'Brown',
+        plan: 'free',
       });
     });
 
     const result = await t.mutation(internal.customer.handleCustomerCreatedOrUpdated, {
-      customerId: "cus_null",
-      email: "carol@example.com",
+      customerId: 'cus_null',
+      email: 'carol@example.com',
       metadata: { userId },
     });
 
@@ -92,66 +92,66 @@ describe("handleCustomerCreatedOrUpdated", () => {
   });
 });
 
-describe("createOrUpdateCustomer", () => {
-  it("should insert a new customer and return the customerId", async () => {
+describe('createOrUpdateCustomer', () => {
+  it('should insert a new customer and return the customerId', async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
-      return await ctx.db.insert("users", {
-        email: "dave@example.com",
-        firstName: "Dave",
-        lastName: "Wilson",
-        plan: "free",
+      return await ctx.db.insert('users', {
+        email: 'dave@example.com',
+        firstName: 'Dave',
+        lastName: 'Wilson',
+        plan: 'free',
       });
     });
 
     const result = await t.mutation(internal.customer.createOrUpdateCustomer, {
-      customerId: "cus_new",
-      email: "dave@example.com",
+      customerId: 'cus_new',
+      email: 'dave@example.com',
       metadata: { userId },
     });
 
-    expect(result).toBe("cus_new");
+    expect(result).toBe('cus_new');
     const customer = await t.run(async (ctx) => {
       return await ctx.db
-        .query("customers")
-        .withIndex("by_customer", (q) => q.eq("customerId", "cus_new"))
+        .query('customers')
+        .withIndex('by_customer', (q) => q.eq('customerId', 'cus_new'))
         .unique();
     });
     expect(customer).not.toBeNull();
-    expect(customer!.email).toBe("dave@example.com");
+    expect(customer!.email).toBe('dave@example.com');
   });
 
-  it("should update an existing customer and return the customerId", async () => {
+  it('should update an existing customer and return the customerId', async () => {
     const t = convexTest({ schema, modules });
     const userId = await t.run(async (ctx) => {
-      return await ctx.db.insert("users", {
-        email: "eve@example.com",
-        firstName: "Eve",
-        lastName: "Adams",
-        plan: "pro",
+      return await ctx.db.insert('users', {
+        email: 'eve@example.com',
+        firstName: 'Eve',
+        lastName: 'Adams',
+        plan: 'pro',
       });
     });
     await t.run(async (ctx) => {
-      await ctx.db.insert("customers", {
-        customerId: "cus_update",
-        email: "original@example.com",
+      await ctx.db.insert('customers', {
+        customerId: 'cus_update',
+        email: 'original@example.com',
         userId,
       });
     });
 
     const result = await t.mutation(internal.customer.createOrUpdateCustomer, {
-      customerId: "cus_update",
-      email: "updated@example.com",
+      customerId: 'cus_update',
+      email: 'updated@example.com',
       metadata: { userId },
     });
 
-    expect(result).toBe("cus_update");
+    expect(result).toBe('cus_update');
     const customer = await t.run(async (ctx) => {
       return await ctx.db
-        .query("customers")
-        .withIndex("by_customer", (q) => q.eq("customerId", "cus_update"))
+        .query('customers')
+        .withIndex('by_customer', (q) => q.eq('customerId', 'cus_update'))
         .unique();
     });
-    expect(customer!.email).toBe("updated@example.com");
+    expect(customer!.email).toBe('updated@example.com');
   });
 });

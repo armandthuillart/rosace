@@ -1,7 +1,7 @@
-import { Command } from "commander";
-import { color, file, spawn } from "bun";
+import { color, file, spawn } from 'bun';
+import { Command } from 'commander';
 
-type ServiceName = "astro" | "svelte" | "convex" | "ngrok";
+type ServiceName = 'astro' | 'svelte' | 'convex' | 'ngrok';
 
 type Service = {
   name: ServiceName;
@@ -33,14 +33,14 @@ type ServiceRuntimeState = {
 
 const bunColor = color;
 
-const RESET = "\x1b[0m";
-const SUCCESS_GREEN = "#16a34a";
+const RESET = '\x1b[0m';
+const SUCCESS_GREEN = '#16a34a';
 
 const SERVICE_COLORS: Partial<Record<ServiceName, string>> = {
-  astro: "#2563eb",
-  svelte: "#ea580c",
-  convex: "#7c3aed",
-  ngrok: "#15803d",
+  astro: '#2563eb',
+  svelte: '#ea580c',
+  convex: '#7c3aed',
+  ngrok: '#15803d',
 };
 
 const ERROR_INCIDENT_DEBOUNCE_MS = 250;
@@ -48,7 +48,7 @@ const ERROR_DUPLICATE_WINDOW_MS = 2000;
 
 const WORKSPACE_ROOT = process.cwd();
 
-const RESOLVABLE_EXTENSIONS = [".ts", ".tsx", ".js", ".mjs", ".cjs", ".svelte"];
+const RESOLVABLE_EXTENSIONS = ['.ts', '.tsx', '.js', '.mjs', '.cjs', '.svelte'];
 
 let verbose = false;
 
@@ -59,22 +59,22 @@ type Subprocess = ReturnType<typeof spawn>;
 
 const SERVICES: readonly Service[] = [
   {
-    name: "svelte",
-    command: ["vp", "run", "dashboard#dev"],
+    name: 'svelte',
+    command: ['vp', 'run', 'dashboard#dev'],
   },
   {
-    name: "astro",
-    command: ["vp", "run", "marketing#dev"],
+    name: 'astro',
+    command: ['vp', 'run', 'marketing#dev'],
   },
   {
-    name: "convex",
-    command: ["vp", "exec", "convex", "dev"],
-    cwd: "packages/convex",
+    name: 'convex',
+    command: ['vp', 'exec', 'convex', 'dev'],
+    cwd: 'packages/convex',
   },
 ];
 
 function paint(color: string, text: string) {
-  const ansi = bunColor?.(color, "ansi");
+  const ansi = bunColor?.(color, 'ansi');
   if (!ansi) return text;
   return `${ansi}${text}${RESET}`;
 }
@@ -86,7 +86,7 @@ function writeLine(line: string) {
 async function readLines(stream: ReadableStream<Uint8Array>, onLine: (line: string) => void) {
   const reader = stream.getReader();
   const decoder = new TextDecoder();
-  let buffer = "";
+  let buffer = '';
 
   while (true) {
     const { value, done } = await reader.read();
@@ -94,23 +94,23 @@ async function readLines(stream: ReadableStream<Uint8Array>, onLine: (line: stri
 
     buffer += decoder.decode(value, { stream: true });
 
-    let newlineIndex = buffer.indexOf("\n");
+    let newlineIndex = buffer.indexOf('\n');
     while (newlineIndex !== -1) {
-      onLine(buffer.slice(0, newlineIndex).replace(/\r$/, ""));
+      onLine(buffer.slice(0, newlineIndex).replace(/\r$/, ''));
       buffer = buffer.slice(newlineIndex + 1);
-      newlineIndex = buffer.indexOf("\n");
+      newlineIndex = buffer.indexOf('\n');
     }
   }
 
   buffer += decoder.decode();
-  if (buffer) onLine(buffer.replace(/\r$/, ""));
+  if (buffer) onLine(buffer.replace(/\r$/, ''));
 }
 
 function timestamp() {
   const now = new Date();
-  const hh = String(now.getHours()).padStart(2, "0");
-  const mm = String(now.getMinutes()).padStart(2, "0");
-  const ss = String(now.getSeconds()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const ss = String(now.getSeconds()).padStart(2, '0');
   return `${hh}:${mm}:${ss}`;
 }
 
@@ -122,20 +122,20 @@ function logGlobalSuccess(message: string) {
   writeLine(paint(SUCCESS_GREEN, verbose ? `[${timestamp()}] ✓ ${message}` : `✓ ${message}`));
 }
 
-function logLine(kind: "info" | "success" | "error", service: ServiceName, message: string) {
-  const symbol = kind === "success" ? "✓" : kind === "error" ? "✖" : "·";
+function logLine(kind: 'info' | 'success' | 'error', service: ServiceName, message: string) {
+  const symbol = kind === 'success' ? '✓' : kind === 'error' ? '✖' : '·';
 
-  const isInfo = kind === "info";
-  const serviceTag = isInfo ? paint(SERVICE_COLORS[service] ?? "", `[${service}]`) : `[${service}]`;
+  const isInfo = kind === 'info';
+  const serviceTag = isInfo ? paint(SERVICE_COLORS[service] ?? '', `[${service}]`) : `[${service}]`;
 
   const formattedLine = verbose
     ? `[${timestamp()}] ${symbol} ${serviceTag} ${message}`
     : `${symbol} ${serviceTag} ${message}`;
 
   const outputLine =
-    kind === "success"
+    kind === 'success'
       ? paint(SUCCESS_GREEN, formattedLine)
-      : kind === "error"
+      : kind === 'error'
         ? `\x1b[1;31m${formattedLine}${RESET}`
         : formattedLine;
 
@@ -143,7 +143,7 @@ function logLine(kind: "info" | "success" | "error", service: ServiceName, messa
 }
 
 function logConvexHttpError(method: string, path: string, cause: string) {
-  const ts = verbose ? `[${timestamp()}] ` : "";
+  const ts = verbose ? `[${timestamp()}] ` : '';
   const line1 = `${ts}✖ [convex] ${method.toUpperCase()} / 500`;
   const line2 = `${ts}✖ [convex] ↳ route ${path} (${cause})`;
 
@@ -170,11 +170,11 @@ function formatPathForDisplay(path: string) {
 }
 
 function stripAnsi(input: string) {
-  let out = "";
+  let out = '';
   let i = 0;
 
   while (i < input.length) {
-    if (input[i] === "\u001b" && input[i + 1] === "[") {
+    if (input[i] === '\u001b' && input[i + 1] === '[') {
       i += 2;
       while (i < input.length) {
         const code = input.charCodeAt(i);
@@ -194,18 +194,18 @@ function stripAnsi(input: string) {
   return out;
 }
 
-function extractUrl(text: string): { url: string; type: "Local" | "Network" } | null {
+function extractUrl(text: string): { url: string; type: 'Local' | 'Network' } | null {
   const patterns = [
     {
       regex: /(?:➜\s+)?Local:?\s+(https?:\/\/\S+)|┃\s*Local\s+(https?:\/\/\S+)/i,
-      type: "Local" as const,
+      type: 'Local' as const,
     },
     {
       regex: /(?:➜\s+)?Network:?\s+(https?:\/\/\S+)|┃\s*Network\s+(https?:\/\/\S+)/i,
-      type: "Network" as const,
+      type: 'Network' as const,
     },
-    { regex: /local[^\n]*?(https?:\/\/\S+)/i, type: "Local" as const },
-    { regex: /network[^\n]*?(https?:\/\/\S+)/i, type: "Network" as const },
+    { regex: /local[^\n]*?(https?:\/\/\S+)/i, type: 'Local' as const },
+    { regex: /network[^\n]*?(https?:\/\/\S+)/i, type: 'Network' as const },
   ];
 
   for (const { regex, type } of patterns) {
@@ -217,7 +217,7 @@ function extractUrl(text: string): { url: string; type: "Local" | "Network" } | 
   if (anyUrlMatch) {
     const url = anyUrlMatch[0];
     const isLocalhost = /https?:\/\/(localhost|127\.0\.0\.1)/i.test(url);
-    return { url, type: isLocalhost ? "Local" : "Network" };
+    return { url, type: isLocalhost ? 'Local' : 'Network' };
   }
 
   return null;
@@ -226,11 +226,11 @@ function extractUrl(text: string): { url: string; type: "Local" | "Network" } | 
 function toFriendlyMessage(
   service: ServiceName,
   rawLine: string,
-  stream: "stdout" | "stderr",
+  stream: 'stdout' | 'stderr',
 ): {
-  kind: "info" | "success" | "error";
+  kind: 'info' | 'success' | 'error';
   message: string;
-  urlType?: "Local" | "Network";
+  urlType?: 'Local' | 'Network';
   url?: string;
 } | null {
   const text = stripAnsi(rawLine).trim();
@@ -239,21 +239,21 @@ function toFriendlyMessage(
   const url = extractUrl(text);
   if (url) {
     return {
-      kind: "info" as const,
+      kind: 'info' as const,
       message: `Running on ${url.url}.`,
       urlType: url.type,
       url: url.url,
     };
   }
 
-  if (service === "convex" && /Preparing Convex functions/i.test(text)) {
-    return { kind: "info" as const, message: "Preparing functions..." };
+  if (service === 'convex' && /Preparing Convex functions/i.test(text)) {
+    return { kind: 'info' as const, message: 'Preparing functions...' };
   }
 
   if (
     /^VITE\+\s+v[\d.]+$/i.test(text) ||
     /^[➜┃│]\s+Network/i.test(text) ||
-    (service !== "convex" && /^.+watching for file changes/i.test(text)) ||
+    (service !== 'convex' && /^.+watching for file changes/i.test(text)) ||
     /cache disabled$/i.test(text) ||
     /^\$\s/.test(text) ||
     /ready in\s+\d+\s*ms/i.test(text)
@@ -261,27 +261,36 @@ function toFriendlyMessage(
     return null;
   }
 
-  if (service === "convex" && /Filesystem changed during push/i.test(text)) {
-    return { kind: "info" as const, message: text };
+  if (service === 'convex' && /Filesystem changed during push/i.test(text)) {
+    return { kind: 'info' as const, message: text };
   }
 
   if (verbose) {
     if (/^\[vite\]\s+connected\.?$/i.test(text)) {
-      return { kind: "info" as const, message: "Vite is connected." };
+      return { kind: 'info' as const, message: 'Vite is connected.' };
     }
     if (/^\d{1,2}:\d{2}:\d{2}\s+\[types\] Generated/i.test(text)) {
-      return { kind: "success" as const, message: "Successfully generated types." };
+      return {
+        kind: 'success' as const,
+        message: 'Successfully generated types.',
+      };
     }
     if (/^\d{1,2}:\d{2}:\d{2}\s+\[content\] Syncing content/i.test(text)) {
-      return { kind: "info" as const, message: "Syncing content collection..." };
+      return {
+        kind: 'info' as const,
+        message: 'Syncing content collection...',
+      };
     }
     if (/^\d{1,2}:\d{2}:\d{2}\s+\[content\] Synced content/i.test(text)) {
-      return { kind: "success" as const, message: "Content collection synced." };
+      return {
+        kind: 'success' as const,
+        message: 'Content collection synced.',
+      };
     }
-    return { kind: "info" as const, message: stripLinePrefix(text) };
+    return { kind: 'info' as const, message: stripLinePrefix(text) };
   }
 
-  if (stream === "stderr") return { kind: "error" as const, message: text };
+  if (stream === 'stderr') return { kind: 'error' as const, message: text };
 
   return null;
 }
@@ -294,14 +303,14 @@ function isOverlayNoiseLine(line: string) {
 }
 
 function startDashboardTunnel(port: string, dashboardUrl: string, children: Set<Subprocess>) {
-  const child = spawn(["ngrok", "http", port, "--url", dashboardUrl, "--log=stdout"], {
-    stdout: "ignore",
-    stderr: "pipe",
+  const child = spawn(['ngrok', 'http', port, '--url', dashboardUrl, '--log=stdout'], {
+    stdout: 'ignore',
+    stderr: 'pipe',
   });
 
   children.add(child);
 
-  let lastError = "";
+  let lastError = '';
   if (child.stderr) {
     void readLines(child.stderr, (line) => {
       const text = stripAnsi(line).trim();
@@ -312,8 +321,8 @@ function startDashboardTunnel(port: string, dashboardUrl: string, children: Set<
   void (async () => {
     const code = await child.exited;
     if ((code ?? 0) !== 0) {
-      const suffix = lastError ? `: ${lastError}` : ".";
-      logLine("error", "ngrok", `Process exited with code ${code ?? 0}${suffix}`);
+      const suffix = lastError ? `: ${lastError}` : '.';
+      logLine('error', 'ngrok', `Process exited with code ${code ?? 0}${suffix}`);
     }
     children.delete(child);
   })();
@@ -334,11 +343,11 @@ function createServiceRuntimeState(startedAt: number): ServiceRuntimeState {
 }
 
 function emitServiceReady(service: Service, state: ServiceRuntimeState) {
-  if (state.isReadyShown || service.name === "convex") return;
+  if (state.isReadyShown || service.name === 'convex') return;
 
   state.isReadyShown = true;
   const readyMs = state.serviceReadyMs ?? Date.now() - state.startedAt;
-  logLine("success", service.name, `Ready in ${formatDuration(readyMs)}.`);
+  logLine('success', service.name, `Ready in ${formatDuration(readyMs)}.`);
   state.resolveReady?.();
   state.resolveReady = null;
 }
@@ -348,22 +357,22 @@ function handleServiceLine(
   state: ServiceRuntimeState,
   children: Set<Subprocess>,
   line: string,
-  stream: "stdout" | "stderr",
+  stream: 'stdout' | 'stderr',
 ) {
   const cleanedLine = stripAnsi(line).trim();
 
   const portInUseMatch = cleanedLine.match(/Port\s+(\d+)\s+is in use/i);
   if (portInUseMatch) {
     const port = portInUseMatch[1];
-    const result = Bun.spawnSync(["lsof", "-ti", `:${port}`]);
+    const result = Bun.spawnSync(['lsof', '-ti', `:${port}`]);
     if (result.exitCode === 0 && result.stdout.length > 0) {
-      const pids = result.stdout.toString().trim().split("\n").filter(Boolean);
-      if (pids.length > 0) Bun.spawnSync(["kill", "-9", ...pids]);
+      const pids = result.stdout.toString().trim().split('\n').filter(Boolean);
+      if (pids.length > 0) Bun.spawnSync(['kill', '-9', ...pids]);
     }
     return;
   }
 
-  if (service.name === "convex") {
+  if (service.name === 'convex') {
     const convexHttpError = cleanedLine.match(
       /\[CONVEX H\((GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s+([^)]+)\)\]\s+Uncaught Error:\s+(.+)$/i,
     );
@@ -385,7 +394,7 @@ function handleServiceLine(
 
     if (/Preparing Convex functions/i.test(cleanedLine)) {
       if (!state.isConvexBootstrapped) {
-        logLine("info", service.name, "Preparing functions...");
+        logLine('info', service.name, 'Preparing functions...');
       }
       return;
     }
@@ -394,20 +403,20 @@ function handleServiceLine(
       const convexReadyMatch = cleanedLine.match(/Convex functions ready!\s*\(([\d.]+)s\)/i);
       const duration = convexReadyMatch
         ? formatDuration(Math.round(Number(convexReadyMatch[1]) * 1000))
-        : "0ms";
+        : '0ms';
 
       if (!state.isConvexBootstrapped) {
         state.isConvexBootstrapped = true;
-        logLine("success", service.name, `Ready in ${duration}.`);
+        logLine('success', service.name, `Ready in ${duration}.`);
       } else {
-        logLine("success", service.name, `Push complete in ${duration}.`);
+        logLine('success', service.name, `Push complete in ${duration}.`);
       }
       return;
     }
   }
 
   const readyMatch = cleanedLine.match(/ready in\s+(\d+)\s*ms/i);
-  if (service.name !== "convex" && readyMatch) {
+  if (service.name !== 'convex' && readyMatch) {
     state.hasSeenReadySignal = true;
     state.serviceReadyMs = Number(readyMatch[1]);
   }
@@ -415,16 +424,16 @@ function handleServiceLine(
   const event = toFriendlyMessage(service.name, line, stream);
   if (!event) return;
 
-  if (event.kind === "error") {
+  if (event.kind === 'error') {
     queueErrorLine(service.name, event.message);
     return;
   }
 
-  if (service.name === "astro" && event.urlType === "Network") {
+  if (service.name === 'astro' && event.urlType === 'Network') {
     return;
   }
 
-  if (service.name === "svelte" && event.urlType === "Local") {
+  if (service.name === 'svelte' && event.urlType === 'Local') {
     state.hasSeenUrl = true;
     state.hasSeenReadySignal = true;
     state.serviceReadyMs = Date.now() - state.startedAt;
@@ -434,9 +443,9 @@ function handleServiceLine(
       const dashboardUrl = process.env.DASHBOARD_URL;
       if (dashboardUrl && !state.hasAnnouncedPublicUrl) {
         state.hasAnnouncedPublicUrl = true;
-        const port = new URL(event.url ?? "http://localhost:5173").port || "80";
+        const port = new URL(event.url ?? 'http://localhost:5173').port || '80';
         startDashboardTunnel(port, dashboardUrl, children);
-        logLine("info", service.name, `Running on ${dashboardUrl}.`);
+        logLine('info', service.name, `Running on ${dashboardUrl}.`);
       }
     }
 
@@ -444,14 +453,14 @@ function handleServiceLine(
     return;
   }
 
-  if (event.urlType === "Local") {
+  if (event.urlType === 'Local') {
     state.hasSeenUrl = true;
   }
 
   logLine(event.kind, service.name, event.message);
 
   const canEmitReady =
-    service.name !== "convex" &&
+    service.name !== 'convex' &&
     !state.isReadyShown &&
     state.hasSeenReadySignal &&
     state.hasSeenUrl;
@@ -468,7 +477,7 @@ async function enrichWorkspaceSpecifiers(input: string): Promise<string> {
   const specifiers = Array.from(input.matchAll(/\/[A-Za-z0-9._\-+/()]+/g), (match) => match[0]);
 
   for (const specifier of specifiers) {
-    if (!specifier.startsWith("/")) continue;
+    if (!specifier.startsWith('/')) continue;
     if (/\.[a-z0-9]+$/i.test(specifier)) continue;
 
     const candidateBase = `${WORKSPACE_ROOT}${specifier}`;
@@ -502,8 +511,8 @@ async function enrichWorkspaceSpecifiers(input: string): Promise<string> {
 
 function stripLinePrefix(line: string): string {
   return line
-    .replace(/^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i, "")
-    .replaceAll(WORKSPACE_ROOT, "");
+    .replace(/^\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?\s+\[[^\]]+\]\s+\((?:ssr|client)\)\s*/i, '')
+    .replaceAll(WORKSPACE_ROOT, '');
 }
 
 async function normalizeCause(lines: string[]) {
@@ -512,7 +521,7 @@ async function normalizeCause(lines: string[]) {
     .filter(
       (l) =>
         l.length > 0 &&
-        !l.startsWith("at ") &&
+        !l.startsWith('at ') &&
         !isOverlayNoiseLine(l) &&
         !/^Error\s*\[[A-Z0-9_]+\]:\s*/.test(l),
     );
@@ -528,12 +537,12 @@ async function normalizeCause(lines: string[]) {
     return await enrichWorkspaceSpecifiers(stripLinePrefix(preferred));
   }
 
-  const fallback = lines.find((l) => !l.trim().startsWith("at "));
+  const fallback = lines.find((l) => !l.trim().startsWith('at '));
   if (fallback) {
     return await enrichWorkspaceSpecifiers(stripLinePrefix(fallback.trim()));
   }
 
-  return "Unknown runtime error";
+  return 'Unknown runtime error';
 }
 
 function getOriginFromLines(lines: string[]) {
@@ -542,7 +551,7 @@ function getOriginFromLines(lines: string[]) {
     if (!match) continue;
 
     const file = match[1];
-    if (file.startsWith("node:")) continue;
+    if (file.startsWith('node:')) continue;
     if (/\/node_modules\//.test(file)) continue;
 
     return `${formatPathForDisplay(file)}:${match[2]}:${match[3]}`;
@@ -551,15 +560,15 @@ function getOriginFromLines(lines: string[]) {
   for (const line of lines) {
     const importedFromMatch = line.match(/\bimported from ((?:\/|[A-Za-z]:\\)\S+)/i);
     if (importedFromMatch) {
-      return formatPathForDisplay(importedFromMatch[1].replace(/[)\],.;]+$/, ""));
+      return formatPathForDisplay(importedFromMatch[1].replace(/[)\],.;]+$/, ''));
     }
   }
 
   for (const line of lines) {
     const ssrModuleMatch = line.match(/\bSSR module (\S+)/i);
     if (ssrModuleMatch) {
-      const rawPath = ssrModuleMatch[1].replace(/[)\],.;]+$/, "");
-      const normalizedPath = rawPath.startsWith("/")
+      const rawPath = ssrModuleMatch[1].replace(/[)\],.;]+$/, '');
+      const normalizedPath = rawPath.startsWith('/')
         ? rawPath.startsWith(`${WORKSPACE_ROOT}/`)
           ? rawPath
           : `${WORKSPACE_ROOT}${rawPath}`
@@ -579,7 +588,7 @@ async function flushErrorIncident(service: ServiceName) {
   state.timer = null;
 
   const cause = await normalizeCause(lines);
-  const origin = getOriginFromLines(lines) ?? "unknown";
+  const origin = getOriginFromLines(lines) ?? 'unknown';
   const signature = `${cause}::${origin}`;
   const now = Date.now();
 
@@ -590,7 +599,7 @@ async function flushErrorIncident(service: ServiceName) {
 
   lastErrorSignatures.set(service, { signature, atMs: now });
 
-  logLine("error", service, `- ${cause}`);
+  logLine('error', service, `- ${cause}`);
 }
 
 function queueErrorLine(service: ServiceName, line: string) {
@@ -623,35 +632,35 @@ function startService(service: Service, children: Set<Subprocess>) {
     state.resolveReady = resolve;
   });
 
-  if (service.name !== "convex") {
-    logLine("info", service.name, "Starting the development server...");
+  if (service.name !== 'convex') {
+    logLine('info', service.name, 'Starting the development server...');
   }
 
   const child = spawn([...service.command], {
     cwd: service.cwd,
-    stdout: "pipe",
-    stderr: "pipe",
+    stdout: 'pipe',
+    stderr: 'pipe',
   });
 
   children.add(child);
 
-  const onLine = (line: string, stream: "stdout" | "stderr") => {
+  const onLine = (line: string, stream: 'stdout' | 'stderr') => {
     handleServiceLine(service, state, children, line, stream);
   };
 
   if (child.stdout) {
-    void readLines(child.stdout, (line) => onLine(line, "stdout"));
+    void readLines(child.stdout, (line) => onLine(line, 'stdout'));
   }
 
   if (child.stderr) {
-    void readLines(child.stderr, (line) => onLine(line, "stderr"));
+    void readLines(child.stderr, (line) => onLine(line, 'stderr'));
   }
 
   void (async () => {
     const code = await child.exited;
     await flushErrorIncident(service.name);
     if ((code ?? 0) !== 0) {
-      logLine("error", service.name, `Process exited with code ${code ?? 0}.`);
+      logLine('error', service.name, `Process exited with code ${code ?? 0}.`);
     }
     children.delete(child);
     state.resolveReady?.();
@@ -666,26 +675,26 @@ async function waitForExit(child: Subprocess) {
 }
 
 async function runPrepare() {
-  logGlobalInfo("Preparing .env.* files...");
-  const child = spawn(["vp", "run", "prepare"], {
-    stdout: "ignore",
-    stderr: "ignore",
+  logGlobalInfo('Preparing .env.* files...');
+  const child = spawn(['vp', 'run', 'prepare'], {
+    stdout: 'ignore',
+    stderr: 'ignore',
   });
   await waitForExit(child);
-  logGlobalSuccess(".env.* files were prepared successfully.");
+  logGlobalSuccess('.env.* files were prepared successfully.');
 }
 
 function resolveServices(opts: { astro: boolean; svelte: boolean; convex: boolean }) {
   const selected = new Set<ServiceName>();
 
-  if (opts.convex) selected.add("convex");
-  if (opts.astro) selected.add("astro");
+  if (opts.convex) selected.add('convex');
+  if (opts.astro) selected.add('astro');
   if (opts.svelte) {
-    selected.add("svelte");
-    selected.add("convex");
+    selected.add('svelte');
+    selected.add('convex');
   }
 
-  const order: ServiceName[] = ["convex", "astro", "svelte"];
+  const order: ServiceName[] = ['convex', 'astro', 'svelte'];
   const base = selected.size > 0 ? order.filter((name) => selected.has(name)) : order;
 
   return base.map((name) => findServiceByName(name));
@@ -695,11 +704,11 @@ async function main() {
   const program = new Command();
 
   program
-    .option("--skip-prepare", "Skip vp run prepare")
-    .option("--astro", "Start astro")
-    .option("--svelte", "Start svelte")
-    .option("--convex", "Start convex")
-    .option("--verbose", "Show timestamps in output")
+    .option('--skip-prepare', 'Skip vp run prepare')
+    .option('--astro', 'Start astro')
+    .option('--svelte', 'Start svelte')
+    .option('--convex', 'Start convex')
+    .option('--verbose', 'Show timestamps in output')
     .allowExcessArguments(false)
     .parse(process.argv);
 
@@ -718,18 +727,18 @@ async function main() {
   const services = resolveServices(opts);
   const children = new Set<Subprocess>();
 
-  process.on("SIGINT", () => {
-    for (const child of children) child.kill("SIGTERM");
+  process.on('SIGINT', () => {
+    for (const child of children) child.kill('SIGTERM');
     process.exit(0);
   });
 
-  const astro = services.find((service) => service.name === "astro");
+  const astro = services.find((service) => service.name === 'astro');
   if (astro) {
     await startService(astro, children);
   }
 
   for (const service of services) {
-    if (service.name === "astro") continue;
+    if (service.name === 'astro') continue;
     void startService(service, children);
   }
 }
