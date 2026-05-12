@@ -1,46 +1,48 @@
 <script lang="ts">
   import { T, useThrelte } from "@threlte/core";
   import * as THREE from "three";
-
   const { scene, renderer } = useThrelte();
+  import { isDarkMode } from "$lib/stores/theme";
 
   $effect.pre(() => {
+    const dark = $isDarkMode;
+
     const hdr = new THREE.Scene();
-    hdr.background = new THREE.Color("black");
     const geometry = new THREE.PlaneGeometry(1, 1);
+
+    const i = dark ? 1 : 8;
 
     const lightformers = [
       {
-        intensity: 2,
+        intensity: i * 2,
         pos: [0, -1, 5],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 3,
+        intensity: i * 3,
         pos: [-1, -1, 1],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 3,
+        intensity: i * 3,
         pos: [1, 1, 1],
         rot: [0, 0, Math.PI / 3],
         scale: [100, 0.1, 1],
       },
       {
-        intensity: 10,
-        pos: [-25, 5, 30],
+        intensity: i * 10,
+        pos: [-10, 0, 27.5],
         rot: [0, Math.PI / 2, Math.PI / 3],
-        scale: [100, 15, 1],
+        scale: [100, 10, 1],
       },
     ];
 
     for (const { intensity, pos, rot, scale } of lightformers) {
       const material = new THREE.MeshBasicMaterial({
-        side: THREE.DoubleSide,
         color: new THREE.Color(intensity, intensity, intensity),
-        toneMapped: false,
+        side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(...(pos as [number, number, number]));
@@ -52,11 +54,11 @@
     geometry.dispose();
 
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const map = pmrem.fromScene(hdr, 0.01).texture;
+    const map = pmrem.fromScene(hdr, 0, 0.1, 1000).texture;
     pmrem.dispose();
 
-    scene.background = map;
     scene.environment = map;
+    scene.background = dark ? map : new THREE.Color(0xd9d9d9);
     scene.backgroundBlurriness = 0.75;
 
     return () => {

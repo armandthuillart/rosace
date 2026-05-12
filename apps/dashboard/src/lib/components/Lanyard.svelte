@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { T, useThrelte } from "@threlte/core";
+  import { T, useThrelte, useTask } from "@threlte/core";
   import { useGltf, useTexture, interactivity } from "@threlte/extras";
   import { MeshLineGeometry, MeshLineMaterial } from "meshline";
   import {
@@ -7,19 +7,15 @@
     Collider,
     useRopeJoint,
     useSphericalJoint,
-    usePhysicsTask,
   } from "@threlte/rapier";
   import * as THREE from "three";
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
   import { page } from "$app/state";
+  import { isDarkMode } from "$lib/stores/theme";
 
   interactivity();
 
   let { user } = page.data;
-
-  // always defined!
-  const lastName = user!.lastName;
-  const firstName = user!.firstName;
 
   const { camera, size } = useThrelte();
 
@@ -37,8 +33,8 @@
     quat = new THREE.Quaternion(),
     euler = new THREE.Euler();
 
-  const gltf = useGltf("/tag.glb");
-  const band = useTexture("/band.jpg");
+  const gltf = useGltf($isDarkMode ? "/tag-dark.glb" : "/tag-light.glb");
+  const band = useTexture($isDarkMode ? "/band-dark.jpg" : "/band-light.jpg");
 
   const curve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(),
@@ -60,11 +56,11 @@
     ctx.drawImage(base.image as CanvasImageSource, 0, 0, size, size);
 
     ctx.font = "600 43px system-ui, -apple-system, sans-serif";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = $isDarkMode ? "white" : "black";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(lastName, 31, 567);
-    ctx.fillText(firstName, 31, 523);
+    ctx.fillText(user!.lastName, 31, 567);
+    ctx.fillText(user!.firstName, 31, 523);
 
     const t = new THREE.CanvasTexture(c);
     t.flipY = false;
@@ -77,11 +73,12 @@
   $effect(() => {
     const map = $gltf?.materials?.base?.map;
     if (!map || !map.image) return;
-    if (texture) return;
+
+    texture?.dispose();
     texture = dynamic(map);
   });
 
-  let joint = useSphericalJoint([0, 0, 0], [0, 1.475, 0]),
+  let joint = useSphericalJoint([0, 0, 0], [0, 1.5, 0]),
     r1 = useRopeJoint([0, 0, 0], [0, 0, 0], 1),
     r2 = useRopeJoint([0, 0, 0], [0, 0, 0], 1),
     r3 = useRopeJoint([0, 0, 0], [0, 0, 0], 1);
@@ -124,7 +121,7 @@
 
   const geometry = new MeshLineGeometry();
 
-  usePhysicsTask((delta) => {
+  useTask((delta) => {
     material.resolution.set(size.current.width, size.current.height);
     // Makes the drag point three dimensional.
     if (dragged) {
@@ -175,11 +172,18 @@
   $effect.pre(() => {
     const b = $band;
     if (!b) return;
+
+    b.colorSpace = THREE.SRGBColorSpace;
+    b.needsUpdate = true;
     b.wrapS = b.wrapT = THREE.RepeatWrapping;
+
     material.map = b;
+    material.useMap = 1;
     material.lineWidth = 1;
     material.depthTest = false;
+    material.toneMapped = false;
     material.resolution.set(size.current.width, size.current.height);
+    material.needsUpdate = true;
   });
 
   let type: "dynamic" | "kinematicPosition" = $state("dynamic");
@@ -187,11 +191,12 @@
   let last = $state(1);
 
   function handlePointerMove(e: PointerEvent) {
-    const canvas = (e.target as HTMLElement)?.closest("canvas");
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    const c = (e.target as HTMLElement).closest("canvas");
+    if (!c) return;
+
+    const r = c.getBoundingClientRect();
+    ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
   }
 
   function handlePointerUp() {
