@@ -74,7 +74,6 @@
     const map = $gltf?.materials?.base?.map;
     if (!map || !map.image) return;
 
-    texture?.dispose();
     texture = dynamic(map);
   });
 
