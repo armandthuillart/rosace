@@ -1,13 +1,14 @@
 @import 'tailwindcss';
 
 @theme {
-  --animate-curtain-line: curtain-line 0.4s cubic-bezier(0.93, 0, 0.1, 1.01) 0.2s both;
-  --animate-left-curtain:
-    left-curtain-enter 0.45s ease-out 0.6s both, left-curtain-exit 0.9s ease-in-out 0.7s forwards;
+  --animate-curtain-center-line: curtain-line-up 0.4s cubic-bezier(0.93, 0, 0.1, 1.01) 0.2s both;
+  --animate-curtain-left-out:
+    curtain-left-radius-reveal 0.45s ease-out 0.6s both,
+    curtain-left-slide-out 0.9s ease-in-out 0.7s forwards;
+  --animate-curtain-right-out:
+    curtain-right-radius-reveal 0.45s ease-out 0.6s both,
+    curtain-right-slide-out 0.9s ease-in-out 0.7s forwards;
   --animate-page: fade-in 1.5s ease-in-out 0.5s both;
-  --animate-right-curtain:
-    right-curtain-enter 0.45s ease-out 0.6s both, right-curtain-exit 0.9s ease-in-out 0.7s forwards;
-  --animate-card-fan: card-fan-step-in 0.6s ease-in-out calc(1s + var(--delay, 0s)) both;
   --color-accent: var(--accent);
   --color-background: var(--background);
   --color-border: var(--border);
@@ -49,7 +50,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --accent: oklch(62.7% 0.17 249);
-    --background: oklch(23.5% 0 0);
+    --background: oklch(17.8% 0 0);
     --border: oklch(34.1% 0 0);
     --foreground: oklch(92.5% 0 0);
     --muted: oklch(29.3% 0 0);
@@ -70,7 +71,7 @@
   }
 }
 
-@keyframes curtain-line {
+@keyframes curtain-line-up {
   from {
     transform: translateX(-50%) translateY(0);
   }
@@ -79,17 +80,16 @@
   }
 }
 
-@keyframes left-curtain-enter {
+@keyframes curtain-left-radius-reveal {
   from {
     border-bottom-right-radius: 0%;
   }
-
   to {
     border-bottom-right-radius: 100%;
   }
 }
 
-@keyframes left-curtain-exit {
+@keyframes curtain-left-slide-out {
   from {
     transform: translateX(0);
   }
@@ -98,17 +98,16 @@
   }
 }
 
-@keyframes right-curtain-enter {
+@keyframes curtain-right-radius-reveal {
   from {
     border-bottom-left-radius: 0%;
   }
-
   to {
     border-bottom-left-radius: 100%;
   }
 }
 
-@keyframes right-curtain-exit {
+@keyframes curtain-right-slide-out {
   from {
     transform: translateX(0);
   }
@@ -126,9 +125,9 @@
   }
 }
 
-@keyframes card-fan-step-in {
+@keyframes card-fan-settle-rotate {
   from {
-    transform: rotate(calc(var(--rotate, 0deg) * 0));
+    transform: rotate(0deg);
   }
   60% {
     transform: rotate(calc(var(--rotate, 0deg) * 1.1));

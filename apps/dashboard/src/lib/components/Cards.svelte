@@ -12,13 +12,13 @@
   const date = formatter(user!._creationTime);
 </script>
 
-<div class="relative h-screen bg-[#F0F0F0]">
+<div class="not-dark:bg-muted relative h-screen">
   <div class="pointer-events-none fixed inset-0 z-50">
     <div
-      class="after:animate-right-curtain dark:after:bg-tertiary dark:before:bg-tertiary after:bg-primary before:animate-left-curtain before:bg-primary absolute top-1/2 left-1/2 size-full -translate-1/2 scale-141 before:absolute before:-left-px before:h-full before:w-1/2 after:absolute after:-right-px after:h-full after:w-1/2"
+      class="after:animate-curtain-right-out dark:after:bg-tertiary dark:before:bg-tertiary after:bg-primary before:animate-curtain-left-out before:bg-primary absolute top-1/2 left-1/2 size-full -translate-1/2 scale-141 before:absolute before:-left-px before:h-full before:w-1/2 after:absolute after:-right-px after:h-full after:w-1/2"
     ></div>
     <div
-      class="bg-primary dark:bg-tertiary animate-curtain-line absolute top-0 left-1/2 h-full w-0.75"
+      class="bg-primary dark:bg-tertiary animate-curtain-center-line absolute top-0 left-1/2 h-full w-0.75"
     ></div>
   </div>
 
@@ -26,31 +26,29 @@
     class="animate-page flex h-full items-center justify-center perspective-[1000px]"
   >
     <div class="relative mt-50 aspect-3/8 h-150 min-[26.5625rem]:h-200">
-      <!-- Left Outer -->
       <div
-        class="animate-card-fan absolute top-0 left-0 z-0 size-full origin-bottom [--delay:0.1s] [--rotate:-50deg]"
+        class="absolute top-0 left-0 z-0 size-full origin-bottom animate-[card-fan-settle-rotate_0.6s_ease-in-out_calc(1s+var(--delay,0s))_both] [--delay:0.1s] [--rotate:-50deg]"
       >
         <div
           class="hover:shadow-card-hover shadow-card-default bg-secondary relative h-1/2 w-full rounded-xl duration-200"
         ></div>
       </div>
-      <!-- Left Inner -->
+
       <div
-        class="animate-card-fan absolute top-0 left-0 z-1 size-full origin-bottom [--delay:0.2s] [--rotate:-25deg]"
+        class="absolute top-0 left-0 z-1 size-full origin-bottom animate-[card-fan-settle-rotate_0.6s_ease-in-out_calc(1s+var(--delay,0s))_both] [--delay:0.2s] [--rotate:-25deg]"
       >
         <div
           class="hover:shadow-card-hover shadow-card-default bg-tertiary relative h-1/2 w-full rounded-xl duration-200"
         ></div>
       </div>
-      <!-- Center -->
+
       <div
-        class="animate-card-fan absolute top-0 left-0 z-3 size-full origin-bottom [--delay:0s] [--rotate:0deg]"
+        class="absolute top-0 left-0 z-3 size-full origin-bottom animate-[card-fan-settle-rotate_0.6s_ease-in-out_calc(1s+var(--delay,0s))_both] [--delay:0s] [--rotate:0deg]"
       >
         <div class="group relative h-1/2 w-full rounded-xl">
           <div
             class="ease-in-out-circ absolute inset-0 rounded-xl transition-transform duration-600 transform-3d group-hover:rotate-y-180"
           >
-            <!-- Front -->
             <div
               class="bg-primary text-background dark:text-primary dark:bg-background shadow-card-active absolute inset-0 flex flex-col justify-between overflow-hidden rounded-xl p-4 backface-hidden"
             >
@@ -63,8 +61,7 @@
                   <div class="text-[1.375rem]/none font-bold tracking-tight">
                     {user!.firstName}<br />{user!.lastName}
                   </div>
-                  <span
-                    class="text-[0.5rem]/none font-medium tracking-tight uppercase"
+                  <span class="text-[0.5rem]/none font-medium uppercase"
                     >Early Access</span
                   >
                 </div>
@@ -100,7 +97,7 @@
                 class="bg-background dark:bg-primary absolute right-19.25 bottom-4.5 h-3.25 w-6.25"
               ></div>
             </div>
-            <!-- Back -->
+
             <div
               class="bg-background dark:bg-primary-foreground shadow-card-active absolute inset-0 flex rotate-y-180 flex-col justify-center space-y-3 rounded-xl p-7 text-[0.8125rem] font-medium text-pretty backface-hidden"
             >
@@ -131,23 +128,23 @@
           </div>
         </div>
       </div>
-      <!-- Right Inner -->
+
       <div
-        class="animate-card-fan absolute top-0 left-0 z-1 size-full origin-bottom [--delay:0.2s] [--rotate:25deg]"
+        class="absolute top-0 left-0 z-1 size-full origin-bottom animate-[card-fan-settle-rotate_0.6s_ease-in-out_calc(1s+var(--delay,0s))_both] [--delay:0.2s] [--rotate:25deg]"
       >
         <div
           class="hover:shadow-card-hover shadow-card-default bg-tertiary relative h-1/2 w-full rounded-xl duration-200"
         ></div>
       </div>
-      <!-- Right Outer -->
+
       <div
-        class="animate-card-fan absolute top-0 left-0 z-0 size-full origin-bottom [--delay:0.1s] [--rotate:50deg]"
+        class="absolute top-0 left-0 z-0 size-full origin-bottom animate-[card-fan-settle-rotate_0.6s_ease-in-out_calc(1s+var(--delay,0s))_both] [--delay:0.1s] [--rotate:50deg]"
       >
         <div
           class="hover:shadow-card-hover shadow-card-default bg-secondary relative h-1/2 w-full rounded-xl duration-200"
         ></div>
       </div>
-      <!-- Controls -->
+
       <div
         class="absolute bottom-40 left-1/2 size-20 -translate-x-1/2 bg-red-500 not-pointer-coarse:hidden"
       ></div>

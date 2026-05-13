@@ -21,7 +21,7 @@
 
       <h1 class="text-2xl font-bold">Log in or sign up</h1>
     </div>
-
+    
     <div class="flex w-full flex-col gap-3">
       {#each providers as provider}
         <a
@@ -37,7 +37,7 @@
       {/each}
     </div>
   </div>
-
+  
   <div
     class="text-muted-foreground row-start-3 place-self-end text-center text-balance"
   >

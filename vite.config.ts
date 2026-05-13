@@ -5,6 +5,7 @@ export default defineConfig({
     ignorePatterns: ['**/.agents/**', '**/*generated/**'],
     singleQuote: true,
     sortImports: true,
+    sortPackageJson: { sortScripts: true },
   },
   lint: {
     ignorePatterns: ['**/.agents/**', '**/*generated/**'],
