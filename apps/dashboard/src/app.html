@@ -5,6 +5,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Rosace</title>
+    <script>
+      let style = document.createElement('style');
+      style.textContent = '* { transition: none !important; }';
+
+      let mm = matchMedia('(prefers-color-scheme: dark)');
+
+      mm.addEventListener('change', () => {
+        if (!style.isConnected) document.head.append(style);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => style.remove());
+        });
+      });
+    </script>
     %sveltekit.head%
   </head>
 
