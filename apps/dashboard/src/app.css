@@ -1,28 +1,61 @@
 @import 'tailwindcss';
 
 @theme {
+  --animate-curtain-line: curtain-line 0.4s cubic-bezier(0.93, 0, 0.1, 1.01) 0.2s both;
+  --animate-left-curtain:
+    left-curtain-enter 0.45s ease-out 0.6s both, left-curtain-exit 0.9s ease-in-out 0.7s forwards;
+  --animate-page: fade-in 1.5s ease-in-out 0.5s both;
+  --animate-right-curtain:
+    right-curtain-enter 0.45s ease-out 0.6s both, right-curtain-exit 0.9s ease-in-out 0.7s forwards;
+  --animate-card-fan: card-fan-step-in 0.6s ease-in-out calc(1s + var(--delay, 0s)) both;
   --color-accent: var(--accent);
   --color-background: var(--background);
   --color-border: var(--border);
   --color-foreground: var(--foreground);
+  --color-discord: oklch(64.7% 0.124 271);
+  --color-gray-50: oklch(98.5% 0 0);
+  --color-gray-100: oklch(97% 0 0);
+  --color-gray-200: oklch(92.5% 0 0);
+  --color-gray-300: oklch(88.5% 0 0);
+  --color-gray-400: oklch(76.7% 0 0);
+  --color-gray-500: oklch(56.2% 0 0);
+  --color-gray-600: oklch(38.7% 0 0);
+  --color-gray-700: oklch(34.1% 0 0);
+  --color-gray-800: oklch(29.3% 0 0);
+  --color-gray-900: oklch(23.5% 0 0);
+  --color-gray-1000: oklch(17.8% 0 0);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-post-it: oklch(92.1% 0.0967 88.7);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-tertiary: var(--tertiary);
+  --ease-in-out-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-card-active: var(--shadow-card-active);
+  --shadow-card-default: var(--shadow-card-default);
 }
 
 :root {
   --accent: oklch(67% 0.183 249);
   --background: oklch(100% 0 0);
   --border: oklch(92.5% 0 0);
-  --foreground: oklch(29.3% 0 0);
+  --foreground: oklch(34.1% 0 0);
   --muted: oklch(97% 0 0);
   --muted-foreground: oklch(56.2% 0 0);
   --primary: oklch(23.5% 0 0);
   --primary-foreground: oklch(92.5% 0 0);
   --secondary: oklch(92.5% 0 0);
+  --shadow-card-hover:
+    0px 0px 0.5px oklch(0% 0 0 / 12%), 0px 10px 16px oklch(0% 0 0 / 12%),
+    0px 2px 5px oklch(0% 0 0 / 15%);
+  --shadow-card-active:
+    0px 0px 0.5px oklch(0% 0 0 / 8%), 0px 10px 24px oklch(0% 0 0 / 18%),
+    0px 2px 5px oklch(0% 0 0 / 15%);
+  --shadow-card-default:
+    0px 0px 0.5px oklch(0% 0 0 / 18%), 0px 3px 8px oklch(0% 0 0 / 10%),
+    0px 1px 3px oklch(0% 0 0 / 10%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,5 +69,82 @@
     --primary: oklch(92.5% 0 0);
     --primary-foreground: oklch(23.5% 0 0);
     --secondary: oklch(34.1% 0 0);
+    --shadow-card-hover:
+      0px 10px 16px oklch(0% 0 0 / 35%), 0px 2px 5px oklch(0% 0 0 / 35%),
+      inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 35%);
+    --shadow-card-active:
+      0px 10px 24px oklch(0% 0 0 / 45%), 0px 3px 5px oklch(0% 0 0 / 35%),
+      inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 35%);
+    --shadow-card-default:
+      0px 3px 8px oklch(0% 0 0 / 35%), 0px 1px 3px oklch(0% 0 0 / 50%),
+      inset 0px 0.5px 0px oklch(100% 0 0 / 8%), inset 0px 0px 0.5px oklch(100% 0 0 / 35%);
+  }
+}
+
+@keyframes curtain-line {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    transform: translateX(-50%) translateY(-101%);
+  }
+}
+
+@keyframes left-curtain-enter {
+  from {
+    border-bottom-right-radius: 0%;
+  }
+
+  to {
+    border-bottom-right-radius: 100%;
+  }
+}
+
+@keyframes left-curtain-exit {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-101%);
+  }
+}
+
+@keyframes right-curtain-enter {
+  from {
+    border-bottom-left-radius: 0%;
+  }
+
+  to {
+    border-bottom-left-radius: 100%;
+  }
+}
+
+@keyframes right-curtain-exit {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(101%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes card-fan-step-in {
+  from {
+    transform: rotate(calc(var(--rotate, 0deg) * 0));
+  }
+  60% {
+    transform: rotate(calc(var(--rotate, 0deg) * 1.1));
+  }
+  to {
+    transform: rotate(var(--rotate, 0deg));
   }
 }

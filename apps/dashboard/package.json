@@ -9,26 +9,20 @@
     "preview": "vp preview"
   },
   "dependencies": {
+    "@repo/canvas": "workspace:*",
+    "@repo/engine": "workspace:*",
     "@repo/svelte": "workspace:*",
     "@repo/utils": "workspace:*",
-    "@threlte/core": "catalog:",
-    "@threlte/extras": "catalog:",
-    "@threlte/rapier": "catalog:",
     "convex": "catalog:",
     "dexie": "catalog:",
-    "gsap": "catalog:",
-    "meshline": "catalog:",
     "posthog-js": "catalog:",
-    "posthog-node": "catalog:",
-    "three": "catalog:"
+    "posthog-node": "catalog:"
   },
   "devDependencies": {
-    "@dimforge/rapier3d-compat": "catalog:",
     "@sveltejs/adapter-cloudflare": "catalog:",
     "@sveltejs/kit": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
-    "@types/three": "catalog:",
     "svelte": "catalog:",
     "svelte-check": "catalog:",
     "tailwindcss": "catalog:",

@@ -18,6 +18,7 @@
     "@astrojs/sitemap": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "tailwindcss": "catalog:",
+    "typescript": "catalog:",
     "wrangler": "catalog:"
   }
 }

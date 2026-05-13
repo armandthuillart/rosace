@@ -1,17 +1,15 @@
+import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
-function createThemeStore() {
-  const isDark = writable(false);
+function store() {
+  const dark = writable(false);
 
-  if (typeof window !== 'undefined') {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    isDark.set(mediaQuery.matches);
-    mediaQuery.addEventListener('change', (e) => {
-      isDark.set(e.matches);
-    });
+  if (browser) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    dark.set(mq.matches);
+    mq.addEventListener('change', (e) => dark.set(e.matches));
   }
-
-  return isDark;
+  return dark;
 }
 
-export const isDarkMode = createThemeStore();
+export const dark = store();

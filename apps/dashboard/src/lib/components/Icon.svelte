@@ -1,13 +1,7 @@
 <script lang="ts">
   import type { SVGAttributes } from "svelte/elements";
 
-  const names = [
-    "view",
-    "apple",
-    "google",
-    "rosace",
-    "view-off-slash",
-  ] as const;
+  const names = ["apple", "google", "rosace"] as const;
 
   interface Props extends SVGAttributes<SVGSVGElement> {
     name: (typeof names)[number];
