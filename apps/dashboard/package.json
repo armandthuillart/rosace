@@ -9,7 +9,6 @@
     "preview": "vp preview"
   },
   "dependencies": {
-    "@repo/canvas": "workspace:*",
     "@repo/engine": "workspace:*",
     "@repo/svelte": "workspace:*",
     "@repo/utils": "workspace:*",

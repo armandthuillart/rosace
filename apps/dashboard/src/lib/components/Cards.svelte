@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import Icon from "$lib/components/Icon.svelte";
+  import posthog from "posthog-js";
 
   const { user } = page.data;
 
@@ -11,7 +12,7 @@
   const date = formatter(user!._creationTime);
 </script>
 
-<div class="bg-[#F0F0F0] relative h-screen">
+<div class="relative h-screen bg-[#F0F0F0]">
   <div class="pointer-events-none fixed inset-0 z-50">
     <div
       class="after:animate-right-curtain dark:after:bg-tertiary dark:before:bg-tertiary after:bg-primary before:animate-left-curtain before:bg-primary absolute top-1/2 left-1/2 size-full -translate-1/2 scale-141 before:absolute before:-left-px before:h-full before:w-1/2 after:absolute after:-right-px after:h-full after:w-1/2"
@@ -153,3 +154,14 @@
     </div>
   </div>
 </div>
+
+<form
+  class="absolute top-5 right-8"
+  method="POST"
+  onsubmit={() => posthog.reset()}
+>
+  <button
+    class="bg-primary hover:bg-primary/80 text-primary-foreground flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-lg font-bold transition-colors duration-200"
+    type="submit">Sign out</button
+  >
+</form>
