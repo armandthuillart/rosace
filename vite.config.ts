@@ -6,6 +6,7 @@ export default defineConfig({
     singleQuote: true,
     sortImports: true,
     sortPackageJson: { sortScripts: true },
+    sortTailwindcss: true,
   },
   lint: {
     ignorePatterns: ['**/.agents/**', '**/*generated/**'],
